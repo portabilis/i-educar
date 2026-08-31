@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEnrollment;
 use App\Models\LegacySchoolHistory;
 use App\Models\LegacySchoolHistoryDiscipline;
 use App\Services\SchoolHistoryService;
@@ -888,26 +889,26 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $params = ['params' => $matriculaId, 'return_only' => 'first-line'];
         $idsSerieCurso = Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
 
-        $matriculaTurma = new clsPmieducarMatriculaTurma;
-        $matriculaTurma = $matriculaTurma->lista(
-            $matriculaId,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $idsSerieCurso['serie_id'],
-            $idsSerieCurso['curso_id']
-        );
-
-        $matriculaTurma = $matriculaTurma[0];
+        $matriculaTurma = LegacyEnrollment::query()
+            ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+            ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+            ->join('pmieducar.curso', 'curso.cod_curso', 'matricula.ref_cod_curso')
+            ->active()
+            ->where('aluno.ativo', 1)
+            ->when(is_numeric($matriculaId), fn ($q) => $q->whereRegistration($matriculaId))
+            ->when(is_numeric($idsSerieCurso['serie_id']), fn ($q) => $q->where('matricula.ref_ref_cod_serie', $idsSerieCurso['serie_id']))
+            ->when(is_numeric($idsSerieCurso['curso_id']), fn ($q) => $q->where('matricula.ref_cod_curso', $idsSerieCurso['curso_id']))
+            ->first([
+                'matricula_turma.ref_cod_turma',
+                'matricula.ref_ref_cod_escola',
+                'matricula.ref_ref_cod_serie',
+                'curso.ref_cod_instituicao',
+                'curso.nm_curso',
+            ]);
 
         $dadosMatricula = [];
 
-        if (is_array($matriculaTurma) && count($matriculaTurma) > 0) {
+        if ($matriculaTurma) {
             $dadosMatricula['ano'] = $ano;
             $dadosMatricula['instituicao_id'] = $matriculaTurma['ref_cod_instituicao'];
             $dadosMatricula['escola_id'] = $matriculaTurma['ref_ref_cod_escola'];
@@ -999,50 +1000,37 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $matriculas = [];
 
         if ($this->canGetMatriculas()) {
-            $alunos = new clsPmieducarMatriculaTurma;
-            $alunos->setOrderby('ref_cod_curso, ref_ref_cod_serie, ref_cod_turma, sequencial_fechamento, nome');
-
-            $alunos = $alunos->lista(
-                $this->getRequest()->matricula_id,
-                $this->getRequest()->turma_id,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                $this->getRequest()->serie_id,
-                $this->getRequest()->curso_id,
-                $this->getRequest()->escola_id,
-                $this->getRequest()->instituicao_id,
-                $this->getRequest()->aluno_id,
-                null,
-                null,
-                null,
-                null,
-                $this->getRequest()->ano,
-                null,
-                true,
-                null,
-                null,
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                $this->getRequest()->dependencia
-            );
-
-            if (!is_array($alunos)) {
-                $alunos = [];
-            }
+            $alunos = LegacyEnrollment::query()
+                ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+                ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+                ->join('cadastro.pessoa', 'pessoa.idpes', 'aluno.ref_idpes')
+                ->join('pmieducar.curso', 'curso.cod_curso', 'matricula.ref_cod_curso')
+                ->join('pmieducar.turma', 'turma.cod_turma', 'matricula_turma.ref_cod_turma')
+                ->active()
+                ->where('aluno.ativo', 1)
+                ->where('matricula.ativo', 1)
+                ->when(is_numeric($this->getRequest()->matricula_id), fn ($q) => $q->whereRegistration($this->getRequest()->matricula_id))
+                ->when(is_numeric($this->getRequest()->turma_id), fn ($q) => $q->whereSchoolClass($this->getRequest()->turma_id))
+                ->when(is_numeric($this->getRequest()->serie_id), fn ($q) => $q->where('matricula.ref_ref_cod_serie', $this->getRequest()->serie_id))
+                ->when(is_numeric($this->getRequest()->curso_id), fn ($q) => $q->where('matricula.ref_cod_curso', $this->getRequest()->curso_id))
+                ->when(is_numeric($this->getRequest()->escola_id), fn ($q) => $q->where('matricula.ref_ref_cod_escola', $this->getRequest()->escola_id))
+                ->when(is_numeric($this->getRequest()->instituicao_id), fn ($q) => $q->where('curso.ref_cod_instituicao', $this->getRequest()->instituicao_id))
+                ->when(is_numeric($this->getRequest()->aluno_id), fn ($q) => $q->where('matricula.ref_cod_aluno', $this->getRequest()->aluno_id))
+                ->when(is_numeric($this->getRequest()->ano), fn ($q) => $q->where('matricula.ano', $this->getRequest()->ano))
+                ->when(is_string($this->getRequest()->dependencia), fn ($q) => $q->where('matricula.dependencia', $this->getRequest()->dependencia))
+                ->orderBy('matricula.ref_cod_curso')
+                ->orderBy('matricula.ref_ref_cod_serie')
+                ->orderBy('matricula_turma.ref_cod_turma')
+                ->orderBy('matricula_turma.sequencial_fechamento')
+                ->orderBy('pessoa.nome')
+                ->get([
+                    'matricula_turma.ref_cod_matricula',
+                    'matricula.ref_cod_aluno',
+                    'matricula.ref_ref_cod_serie',
+                    'curso.nm_curso',
+                    'turma.nm_turma',
+                    'pessoa.nome as nome_aluno',
+                ]);
 
             $situacoesMatricula = [
                 'aprovado' => App_Model_MatriculaSituacao::APROVADO,

@@ -60,14 +60,6 @@ return new class extends clsDetalhe
         $det_ref_cod_tipo_ocorrencia_disciplinar = LegacyDisciplinaryOccurrenceType::find($registro['ref_cod_tipo_ocorrencia_disciplinar'])?->getAttributes();
         $registro['nm_tipo'] = $det_ref_cod_tipo_ocorrencia_disciplinar['nm_tipo'];
 
-        $obj_mat_turma = new clsPmieducarMatriculaTurma;
-
-        $det_mat_turma = $obj_mat_turma->lista($registro['ref_cod_matricula'], null, null, null, null, null, null, null, 1);
-
-        if ($det_mat_turma) {
-            $det_mat_turma = array_shift($det_mat_turma);
-        }
-
         if ($registro['ref_cod_matricula']) {
             $this->addDetalhe(['Matrícula', "{$registro['ref_cod_matricula']}"]);
         }
@@ -89,10 +81,6 @@ return new class extends clsDetalhe
 
         if ($registro['ref_ref_cod_serie']) {
             $this->addDetalhe(['Série', "{$registro['ref_ref_cod_serie']}"]);
-        }
-
-        if ($det_mat_turma['det_turma']) {
-            $this->addDetalhe(['Turma', "{$det_mat_turma['det_turma']}"]);
         }
 
         if ($registro['sequencial']) {

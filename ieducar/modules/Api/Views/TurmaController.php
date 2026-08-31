@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
@@ -130,11 +131,22 @@ class TurmaController extends ApiCoreController
     protected function ordenaAlunosDaTurmaAlfabetica()
     {
         $codTurma = $this->getRequest()->id;
-        $objMatriculaTurma = new clsPmieducarMatriculaTurma;
-        $lstMatriculaTurma = $objMatriculaTurma->lista(null, $codTurma, null, null, null, null, null, null, 3);
+
+        $enturmacoes = LegacyEnrollment::query()
+            ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+            ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+            ->join('cadastro.pessoa', 'pessoa.idpes', 'aluno.ref_idpes')
+            ->whereValid()
+            ->where('aluno.ativo', 1)
+            ->when(is_numeric($codTurma), fn ($q) => $q->whereSchoolClass($codTurma))
+            ->get([
+                'matricula_turma.ref_cod_matricula',
+                'matricula_turma.sequencial',
+                'pessoa.nome',
+            ]);
 
         $lstNomes = [];
-        foreach ($lstMatriculaTurma as $matricula) {
+        foreach ($enturmacoes as $matricula) {
             $lstNomes[] = [
                 'nome' => limpa_acentos(mb_strtoupper($matricula['nome'])),
                 'ref_cod_matricula' => $matricula['ref_cod_matricula'],

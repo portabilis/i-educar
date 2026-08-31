@@ -4,6 +4,7 @@ use App\Events\RegistrationEvent;
 use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
 use App\Models\LegacyCourse;
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyGradeSequence;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
@@ -13,6 +14,7 @@ use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolGrade;
 use App\Models\LegacyStudent;
 use App\Models\RegistrationStatus;
+use App\Services\EnrollmentService;
 use App\Services\PromotionService;
 use App\Services\RegistrationService;
 use App\Services\SchoolClass\AvailableTimeService;
@@ -906,28 +908,24 @@ return new class extends clsCadastro
 
     public function enturmacaoMatricula($matriculaId, $turmaDestinoId)
     {
-        $enturmacaoExists = new clsPmieducarMatriculaTurma;
-
-        $enturmacaoExists = $enturmacaoExists->lista(
-            int_ref_cod_matricula: $matriculaId,
-            int_ref_cod_turma: $turmaDestinoId,
-            int_ativo: 1
-        );
-
-        $enturmacaoExists = is_array(value: $enturmacaoExists) && count(value: $enturmacaoExists) > 0;
+        $enturmacaoExists = LegacyEnrollment::query()
+            ->active()
+            ->when(is_numeric($matriculaId), fn ($q) => $q->whereRegistration($matriculaId))
+            ->when(is_numeric($turmaDestinoId), fn ($q) => $q->whereSchoolClass($turmaDestinoId))
+            ->whereHas('registration', function ($q) {
+                $q->whereHas('student', fn ($q) => $q->active());
+            })
+            ->exists();
 
         if (!$enturmacaoExists) {
-            $enturmacao = new clsPmieducarMatriculaTurma(
-                ref_cod_matricula: $matriculaId,
-                ref_cod_turma: $turmaDestinoId,
-                ref_usuario_exc: $this->pessoa_logada,
-                ref_usuario_cad: $this->pessoa_logada,
-                ativo: 1
+            $enturmacao = app(EnrollmentService::class)->createFromScreen(
+                registrationId: $matriculaId,
+                schoolClassId: $turmaDestinoId,
+                createdBy: $this->pessoa_logada,
+                enrollmentDate: $this->data_matricula
             );
 
-            $enturmacao->data_enturmacao = $this->data_matricula;
-
-            return $enturmacao->cadastra();
+            return $enturmacao !== null;
         }
 
         return false;
@@ -957,10 +955,11 @@ return new class extends clsCadastro
 
     public function _getQtdMatriculaTurma()
     {
-        $obj_mt = new clsPmieducarMatriculaTurma;
-        $lst_mt = $obj_mt->enturmacoesSemDependencia(turmaId: $this->ref_cod_turma);
-
-        return $lst_mt[0];
+        return LegacyEnrollment::query()
+            ->active()
+            ->whereSchoolClass($this->ref_cod_turma)
+            ->whereHas('registration', fn ($q) => $q->where('dependencia', false))
+            ->count();
     }
 
     public function _getMaxAlunoTurma()
@@ -1013,19 +1012,21 @@ return new class extends clsCadastro
     {
         $obj_t = new clsPmieducarTurma(cod_turma: $this->ref_cod_turma);
         $det_t = $obj_t->detalhe();
-        $obj_mt = new clsPmieducarMatriculaTurma;
 
-        $obj_mt->lista(
-            int_ativo: 1,
-            int_ref_cod_serie: $this->ref_cod_serie,
-            int_ref_cod_curso: $this->ref_cod_curso,
-            int_ref_cod_escola: $this->ref_cod_escola,
-            int_turma_turno_id: $det_t['turma_turno_id'],
-            int_ano_turma: $det_t['ano'],
-            dependencia: 'f'
-        );
-
-        return $obj_mt->_total;
+        return LegacyEnrollment::query()
+            ->active()
+            ->whereHas('registration', function ($q) {
+                $q->when(is_numeric($this->ref_cod_serie), fn ($q) => $q->whereGrade($this->ref_cod_serie));
+                $q->when(is_numeric($this->ref_cod_curso), fn ($q) => $q->whereCourse($this->ref_cod_curso));
+                $q->when(is_numeric($this->ref_cod_escola), fn ($q) => $q->whereSchool($this->ref_cod_escola));
+                $q->where('dependencia', false);
+                $q->whereHas('student', fn ($q) => $q->active());
+            })
+            ->whereHas('schoolClass', function ($q) use ($det_t) {
+                $q->when(is_numeric($det_t['turma_turno_id']), fn ($q) => $q->whereShift($det_t['turma_turno_id']));
+                $q->when(is_numeric($det_t['ano']), fn ($q) => $q->whereYearEq($det_t['ano']));
+            })
+            ->count();
     }
 
     private function availableTimeService()

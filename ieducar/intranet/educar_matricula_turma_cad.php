@@ -1,7 +1,10 @@
 <?php
 
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
+use App\Services\EnrollmentService;
 use App\Services\SchoolClass\AvailableTimeService;
+use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro
 {
@@ -96,46 +99,50 @@ return new class extends clsCadastro
             return false;
         }
 
-        $enturmacaoExists = new clsPmieducarMatriculaTurma;
-        $enturmacaoExists = $enturmacaoExists->lista(
-            int_ref_cod_matricula: $matriculaId,
-            int_ref_cod_turma: $turmaDestinoId,
-            int_ativo: 1
-        );
-
-        $enturmacaoExists = is_array(value: $enturmacaoExists) && count(value: $enturmacaoExists) > 0;
+        $enturmacaoExists = LegacyEnrollment::query()
+            ->active()
+            ->when(is_numeric($matriculaId), fn ($q) => $q->whereRegistration($matriculaId))
+            ->when(is_numeric($turmaDestinoId), fn ($q) => $q->whereSchoolClass($turmaDestinoId))
+            ->whereHas('registration', function ($q) {
+                $q->whereHas('student', fn ($q) => $q->active());
+            })
+            ->exists();
 
         if ($enturmacaoExists) {
             return false;
         }
 
-        $enturmacao = new clsPmieducarMatriculaTurma(
-            ref_cod_matricula: $matriculaId,
-            ref_cod_turma: $turmaDestinoId,
-            ref_usuario_exc: $this->pessoa_logada,
-            ref_usuario_cad: $this->pessoa_logada,
-            data_cadastro: null,
-            data_exclusao: null,
-            ativo: 1
-        );
-
-        $enturmacao->data_enturmacao = $this->data_enturmacao;
-
-        $enturmacao->turno_id = $turnoId;
         $this->atualizaUltimaEnturmacao(matriculaId: $matriculaId);
 
-        return $enturmacao->cadastra();
+        $enturmacao = app(EnrollmentService::class)->createFromScreen(
+            registrationId: $matriculaId,
+            schoolClassId: $turmaDestinoId,
+            createdBy: $this->pessoa_logada,
+            enrollmentDate: $this->data_enturmacao,
+            periodId: $turnoId
+        );
+
+        return $enturmacao !== null;
     }
 
     public function validaDataEnturmacao($matriculaId, $turmaDestinoId, $transferir = false)
     {
         $dataObj = new DateTime(datetime: $this->data_enturmacao . ' 23:59:59');
         $matriculaObj = new clsPmieducarMatricula;
-        $enturmacaoObj = new clsPmieducarMatriculaTurma;
         $dataAnoLetivoInicio = $matriculaObj->pegaDataAnoLetivoInicio(cod_turma: $turmaDestinoId);
         $dataAnoLetivoFim = $matriculaObj->pegaDataAnoLetivoFim(cod_turma: $turmaDestinoId);
-        $exclusaoEnturmacao = $enturmacaoObj->getDataExclusaoUltimaEnturmacao(codMatricula: $matriculaId);
-        $maiorDataEnturmacao = $enturmacaoObj->getMaiorDataEnturmacao(codMatricula: $matriculaId);
+
+        $exclusaoEnturmacao = LegacyEnrollment::query()
+            ->whereRegistration($matriculaId)
+            ->whereNotNull('data_exclusao')
+            ->orderByDesc('data_exclusao')
+            ->value('data_exclusao')?->format('Y-m-d');
+
+        $maiorDataEnturmacao = LegacyEnrollment::query()
+            ->whereRegistration($matriculaId)
+            ->whereNotNull('data_enturmacao')
+            ->orderByDesc('data_enturmacao')
+            ->value('data_enturmacao')?->format('Y-m-d');
         $dataSaidaDaTurma = !empty($exclusaoEnturmacao)
             ? new DateTime(datetime: $exclusaoEnturmacao)
             : null;
@@ -177,12 +184,11 @@ return new class extends clsCadastro
 
         if ($this->isTurmaIntegral(turmaId: $turmaDestinoId)) {
             $sequencialEnturmacaoAnterior = $this->getSequencialEnturmacaoByTurmaId(matriculaId: $matriculaId, turmaId: $turmaOrigemId);
-            $enturmacao = new clsPmieducarMatriculaTurma;
-            $enturmacao->ref_cod_matricula = $matriculaId;
-            $enturmacao->ref_cod_turma = $turmaOrigemId;
-            $enturmacao->sequencial = $sequencialEnturmacaoAnterior;
-            $dadosEnturmacaoAnterior = $enturmacao->detalhe();
-            $turnoId = $dadosEnturmacaoAnterior['turno_id'];
+            $turnoId = LegacyEnrollment::query()
+                ->whereRegistration($matriculaId)
+                ->whereSchoolClass($turmaOrigemId)
+                ->whereSequential($sequencialEnturmacaoAnterior)
+                ->value('turno_id');
         }
 
         if ($this->removerEnturmacao(matriculaId: $matriculaId, turmaId: $turmaOrigemId, remanejado: true)) {
@@ -214,74 +220,85 @@ return new class extends clsCadastro
         }
 
         $sequencialEnturmacao = $this->getSequencialEnturmacaoByTurmaId(matriculaId: $matriculaId, turmaId: $turmaId);
-        $enturmacao = new clsPmieducarMatriculaTurma(
-            ref_cod_matricula: $matriculaId,
-            ref_cod_turma: $turmaId,
-            ref_usuario_exc: $this->pessoa_logada,
-            data_exclusao: $this->data_enturmacao,
-            ativo: 0,
-            sequencial: $sequencialEnturmacao
-        );
-        $detEnturmacao = $enturmacao->detalhe();
+        $enturmacaoService = app(EnrollmentService::class);
 
-        $enturmacao->data_enturmacao = $detEnturmacao['data_enturmacao'];
+        DB::beginTransaction();
 
-        if ($enturmacao->edita()) {
-            if ($remanejado) {
-                $enturmacao->marcaAlunoRemanejado(data: $this->data_enturmacao);
-            }
+        $atualizou = $enturmacaoService->updateFromScreen($matriculaId, $turmaId, $sequencialEnturmacao, [
+            'ref_usuario_exc' => $this->pessoa_logada,
+            'data_exclusao' => $this->data_enturmacao,
+            'ativo' => 0,
+        ]);
 
-            return true;
-        } else {
+        if (!$atualizou) {
+            DB::rollBack();
+
             return false;
         }
+
+        if ($remanejado) {
+            $enturmacaoService->registerRelocation($matriculaId, $sequencialEnturmacao, $this->data_enturmacao);
+        }
+
+        DB::commit();
+
+        return true;
     }
 
     public function getSequencialEnturmacaoByTurmaId($matriculaId, $turmaId)
     {
-        $db = new clsBanco;
-        $sql = 'select coalesce(max(sequencial), 1) from pmieducar.matricula_turma where ativo = 1 and ref_cod_matricula = $1 and ref_cod_turma = $2';
-
-        if ($db->execPreparedQuery(query: $sql, params: [$matriculaId, $turmaId]) != false) {
-            $db->ProximoRegistro();
-            $sequencial = $db->Tupla();
-
-            return $sequencial[0];
-        }
-
-        return 1;
+        return LegacyEnrollment::query()
+            ->active()
+            ->whereRegistration($matriculaId)
+            ->whereSchoolClass($turmaId)
+            ->max('sequencial') ?? 1;
     }
 
     public function atualizaUltimaEnturmacao($matriculaId)
     {
-        $objMatriculaTurma = new clsPmieducarMatriculaTurma(ref_cod_matricula: $matriculaId);
-        $ultima_turma = $objMatriculaTurma->getUltimaTurmaEnturmacao(matriculaId: $matriculaId);
-        $sequencial = $objMatriculaTurma->getMaxSequencialEnturmacao(matriculaId: $matriculaId);
-        $lst_ativo = $objMatriculaTurma->lista(int_ref_cod_matricula: $matriculaId, int_ref_cod_turma: $ultima_turma, int_sequencial: $sequencial);
+        $sequencial = LegacyEnrollment::query()
+            ->whereRegistration($matriculaId)
+            ->max('sequencial');
 
-        $ativo = $lst_ativo[0]['ativo'];
-        $data_exclusao = $lst_ativo[0]['data_exclusao'];
+        $ultima_turma = LegacyEnrollment::query()
+            ->whereRegistration($matriculaId)
+            ->when(is_numeric($sequencial), fn ($q) => $q->whereSequential($sequencial))
+            ->value('ref_cod_turma');
 
-        $dataBaseRemanejamento = $this->getDataBaseRemanejamento(
-            instituicao: $objMatriculaTurma->getInstituicao()
-        );
+        $ultimaEnturmacao = LegacyEnrollment::query()
+            ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+            ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+            ->where('aluno.ativo', 1)
+            ->when(is_numeric($matriculaId), fn ($q) => $q->whereRegistration($matriculaId))
+            ->when(is_numeric($ultima_turma), fn ($q) => $q->whereSchoolClass($ultima_turma))
+            ->when(is_numeric($sequencial), fn ($q) => $q->whereSequential($sequencial))
+            ->first([
+                'matricula_turma.ativo',
+                'matricula_turma.data_exclusao',
+            ]);
+
+        $ativo = $ultimaEnturmacao?->ativo;
+        $data_exclusao = $ultimaEnturmacao?->getRawOriginal('data_exclusao');
+
+        $instituicaoId = LegacyRegistration::query()
+            ->whereKey($matriculaId)
+            ->join('pmieducar.escola', 'escola.cod_escola', 'matricula.ref_ref_cod_escola')
+            ->value('escola.ref_cod_instituicao');
+
+        $dataBaseRemanejamento = $this->getDataBaseRemanejamento(instituicao: $instituicaoId);
 
         $marcarAlunoComoRemanejado = is_null(value: $dataBaseRemanejamento) || strtotime(datetime: $dataBaseRemanejamento) < strtotime(datetime: date(format: 'Y-m-d'));
 
         if ($sequencial >= 1 && $marcarAlunoComoRemanejado) {
             $remanejado = true;
-            $enturmacao = new clsPmieducarMatriculaTurma(
-                ref_cod_matricula: $matriculaId,
-                ref_cod_turma: $ultima_turma,
-                ref_usuario_exc: $this->pessoa_logada,
-                ref_usuario_cad: $this->pessoa_logada,
-                data_exclusao: $data_exclusao,
-                ativo: $ativo,
-                sequencial: $sequencial,
-                remanejado: $remanejado
-            );
 
-            return $enturmacao->edita();
+            return app(EnrollmentService::class)->updateFromScreen($matriculaId, $ultima_turma, $sequencial, [
+                'ref_usuario_exc' => $this->pessoa_logada,
+                'ref_usuario_cad' => $this->pessoa_logada,
+                'data_exclusao' => $data_exclusao,
+                'ativo' => $ativo,
+                'remanejado' => $remanejado,
+            ]);
         }
 
         return false;

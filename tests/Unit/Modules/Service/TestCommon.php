@@ -141,7 +141,6 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
         // instâncias de objetos legados e novos
         $this->_setConfigOptions('usuario', ['cod_usuario' => 1])
             ->_setConfigOptions('matricula', $this->_getMatricula())
-            ->_setConfigOptions('matriculaTurma', $this->_getMatriculaTurma())
             ->_setConfigOptions('serie', $this->_getSerie())
             ->_setConfigOptions('curso', $this->_getCurso())
             ->_setConfigOptions('escolaAnoLetivo', $this->_getEscolaAnoLetivo())
@@ -182,7 +181,6 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
         // Cria os mocks das classes legadas
         $this->_setUpMatriculaMock()
-            ->_setUpMatriculaTurmaMock()
             ->_setUpCursoMock()
             ->_setUpSerieMock()
             ->_setUpEscolaAnoLetivo()
@@ -314,17 +312,6 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             'ref_ref_cod_serie' => 1,
             'ref_ref_cod_escola' => 1,
             'aprovado' => 1,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function _getMatriculaTurma()
-    {
-        return [
-            'ref_cod_matricula' => 1,
-            'ref_cod_turma' => 1,
         ];
     }
 
@@ -601,30 +588,6 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
                 return $return[$total++];
             });
-    }
-
-    /**
-     * @return $this
-     *
-     * @throws Exception
-     */
-    protected function _setUpMatriculaTurmaMock()
-    {
-        $mock = $this->getCleanMock('clsPmieducarMatriculaTurma');
-
-        $mock
-            ->method('lista')
-            ->with(1)
-            ->willReturn($this->_getConfigOptions('matriculaTurma'));
-
-        CoreExt_Entity::addClassToStorage(
-            'clsPmieducarMatriculaTurma',
-            $mock,
-            null,
-            true
-        );
-
-        return $this;
     }
 
     /**

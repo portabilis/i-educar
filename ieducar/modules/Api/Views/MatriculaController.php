@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyActiveLooking;
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyRegistration;
 use App\Services\EnrollmentService;
@@ -676,41 +677,49 @@ class MatriculaController extends ApiCoreController
             $situacaoAntiga = $matricula->aprovado;
             $situacaoNova = $this->getRequest()->nova_situacao;
 
-            $enturmacoes = new clsPmieducarMatriculaTurma;
-            $enturmacoes = $enturmacoes->lista($matriculaId, null, null, null, null, null, null, null, 1);
+            $enturmacoes = LegacyEnrollment::query()
+                ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+                ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+                ->active()
+                ->where('aluno.ativo', 1)
+                ->when(is_numeric($matriculaId), fn ($q) => $q->whereRegistration($matriculaId))
+                ->get([
+                    'matricula_turma.ref_cod_turma',
+                    'matricula_turma.sequencial',
+                ]);
+
+            $enturmacaoService = app(EnrollmentService::class);
 
             if (
                 $situacaoNova == App_Model_MatriculaSituacao::TRANSFERIDO ||
                 $situacaoNova == App_Model_MatriculaSituacao::ABANDONO ||
                 $situacaoNova == App_Model_MatriculaSituacao::FALECIDO
             ) {
-                if ($enturmacoes) {
-                    foreach ($enturmacoes as $enturmacao) {
-                        $enturmacao = new clsPmieducarMatriculaTurma(
-                            $matriculaId,
-                            $enturmacao['ref_cod_turma'],
-                            1,
-                            null,
-                            null,
-                            date('Y-m-d H:i:s'),
-                            0,
-                            null,
-                            $enturmacao['sequencial']
-                        );
+                DB::beginTransaction();
 
-                        if (!$enturmacao->edita()) {
-                            return false;
-                        }
+                foreach ($enturmacoes as $enturmacao) {
+                    $atualizou = $enturmacaoService->updateFromScreen($matriculaId, $enturmacao->ref_cod_turma, $enturmacao->sequencial, [
+                        'ref_usuario_exc' => 1,
+                        'data_exclusao' => date('Y-m-d H:i:s'),
+                        'ativo' => 0,
+                    ]);
 
-                        if ($situacaoNova == App_Model_MatriculaSituacao::TRANSFERIDO) {
-                            $enturmacao->marcaAlunoTransferido();
-                        } elseif ($situacaoNova == App_Model_MatriculaSituacao::ABANDONO) {
-                            $enturmacao->marcaAlunoAbandono();
-                        } elseif ($situacaoNova == App_Model_MatriculaSituacao::FALECIDO) {
-                            $enturmacao->marcaAlunoFalecido();
-                        }
+                    if (!$atualizou) {
+                        DB::rollBack();
+
+                        return false;
+                    }
+
+                    if ($situacaoNova == App_Model_MatriculaSituacao::TRANSFERIDO) {
+                        $enturmacaoService->registerTransfer($matriculaId, $enturmacao->sequencial);
+                    } elseif ($situacaoNova == App_Model_MatriculaSituacao::ABANDONO) {
+                        $enturmacaoService->registerAbandonment($matriculaId, $enturmacao->sequencial);
+                    } elseif ($situacaoNova == App_Model_MatriculaSituacao::FALECIDO) {
+                        $enturmacaoService->registerDeath($matriculaId, $enturmacao->sequencial);
                     }
                 }
+
+                DB::commit();
 
                 $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper)
                     ->findAll(['id'], ['matricula_id' => $matricula->cod_matricula])[0];
@@ -727,9 +736,14 @@ class MatriculaController extends ApiCoreController
                 $situacaoNova == App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO ||
                 $situacaoNova == App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS
             ) {
-                $matriculaTurma = new clsPmieducarMatriculaTurma;
-                $enturmacoesParaAtivar = $matriculaTurma->lista($matriculaId);
-                if (!empty($enturmacoesParaAtivar)) {
+                $existeEnturmacao = LegacyEnrollment::query()
+                    ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+                    ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+                    ->where('aluno.ativo', 1)
+                    ->when(is_numeric($matriculaId), fn ($q) => $q->whereRegistration($matriculaId))
+                    ->exists();
+
+                if ($existeEnturmacao) {
                     $params = [$matriculaId];
                     $sql = 'SELECT sequencial as codigo FROM pmieducar.matricula_turma where ref_cod_matricula = $1 order by ativo desc, sequencial desc limit 1';
                     $sequencial = $this->fetchPreparedQuery($sql, $params, false, 'first-field');

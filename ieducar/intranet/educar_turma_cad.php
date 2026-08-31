@@ -2,6 +2,7 @@
 
 use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDisciplineSchoolClass;
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyPerson;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
@@ -338,20 +339,16 @@ return new class extends clsCadastro
         if (!isset($this->cod_turma)) {
             $bloqueia = false;
         } elseif (is_numeric(value: $this->cod_turma)) {
-            $obj_matriculas_turma = new clsPmieducarMatriculaTurma;
-            $obj_matriculas_turma->setOrderby(strNomeCampo: 'nome_aluno');
-            $lst_matriculas_turma = $obj_matriculas_turma->lista(
-                int_ref_cod_turma: $this->cod_turma,
-                int_ativo: 1,
-                aprovado: [1, 2, 3],
-                bool_get_nome_aluno: true,
-                int_ultima_matricula: 1,
-                bool_matricula_ativo: true
-            );
-
-            if (is_array(value: $lst_matriculas_turma) && count(value: $lst_matriculas_turma) > 0) {
-                $bloqueia = true;
-            }
+            $bloqueia = LegacyEnrollment::query()
+                ->active()
+                ->whereSchoolClass($this->cod_turma)
+                ->whereHas('registration', function ($q) {
+                    $q->active();
+                    $q->whereLastRegistration();
+                    $q->validStatus();
+                    $q->whereHas('student', fn ($q) => $q->active());
+                })
+                ->exists();
         }
 
         $desabilitado = $bloqueia;

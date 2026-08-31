@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyEnrollment;
+use App\Services\EnrollmentService;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoAluno;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 
@@ -63,7 +65,7 @@ return new class extends clsCadastro
 
             $helperOptions = ['objectName' => "{$enturmacao['ref_cod_turma']}_{$enturmacao['sequencial']}_tipoatendimento"];
             $options = [
-                'label' => "Tipo de atendimento educacional especializado do aluno na turma {$enturmacao['nm_turma']}: ",
+                'label' => "Tipo de atendimento educacional especializado do aluno na turma {$enturmacao->schoolClass->nm_turma}: ",
                 'options' => [
                     'values' => $tipoAtendimento,
                     'all_values' => TipoAtendimentoAluno::getDescriptiveValues(),
@@ -91,11 +93,12 @@ return new class extends clsCadastro
         }
 
         foreach ($arrayTipoAtendimento as $data) {
-            $obj = new clsPmieducarMatriculaTurma(ref_cod_matricula: $this->cod_matricula, ref_cod_turma: $data['turma'], ref_usuario_exc: $this->pessoa_logada);
             $tipoAtendimento = $data['value'] ? implode(separator: ',', array: $data['value']) : null;
-            $obj->sequencial = $data['sequencial'];
-            $obj->tipo_atendimento = $tipoAtendimento;
-            $obj->edita();
+
+            app(EnrollmentService::class)->updateFromScreen($this->cod_matricula, $data['turma'], $data['sequencial'], [
+                'ref_usuario_exc' => $this->pessoa_logada,
+                'tipo_atendimento' => $tipoAtendimento,
+            ]);
         }
 
         $this->mensagem = 'Tipo do AEE do aluno atualizado com sucesso.<br>';
@@ -120,23 +123,20 @@ return new class extends clsCadastro
 
     private function getEnturmacoesAee()
     {
-        $enturmacoes = new clsPmieducarMatriculaTurma;
-        $enturmacoes = $enturmacoes->lista(
-            int_ref_cod_matricula: $this->cod_matricula,
-        );
-
-        $arrayEnturmacoes = [];
-        foreach ($enturmacoes as $enturmacao) {
-            $turma = new clsPmieducarTurma(cod_turma: $enturmacao['ref_cod_turma']);
-            $turma = $turma->detalhe();
-            $tipoAtendimento = transformStringFromDBInArray(string: $turma['tipo_atendimento']);
-
-            if (is_array($tipoAtendimento) && in_array(TipoAtendimentoTurma::AEE, $tipoAtendimento)) {
-                $arrayEnturmacoes[] = $enturmacao;
-            }
-        }
-
-        return $arrayEnturmacoes;
+        return LegacyEnrollment::query()
+            ->when(is_numeric($this->cod_matricula), fn ($q) => $q->whereRegistration($this->cod_matricula))
+            ->whereHas('registration', function ($q) {
+                $q->whereHas('student', fn ($q) => $q->active());
+            })
+            ->whereHas('schoolClass', function ($q) {
+                $q->whereRaw('? = ANY(tipo_atendimento)', [TipoAtendimentoTurma::AEE]);
+            })
+            ->with('schoolClass:cod_turma,nm_turma')
+            ->get([
+                'ref_cod_turma',
+                'sequencial',
+                'tipo_atendimento',
+            ]);
     }
 
     public function Formular()

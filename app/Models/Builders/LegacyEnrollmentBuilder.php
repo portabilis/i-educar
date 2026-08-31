@@ -58,6 +58,22 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
         return $this->where('ref_cod_turma', $schoolClass);
     }
 
+    /**
+     * Filtra por Matrícula
+     */
+    public function whereRegistration(int $registration): self
+    {
+        return $this->where('matricula_turma.ref_cod_matricula', $registration);
+    }
+
+    /**
+     * Filtra por sequencial da enturmação
+     */
+    public function whereSequential(int $sequential): self
+    {
+        return $this->where('matricula_turma.sequencial', $sequential);
+    }
+
     public function addJoinViewSituacaoRelatorios(int $situation): self
     {
         return $this->join('relatorio.view_situacao_relatorios', function ($join) use ($situation) {
