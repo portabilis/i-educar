@@ -16,9 +16,11 @@ class WebController extends Controller
         return [
             'cod_usuario' => $user->cod_usuario,
             'ativo' => $user->ativo,
+            'ref_cod_tipo_usuario' => $user->ref_cod_tipo_usuario,
             'person' => [
                 'id' => $user->person->id,
                 'name' => $user->person->name,
+                'nome' => $user->person->nome,
                 'url' => $user->person->url,
                 'email' => $user->person->email,
                 'slug' => $user->person->slug,
