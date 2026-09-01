@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyAbandonmentType;
+use App\Models\LegacyGrade;
 use App\Models\LegacyTransferRequest;
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
@@ -78,10 +79,8 @@ return new class extends clsDetalhe
         $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
 
         // Série
-        $obj_serie = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
-        $det_serie = $obj_serie->detalhe();
         $serie_id = $registro['ref_ref_cod_serie'];
-        $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
+        $registro['ref_ref_cod_serie'] = LegacyGrade::query()->whereKey($serie_id)->value('nm_serie');
 
         // Nome da instituição
         $obj_cod_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);

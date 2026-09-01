@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyDisciplinaryOccurrenceType;
+use App\Models\LegacyGrade;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
 
 return new class extends clsDetalhe
@@ -53,9 +54,7 @@ return new class extends clsDetalhe
 
         $obj_ref_cod_matricula = new clsPmieducarMatricula($registro['ref_cod_matricula']);
         $det_ref_cod_matricula = $obj_ref_cod_matricula->detalhe();
-        $obj_serie = new clsPmieducarSerie($det_ref_cod_matricula['ref_ref_cod_serie']);
-        $det_serie = $obj_serie->detalhe();
-        $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
+        $registro['ref_ref_cod_serie'] = LegacyGrade::query()->whereKey($det_ref_cod_matricula['ref_ref_cod_serie'])->value('nm_serie');
 
         $det_ref_cod_tipo_ocorrencia_disciplinar = LegacyDisciplinaryOccurrenceType::find($registro['ref_cod_tipo_ocorrencia_disciplinar'])?->getAttributes();
         $registro['nm_tipo'] = $det_ref_cod_tipo_ocorrencia_disciplinar['nm_tipo'];

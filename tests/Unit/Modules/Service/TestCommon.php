@@ -184,7 +184,6 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
         $this->_setUpMatriculaMock()
             ->_setUpMatriculaTurmaMock()
             ->_setUpCursoMock()
-            ->_setUpSerieMock()
             ->_setUpEscolaAnoLetivo()
             ->_setUpAnoLetivoModulo()
             ->_setUpEscolaSerieDisciplinaMock()
@@ -619,29 +618,6 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
         CoreExt_Entity::addClassToStorage(
             'clsPmieducarMatriculaTurma',
-            $mock,
-            null,
-            true
-        );
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     *
-     * @throws Exception
-     */
-    protected function _setUpSerieMock()
-    {
-        $mock = $this->getCleanMock('clsPmieducarSerie');
-
-        $mock
-            ->method('detalhe')
-            ->willReturn($this->_getConfigOptions('serie'));
-
-        CoreExt_Entity::addClassToStorage(
-            'clsPmieducarSerie',
             $mock,
             null,
             true

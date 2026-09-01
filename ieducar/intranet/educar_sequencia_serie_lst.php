@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyGrade;
 use App\Models\LegacyGradeSequence;
 use App\Models\LegacyUser;
 
@@ -94,21 +95,31 @@ return new class extends clsListagem
         $opcoes_ = ['' => 'Selecione'];
 
         if ($this->ref_curso_origem) {
-            $objTemp = new clsPmieducarSerie;
-            $lista = $objTemp->lista(null, null, null, $this->ref_curso_origem, null, null, null, null, null, null, null, null, 1);
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_serie']] = $registro['nm_serie']  . (!empty($registro['descricao']) ? ' - ' . $registro['descricao'] : '');
-                }
+            $lst_serie = LegacyGrade::query()
+                ->active()
+                ->when(is_numeric($this->ref_curso_origem), fn ($q) => $q->whereCourse($this->ref_curso_origem))
+                ->get([
+                    'cod_serie',
+                    'nm_serie',
+                    'descricao',
+                ]);
+
+            foreach ($lst_serie as $registro) {
+                $opcoes[$registro['cod_serie']] = $registro['nm_serie'] . (!empty($registro['descricao']) ? ' - ' . $registro['descricao'] : '');
             }
         }
         if ($this->ref_curso_destino) {
-            $objTemp = new clsPmieducarSerie;
-            $lista = $objTemp->lista(null, null, null, $this->ref_curso_destino, null, null, null, null, null, null, null, null, 1);
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes_[$registro['cod_serie']] = $registro['nm_serie']  . (!empty($registro['descricao']) ? ' - ' . $registro['descricao'] : '');
-                }
+            $lst_serie = LegacyGrade::query()
+                ->active()
+                ->when(is_numeric($this->ref_curso_destino), fn ($q) => $q->whereCourse($this->ref_curso_destino))
+                ->get([
+                    'cod_serie',
+                    'nm_serie',
+                    'descricao',
+                ]);
+
+            foreach ($lst_serie as $registro) {
+                $opcoes_[$registro['cod_serie']] = $registro['nm_serie'] . (!empty($registro['descricao']) ? ' - ' . $registro['descricao'] : '');
             }
         }
 

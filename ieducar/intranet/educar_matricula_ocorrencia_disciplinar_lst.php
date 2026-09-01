@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyDisciplinaryOccurrenceType;
+use App\Models\LegacyRegistration;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
 
 return new class extends clsListagem
@@ -147,15 +148,18 @@ return new class extends clsListagem
         $lista = $result->items();
         $total = $result->total();
 
+        $nomesSeriesPorMatricula = LegacyRegistration::query()
+            ->join('pmieducar.serie', 'serie.cod_serie', 'matricula.ref_ref_cod_serie')
+            ->whereIn('cod_matricula', array_filter(array_column(is_array($lista) ? $lista : [], 'ref_cod_matricula'), 'is_numeric'))
+            ->pluck('serie.nm_serie', 'matricula.cod_matricula');
+
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
                 $obj_ref_cod_matricula = new clsPmieducarMatricula($registro['ref_cod_matricula']);
                 $det_ref_cod_matricula = $obj_ref_cod_matricula->detalhe();
 
-                $obj_serie = new clsPmieducarSerie($det_ref_cod_matricula['ref_ref_cod_serie']);
-                $det_serie = $obj_serie->detalhe();
-                $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
+                $registro['ref_ref_cod_serie'] = $nomesSeriesPorMatricula[$registro['ref_cod_matricula']] ?? null;
 
                 $det_ref_cod_tipo_ocorrencia_disciplinar = LegacyDisciplinaryOccurrenceType::find($registro['ref_cod_tipo_ocorrencia_disciplinar'])?->getAttributes();
                 $registro['nm_tipo'] = $det_ref_cod_tipo_ocorrencia_disciplinar['nm_tipo'];

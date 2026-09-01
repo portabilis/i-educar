@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyGrade;
 use App\Models\RegistrationStatus;
 
 return new class extends clsListagem
@@ -120,6 +121,10 @@ return new class extends clsListagem
 
         $total = $obj_matricula->_total;
 
+        $nomesSeries = LegacyGrade::query()
+            ->whereIn('cod_serie', array_filter(array_column(is_array(value: $lista) ? $lista : [], 'ref_ref_cod_serie'), 'is_numeric'))
+            ->pluck('nm_serie', 'cod_serie');
+
         // monta a lista
         if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
@@ -127,9 +132,7 @@ return new class extends clsListagem
                 $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
                 $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
 
-                $obj_serie = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
-                $det_serie = $obj_serie->detalhe();
-                $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
+                $registro['ref_ref_cod_serie'] = $nomesSeries[$registro['ref_ref_cod_serie']] ?? null;
 
                 $obj_cod_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
                 $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();

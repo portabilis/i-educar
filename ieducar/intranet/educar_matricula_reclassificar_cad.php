@@ -265,8 +265,9 @@ return new class extends clsCadastro
             echo "<script>alert('Erro ao reclassificar matrícula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
             exit('Erro ao reclassificar matrícula');
         }
-        $obj_serie = new clsPmieducarSerie($this->ref_ref_cod_serie);
-        $det_serie = $obj_serie->detalhe();
+        $cursoDaSerie = is_numeric($this->ref_ref_cod_serie)
+            ? LegacyGrade::query()->whereKey($this->ref_ref_cod_serie)->value('ref_cod_curso')
+            : null;
 
         $obj_matricula = new clsPmieducarMatricula(
             null,
@@ -286,7 +287,7 @@ return new class extends clsCadastro
             null,
             null,
             1,
-            $det_serie['ref_cod_curso'],
+            $cursoDaSerie,
             null,
             null,
             null,

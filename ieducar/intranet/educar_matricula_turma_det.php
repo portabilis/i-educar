@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyGrade;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolGrade;
 
@@ -101,8 +102,10 @@ return new class extends clsDetalhe
         $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
 
         // Nome da série
-        $obj_ser = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
-        $det_ser = $obj_ser->detalhe();
+        $det_ser = LegacyGrade::query()->find($registro['ref_ref_cod_serie'], [
+            'cod_serie',
+            'nm_serie',
+        ]);
         $registro['ref_ref_cod_serie'] = $det_ser['nm_serie'];
 
         // Matrícula

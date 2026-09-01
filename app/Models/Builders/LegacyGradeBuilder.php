@@ -26,6 +26,14 @@ class LegacyGradeBuilder extends LegacyBuilder
     }
 
     /**
+     * Filtra por trecho do nome
+     */
+    public function whereNameLike(string $name): self
+    {
+        return $this->whereRaw("unaccent(nm_serie) ILIKE unaccent('%' || ? || '%')", $name);
+    }
+
+    /**
      * Ordena por nome e curso
      */
     public function orderByNameAndCourse(): self
@@ -44,12 +52,13 @@ class LegacyGradeBuilder extends LegacyBuilder
     }
 
     /**
-     * Filtra por séries presentes na escola
+     * Filtra por séries presentes na escola, no ano letivo quando informado
      */
-    public function whereSchool(int $school): self
+    public function whereSchool(int $school, ?int $year = null): self
     {
-        return $this->whereHas('schools', function ($q) use ($school) {
+        return $this->whereHas('schools', function ($q) use ($school, $year) {
             $q->where('cod_escola', $school);
+            $q->when($year !== null, fn ($q) => $q->whereRaw('? = ANY(escola_serie.anos_letivos)', $year));
         });
     }
 
@@ -67,6 +76,22 @@ class LegacyGradeBuilder extends LegacyBuilder
     public function whereCourse(int $course): self
     {
         return $this->where('ref_cod_curso', $course);
+    }
+
+    /**
+     * Filtra por Instituição
+     */
+    public function whereInstitution(int $institution): self
+    {
+        return $this->whereHas('course', fn ($q) => $q->whereInstitution($institution));
+    }
+
+    /**
+     * Filtra por ano letivo
+     */
+    public function whereAcademicYear(int $year): self
+    {
+        return $this->whereHas('schools', fn ($q) => $q->whereRaw('? = ANY(escola_serie.anos_letivos)', $year));
     }
 
     /**

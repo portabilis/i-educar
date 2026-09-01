@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyGrade;
 use App\Models\LegacyGradeSequence;
 use App\Models\LegacyUser;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -136,23 +137,33 @@ return new class extends clsCadastro
         $opcoes_ = ['' => 'Selecione'];
 
         if ($this->ref_curso_origem) {
-            $objTemp = new clsPmieducarSerie;
-            $objTemp->setOrderby('nm_serie ASC');
-            $lista = $objTemp->lista(null, null, null, $this->ref_curso_origem, null, null, null, null, null, null, null, null, 1);
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['cod_serie']] = $this->concatNameAndDescription('nm_serie', $registro);
-                }
+            $lst_serie = LegacyGrade::query()
+                ->active()
+                ->when(is_numeric($this->ref_curso_origem), fn ($q) => $q->whereCourse($this->ref_curso_origem))
+                ->orderBy('nm_serie')
+                ->get([
+                    'cod_serie',
+                    'nm_serie',
+                    'descricao',
+                ]);
+
+            foreach ($lst_serie as $registro) {
+                $opcoes[$registro['cod_serie']] = $this->concatNameAndDescription('nm_serie', $registro);
             }
         }
         if ($this->ref_curso_destino) {
-            $objTemp = new clsPmieducarSerie;
-            $objTemp->setOrderby('nm_serie ASC');
-            $lista = $objTemp->lista(null, null, null, $this->ref_curso_destino, null, null, null, null, null, null, null, null, 1);
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes_[$registro['cod_serie']] = $this->concatNameAndDescription('nm_serie', $registro);
-                }
+            $lst_serie = LegacyGrade::query()
+                ->active()
+                ->when(is_numeric($this->ref_curso_destino), fn ($q) => $q->whereCourse($this->ref_curso_destino))
+                ->orderBy('nm_serie')
+                ->get([
+                    'cod_serie',
+                    'nm_serie',
+                    'descricao',
+                ]);
+
+            foreach ($lst_serie as $registro) {
+                $opcoes_[$registro['cod_serie']] = $this->concatNameAndDescription('nm_serie', $registro);
             }
         }
 
@@ -162,7 +173,7 @@ return new class extends clsCadastro
         $this->campoOculto('nivel_usuario', $nivel_usuario);
     }
 
-    private function concatNameAndDescription($dataName, array $data): string
+    private function concatNameAndDescription($dataName, array|ArrayAccess $data): string
     {
         return $data[$dataName] . (!empty($data['descricao']) ? ' - ' . $data['descricao'] : '');
     }
