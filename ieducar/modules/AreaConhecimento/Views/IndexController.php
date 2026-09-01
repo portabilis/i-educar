@@ -24,6 +24,7 @@ class IndexController extends Core_Controller_Page_ListController
 
         $paginador = LegacyKnowledgeArea::query()
             ->orderBy('nome')
+            ->orderBy('id')
             ->paginate(perPage: $this->limite, pageName: 'pagina_' . $this->nome);
 
         $lista = $paginador->getCollection();
