@@ -1010,7 +1010,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         if (is_numeric($disciplinaDispensadaTurma)) {
-            if (is_array($componentes)) {
+            if ($componentes && is_array($componentes)) {
                 unset($componentes[$disciplinaDispensadaTurma]);
             }
 
