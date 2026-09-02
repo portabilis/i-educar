@@ -149,15 +149,16 @@ class clsListagem extends clsCampos
             }
 
             if (isset($_GET[$getVar])) {
-                $intPaginaAtual = $_GET[$getVar];
+                $intPaginaAtual = request()->integer($getVar, 1);
             } else {
                 $intPaginaAtual = 1;
             }
 
-            if (!isset($_GET['pagina_formulario']) & !isset($_GET['pagina_'])) {
+            $paginaFormulario = request()->integer('pagina_formulario', 1);
+            if (!isset($paginaFormulario) & !isset($_GET['pagina_'])) {
                 $pagina_formulario = 1;
             } else {
-                $pagina_formulario = (isset($_GET['pagina_formulario'])) ? $_GET['pagina_formulario'] : $_GET['pagina_'];
+                $pagina_formulario = (isset($paginaFormulario)) ? $paginaFormulario : $_GET['pagina_'];
             }
 
             $pagStart = $intPaginaAtual - $intPaginasExibidas;
