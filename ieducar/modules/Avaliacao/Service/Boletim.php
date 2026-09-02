@@ -949,6 +949,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $componentesMatricula = App_Model_IedFinder::getComponentesPorMatricula($matriculaId, null, null, null, $this->getOption('etapaAtual'), $this->getOption('ref_cod_turma'), null, true, true);
         $mediasComponentes = array_intersect_key($mediasComponentes, $componentesMatricula);
 
+        $componentes = null;
         if (!$calcularSituacaoAluno) {
             $componentes = $this->getComponentes();
             $calculaComponenteAgrupado = !empty(array_intersect_key(array_flip($this->codigoDisciplinasAglutinadas()), $componentes));
@@ -1010,7 +1011,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         if (is_numeric($disciplinaDispensadaTurma)) {
-            if ($componentes && is_array($componentes)) {
+            if (is_array($componentes)) {
                 unset($componentes[$disciplinaDispensadaTurma]);
             }
 
