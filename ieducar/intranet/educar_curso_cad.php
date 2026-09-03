@@ -541,11 +541,11 @@ return new class extends clsCadastro
     private function dadosParaGravacao()
     {
         $dados = [
-            'descricao' => $this->descricao ?: null,
-            'ato_poder_publico' => $this->ato_poder_publico ?: null,
-            'objetivo_curso' => $this->objetivo_curso ?: null,
-            'publico_alvo' => $this->publico_alvo ?: null,
-            'modalidade_curso' => $this->modalidade_curso ?: null,
+            'descricao' => $this->descricao === '' ? null : $this->descricao,
+            'ato_poder_publico' => $this->ato_poder_publico === '' ? null : $this->ato_poder_publico,
+            'objetivo_curso' => $this->objetivo_curso === '' ? null : $this->objetivo_curso,
+            'publico_alvo' => $this->publico_alvo === '' ? null : $this->publico_alvo,
+            'modalidade_curso' => $this->modalidade_curso === '' ? null : $this->modalidade_curso,
         ];
 
         $numericos = [
