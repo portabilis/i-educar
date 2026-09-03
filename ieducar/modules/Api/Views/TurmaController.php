@@ -136,7 +136,7 @@ class TurmaController extends ApiCoreController
             ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
             ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
             ->join('cadastro.pessoa', 'pessoa.idpes', 'aluno.ref_idpes')
-            ->whereValid()
+            ->whereValid(includeDependency: false)
             ->where('aluno.ativo', 1)
             ->when(is_numeric($codTurma), fn ($q) => $q->whereSchoolClass($codTurma))
             ->get([

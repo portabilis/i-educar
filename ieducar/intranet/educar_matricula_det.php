@@ -138,7 +138,7 @@ return new class extends clsDetalhe
         // Nome da turma
         $enturmacoes = LegacyEnrollment::query()
             ->when(is_numeric($this->ref_cod_matricula), fn ($q) => $q->whereRegistration($this->ref_cod_matricula))
-            ->whereValid()
+            ->whereValid(includeDependency: false)
             ->whereHas('registration', function ($q) {
                 $q->whereHas('student', fn ($q) => $q->active());
             })
