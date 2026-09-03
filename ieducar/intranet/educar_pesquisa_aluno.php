@@ -63,7 +63,7 @@ return new class extends clsListagem
             ->joinPerson()
             ->joinIndividual()
             ->when(is_numeric($this->cod_aluno), fn ($q) => $q->whereStudent($this->cod_aluno))
-            ->when(is_string($this->nm_aluno), fn ($q) => $q->whereStudentName($this->nm_aluno))
+            ->when(is_string($this->nm_aluno), fn ($q) => $q->whereStudentNameLike($this->nm_aluno))
             ->when(is_numeric($this->ref_cod_escola), fn ($q) => $q->whereLastRegistrationSchool($this->ref_cod_escola))
             ->orderBy('pessoa.nome')
             ->paginate(

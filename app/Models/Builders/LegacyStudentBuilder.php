@@ -70,6 +70,14 @@ class LegacyStudentBuilder extends LegacyBuilder
         );
     }
 
+    public function whereStudentNameLike($name)
+    {
+        return $this->whereHas(
+            'person',
+            fn ($q) => $q->whereRaw("slug ILIKE unaccent('%' || ? || '%')", $name)
+        );
+    }
+
     public function whereStudentNameSimilarity($name)
     {
         return $this->whereHas(
