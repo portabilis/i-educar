@@ -6,6 +6,7 @@ use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
 use App\Rules\CheckGradesAndAbsencesInStageExists;
 use App\Rules\CheckGradesAndAbsencesInStageIDiarioExists;
+use Illuminate\Support\Facades\DB;
 
 class SchoolClassStageService
 {
@@ -68,5 +69,53 @@ class SchoolClassStageService
         $legacySchoolClassStage = new LegacySchoolClassStage;
         $legacySchoolClassStage->fill($stage);
         $legacySchoolClassStage->save();
+    }
+
+    public function updateByCourse(int $course, int $year, bool $isStandardCalendar): void
+    {
+        DB::beginTransaction();
+
+        $this->deleteByCourseAndYear($course, $year);
+
+        if (!$isStandardCalendar) {
+            $this->copyFromSchoolByCourseAndYear($course, $year);
+        }
+
+        DB::commit();
+    }
+
+    private function deleteByCourseAndYear(int $course, int $year): void
+    {
+        LegacySchoolClassStage::query()
+            ->whereHas('schoolClass', fn ($q) => $q->whereMainCourse($course)->whereYearEq($year))
+            ->delete();
+    }
+
+    private function copyFromSchoolByCourseAndYear(int $course, int $year): void
+    {
+        $schoolStages = LegacySchoolClass::query()
+            ->join('pmieducar.ano_letivo_modulo', function ($j) {
+                $j->on('pmieducar.ano_letivo_modulo.ref_ref_cod_escola', 'pmieducar.turma.ref_ref_cod_escola');
+                $j->on('pmieducar.ano_letivo_modulo.ref_ano', 'pmieducar.turma.ano');
+            })
+            ->whereMainCourse($course)
+            ->whereYearEq($year)
+            ->select([
+                'cod_turma',
+                'ref_cod_modulo',
+                'sequencial',
+                'data_inicio',
+                'data_fim',
+                'dias_letivos',
+            ]);
+
+        LegacySchoolClassStage::query()->insertUsing([
+            'ref_cod_turma',
+            'ref_cod_modulo',
+            'sequencial',
+            'data_inicio',
+            'data_fim',
+            'dias_letivos',
+        ], $schoolStages);
     }
 }
