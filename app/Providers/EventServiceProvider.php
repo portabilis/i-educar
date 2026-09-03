@@ -24,6 +24,7 @@ use App\Listeners\RegistrationCopyListener;
 use App\Listeners\ReportIssuedListener;
 use App\Listeners\TransferNotificationListener;
 use App\Listeners\TransferWebhookListener;
+use App\Menu;
 use App\Models\Announcement;
 use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
@@ -31,6 +32,7 @@ use App\Models\SchoolManager;
 use App\Observers\AnnouncementObserver;
 use App\Observers\LegacyGeneralConfigurationObserver;
 use App\Observers\LegacyRegistrationDisciplinaryOccurrenceTypeObserver;
+use App\Observers\MenuObserver;
 use App\Observers\SchoolManagerObserver;
 use Illuminate\Auth\Events\Authenticated;
 use Illuminate\Auth\Events\Login;
@@ -105,6 +107,7 @@ class EventServiceProvider extends ServiceProvider
         LegacyRegistrationDisciplinaryOccurrenceType::observe(LegacyRegistrationDisciplinaryOccurrenceTypeObserver::class);
         Announcement::observe(AnnouncementObserver::class);
         LegacyGeneralConfiguration::observe(LegacyGeneralConfigurationObserver::class);
+        Menu::observe(MenuObserver::class);
     }
 
     /**
