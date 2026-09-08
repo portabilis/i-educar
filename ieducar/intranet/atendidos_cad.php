@@ -924,6 +924,10 @@ return new class extends clsCadastro
 
     protected function loadAlunoByPessoaId($id)
     {
+        if (!is_numeric($id)) {
+            return null;
+        }
+
         return LegacyStudent::query()
             ->wherePerson($id)
             ->first([
