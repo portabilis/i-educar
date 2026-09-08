@@ -284,6 +284,12 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 628, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
 
+        if (!is_numeric($this->ref_cod_matricula)) {
+            $this->mensagem = 'Edição não realizada.<br />';
+
+            return false;
+        }
+
         $registration = LegacyRegistration::query()->findOrFail($this->ref_cod_matricula, [
             'cod_matricula',
             'ref_ref_cod_serie',
@@ -343,6 +349,12 @@ return new class extends clsCadastro
     {
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: 628, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
+
+        if (!is_numeric($this->ref_cod_matricula)) {
+            $this->mensagem = 'Exclusão não realizada.<br />';
+
+            return false;
+        }
 
         $registration = LegacyRegistration::query()->findOrFail($this->ref_cod_matricula, [
             'cod_matricula',
