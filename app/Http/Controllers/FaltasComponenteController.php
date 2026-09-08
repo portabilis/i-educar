@@ -1,0 +1,112 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\PostFaltaComponenteRequest;
+use iEducar\Modules\EvaluationRules\Exceptions\DisciplineNotExistsForSchoolClass;
+use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowDisciplineAbsence;
+use Illuminate\Support\Collection;
+
+class FaltasComponenteController extends DiarioController
+{
+    public function __invoke(PostFaltaComponenteRequest $request)
+    {
+        $etapa = $request->integer('etapa');
+        $faltas = $request->integer('faltas');
+        $alunoId = $request->integer('aluno_id');
+        $turmaId = $request->integer('turma_id');
+        $componenteId = $request->integer('componente_id');
+        $areaDoConhecimentoId = $request->integer('area_do_conhecimento_id');
+
+        $componentesTurma = $this->service->getComponentesTurma($turmaId);
+        $matricula = $this->service->findMatricula($turmaId, $alunoId);
+
+        if (empty($matricula)) {
+            return response()->json([
+                'message' => 'Matrícula não encontrada para o aluno e turma informados.',
+            ]);
+        }
+
+        $regra = $this->service->getRegraAvaliacaoPorMatricula($matricula->getKey());
+
+        try {
+            if ($regra->get('tipoPresenca') != \RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+                throw new EvaluationRuleNotAllowDisciplineAbsence($turmaId);
+            }
+
+            $faltasAlunoTurma = [
+                $componenteId => $faltas,
+            ];
+
+            if (!empty($areaDoConhecimentoId)) {
+                $faltasAlunoTurma = $this->getFaltasPorComponentes(
+                    $componentesTurma,
+                    $matricula->ref_ref_cod_serie,
+                    $areaDoConhecimentoId,
+                    $faltas
+                );
+            }
+
+            $i = 1;
+            foreach ($faltasAlunoTurma as $componenteCurricularId => $faltaTurmaAlunoDisciplina) {
+                if (!$this->service->validateComponenteTurma($componenteCurricularId, $componentesTurma, $turmaId, $matricula)) {
+                    throw new DisciplineNotExistsForSchoolClass($componenteCurricularId, $turmaId);
+                }
+                $falta = new \Avaliacao_Model_FaltaComponente([
+                    'componenteCurricular' => $componenteCurricularId,
+                    'quantidade' => $faltaTurmaAlunoDisciplina,
+                    'etapa' => $etapa,
+                ]);
+                $boletim = $this->service->getServiceBoletim($turmaId, $alunoId, $matricula);
+                $boletim->addFalta($falta);
+                $boletim->saveFaltas();
+
+                try {
+                    $boletim->promover();
+                } catch (\CoreExt_Service_Exception) {
+                    // Evita Exception ao não promover matrículas pois não houve mudança de situação
+                }
+            }
+        } catch (EvaluationRuleNotAllowDisciplineAbsence|\RuntimeException $exception) {
+            return response()->json([
+                'message' => $exception->getMessage(),
+            ], 422);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'message' => 'Não foi possível salvar as faltas por componente para o aluno e turma informados. (' . $exception->getMessage() . ')',
+            ], 500);
+        }
+
+        return response()->json([
+            'message' => 'Faltas gerais salvas com sucesso.',
+        ], 202);
+    }
+
+    private function getFaltasPorComponentes(
+        Collection $componentesTurma,
+        int $serieId,
+        int $areaDoConhecimentoId,
+        int $faltas,
+    ): array {
+        $componentesArea = $componentesTurma->when($serieId, function (Collection $collection, int $serieId) {
+            return $collection->where('cod_serie', $serieId);
+        })->where('knowledgeArea.id', $areaDoConhecimentoId)
+            ->where('knowledgeArea.agrupar_descritores', true);
+
+        if ($componentesArea->isEmpty()) {
+            throw new \RuntimeException(
+                'Não foi possível encontrar componentes dessa turma agrupados para a área do conhecimento informada.'
+            );
+        }
+
+        $componenteAreaPrimeiro = $componentesArea->shift();
+        // coloca a falta no primeiro componente do agrupamento
+        $novoFaltaTurmaAluno[$componenteAreaPrimeiro->id] = $faltas;
+        // coloca zero no restante dos componentes do agrupamento
+        foreach ($componentesArea as $componenteArea) {
+            $novoFaltaTurmaAluno[$componenteArea->id] = 0;
+        }
+
+        return $novoFaltaTurmaAluno;
+    }
+}
