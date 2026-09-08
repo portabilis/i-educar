@@ -48,7 +48,7 @@ return new class extends clsCadastro
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
         $this->breadcrumb(currentPage: $nomeMenu . ' motivo de ausência de documentação', breadcrumbs: [
-            url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
 
         $this->nome_url_cancelar = 'Cancelar';

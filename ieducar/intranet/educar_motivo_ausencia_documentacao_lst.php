@@ -67,7 +67,7 @@ return new class extends clsListagem
         $this->largura = '100%';
 
         $this->breadcrumb(currentPage: 'Motivos de ausência de documentação', breadcrumbs: [
-            url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
     }
 

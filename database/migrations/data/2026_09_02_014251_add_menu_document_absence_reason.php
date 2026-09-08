@@ -11,12 +11,12 @@ return new class extends Migration
     public function up(): void
     {
         $menu = Menu::query()->updateOrCreate(['old' => Process::DOCUMENT_ABSENCE_REASON], [
-            'parent_id' => Menu::query()->where('old', 999917)->valueOrFail('id'),
+            'parent_id' => Menu::query()->where('old', 999934)->valueOrFail('id'),
             'process' => Process::DOCUMENT_ABSENCE_REASON,
             'title' => 'Motivos de ausência de documentação',
             'description' => 'Cadastro de motivos de ausência de documentação',
             'order' => 0,
-            'parent_old' => 999917,
+            'parent_old' => 999934,
             'link' => '/intranet/educar_motivo_ausencia_documentacao_lst.php',
         ]);
 
