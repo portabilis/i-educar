@@ -5,8 +5,7 @@ use App\Models\LegacyEducacensoStages;
 use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
 use App\Models\LegacyRegimeType;
-use App\Models\LegacySchoolClass;
-use App\Models\LegacySchoolClassStage;
+use App\Services\SchoolClassStageService;
 
 return new class extends clsCadastro
 {
@@ -434,54 +433,15 @@ return new class extends clsCadastro
 
     public function atualizaEtapasDasTurmasDoCurso($curso, $padraoAnoEscolar, $ano): void
     {
-        $this->removeEtapasDasTurmasDoCurso(curso: $curso, ano: $ano);
-
-        if ($padraoAnoEscolar == 0) {
-            $this->copiaEtapasDaEscolaParaTurmasDoCurso(curso: $curso, ano: $ano);
-        }
-    }
-
-    private function removeEtapasDasTurmasDoCurso($curso, $ano): void
-    {
         if (!is_numeric($curso) || !is_numeric($ano)) {
             return;
         }
 
-        LegacySchoolClassStage::query()
-            ->whereHas('schoolClass', fn ($q) => $q->whereCourse($curso)->whereYearEq($ano))
-            ->delete();
-    }
-
-    private function copiaEtapasDaEscolaParaTurmasDoCurso($curso, $ano): void
-    {
-        if (!is_numeric($curso) || !is_numeric($ano)) {
-            return;
-        }
-
-        $etapasDaEscola = LegacySchoolClass::query()
-            ->join('pmieducar.ano_letivo_modulo', function ($j) {
-                $j->on('pmieducar.ano_letivo_modulo.ref_ref_cod_escola', 'pmieducar.turma.ref_ref_cod_escola');
-                $j->on('pmieducar.ano_letivo_modulo.ref_ano', 'pmieducar.turma.ano');
-            })
-            ->whereCourse($curso)
-            ->whereYearEq($ano)
-            ->select([
-                'cod_turma',
-                'ref_cod_modulo',
-                'sequencial',
-                'data_inicio',
-                'data_fim',
-                'dias_letivos',
-            ]);
-
-        LegacySchoolClassStage::query()->insertUsing([
-            'ref_cod_turma',
-            'ref_cod_modulo',
-            'sequencial',
-            'data_inicio',
-            'data_fim',
-            'dias_letivos',
-        ], $etapasDaEscola);
+        (new SchoolClassStageService)->updateByCourse(
+            course: (int) $curso,
+            year: (int) $ano,
+            isStandardCalendar: (bool) $padraoAnoEscolar
+        );
     }
 
     public function makeExtra()
