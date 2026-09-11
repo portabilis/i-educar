@@ -135,21 +135,15 @@ return new class extends clsCadastro
         $this->campoOculto('cod_servidor_alocacao', $this->cod_servidor_alocacao);
 
         // Dados do servidor
-        $objTemp = new clsPmieducarServidor(
-            $this->ref_cod_servidor,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_ref_cod_instituicao
-        );
+        if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ref_ref_cod_instituicao)) {
+            $cargaHorariaServidor = Employee::query()
+                ->whereEmployee($this->ref_cod_servidor)
+                ->whereInstitution($this->ref_ref_cod_instituicao)
+                ->value('carga_horaria');
 
-        $det = $objTemp->detalhe();
-
-        if ($det) {
-            $this->carga_horaria_disponivel = $det['carga_horaria'];
+            if ($cargaHorariaServidor !== null) {
+                $this->carga_horaria_disponivel = $cargaHorariaServidor;
+            }
         }
 
         if ($this->ref_cod_servidor) {

@@ -1,11 +1,13 @@
 <?php
 
+namespace App\Support\View;
+
 /**
  * Classe de parametrização dos dados a serem informados para as listagens genéricas.
  *
  * @author Adriano Erik Weiguert Nagasava
  */
-class clsParametrosPesquisas
+class SearchParameters
 {
     /**
      * Deve ser utilizado para informar se haverá submit (1) ou não na página (0).
@@ -94,7 +96,7 @@ class clsParametrosPesquisas
     /**
      * Construtor da classe
      *
-     * @return clsParametrosPesquisas
+     * @return SearchParameters
      */
     public function __construct()
     {

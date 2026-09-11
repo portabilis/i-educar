@@ -276,7 +276,7 @@ class BatchEnrollmentController extends Controller
     {
         $user = auth()->user();
 
-        if (! $user?->isSchooling()) {
+        if (!$user?->isSchooling()) {
             return;
         }
 

@@ -56,7 +56,7 @@ class EmployeeBuilder extends LegacyBuilder
     public function whereName(string $name): self
     {
         return $this->whereHas('person', function (Builder $q) use ($name) {
-            $q->whereRaw('unaccent(nome) ~* unaccent(?)', addcslashes($name, '[]()\''));
+            $q->whereRaw('f_unaccent(nome) ILIKE f_unaccent(?)', ["%{$name}%"]);
         });
     }
 

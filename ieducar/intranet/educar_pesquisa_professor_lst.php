@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Employee;
+use App\Models\LegacyInstitution;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsListagem
@@ -75,47 +77,67 @@ return new class extends clsListagem
         ]);
         $this->campoTexto(nome: 'nome_servidor', campo: 'Nome Servidor', valor: $this->nome_servidor, tamanhovisivel: 30, tamanhomaximo: 255);
         $this->campoOculto(nome: 'tipo', valor: $_GET['tipo']);
-        $obj_servidor = new clsPmieducarServidor;
-        $obj_servidor->setOrderby(strNomeCampo: 'nome ASC');
+        $lista_professor = collect();
 
-        $lista_professor = false;
-
-        if ($this->ref_cod_instituicao && $this->ref_cod_escola) {
-            $lista_professor = $obj_servidor->lista_professor(cod_instituicao: $this->ref_cod_instituicao, cod_escola: $this->ref_cod_escola, str_nome_servidor: $this->nome_servidor);
+        if (is_numeric(value: $this->ref_cod_instituicao) && is_numeric(value: $this->ref_cod_escola)) {
+            $lista_professor = Employee::query()
+                ->select([
+                    'servidor.cod_servidor',
+                    'pessoa.nome',
+                    'funcionario.matricula',
+                    'servidor.ref_cod_instituicao',
+                ])
+                ->leftJoin('cadastro.pessoa', 'pessoa.idpes', 'servidor.cod_servidor')
+                ->leftJoin('portal.funcionario', 'funcionario.ref_cod_pessoa_fj', 'servidor.cod_servidor')
+                ->whereInstitution($this->ref_cod_instituicao)
+                ->whereHas('employeeAllocations', function ($q) {
+                    $q->whereInstitution($this->ref_cod_instituicao);
+                    $q->whereSchool($this->ref_cod_escola);
+                    $q->active();
+                })
+                ->whereHas('employeeRoles', function ($q) {
+                    $q->whereInstitution($this->ref_cod_instituicao);
+                    $q->whereTeacherRole();
+                })
+                ->whereHas('disciplines', fn ($q) => $q->where('servidor_disciplina.ref_ref_cod_instituicao', $this->ref_cod_instituicao))
+                ->when(is_string(value: $this->nome_servidor), fn ($q) => $q->whereName($this->nome_servidor))
+                ->active()
+                ->groupBy('servidor.cod_servidor', 'pessoa.nome', 'funcionario.matricula', 'servidor.ref_cod_instituicao')
+                ->orderBy('pessoa.nome')
+                ->get();
         }
 
-        // pega detalhes de foreign_keys
-        $obj_ref_cod_instituicao = new clsPmieducarInstituicao(cod_instituicao: $lista_professor[0]['ref_cod_instituicao']);
-        $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-        $nm_instituicao = $det_ref_cod_instituicao['nm_instituicao'];
+        $nm_instituicao = $lista_professor->isNotEmpty()
+            ? LegacyInstitution::query()
+                ->whereKey($lista_professor->first()->ref_cod_instituicao)
+                ->value('nm_instituicao')
+            : null;
 
         // monta a lista
-        if (is_array(value: $lista_professor) && count(value: $lista_professor)) {
-            foreach ($lista_professor as $registro) {
-                $campo1 = Session::get(key: 'campo1');
-                $campo2 = Session::get(key: 'campo2');
-                $setAll = '';
-                if (Session::get(key: 'tipo')) {
-                    if (is_string(value: $campo1) && is_string(value: $campo2)) {
-                        $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}', '{$registro['nome']}'); addVal1('{$campo2}','{$registro['nome']}', '{$registro['cod_servidor']}'); $setAll fecha();\"";
-                    } elseif (is_string(value: $campo1)) {
-                        $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
-                    }
-                } else {
-                    if (is_string(value: $campo1) && is_string(value: $campo2)) {
-                        $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
-                    } elseif (is_string(value: $campo2)) {
-                        $script = " onclick=\"addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
-                    } elseif (is_string(value: $campo1)) {
-                        $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
-                    }
+        foreach ($lista_professor as $registro) {
+            $campo1 = Session::get(key: 'campo1');
+            $campo2 = Session::get(key: 'campo2');
+            $setAll = '';
+            if (Session::get(key: 'tipo')) {
+                if (is_string(value: $campo1) && is_string(value: $campo2)) {
+                    $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}', '{$registro['nome']}'); addVal1('{$campo2}','{$registro['nome']}', '{$registro['cod_servidor']}'); $setAll fecha();\"";
+                } elseif (is_string(value: $campo1)) {
+                    $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
                 }
-                $this->addLinhas(linha: [
-                    "<a href=\"javascript:void(0);\" $script>{$registro['nome']}</a>",
-                    "<a href=\"javascript:void(0);\" $script>{$registro['matricula']}</a>",
-                    "<a href=\"javascript:void(0);\" $script>{$nm_instituicao}</a>",
-                ]);
+            } else {
+                if (is_string(value: $campo1) && is_string(value: $campo2)) {
+                    $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+                } elseif (is_string(value: $campo2)) {
+                    $script = " onclick=\"addVal1('{$campo2}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+                } elseif (is_string(value: $campo1)) {
+                    $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_servidor']}','{$registro['nome']}'); $setAll fecha();\"";
+                }
             }
+            $this->addLinhas(linha: [
+                "<a href=\"javascript:void(0);\" $script>{$registro['nome']}</a>",
+                "<a href=\"javascript:void(0);\" $script>{$registro['matricula']}</a>",
+                "<a href=\"javascript:void(0);\" $script>{$nm_instituicao}</a>",
+            ]);
         }
         $this->largura = '100%';
 

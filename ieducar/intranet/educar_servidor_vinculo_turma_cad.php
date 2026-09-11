@@ -4,6 +4,7 @@ use App\Models\Employee;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassTeacher;
+use App\Models\LegacySchoolClassTeacherDiscipline;
 use App\Services\iDiarioService;
 use Carbon\Carbon;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
@@ -708,15 +709,13 @@ return new class extends clsCadastro
 
     private function gravaComponentesProfessorTurma($professorTurmaId, $componentes)
     {
-        LegacySchoolClassTeacher::find($professorTurmaId)
-            ->disciplines()
-            ->sync(array_filter((array) $componentes));
+        $professorTurma = LegacySchoolClassTeacher::find($professorTurmaId, ['id']);
+
+        $professorTurma->disciplines()->sync(array_filter((array) $componentes));
     }
 
     private function excluiComponentesProfessorTurma($professorTurmaId)
     {
-        LegacySchoolClassTeacher::find($professorTurmaId)
-            ->disciplines()
-            ->detach();
+        LegacySchoolClassTeacherDiscipline::where('professor_turma_id', $professorTurmaId)->delete();
     }
 };

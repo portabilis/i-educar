@@ -4,9 +4,9 @@ use App\Models\ComponentBatchOperation;
 use App\Models\Enums\ComponentBatchStatus;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
-use App\Models\RegistrationStatus;
 use App\Models\View\Discipline;
 use App\Services\ComponentBatchManagerService;
+use App\Services\DiarioControllerService;
 use App\Services\RemoveHtmlTagsStringService;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowGeneralAbsence;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
@@ -88,34 +88,7 @@ class DiarioController extends ApiCoreController
 
     protected function findMatricula($turmaId, $alunoId)
     {
-        return Cache::remember('matricula_id_' . $turmaId . '_' . $alunoId, now()->addMinutes(5), function () use ($turmaId, $alunoId) {
-            return LegacyRegistration::query()
-                ->active()
-                ->whereHas('enrollments', function ($q) use ($turmaId) {
-                    $q->where('ref_cod_turma', $turmaId);
-                    $q->where(function ($q) {
-                        $q->where('ativo', 1);
-                        $q->orWhere('transferido', true);
-                    });
-                })
-                ->whereStudent($alunoId)
-                ->whereIn('aprovado', [
-                    RegistrationStatus::APPROVED,
-                    RegistrationStatus::REPROVED,
-                    RegistrationStatus::ONGOING,
-                    RegistrationStatus::TRANSFERRED,
-                    RegistrationStatus::APPROVED_BY_BOARD,
-                    RegistrationStatus::APPROVED_WITH_DEPENDENCY,
-                    RegistrationStatus::REPROVED_BY_ABSENCE,
-                ])
-                ->orderBy('aprovado')
-                ->first([
-                    'cod_matricula',
-                    'ref_ref_cod_serie',
-                    'ref_ref_cod_escola',
-                    'ano',
-                ]);
-        });
+        return (new DiarioControllerService)->findMatricula($turmaId, $alunoId);
     }
 
     /**

@@ -300,6 +300,13 @@ class LegacyIndividual extends Model
         );
     }
 
+    protected function countryOfOriginName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => in_array((int) $this->nacionalidade, [Nationality::NATURALIZED_BRAZILIAN, Nationality::FOREIGN], true) ? $this->foreignCountry?->name : null
+        );
+    }
+
     protected function socialName(): Attribute
     {
         return Attribute::make(

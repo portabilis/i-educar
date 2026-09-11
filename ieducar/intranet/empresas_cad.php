@@ -325,6 +325,7 @@ return new class extends clsCadastro
         }
 
         $valorNumerico = (float) str_replace(search: [',', '.'], replace: ['.', ''], subject: $valor);
+
         return $valorNumerico >= 0;
     }
 

@@ -304,7 +304,7 @@ class RegistrationService
      */
     public function cancelRegistration(LegacyRegistration $registration, bool $reorderSchoolClasses = true): void
     {
-        if (! $registration->ativo) {
+        if (!$registration->ativo) {
             throw new RegistrationException('A matrícula já está cancelada.');
         }
 
@@ -402,7 +402,7 @@ class RegistrationService
             ->whereHas('transferEnd', fn ($query) => $query->withTrashed())
             ->max('cod_matricula');
 
-        if (! $transferredRegistrationId) {
+        if (!$transferredRegistrationId) {
             return;
         }
 
@@ -426,7 +426,7 @@ class RegistrationService
             ->orderBy('id')
             ->first();
 
-        if (! $sequence) {
+        if (!$sequence) {
             return;
         }
 
@@ -440,7 +440,7 @@ class RegistrationService
             ->orderByDesc('cod_matricula')
             ->first();
 
-        if (! $previousRegistration) {
+        if (!$previousRegistration) {
             return;
         }
 

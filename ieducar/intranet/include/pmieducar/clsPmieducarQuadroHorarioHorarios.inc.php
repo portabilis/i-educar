@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Employee;
 use iEducar\Legacy\Model;
 
 class clsPmieducarQuadroHorarioHorarios extends Model
@@ -578,18 +579,12 @@ class clsPmieducarQuadroHorarioHorarios extends Model
     {
         if (is_numeric($int_ref_cod_servidor_substituto) &&
             is_numeric($this->ref_cod_instituicao_servidor)) {
-            $servidor = new clsPmieducarServidor(
-                $int_ref_cod_servidor_substituto,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                $this->ref_cod_instituicao_servidor
-            );
+            $servidorExiste = Employee::query()
+                ->whereEmployee($int_ref_cod_servidor_substituto)
+                ->whereInstitution($this->ref_cod_instituicao_servidor)
+                ->exists();
 
-            if (!$servidor->existe()) {
+            if (!$servidorExiste) {
                 return false;
             }
         }

@@ -26,7 +26,7 @@
         "aws/aws-sdk-php-laravel": "^3.11",
         "composer/semver": "^3.2",
         "dex/composer-plug-and-play": "^0.26",
-        "dex/frontier": "^0.17.0",
+        "dex/frontier": "^0.18.0",
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^7.3",
         "honeybadger-io/honeybadger-laravel": "^5.0",
@@ -41,8 +41,7 @@
         "league/flysystem-aws-s3-v3": "^3.0",
         "league/flysystem-ftp": "^3.0",
         "league/flysystem-sftp-v3": "^3.0",
-        "maatwebsite/excel": "^3.1",
-        "phpoffice/phpspreadsheet": "1.30.0",
+        "maatwebsite/excel": "^4.0",
         "predis/predis": "^2.3",
         "psr/simple-cache": "^3.0",
         "socialiteproviders/laravelpassport": "^4.3",
@@ -148,19 +147,6 @@
             "pestphp/pest-plugin": true,
             "phpstan/extension-installer": true,
             "php-http/discovery": true
-        },
-        "audit": {
-            "ignore": [
-                "PKSA-gz3f-3cz3-3wsw",
-                "PKSA-x13r-n4wc-4gcr",
-                "PKSA-8cfg-tzhf-fr83",
-                "PKSA-hznc-gbby-6w16",
-                "PKSA-jtdk-dcr5-f11n",
-                "PKSA-r22k-87hv-mfk4",
-                "PKSA-m9cr-9614-rsf7",
-                "PKSA-dqzt-yst9-1w9y",
-                "PKSA-x678-4z45-v3d5"
-            ]
         }
     },
     "minimum-stability": "dev",

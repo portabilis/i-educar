@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\DeficiencyType;
+use App\Models\FileRelation;
 use App\Models\Individual;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyDocument;
@@ -8,8 +9,10 @@ use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyPerson;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
+use App\Models\LegacyStudent;
 use App\Models\LegacyStudentBenefit;
 use App\Models\LegacyStudentHistoricalHeightWeight;
 use App\Models\LegacyStudentMedicalRecord;
@@ -17,6 +20,8 @@ use App\Models\LegacyStudentProject;
 use App\Models\LogUnification;
 use App\Models\SchoolInep;
 use App\Models\TransportationProvider;
+use App\Services\FileService;
+use App\Services\UrlPresigner;
 use App\User;
 use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
@@ -651,7 +656,7 @@ class AlunoController extends ApiCoreController
 
         $aluno->veiculo_transporte_escolar = $veiculoTransporteEscolar;
 
-        $this->file_foto = $_FILES['file'];
+        $this->file_foto = $_FILES['foto'];
         $this->del_foto = $_POST['file_delete'];
 
         if (!$this->validatePhoto()) {
@@ -695,6 +700,7 @@ class AlunoController extends ApiCoreController
              WHERE ref_cod_matricula = $1
                AND turma.cod_turma = ref_cod_turma
                AND (matricula_turma.ativo = 1 OR matricula_turma.transferido = TRUE)
+          ORDER BY matricula_turma.ativo DESC, matricula_turma.sequencial, matricula_turma.id
              LIMIT 1
         ';
 
@@ -1184,7 +1190,6 @@ class AlunoController extends ApiCoreController
                 'recebe_escolarizacao_em_outro_espaco',
                 'justificativa_falta_documentacao',
                 'veiculo_transporte_escolar',
-                'url_laudo_medico',
                 'url_documento',
                 'codigo_sistema',
                 'url_foto_aluno',
@@ -1246,7 +1251,7 @@ class AlunoController extends ApiCoreController
                 }
             }
 
-            $sql = 'select sus, ref_cod_religiao, observacao from cadastro.fisica where idpes = $1';
+            $sql = 'select sus, ref_cod_religiao, observacao, idpes_mae, idpes_pai, idpes_responsavel from cadastro.fisica where idpes = $1';
             $camposFisica = $this->fetchPreparedQuery($sql, $aluno['pessoa_id'], false, 'first-row');
 
             $aluno['sus'] = $camposFisica['sus'];
@@ -1256,13 +1261,64 @@ class AlunoController extends ApiCoreController
             $aluno['projetos'] = $this->loadProjetos($id);
             $aluno['historico_altura_peso'] = $this->loadHistoricoAlturaPeso($id);
 
+            $aluno['nomes_responsaveis'] = $this->getNomesResponsaveis($alunoDetalhe['tipo_responsavel'] ?? null, $camposFisica);
+
             $caminhoFoto = LegacyIndividualPicture::whereKey($aluno['pessoa_id'])->value('caminho');
             if ($caminhoFoto) {
                 $aluno['url_foto_aluno'] = $caminhoFoto;
             }
 
+            $fileService = new FileService(new UrlPresigner);
+            $files = $fileService->getFiles(LegacyStudent::find($id), type: FileRelation::TYPE_MEDICAL_REPORT);
+            $aluno['laudos'] = $files->map(fn ($file) => $file->only([
+                'url',
+                'size',
+                'original_name',
+                'extension',
+                'created_at',
+                'updated_at',
+            ]))->toArray();
+
             return $aluno;
         }
+    }
+
+    private function getNomesResponsaveis(?string $tipoResponsavel, array $camposFisica): array
+    {
+        // Compatibilidade com cadastro antigo - mesmo comportamento da função tipoResponsavel
+        if (!$tipoResponsavel) {
+            if ($camposFisica['idpes_responsavel']) {
+                $tipoResponsavel = 'r';
+            } elseif ($camposFisica['idpes_pai']) {
+                $tipoResponsavel = 'p';
+            } elseif ($camposFisica['idpes_mae']) {
+                $tipoResponsavel = 'm';
+            } else {
+                return [];
+            }
+        }
+
+        $nomesResponsaveis = [];
+
+        switch ($tipoResponsavel) {
+            case 'm':
+                $nomesResponsaveis = [$camposFisica['idpes_mae'] ? LegacyPerson::whereKey($camposFisica['idpes_mae'])->value('nome') : null];
+                break;
+            case 'p':
+                $nomesResponsaveis = [$camposFisica['idpes_pai'] ? LegacyPerson::whereKey($camposFisica['idpes_pai'])->value('nome') : null];
+                break;
+            case 'r':
+                $nomesResponsaveis = [$camposFisica['idpes_responsavel'] ? LegacyPerson::whereKey($camposFisica['idpes_responsavel'])->value('nome') : null];
+                break;
+            case 'a':
+                $nomesResponsaveis = [
+                    $camposFisica['idpes_mae'] ? LegacyPerson::whereKey($camposFisica['idpes_mae'])->value('nome') : null,
+                    $camposFisica['idpes_pai'] ? LegacyPerson::whereKey($camposFisica['idpes_pai'])->value('nome') : null,
+                ];
+                break;
+        }
+
+        return array_filter($nomesResponsaveis);
     }
 
     protected function getTodosAlunos()
@@ -1674,6 +1730,7 @@ class AlunoController extends ApiCoreController
                 $this->createOrUpdatePessoaTransporte($pessoaId);
                 $this->createOrUpdateDocumentos($pessoaId);
                 $this->createOrUpdatePessoa($pessoaId);
+                $this->createOrUpdateLaudos($id);
 
                 $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
             } else {
@@ -1708,6 +1765,7 @@ class AlunoController extends ApiCoreController
             $this->createOrUpdatePessoaTransporte($pessoaId);
             $this->createOrUpdateDocumentos($pessoaId);
             $this->createOrUpdatePessoa($pessoaId);
+            $this->createOrUpdateLaudos($id);
 
             $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
         } else {
@@ -1837,6 +1895,34 @@ class AlunoController extends ApiCoreController
             $this->objPhoto = null;
 
             return true;
+        }
+    }
+
+    protected function createOrUpdateLaudos($pessoaId)
+    {
+        $fileService = new FileService(urlPresigner: new UrlPresigner);
+
+        $file_url = request('file_url');
+        $file_url_deleted = request('file_url_deleted');
+
+        if ($file_url) {
+            $newFiles = json_decode($file_url);
+            foreach ($newFiles as $file) {
+                $fileService->saveFile(
+                    url: $file->url,
+                    size: $file->size,
+                    originalName: $file->originalName,
+                    extension: $file->extension,
+                    typeFileRelation: LegacyStudent::class,
+                    relationId: $pessoaId,
+                    type: FileRelation::TYPE_MEDICAL_REPORT
+                );
+            }
+        }
+
+        if ($file_url_deleted) {
+            $deletedFiles = explode(',', $file_url_deleted);
+            $fileService->deleteFiles(deletedFiles: $deletedFiles);
         }
     }
 
