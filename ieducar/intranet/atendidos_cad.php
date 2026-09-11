@@ -125,8 +125,6 @@ return new class extends clsCadastro
 
     public $document_absence_observation;
 
-    public $cpf_legacy;
-
     public function Inicializar()
     {
         $obj_permissoes = new clsPermissoes;
@@ -188,9 +186,7 @@ return new class extends clsCadastro
                 $this->povo_indigena_educacenso_id = $fisica->povo_indigena_educacenso_id;
                 $this->document_absence_reason_id = $fisica->document_absence_reason_id;
                 $this->document_absence_observation = $fisica->document_absence_observation;
-
-                // cadastro anterior a esta regra não é obrigado a informar nenhum dos dois
-                $this->cpf_legacy = (int) (!$fisica->getRawOriginal('cpf') && !$fisica->document_absence_reason_id);
+                $this->possui_cpf = (int) $fisica->possui_cpf;
             }
 
             $this->loadAddress(person: $this->cod_pessoa_fj);
@@ -205,7 +201,7 @@ return new class extends clsCadastro
             $this->naturalidade_id = $this->naturalidade;
         }
 
-        $this->possui_cpf = 1;
+        $this->possui_cpf ??= 1;
 
         $this->fexcluir = is_numeric(value: $this->cod_pessoa_fj) && $obj_permissoes->permissao_excluir(
             int_processo_ap: 43,
@@ -247,6 +243,8 @@ return new class extends clsCadastro
         }
 
         $this->inputCpf();
+
+        $this->campoOculto('obrigarCPF', (int) $this->obrigarCPFPessoa());
 
         $this->campoOculto(nome: 'cod_pessoa_fj', valor: $this->cod_pessoa_fj);
         $this->campoTexto(nome: 'nm_pessoa', campo: 'Nome', valor: $this->nm_pessoa, tamanhovisivel: '50', tamanhomaximo: '100', obrigatorio: true);
@@ -824,9 +822,7 @@ return new class extends clsCadastro
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $script);
 
-        // vai por script, e não por campo oculto, porque o oculto tem o valor
-        // codificado para URL e a vírgula da lista chegaria escapada
-        $motivosExigemObservacao = DocumentAbsenceReason::query()
+        $motivosExigemObservacao = DocumentAbsenceReason::withTrashed()
             ->where('requires_observation', true)
             ->pluck('id')
             ->all();
@@ -949,15 +945,13 @@ return new class extends clsCadastro
         return $aluno->detalhe();
     }
 
-    // os campos condicionais nascem sem obrigatoriedade porque a validação do
-    // envio não olha se o campo está visível: quem obriga é o JavaScript
     protected function inputCpf()
     {
         $this->campoRadio(
             nome: 'possui_cpf',
             campo: 'CPF',
             valor: [1 => 'Possui CPF', 0 => 'Não possui / não informado'],
-            default: (int) ($this->possui_cpf ?? 1)
+            default: (int) $this->possui_cpf
         );
 
         $this->campoCpf(
@@ -985,34 +979,24 @@ return new class extends clsCadastro
             obrigatorio: false
         );
 
-        $this->campoOculto(nome: 'cpf_legacy', valor: (int) $this->cpf_legacy);
-
         $this->campoTrilhaCpf();
     }
 
-    // inclui o motivo gravado mesmo inativo, senão ele some da lista e o
-    // usuário é obrigado a trocar para conseguir gravar
     protected function motivosAusenciaCpf()
     {
-        $motivos = DocumentAbsenceReason::query()
-            ->orderBy('name')
-            ->get(['id', 'name'])
-            ->mapWithKeys(fn ($motivo) => [$motivo->id => $motivo->name])
-            ->all();
+        $motivos = DocumentAbsenceReason::query()->orderBy('name')->pluck('name', 'id');
 
-        if ($this->document_absence_reason_id && !isset($motivos[$this->document_absence_reason_id])) {
+        if ($this->document_absence_reason_id && !$motivos->has($this->document_absence_reason_id)) {
             $inativo = DocumentAbsenceReason::withTrashed()->find($this->document_absence_reason_id);
 
             if ($inativo) {
-                $motivos[$inativo->id] = $inativo->name . ' (inativo)';
+                $motivos->put($inativo->id, $inativo->name . ' (inativo)');
             }
         }
 
-        return ['' => 'Selecione'] + $motivos;
+        return $motivos->prepend('Selecione', '')->toArray();
     }
 
-    // o critério é a pessoa existir, e não o retorno da tela, porque o
-    // Inicializar não roda ao reexibir depois de uma falha de validação
     protected function campoTrilhaCpf()
     {
         if (!is_numeric($this->cod_pessoa_fj)) {
@@ -1081,8 +1065,6 @@ return new class extends clsCadastro
         $this->inputsHelper()->simpleSearchPessoa(attrName: 'nome', inputOptions: $options, helperOptions: $helperOptions);
     }
 
-    // esconder o campo não impede o envio: um número digitado antes da troca
-    // chegaria aqui e seria validado sem ninguém querer gravá-lo
     protected function normalizaEstadoCpf()
     {
         if ((int) $this->possui_cpf === 0) {
@@ -1095,10 +1077,10 @@ return new class extends clsCadastro
         $this->document_absence_observation = null;
     }
 
-    protected function validaEstadoCpf($pessoaIdOrNull = null)
+    protected function validaEstadoCpf()
     {
         if ((int) $this->possui_cpf === 1) {
-            if ($this->id_federal || $this->registroLegadoSemCpf(pessoaId: $pessoaIdOrNull)) {
+            if ($this->id_federal) {
                 return true;
             }
 
@@ -1113,7 +1095,13 @@ return new class extends clsCadastro
             return false;
         }
 
-        $motivo = DocumentAbsenceReason::withTrashed()->find($this->document_absence_reason_id);
+        $motivoGravado = is_numeric($this->cod_pessoa_fj)
+            ? LegacyIndividual::find($this->cod_pessoa_fj, ['idpes', 'document_absence_reason_id'])?->document_absence_reason_id
+            : null;
+
+        $motivo = DocumentAbsenceReason::query()
+            ->when((int) $motivoGravado === (int) $this->document_absence_reason_id, fn ($q) => $q->withTrashed())
+            ->find($this->document_absence_reason_id);
 
         if (!$motivo) {
             $this->erros['document_absence_reason_id'] = 'O motivo da ausência do CPF informado não existe.';
@@ -1128,18 +1116,6 @@ return new class extends clsCadastro
         }
 
         return true;
-    }
-
-    // a origem é o banco, e não o campo oculto, que o navegador pode alterar
-    protected function registroLegadoSemCpf($pessoaId)
-    {
-        if (!is_numeric($pessoaId)) {
-            return false;
-        }
-
-        $fisica = LegacyIndividual::find($pessoaId, ['idpes', 'cpf', 'document_absence_reason_id']);
-
-        return $fisica && !$fisica->getRawOriginal('cpf') && !$fisica->document_absence_reason_id;
     }
 
     protected function validatesCpf($cpf)
@@ -1168,7 +1144,7 @@ return new class extends clsCadastro
     {
         $this->normalizaEstadoCpf();
 
-        if (!$this->validaEstadoCpf(pessoaIdOrNull: $pessoaIdOrNull)) {
+        if (!$this->validaEstadoCpf()) {
             return false;
         }
 
@@ -1412,6 +1388,21 @@ return new class extends clsCadastro
         return $obrigarDocumentoPessoa;
     }
 
+    protected function obrigarCPFPessoa()
+    {
+        $user = Auth::user();
+
+        if ($user->ref_cod_instituicao) {
+            $obrigarCpf = LegacyInstitution::query()
+                ->find($user->ref_cod_instituicao, ['obrigar_cpf'])?->obrigar_cpf;
+        } else {
+            $obrigarCpf = LegacyInstitution::query()
+                ->first(['obrigar_cpf'])?->obrigar_cpf;
+        }
+
+        return $obrigarCpf;
+    }
+
     protected function possuiDocumentoObrigatorio()
     {
         $certidaoCivil = $this->termo_certidao_civil && $this->folha_certidao_civil && $this->livro_certidao_civil;
@@ -1527,7 +1518,9 @@ return new class extends clsCadastro
             'document_absence_observation' => $fisica?->document_absence_observation,
         ];
 
-        DB::transaction(function () use ($pessoaId, $fisica, $estadoAnterior) {
+        DB::beginTransaction();
+
+        try {
             if ($fisica) {
                 $fisica->update($this->montarDadosFisicaEdicao());
                 $this->atualizarSlugPessoaFisica($pessoaId, isInsert: false);
@@ -1537,7 +1530,13 @@ return new class extends clsCadastro
             }
 
             $this->registrarTrilhaCpf(pessoaId: $pessoaId, estadoAnterior: $estadoAnterior);
-        });
+
+            DB::commit();
+        } catch (Throwable $exception) {
+            DB::rollBack();
+
+            throw $exception;
+        }
 
         $this->createOrUpdateRaca(pessoaId: $pessoaId, corRaca: $this->cor_raca);
     }
@@ -1578,6 +1577,8 @@ return new class extends clsCadastro
         if (is_numeric($cpfInt)) {
             $dados['cpf'] = $cpfInt;
         }
+
+        $dados['possui_cpf'] = (int) $this->possui_cpf === 1;
 
         if (is_numeric($this->document_absence_reason_id)) {
             $dados['document_absence_reason_id'] = $this->document_absence_reason_id;
@@ -1703,6 +1704,7 @@ return new class extends clsCadastro
         $cpfInt = $this->id_federal ? idFederal2int(str: $this->id_federal) : null;
         $dados['cpf'] = is_numeric($cpfInt) ? $cpfInt : null;
 
+        $dados['possui_cpf'] = (int) $this->possui_cpf === 1;
         $dados['document_absence_reason_id'] = is_numeric($this->document_absence_reason_id) ? $this->document_absence_reason_id : null;
         $dados['document_absence_observation'] = $dados['document_absence_reason_id'] ? ($this->document_absence_observation ?: null) : null;
 

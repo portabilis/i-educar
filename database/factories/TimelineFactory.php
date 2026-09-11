@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\LegacyIndividual;
 use App\Models\Timeline;
+use App\Services\IndividualCpfTimelineService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,7 @@ class TimelineFactory extends Factory
         return [
             'model_id' => $this->faker->randomNumber(),
             'model_type' => LegacyIndividual::class,
-            'type' => 'individual-cpf-updated',
+            'type' => IndividualCpfTimelineService::TYPE,
             'payload' => [
                 'user' => [
                     'id' => $this->faker->randomNumber(),

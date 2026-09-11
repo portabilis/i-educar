@@ -106,6 +106,7 @@ class LegacyIndividual extends Model
         'pai_restricao_judicial',
         'mae_restricao_judicial',
         'responsavel_restricao_judicial',
+        'possui_cpf',
         'document_absence_reason_id',
         'document_absence_observation',
     ];
@@ -284,6 +285,14 @@ class LegacyIndividual extends Model
             $model->origem_gravacao = 'M';
             $model->operacao = 'I';
             $model->pais_residencia = $model->pais_residencia ?? 76;
+        });
+
+        static::saving(function ($model) {
+            if ($model->isDirty('cpf') && filled($model->getAttributes()['cpf'] ?? null)) {
+                $model->possui_cpf = true;
+                $model->document_absence_reason_id = null;
+                $model->document_absence_observation = null;
+            }
         });
     }
 

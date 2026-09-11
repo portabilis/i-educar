@@ -12,9 +12,6 @@ class IndividualCpfTimelineService
 {
     public const TYPE = 'individual-cpf-updated';
 
-    /**
-     * Registra a alteração do CPF, e nada grava quando o estado não muda
-     */
     public function register(int $individualId, array $before, array $after): ?Timeline
     {
         $before = $this->describe($before);
@@ -39,25 +36,36 @@ class IndividualCpfTimelineService
         ]);
     }
 
-    /**
-     * Histórico completo, do mais recente para o mais antigo
-     *
-     * @return Collection<int, Timeline>
-     */
     public function history(int $individualId): Collection
     {
         return Timeline::query()
             ->where('model_type', LegacyIndividual::class)
             ->where('model_id', $individualId)
             ->where('type', self::TYPE)
-            // por id, e não por data: a coluna não guarda fração de segundo
             ->orderByDesc('id')
             ->get();
     }
 
-    /**
-     * Traduz o estado do campo para os rótulos exibidos na trilha
-     */
+    public function summary(array $payload): string
+    {
+        $after = $payload['after'] ?? [];
+
+        if (!empty($after['CPF'])) {
+            return 'Informou o CPF ' . $after['CPF'];
+        }
+
+        if (!empty($after['Motivo da ausência'])) {
+            return 'Marcou "Não possui" com o motivo ' . $after['Motivo da ausência'];
+        }
+
+        return 'Removeu o CPF';
+    }
+
+    public function userName(array $payload): string
+    {
+        return $payload['user']['name'] ?? 'Usuário não identificado';
+    }
+
     private function describe(array $state): array
     {
         $cpf = $state['cpf'] ?? null;

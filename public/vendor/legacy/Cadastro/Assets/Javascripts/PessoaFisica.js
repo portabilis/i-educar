@@ -1,5 +1,10 @@
 // before page is ready
 
+const ignoreValidation = [
+  '000.000.000-00'
+];
+const obrigarCPF = $j("#obrigarCPF");
+
 function hrefToCreateParent(parentType) {
   return '/intranet/atendidos_cad.php?parent_type=' + parentType;
 }
@@ -141,29 +146,19 @@ var checkTipoCertidaoCivil = function() {
   }
 }
 
-// o radio do formulário legado só coloca id no primeiro item, então a leitura é pelo name
 var possuiCpf = function() {
   return $j('input[name=possui_cpf]:checked').val() == '1';
 }
 
-// cadastro anterior a esta regra continua podendo ser gravado sem nenhum dos dois
-var cpfLegado = function() {
-  return $j('#cpf_legacy').val() == '1';
-}
-
 var checkMotivoExigeObservacao = function() {
   var motivo = parseInt($j('#document_absence_reason_id').val(), 10);
-  var motivos = (typeof motivosExigemObservacao === 'undefined') ? [] : motivosExigemObservacao;
-
-  if (motivos.indexOf(motivo) > -1) {
+  if (motivosExigemObservacao.indexOf(motivo) > -1) {
     $j('#document_absence_observation').makeRequired();
   } else {
     $j('#document_absence_observation').makeUnrequired();
   }
 }
 
-// o formulário legado alterna a cor de fundo a cada rótulo, o que quebraria o
-// bloco de CPF em faixas. aqui as linhas dele recebem a mesma cor da primeira
 var agrupaLinhasDoCpf = function() {
   var classe = $j('#tr_possui_cpf td:first').attr('class');
 
@@ -173,8 +168,6 @@ var agrupaLinhasDoCpf = function() {
     .addClass(classe);
 }
 
-// a obrigatoriedade é aplicada aqui, e não no PHP, porque a validação gerada
-// no envio não olha se o campo está visível: escondido e vazio bloquearia a gravação
 var checkPossuiCpf = function() {
   var $motivo = $j('#document_absence_reason_id');
   var $observacao = $j('#document_absence_observation');
@@ -186,11 +179,7 @@ var checkPossuiCpf = function() {
     $motivo.makeUnrequired();
     $observacao.makeUnrequired();
 
-    if (cpfLegado()) {
-      $cpfField.makeUnrequired();
-    } else {
-      $cpfField.makeRequired();
-    }
+    $cpfField.makeRequired();
 
     return;
   }
@@ -198,7 +187,6 @@ var checkPossuiCpf = function() {
   $j('#tr_id_federal').hide();
   $j('#tr_document_absence_reason_id, #tr_document_absence_observation').show();
 
-  // limpa para que um CPF inválido digitado antes da troca não fique preso no campo escondido
   $cpfField.val('');
   $cpfNotice.hide();
   $cpfField.makeUnrequired();
@@ -213,7 +201,7 @@ var validatesCpf = function() {
 
   $cpfNotice.hide();
 
-  if (cpf && ! validationUtils.validatesCpf(cpf)) {
+  if (cpf && (obrigarCPF.val() == 1 || !ignoreValidation.includes(cpf)) && ! validationUtils.validatesCpf(cpf)) {
     $cpfNotice.html(stringUtils.toUtf8('O CPF informado é inválido')).slideDown('fast');
 
     // não usado $cpfField.focus(), pois isto prenderia o usuário a página,
@@ -232,7 +220,7 @@ var validatesUniquenessOfCpf = function() {
 
   $cpfNotice.hide();
 
-  if (possuiCpf() && cpf && validatesCpf())
+  if (possuiCpf() && (obrigarCPF.val() == 1 || !ignoreValidation.includes(cpf)) && cpf && validatesCpf())
     getPersonByCpf(cpf);
 }
 
@@ -263,7 +251,7 @@ var submitForm = function(event) {
     validateFieldSUS();
   }
 
-  if (possuiCpf() && $cpfField.val()) {
+  if (possuiCpf() && !ignoreValidation.includes($cpfField.val()) && $cpfField.val()) {
     $j(document).data('submit_form_after_ajax_validation', true);
     validatesUniquenessOfCpf();
   }
@@ -313,7 +301,6 @@ $j(document).ready(function() {
   changeVisibilityOfLinksToPessoaPai();
   changeVisibilityOfLinksToPessoaMae();
 
-  // lê o estado marcado, nunca o padrão: ao reexibir depois de uma falha, o valor vem do envio
   agrupaLinhasDoCpf();
   checkPossuiCpf();
   $j('input[name=possui_cpf]').on('change', checkPossuiCpf);

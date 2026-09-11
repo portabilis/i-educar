@@ -1,28 +1,17 @@
+@inject('trilha', App\Services\IndividualCpfTimelineService::class)
 @php
     $ultima = $historico->first();
-    $descricao = static function (array $payload) {
-        $depois = $payload['after'] ?? [];
-
-        if (!empty($depois['CPF'])) {
-            return 'Informou o CPF ' . $depois['CPF'];
-        }
-
-        if (!empty($depois['Motivo da ausência'])) {
-            return 'Marcou "Não possui" com o motivo ' . $depois['Motivo da ausência'];
-        }
-
-        return 'Removeu o CPF';
-    };
     $classeLinha = 'formmdtd';
 @endphp
 <span>
-    {{ $descricao($ultima->payload) }}, por
-    <strong>{{ $ultima->payload['user']['name'] ?? 'Usuário não identificado' }}</strong>
+    {{ $trilha->summary($ultima->payload) }}, por
+    <strong>{{ $trilha->userName($ultima->payload) }}</strong>
     em <strong>{{ $ultima->created_at->format('d/m/Y \à\s H:i') }}</strong>.
 </span>
 <a class="decorated" id="link_cpf_timeline" style="cursor: pointer; margin-left: 10px;">Ver histórico</a>
 
-<div id="cpf_timeline_historico" style="display: none;"><table class="tablelistagem" cellspacing="1" cellpadding="4" border="0" style="width: 100%; padding: 0">
+<div id="cpf_timeline_historico" style="display: none;">
+    <table class="tablelistagem" cellspacing="1" cellpadding="4" border="0" style="width: 100%; padding: 0">
         <tbody>
             <tr>
                 <td class="titulo-tabela-listagem" colspan="3">Alterações do CPF</td>
@@ -35,9 +24,9 @@
             @foreach ($historico as $entrada)
                 <tr>
                     <td class="{{ $classeLinha }}">{{ $entrada->created_at->format('d/m/Y H:i') }}</td>
-                    <td class="{{ $classeLinha }}">{{ $entrada->payload['user']['name'] ?? 'Não identificado' }}</td>
+                    <td class="{{ $classeLinha }}">{{ $trilha->userName($entrada->payload) }}</td>
                     <td class="{{ $classeLinha }}">
-                        {{ $descricao($entrada->payload) }}
+                        {{ $trilha->summary($entrada->payload) }}
                         @if (!empty($entrada->payload['after']['Observações']))
                             <br><em>{{ $entrada->payload['after']['Observações'] }}</em>
                         @endif
@@ -46,7 +35,8 @@
                 @php $classeLinha = $classeLinha === 'formmdtd' ? 'formlttd' : 'formmdtd'; @endphp
             @endforeach
         </tbody>
-    </table></div>
+    </table>
+</div>
 
 <script>
     $j('#cpf_timeline_historico').dialog({
