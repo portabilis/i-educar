@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\EducacensoIndigenousPeople;
+use App\Models\FileRelation;
 use App\Models\LegacyDocument;
 use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyIndividual;
@@ -8,6 +9,8 @@ use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyIssuingBody;
 use App\Models\LegacyRace;
+use App\Models\LegacyStudent;
+use App\Services\FileService;
 use App\Services\UrlPresigner;
 use App\User;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
@@ -357,9 +360,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         if ($foto) {
             $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner)->getPresignedUrl($foto)  . '"/>');
             $this->inputsHelper()->checkbox('file_delete', ['label' => 'Excluir a foto']);
-            $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 2MB</span>');
+            $this->campoArquivo('foto', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 2MB</span>');
         } else {
-            $this->campoArquivo('file', 'Foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 2MB</span>');
+            $this->campoArquivo('foto', 'Foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 2MB</span>');
         }
 
         $options = ['label' => _cl('aluno.detalhe.codigo_aluno'), 'disabled' => true, 'required' => false, 'size' => 25];
@@ -858,12 +861,13 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->hidden('url_documento');
 
-        $this->campoArquivo('laudo_medico', $this->_getLabel('laudo_medico'), $this->laudo_medico, 40, '<br/> <span id=\'span-laudo_medico\' style=\'font-style: italic; font-size= 10px;\'\'> São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 2MB</span>');
+        $fileService = new FileService(urlPresigner: new UrlPresigner);
+        $idAluno = request()->exists('id') ? request('id') : null;
+        $files = $idAluno && is_numeric($idAluno) ? $fileService->getFiles(relation: LegacyStudent::find($idAluno), type: FileRelation::TYPE_MEDICAL_REPORT) : [];
+        $this->addHtml(html: view(view: 'uploads.upload', data: ['files' => $files, 'label' => 'Laudo Médico'])->render());
 
         $options = ['label' => $this->_getLabel('observacao_aluno'), 'required' => false, 'size' => 50, 'max_length' => 255, 'value' => $this->observacao];
         $this->inputsHelper()->textArea('observacao_aluno', $options);
-
-        $this->inputsHelper()->hidden('url_laudo_medico');
 
         $laudo = config('legacy.app.alunos.laudo_medico_obrigatorio');
 

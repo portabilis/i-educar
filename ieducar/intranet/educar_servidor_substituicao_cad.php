@@ -3,6 +3,7 @@
 use App\Models\Employee;
 use App\Models\EmployeeAllocation;
 use App\Models\LegacyPerson;
+use App\Services\EmployeeService;
 
 return new class extends clsCadastro
 {
@@ -55,18 +56,17 @@ return new class extends clsCadastro
         if (is_numeric(value: $this->ref_cod_servidor) && is_numeric(value: $this->ref_ref_cod_instituicao)) {
             $retorno = 'Novo';
 
-            $obj_servidor = new clsPmieducarServidor(
-                cod_servidor: $this->ref_cod_servidor,
-                ref_cod_instituicao: $this->ref_ref_cod_instituicao
-            );
-            $det_servidor = $obj_servidor->detalhe();
+            $cargaHoraria = Employee::query()
+                ->whereEmployee($this->ref_cod_servidor)
+                ->whereInstitution($this->ref_ref_cod_instituicao)
+                ->value('carga_horaria');
 
             // Nenhum servidor com o código de servidor e instituição
-            if (!$det_servidor) {
+            if ($cargaHoraria === null) {
                 $this->simpleRedirect(url: 'educar_servidor_lst.php');
             }
 
-            $this->professor = $obj_servidor->isProfessor() == true ? 'true' : 'false';
+            $this->professor = (new EmployeeService)->isTeacher($this->ref_cod_servidor, $this->ref_ref_cod_instituicao) ? 'true' : 'false';
 
             $lista = EmployeeAllocation::query()
                 ->when(is_numeric($this->ref_ref_cod_instituicao), fn ($q) => $q->whereInstitution($this->ref_ref_cod_instituicao))
@@ -89,7 +89,7 @@ return new class extends clsCadastro
                 $retorno = 'Novo';
             }
 
-            $this->carga_horaria = $det_servidor['carga_horaria'];
+            $this->carga_horaria = $cargaHoraria;
         } else {
             $this->simpleRedirect(url: 'educar_servidor_lst.php');
         }
@@ -115,14 +115,6 @@ return new class extends clsCadastro
 
         $this->campoRotulo(nome: 'nm_instituicao', campo: 'Instituição', valor: $inst_det['nm_instituicao']);
         $this->campoOculto(nome: 'ref_ref_cod_instituicao', valor: $this->ref_ref_cod_instituicao);
-
-        $objTemp = new clsPmieducarServidor(cod_servidor: $this->ref_cod_servidor);
-        $det = $objTemp->detalhe();
-        if ($det) {
-            foreach ($det as $key => $registro) {
-                $this->$key = $registro;
-            }
-        }
 
         if (is_numeric($this->ref_cod_servidor)) {
             $nm_servidor = LegacyPerson::query()->whereKey($this->ref_cod_servidor)->value('nome');

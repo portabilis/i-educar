@@ -88,6 +88,13 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::post('/cancelar-enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@cancelEnrollments')
         ->name('enrollments.batch.cancel');
 
+    Route::get('/cancelar-matricula-em-lote/{schoolClass}', 'BatchEnrollmentController@indexCancelRegistrations')
+        ->middleware(['can:modify:' . Process::REGISTRATIONS, 'can:remove:' . Process::CANCEL_REGISTRATION])
+        ->name('registrations.batch.cancel.index');
+    Route::post('/cancelar-matricula-em-lote/{schoolClass}', 'BatchEnrollmentController@cancelRegistrations')
+        ->middleware(['can:modify:' . Process::REGISTRATIONS, 'can:remove:' . Process::CANCEL_REGISTRATION])
+        ->name('registrations.batch.cancel');
+
     Route::get('/escolaridade/{schoolingDegree}', 'SchoolingDegreeController@show')
         ->name('schooling_degrees.show');
 
@@ -211,7 +218,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::fallback([WebController::class, 'fallback']);
 });
 
-Route::get('/auth/redirect', SocialiteRedirectController::class)->name('socialite.redirect');
+Route::middleware('guest')->get('/auth/redirect', SocialiteRedirectController::class)->name('socialite.redirect');
 Route::get('/auth/callback', SocialiteCallbackController::class)->name('socialite.callback');
 
 Route::post('/webhook/transfer/{id}', TransferWebhookCallbackController::class)

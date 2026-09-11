@@ -41,9 +41,6 @@ return new class extends clsListagem
             $this->$var = ($val === '') ? null : $val;
         }
 
-        $tmp_obj = new clsPmieducarServidor(cod_servidor: $this->ref_cod_servidor, ref_cod_deficiencia: null, ref_idesco: null, carga_horaria: null, data_cadastro: null, data_exclusao: null, ativo: null, ref_cod_instituicao: $this->ref_cod_instituicao);
-        $tmp_obj->detalhe();
-
         $this->addCabecalhos([
             'Escola',
             'Instituição',

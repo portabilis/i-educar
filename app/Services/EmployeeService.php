@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\EmployeeAllocation;
 use App\Models\LegacyAbsenceDelayCompensate;
+use App\Models\LegacyEmployeeRole;
 use Carbon\Carbon;
 
 class EmployeeService
@@ -61,5 +62,21 @@ class EmployeeService
             'hora' => $horas_total,
             'min' => $minutos_total,
         ];
+    }
+
+    /**
+     * Verifica se o servidor exerce alguma função de professor na instituição
+     */
+    public function isTeacher($cod_servidor, $cod_instituicao): bool
+    {
+        if (!is_numeric($cod_servidor) || !is_numeric($cod_instituicao)) {
+            return false;
+        }
+
+        return LegacyEmployeeRole::query()
+            ->whereEmployee($cod_servidor)
+            ->whereInstitution($cod_instituicao)
+            ->whereTeacherRole()
+            ->exists();
     }
 }

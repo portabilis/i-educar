@@ -41,4 +41,12 @@ class LegacyEmployeeRoleTest extends EloquentTestCase
     {
         $this->assertEquals($this->legacyEmployeeRole->id, $this->legacyEmployeeRole->cod_servidor_funcao);
     }
+
+    protected function getAttributesForUpdate()
+    {
+        $attributes = parent::getAttributesForUpdate();
+        $attributes['matricula'] = 'Matrícula atualizada';
+
+        return $attributes;
+    }
 }

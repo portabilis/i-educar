@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\City;
-use App\Models\Country;
 use App\Models\DeficiencyType;
+use App\Models\FileRelation;
 use App\Models\LegacyBenefit;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyDocument;
@@ -14,13 +14,14 @@ use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use App\Models\LegacyProject;
 use App\Models\LegacyRace;
+use App\Models\LegacyStudent;
 use App\Models\LegacyStudentMedicalRecord;
 use App\Models\PersonHasPlace;
 use App\Models\Religion;
 use App\Models\TransportationProvider;
 use App\Models\UniformDistribution;
+use App\Services\FileService;
 use App\Services\UrlPresigner;
-use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -104,7 +105,8 @@ return new class extends clsDetalhe
             $cel = $telefones->get(LegacyPhone::TYPE_MOBILE_ALT);
             $fax = $telefones->get(LegacyPhone::TYPE_FAX);
 
-            $det_fisica = LegacyIndividual::find($this->ref_idpes)?->getAttributes();
+            $fisica = LegacyIndividual::find($this->ref_idpes);
+            $det_fisica = $fisica?->getAttributes();
 
             $nameRace = LegacyRace::query()->whereHas('individual', fn ($q) => $q->whereKey($this->ref_idpes))->value('nm_raca');
 
@@ -132,8 +134,7 @@ return new class extends clsDetalhe
 
             $registro['naturalidade'] = City::getNameById(id: $det_fisica['idmun_nascimento']);
 
-            $countryName = Country::query()->find(id: $det_fisica['idpais_estrangeiro']);
-            $registro['pais_origem'] = $countryName->name;
+            $registro['pais_origem'] = $fisica?->country_of_origin_name;
 
             $registro['ref_idpes_responsavel'] = $det_fisica['idpes_responsavel'];
 
@@ -358,7 +359,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Nacionalidade', $registro['nacionalidade']]);
         }
 
-        if ($registro['pais_origem'] && $registro['nacionalidade'] != Nacionalidade::BRASILEIRA) {
+        if ($registro['pais_origem']) {
             $this->addDetalhe(detalhe: ['País de Origem', $registro['pais_origem']]);
         }
 
@@ -519,16 +520,23 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Documentos do aluno', $tabela]);
         }
 
-        if (!empty($registro['url_laudo_medico']) && $registro['url_laudo_medico'] != '[]') {
+        $fileService = new FileService(new UrlPresigner);
+        $files = $fileService->getFiles(
+            relation: LegacyStudent::find($this->cod_aluno),
+            type: FileRelation::TYPE_MEDICAL_REPORT
+        );
+
+        if ($files->isNotEmpty()) {
             $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Laudo médico</td></tr>';
 
             $cor = '#D1DADF';
 
-            $arrayLaudoMedico = json_decode(json: $registro['url_laudo_medico']);
-            foreach ($arrayLaudoMedico as $key => $laudoMedico) {
+            $key = 0;
+            foreach ($files as $file) {
                 $cor = $cor == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
-                $laudoMedicoUrl = $this->urlPresigner()->getPresignedUrl(url: $laudoMedico->url);
-                $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$laudoMedicoUrl}' target='_blank' > Visualizar laudo " . (count(value: $arrayLaudoMedico) > 1 ? ($key + 1) : '') . ' </a></td></tr>';
+                $laudoMedicoUrl = $file->url;
+                $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$laudoMedicoUrl}' target='_blank' > Visualizar laudo " . ($files->count() > 1 ? ($key + 1) : '') . ' </a></td></tr>';
+                $key++;
             }
 
             $tabela .= '</table>';
@@ -635,8 +643,14 @@ return new class extends clsDetalhe
 
             $this->array_botao[] = 'Atualizar histórico';
             $this->array_botao_url_script[] = sprintf('go("educar_historico_escolar_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']);
+
             $this->array_botao[] = 'Distribuição de uniforme';
             $this->array_botao_url_script[] = sprintf('go("educar_distribuicao_uniforme_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']);
+
+            if ($this->permissaoReconhecimentoFacial()) {
+                $this->array_botao[] = 'Fotos para reconhecimento facial';
+                $this->array_botao_url_script[] = sprintf('go("educar_reconhecimento_facial_det.php?ref_cod_aluno=%d");', $registro['cod_aluno']);
+            }
 
             if ($titulo = config(key: 'legacy.app.alunos.sistema_externo.titulo')) {
                 $link = config(key: 'legacy.app.alunos.sistema_externo.link');
@@ -981,6 +995,17 @@ return new class extends clsDetalhe
     {
         $user = Auth::user();
         $allow = Gate::allows(ability: 'view', arguments: 680);
+        if ($user->isLibrary()) {
+            return false;
+        }
+
+        return $allow;
+    }
+
+    private function permissaoReconhecimentoFacial()
+    {
+        $user = Auth::user();
+        $allow = Gate::allows(ability: 'view', arguments: 5781);
         if ($user->isLibrary()) {
             return false;
         }

@@ -29,6 +29,8 @@ class Kernel extends ConsoleKernel
         $schedule->job(new TenantsJob(CheckInstitutionConfigurationsJob::class))->cron('0 8 1 1 *');
 
         $schedule->command('notifications:delete')->saturdays()->dailyAt('04:00');
+
+        $schedule->command('audit:reconcile')->dailyAt('03:30')->withoutOverlapping();
     }
 
     /**

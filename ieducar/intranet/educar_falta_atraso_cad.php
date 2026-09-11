@@ -2,7 +2,6 @@
 
 use App\Models\Enums\AbsenceDelayType;
 use App\Models\LegacyAbsenceDelay;
-use App\Services\EmployeeService;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 use Illuminate\Support\Facades\DB;
@@ -113,6 +112,11 @@ return new class extends clsCadastro
         $funcoesDoServidor = array_replace([null => 'Selecione'], $funcoesDoServidor);
         $this->campoLista(nome: 'ref_cod_servidor_funcao', campo: 'Função', valor: $funcoesDoServidor, default: $this->ref_cod_servidor_funcao, acao: null, duplo: null, descricao: null, complemento: null, desabilitado: null, obrigatorio: true);
 
+        if ($this->tipo == AbsenceDelayType::ABSENCE->value) {
+            $this->qtd_horas = null;
+            $this->qtd_min = null;
+        }
+
         $this->campoNumero(nome: 'qtd_horas', campo: 'Quantidade de Horas', valor: $this->qtd_horas, tamanhovisivel: 30, tamanhomaximo: 255);
         $this->campoNumero(nome: 'qtd_min', campo: 'Quantidade de Minutos', valor: $this->qtd_min, tamanhovisivel: 30, tamanhomaximo: 255);
 
@@ -182,44 +186,19 @@ return new class extends clsCadastro
             return false;
         }
 
-        if ($this->tipo == 1) {
-            $obj = new LegacyAbsenceDelay;
-            $obj->ref_cod_escola = $this->ref_cod_escola;
-            $obj->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
-            $obj->ref_usuario_cad = $this->pessoa_logada;
-            $obj->ref_cod_servidor = $this->ref_cod_servidor;
-            $obj->tipo = $this->tipo;
-            $obj->data_falta_atraso = $this->data_falta_atraso;
+        $obj = new LegacyAbsenceDelay;
+        $obj->ref_cod_escola = $this->ref_cod_escola;
+        $obj->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
+        $obj->ref_usuario_cad = $this->pessoa_logada;
+        $obj->ref_cod_servidor = $this->ref_cod_servidor;
+        $obj->tipo = $this->tipo;
+        $obj->data_falta_atraso = $this->data_falta_atraso;
+        $obj->justificada = $this->justificada;
+        $obj->ref_cod_servidor_funcao = $this->ref_cod_servidor_funcao;
+
+        if ($this->tipo == AbsenceDelayType::DELAY->value) {
             $obj->qtd_horas = $this->qtd_horas;
             $obj->qtd_min = $this->qtd_min;
-            $obj->justificada = $this->justificada;
-            $obj->ref_cod_servidor_funcao = $this->ref_cod_servidor_funcao;
-
-        } elseif ($this->tipo == 2) {
-            $db = new clsBanco;
-            $dia_semana = $db->CampoUnico(sprintf('(SELECT EXTRACT (DOW FROM date \'%s\') + 1 )', $this->data_falta_atraso));
-
-            $servive = new EmployeeService;
-            $horas = $servive->getQuantityHours(
-                cod_servidor: $this->ref_cod_servidor,
-                cod_escola: $this->ref_cod_escola,
-                cod_instituicao: $this->ref_cod_instituicao,
-                dia_semana: $dia_semana
-            );
-
-            if ($horas) {
-                $obj = new LegacyAbsenceDelay;
-                $obj->ref_cod_escola = $this->ref_cod_escola;
-                $obj->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
-                $obj->ref_usuario_cad = $this->pessoa_logada;
-                $obj->ref_cod_servidor = $this->ref_cod_servidor;
-                $obj->tipo = $this->tipo;
-                $obj->data_falta_atraso = $this->data_falta_atraso;
-                $obj->qtd_horas = $horas['hora'];
-                $obj->qtd_min = $horas['min'];
-                $obj->justificada = $this->justificada;
-                $obj->ref_cod_servidor_funcao = $this->ref_cod_servidor_funcao;
-            }
         }
 
         if ($obj->save()) {
@@ -272,42 +251,25 @@ return new class extends clsCadastro
         }
 
         $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
-        if ($this->tipo == 1) {
-            $obj = LegacyAbsenceDelay::find($this->cod_falta_atraso);
-            $obj->ref_cod_escola = $this->ref_cod_escola;
-            $obj->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
-            $obj->ref_usuario_exc = $this->pessoa_logada;
-            $obj->ref_cod_servidor = $this->ref_cod_servidor;
-            $obj->tipo = $this->tipo;
-            $obj->data_falta_atraso = $this->data_falta_atraso;
+
+        $obj = LegacyAbsenceDelay::find($this->cod_falta_atraso);
+        $obj->ref_cod_escola = $this->ref_cod_escola;
+        $obj->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
+        $obj->ref_usuario_exc = $this->pessoa_logada;
+        $obj->ref_cod_servidor = $this->ref_cod_servidor;
+        $obj->tipo = $this->tipo;
+        $obj->data_falta_atraso = $this->data_falta_atraso;
+        $obj->justificada = $this->justificada;
+        $obj->ref_cod_servidor_funcao = $this->ref_cod_servidor_funcao;
+
+        if ($this->tipo == AbsenceDelayType::DELAY->value) {
             $obj->qtd_horas = $this->qtd_horas;
             $obj->qtd_min = $this->qtd_min;
-            $obj->justificada = $this->justificada;
-            $obj->ref_cod_servidor_funcao = $this->ref_cod_servidor_funcao;
-
-        } elseif ($this->tipo == 2) {
-            $obj_ser = new clsPmieducarServidor(
-                cod_servidor: $this->ref_cod_servidor,
-                ativo: 1,
-                ref_cod_instituicao: $this->ref_cod_instituicao
-            );
-
-            $det_ser = $obj_ser->detalhe();
-            $horas = floor($det_ser['carga_horaria']);
-            $minutos = ($det_ser['carga_horaria'] - $horas) * 60;
-
-            $obj = LegacyAbsenceDelay::find($this->cod_falta_atraso);
-            $obj->ref_cod_escola = $this->ref_cod_escola;
-            $obj->ref_ref_cod_instituicao = $this->ref_cod_instituicao;
-            $obj->ref_usuario_exc = $this->pessoa_logada;
-            $obj->ref_cod_servidor = $this->ref_cod_servidor;
-            $obj->tipo = $this->tipo;
-            $obj->data_falta_atraso = $this->data_falta_atraso;
-            $obj->qtd_horas = $horas;
-            $obj->qtd_min = $minutos;
-            $obj->justificada = $this->justificada;
-            $obj->ref_cod_servidor_funcao = $this->ref_cod_servidor_funcao;
+        } else {
+            $obj->qtd_horas = null;
+            $obj->qtd_min = null;
         }
+
         if ($obj->save()) {
 
             $fileService = new FileService(new UrlPresigner);

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserSocialiteNotFound;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Contracts\User as UserSocialite;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialiteCallbackController
@@ -12,13 +14,9 @@ class SocialiteCallbackController
     {
         $socialite = Socialite::driver('passport')->user();
 
-        $email = $socialite->getEmail();
+        $user = $this->findUserByEmail($socialite);
 
-        $user = User::query()->whereHas('employee', function ($query) use ($email) {
-            $query->where('email', $email);
-        })->first();
-
-        if (empty($email) || empty($user)) {
+        if (empty($user)) {
             return redirect('/login')->withErrors([
                 'login' => 'Usuário não encontrado.',
             ]);
@@ -33,5 +31,25 @@ class SocialiteCallbackController
         Auth::login($user);
 
         return redirect()->intended();
+    }
+
+    public function findUserByEmail(UserSocialite $socialite): ?User
+    {
+        $user = $this->findUser($socialite->getEmail());
+
+        if ($user) {
+            return $user;
+        }
+
+        event(new UserSocialiteNotFound($socialite));
+
+        return $this->findUser($socialite->getEmail());
+    }
+
+    private function findUser($email): ?User
+    {
+        return User::query()->whereHas('employee', function ($query) use ($email) {
+            $query->where('email', $email);
+        })->first();
     }
 }

@@ -23,18 +23,12 @@ class DisciplineExport implements FromCollection, WithHeadingRow, WithHeadings, 
         $this->collection = $collection;
     }
 
-    /**
-     * @return Collection
-     */
     public function collection(): Collection
     {
         return $this->collection;
     }
 
-    /**
-     * @param array $row
-     */
-    public function map($row): array
+    public function map(mixed $row): array
     {
         return $row;
     }

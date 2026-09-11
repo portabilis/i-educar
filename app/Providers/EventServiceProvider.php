@@ -6,12 +6,14 @@ use App\Events\ActiveLookingChanged;
 use App\Events\RegistrationCopyEvent;
 use App\Events\RegistrationEvent;
 use App\Events\ReportIssued;
+use App\Events\SystemSettingsUpdatedEvent;
 use App\Events\TransferEvent;
 use App\Events\UserDeleted;
 use App\Events\UserUpdated;
 use App\Listeners\AcceptTransferRequestListener;
 use App\Listeners\ActiveLookingNotificationListener;
 use App\Listeners\AuthenticatedUser;
+use App\Listeners\ClearSettingsCacheListener;
 use App\Listeners\ConfigureAuthenticatedUserForAudit;
 use App\Listeners\CopyTransferDataListener;
 use App\Listeners\ForgetCachedUserListener;
@@ -22,11 +24,15 @@ use App\Listeners\RegistrationCopyListener;
 use App\Listeners\ReportIssuedListener;
 use App\Listeners\TransferNotificationListener;
 use App\Listeners\TransferWebhookListener;
+use App\Menu;
 use App\Models\Announcement;
+use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
 use App\Models\SchoolManager;
 use App\Observers\AnnouncementObserver;
+use App\Observers\LegacyGeneralConfigurationObserver;
 use App\Observers\LegacyRegistrationDisciplinaryOccurrenceTypeObserver;
+use App\Observers\MenuObserver;
 use App\Observers\SchoolManagerObserver;
 use Illuminate\Auth\Events\Authenticated;
 use Illuminate\Auth\Events\Login;
@@ -83,6 +89,9 @@ class EventServiceProvider extends ServiceProvider
         ActiveLookingChanged::class => [
             ActiveLookingNotificationListener::class,
         ],
+        SystemSettingsUpdatedEvent::class => [
+            ClearSettingsCacheListener::class,
+        ],
     ];
 
     /**
@@ -97,6 +106,8 @@ class EventServiceProvider extends ServiceProvider
         SchoolManager::observe(SchoolManagerObserver::class);
         LegacyRegistrationDisciplinaryOccurrenceType::observe(LegacyRegistrationDisciplinaryOccurrenceTypeObserver::class);
         Announcement::observe(AnnouncementObserver::class);
+        LegacyGeneralConfiguration::observe(LegacyGeneralConfigurationObserver::class);
+        Menu::observe(MenuObserver::class);
     }
 
     /**
