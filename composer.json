@@ -28,7 +28,7 @@
         "dex/composer-plug-and-play": "^0.26",
         "dex/frontier": "^0.18.0",
         "google/recaptcha": "^1.2",
-        "guzzlehttp/guzzle": "^7.3",
+        "guzzlehttp/guzzle": "^7.15.2",
         "honeybadger-io/honeybadger-laravel": "^5.0",
         "intervention/image": "^2.6",
         "laravel/framework": "^13.0",
@@ -42,6 +42,7 @@
         "league/flysystem-ftp": "^3.0",
         "league/flysystem-sftp-v3": "^3.0",
         "maatwebsite/excel": "^4.0",
+        "phpoffice/phpspreadsheet": "^5.8",
         "predis/predis": "^2.3",
         "psr/simple-cache": "^3.0",
         "socialiteproviders/laravelpassport": "^4.3",
@@ -58,6 +59,7 @@
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^4.0",
+        "roave/security-advisories": "dev-latest",
         "spatie/laravel-ignition": "^2.0",
         "symfony/yaml": "^7.0"
     },
@@ -142,6 +144,7 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
+        "platform-check": false,
         "allow-plugins": {
             "dex/composer-plug-and-play": true,
             "pestphp/pest-plugin": true,
