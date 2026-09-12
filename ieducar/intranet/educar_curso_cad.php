@@ -290,7 +290,7 @@ return new class extends clsCadastro
             // Refatoração: Centraliza limpeza e flags
             $this->prepararDados();
 
-            if (!$this->validarNomeCurso() || !$this->validarQuantidadeEtapas() || !$this->validarHoraFalta()) {
+            if (!$this->validarNomeCurso() || !$this->validarQuantidadeEtapas() || !$this->validarHoraFalta() || !$this->validarCargaHoraria()) {
                 return false;
             }
 
@@ -339,7 +339,7 @@ return new class extends clsCadastro
             // Refatoração: Usa o mesmo método de preparação
             $this->prepararDados();
 
-            if (!$this->validarNomeCurso() || !$this->validarQuantidadeEtapas() || !$this->validarHoraFalta()) {
+            if (!$this->validarNomeCurso() || !$this->validarQuantidadeEtapas() || !$this->validarHoraFalta() || !$this->validarCargaHoraria()) {
                 return false;
             }
 
@@ -482,6 +482,17 @@ return new class extends clsCadastro
     {
         if (!is_numeric(value: $this->qtd_etapas) || (int) $this->qtd_etapas <= 0) {
             $this->mensagem = "O campo 'Quantidade Etapas' deve ser maior que zero.<br>";
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validarCargaHoraria()
+    {
+        if (!is_numeric(value: $this->carga_horaria) || (float) $this->carga_horaria <= 0) {
+            $this->mensagem = "O campo 'Carga Horária' deve ser maior que zero.<br>";
 
             return false;
         }
