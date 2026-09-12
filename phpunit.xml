@@ -18,20 +18,20 @@
       <directory suffix="Test.php">./tests/Unit</directory>
     </testsuite>
   </testsuites>
-  <!-- 🔍 Cobertura explícita -->
   <php>
     <ini name="memory_limit" value="512M"/>
+    <server name="API_ACCESS_KEY" value="ieducar-access-key"/>
+    <server name="API_SECRET_KEY" value="ieducar-secret-key"/>
+    <server name="APP_DEFAULT_HOST" value="localhost"/>
     <server name="APP_ENV" value="testing"/>
     <server name="BCRYPT_ROUNDS" value="4"/>
     <server name="CACHE_STORE" value="array"/>
+    <server name="DB_DATABASE" value="testing"/>
+    <server name="LEGACY_SEED_DATA" value="false"/>
     <server name="MAIL_MAILER" value="array"/>
     <server name="QUEUE_CONNECTION" value="sync"/>
     <server name="SESSION_DRIVER" value="array"/>
     <server name="TELESCOPE_ENABLED" value="false"/>
-    <server name="APP_DEFAULT_HOST" value="localhost"/>
-    <server name="LEGACY_SEED_DATA" value="false"/>
-    <server name="API_ACCESS_KEY" value="ieducar-access-key"/>
-    <server name="API_SECRET_KEY" value="ieducar-secret-key"/>
   </php>
   <source>
     <include>
