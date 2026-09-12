@@ -125,9 +125,10 @@
             "@php artisan migrate --force --ansi"
         ],
         "testing-install": [
+            "@putenv DB_DATABASE=testing",
+            "@putenv LEGACY_SEED_DATA=false",
             "@composer install",
-            "@php artisan key:generate --ansi",
-            "@php artisan migrate --force --ansi --env=testing"
+            "@php artisan migrate --force --ansi"
         ],
         "post-install-cmd": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
