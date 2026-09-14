@@ -161,11 +161,18 @@ var checkMotivoExigeObservacao = function() {
 
 var agrupaLinhasDoCpf = function() {
   var classe = $j('#tr_possui_cpf td:first').attr('class');
+  var $linhasDoCpf = $j('#tr_id_federal, #tr_document_absence_reason_id, #tr_document_absence_observation, #tr_cpf_timeline');
 
-  $j('#tr_id_federal, #tr_document_absence_reason_id, #tr_document_absence_observation, #tr_cpf_timeline')
+  $linhasDoCpf
     .find('td')
     .removeClass('formmdtd formlttd')
     .addClass(classe);
+
+  if ($linhasDoCpf.length % 2 === 1) {
+    $j('#tr_possui_cpf').nextAll('tr[id^="tr_"]').not($linhasDoCpf).not('#tr_file')
+      .find('td.formmdtd, td.formlttd')
+      .toggleClass('formmdtd formlttd');
+  }
 }
 
 var checkPossuiCpf = function() {
@@ -189,6 +196,8 @@ var checkPossuiCpf = function() {
 
   $cpfField.val('');
   $cpfNotice.hide();
+  $cpfField.siblings('font[color=red]').prev('br').remove();
+  $cpfField.siblings('font[color=red]').remove();
   $cpfField.makeUnrequired();
 
   $motivo.makeRequired();
@@ -305,15 +314,9 @@ $j(document).ready(function() {
   checkPossuiCpf();
   $j('input[name=possui_cpf]').on('change', checkPossuiCpf);
   $j('#document_absence_reason_id').on('change', checkMotivoExigeObservacao);
+  $j('input[type=hidden]#cpf_timeline').remove();
   verificaCampoZonaResidencia();
   $j('#pais_residencia').on('change', verificaCampoZonaResidencia);
-
-  // style fixup
-
-  // agrupado zebra por tipo documento, branco => .formlttd, colorido => .formmdtd
-
-  $j('#tr_uf_emissao_certidao_civil td').removeClass('formmdtd');
-  $j('#tr_carteira_trabalho td').removeClass('formlttd').addClass('formmdtd');
 
   // bind events
 
