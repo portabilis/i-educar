@@ -130,4 +130,3 @@ class PostalCodeControllerTest extends TestCase
         ], $overrides);
     }
 }
-
