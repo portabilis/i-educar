@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\DocumentAbsenceReason;
 use App\Models\LegacyIndividual;
+use Illuminate\Support\Collection;
 
 class IndividualCpfStateService
 {
@@ -67,11 +68,10 @@ class IndividualCpfStateService
         return $reasons->prepend('Selecione', '')->toArray();
     }
 
-    public function reasonsRequiringObservation(): array
+    public function reasonsRequiringObservation(): Collection
     {
         return DocumentAbsenceReason::withTrashed()
             ->where('requires_observation', true)
-            ->pluck('id')
-            ->all();
+            ->pluck('id');
     }
 }
