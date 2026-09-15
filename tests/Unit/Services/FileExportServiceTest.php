@@ -4,7 +4,6 @@ namespace Tests\Unit\Services;
 
 use App\Jobs\FileExporterJob;
 use App\Services\FileExportService;
-use Carbon\Carbon;
 use Database\Factories\FileExportFactory;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyEnrollmentFactory;
@@ -114,7 +113,7 @@ class FileExportServiceTest extends TestCase
         FileExporterJob::dispatch($this->export, $this->args);
         Queue::assertPushed(FileExporterJob::class, 1);
 
-        $zipPath = "{$this->export->getConnectionName()}/zip/{$this->export->hash}/Alunos_" . Carbon::now()->format('Y-m-d_H:i') . '.zip';
+        $zipPath = "{$this->export->getConnectionName()}/zip/{$this->export->hash}/{$this->export->filename}.zip";
         Storage::disk('local')->assertMissing($zipPath);
         $service = new FileExportService($this->export, $this->args, 'local');
         $service->setIssueStudentRecordReport(false);
