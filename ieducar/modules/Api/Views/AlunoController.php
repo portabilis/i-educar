@@ -21,6 +21,8 @@ use App\Models\LogUnification;
 use App\Models\SchoolInep;
 use App\Models\TransportationProvider;
 use App\Services\FileService;
+use App\Services\IndividualCpfStateService;
+use App\Services\IndividualCpfTimelineService;
 use App\Services\UrlPresigner;
 use App\User;
 use iEducar\Modules\Educacenso\Model\Deficiencias;
@@ -237,13 +239,56 @@ class AlunoController extends ApiCoreController
             $this->validateNis() &&
             $this->validateInepExam() &&
             $this->validateTechnologicalResources() &&
+            $this->validateCpfState() &&
             $this->validateCpfCode() &&
             $this->validateBirthCertificate() &&
             $this->validateInepCode();
     }
 
+    private function cpfState(): ?array
+    {
+        if ($this->getRequest()->possui_cpf === null) {
+            return null;
+        }
+
+        return (new IndividualCpfStateService)->normalize([
+            'possui_cpf' => (int) $this->getRequest()->possui_cpf === 1,
+            'cpf' => $this->getRequest()->id_federal,
+            'document_absence_reason_id' => $this->getRequest()->document_absence_reason_id,
+            'document_absence_observation' => $this->getRequest()->document_absence_observation,
+        ]);
+    }
+
+    private function validateCpfState(): bool
+    {
+        $state = $this->cpfState();
+
+        if ($state === null) {
+            return true;
+        }
+
+        $error = (new IndividualCpfStateService)->validate(
+            state: $state,
+            individualId: is_numeric($this->getRequest()->pessoa_id) ? (int) $this->getRequest()->pessoa_id : null
+        );
+
+        if ($error) {
+            $this->messenger->append(reset($error));
+
+            return false;
+        }
+
+        return true;
+    }
+
     private function validateCpfCode()
     {
+        $state = $this->cpfState();
+
+        if ($state !== null && !$state['possui_cpf']) {
+            return true;
+        }
+
         /** @var User $user */
         $user = Auth::user();
 
@@ -1975,14 +2020,48 @@ class AlunoController extends ApiCoreController
 
     protected function createOrUpdatePessoa($idPessoa)
     {
-        $individual = LegacyIndividual::find($idPessoa, ['idpes', 'cpf', 'ref_cod_religiao', 'nis_pis_pasep', 'observacao', 'renda_mensal']);
-        $individual?->update([
+        $individual = LegacyIndividual::find($idPessoa, ['idpes', 'cpf', 'ref_cod_religiao', 'nis_pis_pasep', 'observacao', 'renda_mensal', 'possui_cpf', 'document_absence_reason_id', 'document_absence_observation']);
+
+        if (!$individual) {
+            return;
+        }
+
+        $state = $this->cpfState();
+
+        $before = [
+            'cpf' => $individual->getRawOriginal('cpf'),
+            'document_absence_reason_id' => $individual->document_absence_reason_id,
+            'document_absence_observation' => $individual->document_absence_observation,
+        ];
+
+        $data = [
             'cpf' => idFederal2int($this->getRequest()->id_federal) ?: null,
             'ref_cod_religiao' => $this->getRequest()->religiao_id ?: null,
             'nis_pis_pasep' => $this->getRequest()->nis_pis_pasep ?: null,
             'observacao' => $this->getRequest()->observacao_aluno ?: null,
             'renda_mensal' => $this->getRequest()->renda_mensal ?: null,
-        ]);
+        ];
+
+        if ($state !== null) {
+            $data['cpf'] = idFederal2int($state['cpf'] ?? '') ?: null;
+            $data['possui_cpf'] = $state['possui_cpf'];
+            $data['document_absence_reason_id'] = $state['document_absence_reason_id'] ?: null;
+            $data['document_absence_observation'] = $state['document_absence_observation'] ?: null;
+        }
+
+        $individual->update($data);
+
+        if ($state !== null) {
+            (new IndividualCpfTimelineService)->register(
+                individualId: $individual->getKey(),
+                before: $before,
+                after: [
+                    'cpf' => $data['cpf'],
+                    'document_absence_reason_id' => $data['document_absence_reason_id'],
+                    'document_absence_observation' => $data['document_absence_observation'],
+                ]
+            );
+        }
     }
 
     protected function loadAcessoDataEntradaSaida()

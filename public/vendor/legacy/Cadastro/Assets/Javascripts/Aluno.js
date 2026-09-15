@@ -161,7 +161,7 @@ function handleShowSubmit() {
 };
 
 function formularioValido() {
-  if ( obrigarCPF.val() == 1 && $j("#tipo_nacionalidade").val() != 3  && !$cpfField.val()) {
+  if (possuiCpf() && !$cpfField.val()) {
     messageUtils.error(
       "É necessário o preenchimento do CPF"
     );
@@ -1015,6 +1015,107 @@ $j("#certidao_nascimento").on("change", checkJustificativa);
 $j("#nis_pis_pasep").on("change", checkJustificativa);
 $j("#id_federal").on("change", checkJustificativa);
 
+var possuiCpf = function () {
+  return $j("input[name=possui_cpf]:checked").val() == "1";
+};
+
+var checkMotivoExigeObservacao = function () {
+  var motivo = parseInt($j("#document_absence_reason_id").val(), 10);
+
+  if (motivosExigemObservacao.indexOf(motivo) > -1) {
+    $j("#document_absence_observation").makeRequired();
+  } else {
+    $j("#document_absence_observation").makeUnrequired();
+  }
+};
+
+var agrupaLinhasDoCpf = function () {
+  var classe = $j("#tr_possui_cpf td:first").attr("class");
+  var $linhasDoCpf = $j("#tr_id_federal, #tr_document_absence_reason_id, #tr_document_absence_observation, #tr_cpf_timeline");
+
+  $linhasDoCpf
+    .children("td")
+    .removeClass("formmdtd formlttd")
+    .addClass(classe);
+
+  if ($linhasDoCpf.length % 2 === 1) {
+    var $linhasAbaixo = $j("#tr_possui_cpf").nextAll('tr[id^="tr_"]').not($linhasDoCpf).not("#tr_file");
+
+    $linhasAbaixo.filter(".formmdtd, .formlttd").toggleClass("formmdtd formlttd");
+    $linhasAbaixo.children("td.formmdtd, td.formlttd").toggleClass("formmdtd formlttd");
+  }
+};
+
+var checkTrilhaCpf = function () {
+  var pessoaDaTrilha = $j("#person").val();
+
+  if (pessoaDaTrilha) {
+    $j("#tr_cpf_timeline").toggle($j("#pessoa_id").val() == pessoaDaTrilha);
+  }
+};
+
+var checkPossuiCpf = function () {
+  var $motivo = $j("#document_absence_reason_id");
+  var $observacao = $j("#document_absence_observation");
+
+  checkTrilhaCpf();
+
+  if (possuiCpf()) {
+    $j("#tr_id_federal").show();
+    $j("#tr_document_absence_reason_id, #tr_document_absence_observation").hide();
+
+    $motivo.makeUnrequired();
+    $observacao.makeUnrequired();
+
+    $cpfField.makeRequired();
+
+    return;
+  }
+
+  $j("#tr_id_federal").hide();
+  $j("#tr_document_absence_reason_id, #tr_document_absence_observation").show();
+
+  $cpfField.val("");
+
+  if ($cpfNotice.css("display") !== "none" && $pessoaNotice.css("display") === "none") {
+    handleShowSubmit();
+  }
+
+  $cpfNotice.hide();
+  $cpfField.makeUnrequired();
+  checkJustificativa();
+
+  $motivo.makeRequired();
+  checkMotivoExigeObservacao();
+};
+
+var preencheEstadoCpf = function (dataResponse) {
+  if (dataResponse.possui_cpf === undefined) {
+    return;
+  }
+
+  var motivo = dataResponse.document_absence_reason_id;
+  var $motivo = $j("#document_absence_reason_id");
+
+  if (motivo && !$motivo.find('option[value="' + motivo + '"]').length) {
+    $motivo.append(
+      $j("<option>").val(motivo).text(dataResponse.document_absence_reason_name + " (inativo)")
+    );
+  }
+
+  $j('input[name=possui_cpf][value="' + dataResponse.possui_cpf + '"]').prop("checked", true);
+  $motivo.val(motivo || "");
+  $j("#document_absence_observation").val(dataResponse.document_absence_observation || "");
+
+  checkPossuiCpf();
+};
+
+agrupaLinhasDoCpf();
+checkPossuiCpf();
+$j("input[name=possui_cpf]").on("change", checkPossuiCpf);
+$j("#document_absence_reason_id").on("change", checkMotivoExigeObservacao);
+$j("input[type=hidden]#cpf_timeline").remove();
+
 let verificaCampoZonaResidencia = () => {
   let $field = $j("#zona_localizacao_censo");
   let isBrasil = $j("#pais_residencia").val() == "76";
@@ -1283,6 +1384,7 @@ var handleGetPersonDetails = function (dataResponse) {
 
   $j("#sus").val(dataResponse.sus);
 
+  preencheEstadoCpf(dataResponse);
   checkJustificativa();
 
   canShowParentsFields();
@@ -1689,6 +1791,8 @@ function canShowParentsFields() {
       if (typeof camposTransporte == "function") {
         camposTransporte();
       }
+
+      checkPossuiCpf();
     });
 
     var first_click_medica = true;
@@ -2848,7 +2952,7 @@ function canShowParentsFields() {
 
       $cpfNotice.hide();
 
-      if (cpf && (obrigarCPF.val() == 1 || !ignoreValidation.includes(cpf))) {
+      if (possuiCpf() && cpf && (obrigarCPF.val() == 1 || !ignoreValidation.includes(cpf))) {
         if (validatesCpf()) {
           getPersonByCpf(cpf);
         }
