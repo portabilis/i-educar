@@ -288,7 +288,7 @@ class LegacyIndividual extends Model
         });
 
         static::saving(function ($model) {
-            if ($model->isDirty('cpf') && filled($model->getAttributes()['cpf'] ?? null)) {
+            if ($model->isDirty('cpf') && filled($model->getDirty()['cpf'] ?? null)) {
                 $model->possui_cpf = true;
                 $model->document_absence_reason_id = null;
                 $model->document_absence_observation = null;
