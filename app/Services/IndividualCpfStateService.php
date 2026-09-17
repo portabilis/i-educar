@@ -13,6 +13,7 @@ class IndividualCpfStateService
     {
         if (!$state['possui_cpf']) {
             $state['cpf'] = null;
+            $state['document_absence_observation'] = $this->observation($state);
 
             return $state;
         }
@@ -47,7 +48,7 @@ class IndividualCpfStateService
             return ['document_absence_reason_id' => 'O motivo da ausência do CPF informado não existe.'];
         }
 
-        if ($reason->requires_observation && !trim((string) $state['document_absence_observation'])) {
+        if ($reason->requires_observation && !trim((string) $this->observation($state))) {
             return ['document_absence_observation' => 'Este motivo exige o preenchimento das observações.'];
         }
 
@@ -68,6 +69,13 @@ class IndividualCpfStateService
         $id = filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => self::MAX_REASON_ID]]);
 
         return $id === false ? null : $id;
+    }
+
+    private function observation(array $state): ?string
+    {
+        $observation = $state['document_absence_observation'] ?? null;
+
+        return is_string($observation) ? $observation : null;
     }
 
     public function reasonsRequiringObservation(): Collection
