@@ -2,7 +2,6 @@
 
 use App\Services\IndividualCpfStateService;
 use Database\Factories\DocumentAbsenceReasonFactory;
-use Database\Factories\LegacyIndividualFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -71,7 +70,7 @@ test('validate requires the reason when the person has no cpf', function () {
     $this->assertSame(['document_absence_reason_id' => 'É necessário informar o motivo da ausência do CPF.'], $error);
 });
 
-test('validate refuses an inactive reason that is not the saved one', function () {
+test('validate refuses an inactive reason', function () {
     $reason = DocumentAbsenceReasonFactory::new()->create(['requires_observation' => false]);
     $reason->delete();
 
@@ -83,24 +82,6 @@ test('validate refuses an inactive reason that is not the saved one', function (
     ]);
 
     $this->assertSame(['document_absence_reason_id' => 'O motivo da ausência do CPF informado não existe.'], $error);
-});
-
-test('validate accepts an inactive reason already saved for the person', function () {
-    $reason = DocumentAbsenceReasonFactory::new()->create(['requires_observation' => false]);
-    $individual = LegacyIndividualFactory::new()->create([
-        'possui_cpf' => false,
-        'document_absence_reason_id' => $reason->getKey(),
-    ]);
-    $reason->delete();
-
-    $error = $this->service->validate([
-        'possui_cpf' => false,
-        'cpf' => null,
-        'document_absence_reason_id' => $reason->getKey(),
-        'document_absence_observation' => null,
-    ], $individual->getKey());
-
-    $this->assertNull($error);
 });
 
 test('validate requires the observation when the reason asks for it', function () {
@@ -123,23 +104,20 @@ test('validate requires the observation when the reason asks for it', function (
     $this->assertNull($this->service->validate($state));
 });
 
-test('reason options start with the placeholder and mark the saved inactive reason', function () {
+test('reason options start with the placeholder and list only the active reasons', function () {
     $active = DocumentAbsenceReasonFactory::new()->create();
     $inactive = DocumentAbsenceReasonFactory::new()->create();
     $inactive->delete();
-    $otherInactive = DocumentAbsenceReasonFactory::new()->create();
-    $otherInactive->delete();
 
-    $options = $this->service->reasonOptions($inactive->getKey());
+    $options = $this->service->reasonOptions();
 
     $this->assertSame('Selecione', $options['']);
     $this->assertSame('', array_key_first($options));
     $this->assertSame($active->name, $options[$active->getKey()]);
-    $this->assertSame($inactive->name . ' (inativo)', $options[$inactive->getKey()]);
-    $this->assertArrayNotHasKey($otherInactive->getKey(), $options);
+    $this->assertArrayNotHasKey($inactive->getKey(), $options);
 });
 
-test('reasons requiring observation include inactive ones', function () {
+test('reasons requiring observation list only the active ones', function () {
     $requires = DocumentAbsenceReasonFactory::new()->create(['requires_observation' => true]);
     $requiresInactive = DocumentAbsenceReasonFactory::new()->create(['requires_observation' => true]);
     $requiresInactive->delete();
@@ -148,6 +126,6 @@ test('reasons requiring observation include inactive ones', function () {
     $ids = $this->service->reasonsRequiringObservation();
 
     $this->assertContains($requires->getKey(), $ids);
-    $this->assertContains($requiresInactive->getKey(), $ids);
+    $this->assertNotContains($requiresInactive->getKey(), $ids);
     $this->assertNotContains($doesNotRequire->getKey(), $ids);
 });

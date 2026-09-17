@@ -1098,9 +1098,7 @@ var preencheEstadoCpf = function (dataResponse) {
   var $motivo = $j("#document_absence_reason_id");
 
   if (motivo && !$motivo.find('option[value="' + motivo + '"]').length) {
-    $motivo.append(
-      $j("<option>").val(motivo).text(dataResponse.document_absence_reason_name + " (inativo)")
-    );
+    motivo = "";
   }
 
   $j('input[name=possui_cpf][value="' + dataResponse.possui_cpf + '"]').prop("checked", true);

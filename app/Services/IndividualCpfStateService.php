@@ -3,11 +3,12 @@
 namespace App\Services;
 
 use App\Models\DocumentAbsenceReason;
-use App\Models\LegacyIndividual;
 use Illuminate\Support\Collection;
 
 class IndividualCpfStateService
 {
+    private const MAX_REASON_ID = 32767;
+
     public function normalize(array $state): array
     {
         if (!$state['possui_cpf']) {
@@ -22,7 +23,7 @@ class IndividualCpfStateService
         return $state;
     }
 
-    public function validate(array $state, ?int $individualId = null): ?array
+    public function validate(array $state): ?array
     {
         if ($state['possui_cpf']) {
             return $state['cpf'] ? null : ['id_federal' => 'É necessário o preenchimento do CPF.'];
@@ -34,13 +35,13 @@ class IndividualCpfStateService
             return ['document_absence_reason_id' => 'É necessário informar o motivo da ausência do CPF.'];
         }
 
-        $savedReasonId = $individualId
-            ? LegacyIndividual::query()->whereKey($individualId)->value('document_absence_reason_id')
-            : null;
+        $reasonId = $this->reasonId($reasonId);
 
-        $reason = DocumentAbsenceReason::query()
-            ->when((int) $savedReasonId === (int) $reasonId, fn ($query) => $query->withTrashed())
-            ->find($reasonId);
+        if ($reasonId === null) {
+            return ['document_absence_reason_id' => 'O motivo da ausência do CPF informado não existe.'];
+        }
+
+        $reason = DocumentAbsenceReason::query()->find($reasonId);
 
         if (!$reason) {
             return ['document_absence_reason_id' => 'O motivo da ausência do CPF informado não existe.'];
@@ -53,24 +54,25 @@ class IndividualCpfStateService
         return null;
     }
 
-    public function reasonOptions(?int $currentReasonId = null): array
+    public function reasonOptions(): array
     {
-        $reasons = DocumentAbsenceReason::query()->orderBy('name')->pluck('name', 'id');
+        return DocumentAbsenceReason::query()
+            ->orderBy('name')
+            ->pluck('name', 'id')
+            ->prepend('Selecione', '')
+            ->toArray();
+    }
 
-        if ($currentReasonId && !$reasons->has($currentReasonId)) {
-            $inactive = DocumentAbsenceReason::withTrashed()->find($currentReasonId);
+    private function reasonId(mixed $value): ?int
+    {
+        $id = filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => self::MAX_REASON_ID]]);
 
-            if ($inactive) {
-                $reasons->put($inactive->id, $inactive->name . ' (inativo)');
-            }
-        }
-
-        return $reasons->prepend('Selecione', '')->toArray();
+        return $id === false ? null : $id;
     }
 
     public function reasonsRequiringObservation(): Collection
     {
-        return DocumentAbsenceReason::withTrashed()
+        return DocumentAbsenceReason::query()
             ->where('requires_observation', true)
             ->pluck('id');
     }

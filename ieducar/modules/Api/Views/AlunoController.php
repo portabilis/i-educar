@@ -241,6 +241,7 @@ class AlunoController extends ApiCoreController
             $this->validateTechnologicalResources() &&
             $this->validateCpfState() &&
             $this->validateCpfCode() &&
+            $this->validateCpfUniqueness() &&
             $this->validateBirthCertificate() &&
             $this->validateInepCode();
     }
@@ -267,13 +268,29 @@ class AlunoController extends ApiCoreController
             return true;
         }
 
-        $error = (new IndividualCpfStateService)->validate(
-            state: $state,
-            individualId: is_numeric($this->getRequest()->pessoa_id) ? (int) $this->getRequest()->pessoa_id : null
-        );
+        $error = (new IndividualCpfStateService)->validate($state);
 
         if ($error) {
             $this->messenger->append(reset($error));
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validateCpfUniqueness(): bool
+    {
+        $state = $this->cpfState();
+
+        if ($state === null || !$state['possui_cpf']) {
+            return true;
+        }
+
+        $existing = LegacyIndividual::findByCpf($state['cpf']);
+
+        if ($existing && (int) $existing->idpes !== (int) $this->getRequest()->pessoa_id) {
+            $this->messenger->append("CPF já utilizado pela pessoa {$existing->idpes}.");
 
             return false;
         }
@@ -302,8 +319,8 @@ class AlunoController extends ApiCoreController
                 ->first(['obrigar_cpf'])?->obrigar_cpf;
         }
 
-        if ($strictValitation) {
-            $ignoreValidateCpf = LegacyIndividual::where('nacionalidade', Nacionalidade::ESTRANGEIRA)->whereKey($this->getRequest()->pessoa_id)->exists();
+        if ($strictValitation || ($state !== null && $state['possui_cpf'])) {
+            $ignoreValidateCpf = $state === null && LegacyIndividual::where('nacionalidade', Nacionalidade::ESTRANGEIRA)->whereKey($this->getRequest()->pessoa_id)->exists();
 
             if ($ignoreValidateCpf || validaCPF($cpf)) {
                 return true;

@@ -47,6 +47,9 @@
         maxHeight: 500,
         modal: true,
         resizable: false,
+        open: function () {
+            $j(this).closest('.ui-dialog').find('.ui-dialog-titlebar').hide();
+        },
         buttons: {
             'Fechar': function () {
                 $j(this).dialog('close');

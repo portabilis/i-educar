@@ -961,9 +961,7 @@ return new class extends clsCadastro
         $this->campoLista(
             nome: 'document_absence_reason_id',
             campo: 'Motivo',
-            valor: (new IndividualCpfStateService)->reasonOptions(
-                is_numeric($this->document_absence_reason_id) ? (int) $this->document_absence_reason_id : null
-            ),
+            valor: (new IndividualCpfStateService)->reasonOptions(),
             default: $this->document_absence_reason_id,
             descricao: 'Justificativa da ausência de CPF',
             obrigatorio: false
@@ -1070,10 +1068,7 @@ return new class extends clsCadastro
 
     protected function validaEstadoCpf()
     {
-        $erro = (new IndividualCpfStateService)->validate(
-            state: $this->estadoCpf(),
-            individualId: is_numeric($this->cod_pessoa_fj) ? (int) $this->cod_pessoa_fj : null
-        );
+        $erro = (new IndividualCpfStateService)->validate($this->estadoCpf());
 
         foreach ($erro ?? [] as $campo => $mensagem) {
             $this->erros[$campo] = $mensagem;

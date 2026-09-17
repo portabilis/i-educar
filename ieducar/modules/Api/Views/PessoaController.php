@@ -144,8 +144,7 @@ class PessoaController extends ApiCoreController
              fisica.observacao,
              fisica.possui_cpf,
              fisica.document_absence_reason_id,
-             fisica.document_absence_observation,
-             (SELECT document_absence_reasons.name FROM public.document_absence_reasons WHERE document_absence_reasons.id = fisica.document_absence_reason_id) as document_absence_reason_name
+             fisica.document_absence_observation
             from cadastro.fisica
             where idpes = $2';
 
@@ -207,7 +206,6 @@ class PessoaController extends ApiCoreController
             'possui_cpf',
             'document_absence_reason_id',
             'document_absence_observation',
-            'document_absence_reason_name',
         ];
 
         $details = Portabilis_Array_Utils::filter($details, $attrs);
@@ -220,7 +218,6 @@ class PessoaController extends ApiCoreController
         $details['cpf'] = int2CPF($details['cpf']);
         $details['possui_cpf'] = (int) dbBool($details['possui_cpf']);
         $details['document_absence_observation'] = $this->toUtf8($details['document_absence_observation']);
-        $details['document_absence_reason_name'] = $this->toUtf8($details['document_absence_reason_name']);
 
         $details['nis_pis_pasep'] = int2Nis($details['nis_pis_pasep']);
 
