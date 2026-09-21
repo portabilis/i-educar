@@ -29,7 +29,8 @@ class TurmaController extends ApiCoreController
     {
         return
             $this->canAcceptRequest() &&
-            $this->validatesTurmaId() && $this->validatesAuthorizationToView();
+            $this->validatesTurmaId() &&
+            $this->validatesAuthorizationToView();
     }
 
     protected function canGetAlunosExameTurma()
@@ -44,7 +45,7 @@ class TurmaController extends ApiCoreController
     protected function get()
     {
         if (!$this->canGet()) {
-            return void;
+            return null;
         }
 
         $id = $this->getRequest()->id;
