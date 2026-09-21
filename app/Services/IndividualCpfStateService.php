@@ -64,6 +64,8 @@ class IndividualCpfStateService
 
     public function reasonOptions(?int $currentReasonId = null): array
     {
+        $currentReasonId = $this->reasonId($currentReasonId);
+
         return DocumentAbsenceReason::withTrashed()
             ->where(fn ($query) => $query->whereNull('deleted_at')->orWhere('id', $currentReasonId))
             ->orderBy('name')
