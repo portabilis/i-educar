@@ -71,6 +71,13 @@ var $cpfNotice = $j("<span>")
   .width($j("#pessoa_nome").outerWidth() - 12)
   .appendTo($cpfField.parent());
 
+var $motivoNotice = $j("<span>")
+  .html("")
+  .addClass("error resource-notice")
+  .hide()
+  .width($j("#pessoa_nome").outerWidth() - 12)
+  .appendTo($j("#document_absence_reason_id").parent());
+
 function laudoMedicoObrigatorio() {
   $j("#file").addClass("error");
   messageUtils.error(
@@ -1029,6 +1036,14 @@ var checkMotivoExigeObservacao = function () {
   }
 };
 
+var checkMotivoInativo = function () {
+  if (motivosInativos.hasOwnProperty($j("#document_absence_reason_id").val())) {
+    $motivoNotice.html("Motivo inativo. Recomenda-se escolher um motivo ativo.").slideDown("fast");
+  } else {
+    $motivoNotice.hide();
+  }
+};
+
 var agrupaLinhasDoCpf = function () {
   var classe = $j("#tr_possui_cpf td:first").attr("class");
   var $linhasDoCpf = $j("#tr_id_federal, #tr_document_absence_reason_id, #tr_document_absence_observation, #tr_cpf_timeline");
@@ -1087,6 +1102,7 @@ var checkPossuiCpf = function () {
 
   $motivo.makeRequired();
   checkMotivoExigeObservacao();
+  checkMotivoInativo();
 };
 
 var preencheEstadoCpf = function (dataResponse) {
@@ -1094,8 +1110,31 @@ var preencheEstadoCpf = function (dataResponse) {
     return;
   }
 
-  var motivo = dataResponse.document_absence_reason_id;
+  var motivo = String(dataResponse.document_absence_reason_id || "");
   var $motivo = $j("#document_absence_reason_id");
+
+  $motivo
+    .find("option")
+    .filter(function () {
+      return motivosInativos.hasOwnProperty(this.value) && this.value !== motivo;
+    })
+    .remove();
+
+  if (motivosInativos.hasOwnProperty(motivo) && !$motivo.find('option[value="' + motivo + '"]').length) {
+    var $opcao = $j("<option>").val(motivo).text(motivosInativos[motivo]);
+    var $seguinte = $motivo
+      .find("option")
+      .filter(function () {
+        return this.value !== "" && this.text.localeCompare($opcao.text(), "pt-BR") > 0;
+      })
+      .first();
+
+    if ($seguinte.length) {
+      $opcao.insertBefore($seguinte);
+    } else {
+      $opcao.appendTo($motivo);
+    }
+  }
 
   if (motivo && !$motivo.find('option[value="' + motivo + '"]').length) {
     motivo = "";
@@ -1112,6 +1151,7 @@ agrupaLinhasDoCpf();
 checkPossuiCpf();
 $j("input[name=possui_cpf]").on("change", checkPossuiCpf);
 $j("#document_absence_reason_id").on("change", checkMotivoExigeObservacao);
+$j("#document_absence_reason_id").on("change", checkMotivoInativo);
 $j("input[type=hidden]#cpf_timeline").remove();
 
 let verificaCampoZonaResidencia = () => {

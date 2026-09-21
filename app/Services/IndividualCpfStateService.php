@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\DocumentAbsenceReason;
+use App\Models\LegacyIndividual;
 use Illuminate\Support\Collection;
 
 class IndividualCpfStateService
@@ -24,7 +25,7 @@ class IndividualCpfStateService
         return $state;
     }
 
-    public function validate(array $state): ?array
+    public function validate(array $state, ?int $individualId = null): ?array
     {
         if ($state['possui_cpf']) {
             return $state['cpf'] ? null : ['id_federal' => 'É necessário o preenchimento do CPF.'];
@@ -42,7 +43,13 @@ class IndividualCpfStateService
             return ['document_absence_reason_id' => 'O motivo da ausência do CPF informado não existe.'];
         }
 
-        $reason = DocumentAbsenceReason::query()->find($reasonId);
+        $savedReasonId = $individualId
+            ? LegacyIndividual::query()->whereKey($individualId)->value('document_absence_reason_id')
+            : null;
+
+        $reason = DocumentAbsenceReason::query()
+            ->when((int) $savedReasonId === $reasonId, fn ($query) => $query->withTrashed())
+            ->find($reasonId);
 
         if (!$reason) {
             return ['document_absence_reason_id' => 'O motivo da ausência do CPF informado não existe.'];
@@ -55,13 +62,28 @@ class IndividualCpfStateService
         return null;
     }
 
-    public function reasonOptions(): array
+    public function reasonOptions(?int $currentReasonId = null): array
     {
-        return DocumentAbsenceReason::query()
+        return DocumentAbsenceReason::withTrashed()
+            ->where(fn ($query) => $query->whereNull('deleted_at')->orWhere('id', $currentReasonId))
             ->orderBy('name')
-            ->pluck('name', 'id')
+            ->get()
+            ->mapWithKeys(fn (DocumentAbsenceReason $reason) => [$reason->getKey() => $this->label($reason)])
             ->prepend('Selecione', '')
             ->toArray();
+    }
+
+    public function inactiveReasons(): Collection
+    {
+        return DocumentAbsenceReason::onlyTrashed()
+            ->orderBy('name')
+            ->get()
+            ->mapWithKeys(fn (DocumentAbsenceReason $reason) => [$reason->getKey() => $this->label($reason)]);
+    }
+
+    private function label(DocumentAbsenceReason $reason): string
+    {
+        return $reason->trashed() ? $reason->name . ' (inativo)' : $reason->name;
     }
 
     private function reasonId(mixed $value): ?int
@@ -80,7 +102,7 @@ class IndividualCpfStateService
 
     public function reasonsRequiringObservation(): Collection
     {
-        return DocumentAbsenceReason::query()
+        return DocumentAbsenceReason::withTrashed()
             ->where('requires_observation', true)
             ->pluck('id');
     }

@@ -268,7 +268,10 @@ class AlunoController extends ApiCoreController
             return true;
         }
 
-        $error = (new IndividualCpfStateService)->validate($state);
+        $error = (new IndividualCpfStateService)->validate(
+            state: $state,
+            individualId: is_numeric($this->getRequest()->pessoa_id) ? (int) $this->getRequest()->pessoa_id : null
+        );
 
         if ($error) {
             $this->messenger->append(reset($error));

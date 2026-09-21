@@ -500,7 +500,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->campoLista(
             nome: 'document_absence_reason_id',
             campo: 'Motivo',
-            valor: (new IndividualCpfStateService)->reasonOptions(),
+            valor: (new IndividualCpfStateService)->reasonOptions($motivoAusenciaCpf),
             default: $motivoAusenciaCpf,
             descricao: 'Justificativa da ausência de CPF',
             obrigatorio: false
@@ -1268,8 +1268,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ]);
 
         $motivosExigemObservacao = (new IndividualCpfStateService)->reasonsRequiringObservation();
+        $motivosInativos = (new IndividualCpfStateService)->inactiveReasons();
 
-        Portabilis_View_Helper_Application::embedJavascript($this, 'var motivosExigemObservacao = ' . json_encode($motivosExigemObservacao) . ';');
+        Portabilis_View_Helper_Application::embedJavascript($this, 'var motivosExigemObservacao = ' . json_encode($motivosExigemObservacao) . '; var motivosInativos = ' . json_encode($motivosInativos) . ';');
 
         $this->loadResourceAssets($this->getDispatcher());
 
