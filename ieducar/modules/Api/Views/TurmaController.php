@@ -6,6 +6,8 @@ use App\Models\LegacySchoolClassGrade;
 
 class TurmaController extends ApiCoreController
 {
+    protected $_processoAp = 586;
+
     // validators
     protected function validatesTurmaId()
     {
@@ -27,7 +29,7 @@ class TurmaController extends ApiCoreController
     {
         return
             $this->canAcceptRequest() &&
-            $this->validatesTurmaId();
+            $this->validatesTurmaId() && $this->validatesAuthorizationToView();
     }
 
     protected function canGetAlunosExameTurma()
