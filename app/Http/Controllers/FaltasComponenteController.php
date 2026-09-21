@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PostFaltaComponenteRequest;
 use iEducar\Modules\EvaluationRules\Exceptions\DisciplineNotExistsForSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowDisciplineAbsence;
+use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 
 class FaltasComponenteController extends DiarioController
@@ -20,12 +21,6 @@ class FaltasComponenteController extends DiarioController
 
         $componentesTurma = $this->service->getComponentesTurma($turmaId);
         $matricula = $this->service->findMatricula($turmaId, $alunoId);
-
-        if (empty($matricula)) {
-            return response()->json([
-                'message' => 'Matrícula não encontrada para o aluno e turma informados.',
-            ]);
-        }
 
         $regra = $this->service->getRegraAvaliacaoPorMatricula($matricula->getKey());
 
@@ -70,16 +65,16 @@ class FaltasComponenteController extends DiarioController
         } catch (EvaluationRuleNotAllowDisciplineAbsence|\RuntimeException $exception) {
             return response()->json([
                 'message' => $exception->getMessage(),
-            ], 422);
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (\Exception $exception) {
             return response()->json([
                 'message' => 'Não foi possível salvar as faltas por componente para o aluno e turma informados. (' . $exception->getMessage() . ')',
-            ], 500);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return response()->json([
             'message' => 'Faltas gerais salvas com sucesso.',
-        ], 202);
+        ], Response::HTTP_CREATED);
     }
 
     private function getFaltasPorComponentes(
