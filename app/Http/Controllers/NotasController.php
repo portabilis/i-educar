@@ -71,19 +71,13 @@ class NotasController extends DiarioController
                 'message' => $exception->getMessage(),
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (\Exception $exception) {
-            var_export([
-                $exception->getMessage(),
-                $exception->getTraceAsString(),
-            ]);
-            exit();
-
             return response()->json([
                 'message' => 'Não foi possível salvar as notas para o aluno e turma informados. (' . $exception->getMessage() . ')',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return response()->json([
-            'message' => 'Notas salvas com sucesso.',
+            'message' => 'Nota salva com sucesso.',
         ], Response::HTTP_CREATED);
     }
 
