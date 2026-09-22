@@ -101,4 +101,6 @@ class Process
     public const UNENROLLMENT = 696;
 
     public const COMPONENT_BATCH_MANAGER = 9999121;
+
+    public const DOCUMENT_ABSENCE_REASON = 5842;
 }

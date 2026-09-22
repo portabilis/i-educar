@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services;
 
 use App\Jobs\DatabaseToCsvExporter;
+use App\Models\Exporter\Export;
 use App\Services\Exporter\ExportService;
 use Database\Factories\Exporter\ExportFactory;
 use Database\Factories\LegacyCourseFactory;
@@ -29,16 +30,14 @@ class ExportServiceTest extends TestCase
 {
     use DatabaseTransactions;
 
+    private Export $export;
+
+    private int $registrationId;
+
     protected function setUp(): void
     {
         parent::setUp();
         $this->export = ExportFactory::new()->create();
-        $this->fullPath = sprintf(
-            '%s/csv/%s/%s',
-            $this->export->getConnectionName(),
-            $this->export->hash,
-            $this->export->filename
-        );
 
         $count = DB::table('relatorio.situacao_matricula')->count();
         if ($count === 0) {
@@ -79,6 +78,7 @@ class ExportServiceTest extends TestCase
             'ref_ref_cod_escola' => $school->id,
             'ativo' => 1,
         ]);
+        $this->registrationId = $registration->getKey();
         LegacyEvaluationRuleGradeYearFactory::new()->create([
             'serie_id' => $grade->id,
             'ano_letivo' => now()->year,
@@ -104,10 +104,15 @@ class ExportServiceTest extends TestCase
         Queue::assertPushed(DatabaseToCsvExporter::class, 1);
 
         Storage::fake('s3');
-        Storage::disk('s3')->assertMissing($this->getFilename());
+        $this->assertFalse(Storage::disk('s3')->exists($this->getFilename()));
         $service = new ExportService($this->export, 's3');
         $service->execute();
-        Storage::disk('s3')->assertExists($this->getFilename());
+        $this->assertTrue(Storage::disk('s3')->exists($this->getFilename()));
+
+        $content = Storage::disk('s3')->get($this->getFilename());
+
+        $this->assertStringContainsString('ID Matrícula', $content);
+        $this->assertStringContainsString((string) $this->registrationId, $content);
     }
 
     private function getFilename(): string

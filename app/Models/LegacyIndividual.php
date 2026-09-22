@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * @property LegacyPerson $mother
@@ -105,6 +106,9 @@ class LegacyIndividual extends Model
         'pai_restricao_judicial',
         'mae_restricao_judicial',
         'responsavel_restricao_judicial',
+        'possui_cpf',
+        'document_absence_reason_id',
+        'document_absence_observation',
     ];
 
     /**
@@ -146,6 +150,22 @@ class LegacyIndividual extends Model
             'ref_idpes',
             'ref_cod_deficiencia'
         );
+    }
+
+    /**
+     * @return BelongsTo<DocumentAbsenceReason, $this>
+     */
+    public function documentAbsenceReason(): BelongsTo
+    {
+        return $this->belongsTo(DocumentAbsenceReason::class);
+    }
+
+    /**
+     * @return MorphMany<Timeline, $this>
+     */
+    public function timelines(): MorphMany
+    {
+        return $this->morphMany(Timeline::class, 'model');
     }
 
     /**
@@ -265,6 +285,14 @@ class LegacyIndividual extends Model
             $model->origem_gravacao = 'M';
             $model->operacao = 'I';
             $model->pais_residencia = $model->pais_residencia ?? 76;
+        });
+
+        static::saving(function ($model) {
+            if ($model->isDirty('cpf') && filled($model->getDirty()['cpf'] ?? null)) {
+                $model->possui_cpf = true;
+                $model->document_absence_reason_id = null;
+                $model->document_absence_observation = null;
+            }
         });
     }
 
