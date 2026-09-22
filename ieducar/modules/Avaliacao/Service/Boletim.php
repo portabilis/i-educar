@@ -1567,7 +1567,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             if ($this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia()) {
                 $situacaoFalta = App_Model_MatriculaSituacao::APROVADO;
             } elseif ($tipoFaltaPorComponente) {
-                $situacaoFalta = $situacaoFaltas->componentesCurriculares[$ccId]->situacao;
+                $situacaoFalta = ($situacaoFaltas->componentesCurriculares[$ccId] ?? null)?->situacao;
             } else {
                 $situacaoFalta = $situacaoFaltas->situacao;
             }
