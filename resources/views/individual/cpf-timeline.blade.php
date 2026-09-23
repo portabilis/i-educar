@@ -47,6 +47,12 @@
         maxHeight: 500,
         modal: true,
         resizable: false,
+        open: function () {
+            var $modal = $j(this).closest('.ui-dialog');
+
+            $modal.find('.ui-dialog-titlebar').hide();
+            $modal.add($modal.find('.ui-widget-content')).css('padding', 0);
+        },
         buttons: {
             'Fechar': function () {
                 $j(this).dialog('close');

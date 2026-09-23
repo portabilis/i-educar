@@ -141,7 +141,10 @@ class PessoaController extends ApiCoreController
 
              fisica.pais_residencia,
              fisica.sus,
-             fisica.observacao
+             fisica.observacao,
+             fisica.possui_cpf,
+             fisica.document_absence_reason_id,
+             fisica.document_absence_observation
             from cadastro.fisica
             where idpes = $2';
 
@@ -200,6 +203,9 @@ class PessoaController extends ApiCoreController
             'sus',
             'observacao',
             'povo_indigena_educacenso_id',
+            'possui_cpf',
+            'document_absence_reason_id',
+            'document_absence_observation',
         ];
 
         $details = Portabilis_Array_Utils::filter($details, $attrs);
@@ -210,6 +216,8 @@ class PessoaController extends ApiCoreController
         $details['nome_responsavel'] = $this->toUtf8($details['nome_responsavel'], ['transform' => true]);
         $details['cep'] = int2CEP($details['cep']);
         $details['cpf'] = int2CPF($details['cpf']);
+        $details['possui_cpf'] = (int) dbBool($details['possui_cpf']);
+        $details['document_absence_observation'] = $this->toUtf8($details['document_absence_observation']);
 
         $details['nis_pis_pasep'] = int2Nis($details['nis_pis_pasep']);
 
