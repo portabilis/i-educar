@@ -37,7 +37,13 @@ class NotasController extends DiarioController
                 $notaValidacao = $valorNota;
             }
 
-            $this->validateScoreByEvaluationRule($notaValidacao, $valorNota, $etapa, $regra);
+            $this->validateScoreByEvaluationRule(
+                $notaValidacao,
+                $valorNota,
+                $etapa,
+                $regra,
+                $boletim->getEvaluationRule()->isSumScoreCalculation()
+            );
 
             $array_nota = [
                 'componenteCurricular' => $componenteCurricularId,
@@ -66,7 +72,7 @@ class NotasController extends DiarioController
             }
 
             $this->service->atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId, $matricula);
-        } catch (\RuntimeException $exception) {
+        } catch (\RuntimeException|DisciplineNotExistsForSchoolClass $exception) {
             return response()->json([
                 'message' => $exception->getMessage(),
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -81,7 +87,7 @@ class NotasController extends DiarioController
         ], Response::HTTP_CREATED);
     }
 
-    private function validateScoreByEvaluationRule($notaValidacao, $valorNota, $etapa, $regra)
+    private function validateScoreByEvaluationRule($notaValidacao, $valorNota, $etapa, $regra, bool $isSumScoreCalculation)
     {
         if ($etapa === 'Rc' && $notaValidacao > $regra->notaMaximaExameFinal) {
             throw new \RuntimeException(
@@ -89,7 +95,7 @@ class NotasController extends DiarioController
             );
         }
 
-        if ($etapa !== 'Rc' && $notaValidacao > $regra->notaMaximaGeral && !$regra->isSumScoreCalculation()) {
+        if ($etapa !== 'Rc' && $notaValidacao > $regra->notaMaximaGeral && !$isSumScoreCalculation) {
             throw new \RuntimeException(
                 "A nota {$valorNota} está acima da configurada para nota máxima geral que é {$regra->notaMaximaGeral}."
             );

@@ -3,6 +3,7 @@
 namespace Tests\Api;
 
 use App\Models\LegacyDisciplineScore;
+use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyGeneralScore;
 use App\Models\LegacyInstitution;
@@ -23,7 +24,6 @@ use Database\Factories\LegacySchoolGradeDisciplineFactory;
 use Database\Factories\LegacySchoolGradeFactory;
 use Database\Factories\LegacyStageTypeFactory;
 use Database\Factories\LegacyStudentFactory;
-use iEducar\Support\Exceptions\Error;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Testing\TestResponse;
 use RegraAvaliacao_Model_TipoRecuperacaoParalela;
@@ -67,8 +67,8 @@ class NotasApiV2Test extends TestCase
     {
         $cenario = $this->criarCenario();
 
-        $this->postNota($cenario, ['nota' => 6, 'recuperacao' => 2])->assertOk();
-        $this->postNota($cenario, ['nota' => 6, 'recuperacao' => 7])->assertOk();
+        $this->postNota($cenario, ['nota' => 6, 'recuperacao' => 2])->assertCreated();
+        $this->postNota($cenario, ['nota' => 6, 'recuperacao' => 7])->assertCreated();
 
         $disciplineScore = LegacyDisciplineScore::first();
 
@@ -92,10 +92,99 @@ class NotasApiV2Test extends TestCase
 
         $response = $this->postNota($cenario, ['nota' => 11, 'recuperacao' => null]);
 
-        $response->assertUnprocessable()
-            ->assertJsonPath('code', Error::SCORE_GREATER_THAN_MAX_ALLOWED);
+        $response->assertUnprocessable()->assertJson([
+            'message' => 'A nota 11 está acima da configurada para nota máxima geral que é 10.',
+        ]);
 
         $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
+    }
+
+    public function test_aceita_nota_igual_a_nota_maxima_da_regra(): void
+    {
+        $cenario = $this->criarCenario();
+
+        $this->postNota($cenario, ['nota' => 10, 'recuperacao' => null])->assertCreated();
+
+        $this->assertDatabaseHas(LegacyDisciplineScore::class, [
+            'componente_curricular_id' => $cenario['discipline']->getKey(),
+            'nota' => 10,
+            'etapa' => 1,
+        ]);
+    }
+
+    public function test_rejeita_nota_de_recuperacao_que_eleva_a_nota_acima_da_maxima(): void
+    {
+        $cenario = $this->criarCenario();
+
+        // Na recuperação por etapa com substituição, a maior nota prevalece,
+        // então a validação é feita sobre a nota já calculada (11).
+        $response = $this->postNota($cenario, ['nota' => 6, 'recuperacao' => 11]);
+
+        $response->assertUnprocessable()->assertJson([
+            'message' => 'A nota 11 está acima da configurada para nota máxima geral que é 10.',
+        ]);
+
+        $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
+    }
+
+    public function test_aceita_nota_acima_da_maxima_quando_regra_soma_recuperacao(): void
+    {
+        $cenario = $this->criarCenario([
+            'tipo_recuperacao_paralela' => RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA,
+            'tipo_calculo_recuperacao_paralela' => LegacyEvaluationRule::PARALLEL_REMEDIAL_SUM_SCORE,
+        ]);
+
+        $this->postNota($cenario, ['nota' => 6, 'recuperacao' => 5])->assertCreated();
+
+        $this->assertDatabaseHas(LegacyDisciplineScore::class, [
+            'componente_curricular_id' => $cenario['discipline']->getKey(),
+            'nota' => 11,
+            'nota_original' => 6,
+            'nota_recuperacao' => 5,
+            'etapa' => 1,
+        ]);
+    }
+
+    public function test_rejeita_nota_abaixo_da_nota_minima_da_regra(): void
+    {
+        $cenario = $this->criarCenario(['nota_minima_geral' => 2]);
+
+        $response = $this->postNota($cenario, ['nota' => 1, 'recuperacao' => null]);
+
+        $response->assertUnprocessable()->assertJson([
+            'message' => 'A nota 1 está abaixo da configurada para nota mínima geral que é 2.',
+        ]);
+
+        $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
+    }
+
+    public function test_rejeita_nota_de_exame_acima_da_nota_maxima_de_exame(): void
+    {
+        $cenario = $this->criarCenario(['nota_maxima_exame_final' => 8]);
+
+        $response = $this->postNota($cenario, ['nota' => 9, 'recuperacao' => null, 'etapa' => 'Rc']);
+
+        $response->assertUnprocessable()->assertJson([
+            'message' => 'A nota 9 está acima da configurada para nota máxima para exame que é 8.',
+        ]);
+
+        $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
+    }
+
+    public function test_nota_de_exame_nao_e_limitada_pela_nota_maxima_geral(): void
+    {
+        $cenario = $this->criarCenario([
+            'nota_maxima_geral' => 10,
+            'nota_maxima_exame_final' => 12,
+        ]);
+
+        $this->postNota($cenario, ['nota' => 11, 'recuperacao' => null, 'etapa' => 'Rc'])->assertCreated();
+
+        $this->assertDatabaseHas(LegacyDisciplineScore::class, [
+            'componente_curricular_id' => $cenario['discipline']->getKey(),
+            'nota' => 11,
+            'etapa' => 'Rc',
+        ]);
     }
 
     public function test_rejeita_aluno_sem_matricula_na_turma(): void
@@ -124,7 +213,9 @@ class NotasApiV2Test extends TestCase
             'componente_id' => $outroComponente->getKey(),
         ]);
 
-        $response->assertUnprocessable()->assertJsonValidationErrors('componente_id');
+        $response->assertUnprocessable()->assertJson([
+            'message' => "Componente curricular de código {$outroComponente->getKey()} não existe para a turma {$cenario['schoolClass']->getKey()}.",
+        ]);
         $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
     }
 
@@ -158,7 +249,7 @@ class NotasApiV2Test extends TestCase
         ], $overrides);
     }
 
-    private function criarCenario(): array
+    private function criarCenario(array $regraAvaliacao = []): array
     {
         $school = LegacySchoolFactory::new()->create();
 
@@ -204,6 +295,7 @@ class NotasApiV2Test extends TestCase
             'tipo_recuperacao_paralela' => RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA,
             'tipo_nota' => \RegraAvaliacao_Model_Nota_TipoValor::NUMERICA,
             'tipo_presenca' => \RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE,
+            ...$regraAvaliacao,
         ]);
 
         $discipline = LegacyDisciplineFactory::new()->create();
