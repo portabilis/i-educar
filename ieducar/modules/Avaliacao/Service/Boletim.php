@@ -18,7 +18,6 @@ use iEducar\Modules\Stages\Exceptions\StagesNotInformedByCoordinatorException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByTeacherException;
 use Illuminate\Database\Eloquent\HigherOrderBuilderProxy;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 class Avaliacao_Service_Boletim implements CoreExt_Configurable
 {
@@ -3215,9 +3214,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         $secretarioDeveLancarNota = false;
-        Log::info('verificaNotasLancadasNasEtapasAnteriores - 3');
-        Log::info('TESTE 1: ' . $this->getOption('etapas'));
-        Log::info('TESTE 2: ' . $etapaId);
         for ($etapa = 1; $etapa <= $etapaId; $etapa++) {
 
             // Etapas com dispensa não terão notas, então não devem ser
@@ -3253,7 +3249,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $etapasSemNotas[] = $etapa;
             }
         }
-        Log::info('verificaNotasLancadasNasEtapasAnteriores - 4');
+
         if ($temEtapasAnterioresLancadas) {
             return true;
         }
@@ -3267,7 +3263,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $nomeDaEtapa = $etapa['nm_tipo'];
             }
         }
-        Log::info('verificaNotasLancadasNasEtapasAnteriores - 5');
+
         if ($secretarioDeveLancarNota) {
             throw new StagesNotInformedByCoordinatorException($etapasSemNotas, $nomeDaEtapa);
         }
