@@ -1,4 +1,4 @@
-<p class="{{ $situacao['type'] === 'justified_absence' ? 'notice' : 'error' }} simple-block">
+<p class="{{ $situacao['type'] === 'justified_absence' ? 'notice' : 'error' }} simple-block cpf-ausencia">
     @if ($situacao['type'] === 'justified_absence')
         {{ $sujeito }} {{ $nome }} não possui CPF registrado. Motivo: {{ $situacao['reason'] }}@if ($situacao['user']), registrado por {{ $situacao['user'] }} em {{ $situacao['date'] }}@endif.
         Se você possui essa informação, aproveite para atualizá-la.

@@ -1028,7 +1028,8 @@ return new class extends clsDetalhe
             viewInstance: $this,
             css: '.cpf-situacao { display: inline-block; padding: 3px 9px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
                 .cpf-situacao-com { background: #e6f4e6; color: #2e7d32; }
-                .cpf-situacao-sem { background: #fcefef; color: #c05e5e; }'
+                .cpf-situacao-sem { background: #fcefef; color: #c05e5e; }
+                .cpf-ausencia { margin: 2px 0; }'
         );
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $scripts);
