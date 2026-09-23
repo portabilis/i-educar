@@ -17,7 +17,7 @@
     ],
     "homepage": "https://github.com/portabilis/i-educar",
     "require": {
-        "php": ">=8.3",
+        "php": "^8.5",
         "ext-gd": "*",
         "ext-json": "*",
         "ext-pdo": "*",
@@ -28,7 +28,7 @@
         "dex/composer-plug-and-play": "^0.26",
         "dex/frontier": "^0.18.0",
         "google/recaptcha": "^1.2",
-        "guzzlehttp/guzzle": "^7.3",
+        "guzzlehttp/guzzle": "^7.15.2",
         "honeybadger-io/honeybadger-laravel": "^5.0",
         "intervention/image": "^2.6",
         "laravel/framework": "^13.0",
@@ -123,9 +123,10 @@
             "@php artisan migrate --force --ansi"
         ],
         "testing-install": [
+            "@putenv DB_DATABASE=testing",
+            "@putenv LEGACY_SEED_DATA=false",
             "@composer install",
-            "@php artisan key:generate --ansi",
-            "@php artisan migrate --force --ansi --env=testing"
+            "@php artisan migrate --force --ansi"
         ],
         "post-install-cmd": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
