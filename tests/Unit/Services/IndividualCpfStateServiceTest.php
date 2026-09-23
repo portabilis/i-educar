@@ -3,6 +3,7 @@
 use App\Services\IndividualCpfStateService;
 use Database\Factories\DocumentAbsenceReasonFactory;
 use Database\Factories\LegacyIndividualFactory;
+use Database\Factories\TimelineFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -152,4 +153,49 @@ test('reasons requiring observation include inactive ones', function () {
     $this->assertContains($requires->getKey(), $ids);
     $this->assertContains($requiresInactive->getKey(), $ids);
     $this->assertNotContains($doesNotRequire->getKey(), $ids);
+});
+
+test('situation with cpf returns the formatted number', function () {
+    $individual = LegacyIndividualFactory::new()->create(['cpf' => 12345678909]);
+
+    $this->assertSame(['type' => 'with_cpf', 'cpf' => '123.456.789-09'], $this->service->situation($individual));
+});
+
+test('situation without cpf and without reason is an unjustified absence', function () {
+    $individual = LegacyIndividualFactory::new()->create(['cpf' => null, 'document_absence_reason_id' => null]);
+
+    $this->assertSame(['type' => 'unjustified_absence'], $this->service->situation($individual));
+});
+
+test('situation with the system reason is an unjustified absence', function () {
+    $reason = DocumentAbsenceReasonFactory::new()->create(['from_system' => true]);
+    $individual = LegacyIndividualFactory::new()->create(['cpf' => null, 'document_absence_reason_id' => $reason->getKey()]);
+
+    $this->assertSame(['type' => 'unjustified_absence'], $this->service->situation($individual));
+});
+
+test('situation with a reason brings the author and date of the last change', function () {
+    $reason = DocumentAbsenceReasonFactory::new()->create();
+    $individual = LegacyIndividualFactory::new()->create(['cpf' => null, 'document_absence_reason_id' => $reason->getKey()]);
+    TimelineFactory::new()->create(['model_id' => $individual->getKey(), 'payload' => ['user' => ['name' => 'Usuário antigo']]]);
+    $last = TimelineFactory::new()->create(['model_id' => $individual->getKey(), 'payload' => ['user' => ['name' => 'Usuário recente']]]);
+
+    $this->assertSame([
+        'type' => 'justified_absence',
+        'reason' => $reason->name,
+        'user' => 'Usuário recente',
+        'date' => $last->created_at->format('d/m/Y'),
+    ], $this->service->situation($individual));
+});
+
+test('situation with a reason and no history has no author nor date', function () {
+    $reason = DocumentAbsenceReasonFactory::new()->create();
+    $individual = LegacyIndividualFactory::new()->create(['cpf' => null, 'document_absence_reason_id' => $reason->getKey()]);
+
+    $this->assertSame([
+        'type' => 'justified_absence',
+        'reason' => $reason->name,
+        'user' => null,
+        'date' => null,
+    ], $this->service->situation($individual));
 });
