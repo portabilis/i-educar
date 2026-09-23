@@ -88,7 +88,7 @@ class IndividualCpfStateService
         return $reason->trashed() ? $reason->name . ' (inativo)' : $reason->name;
     }
 
-    private function reasonId(mixed $value): ?int
+    public function reasonId(mixed $value): ?int
     {
         $id = filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => self::MAX_REASON_ID]]);
 

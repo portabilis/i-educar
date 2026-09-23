@@ -19,6 +19,35 @@ class LegacyPersonBuilder extends LegacyBuilder
         );
     }
 
+    public function whereCpfSituation(string $situation): self
+    {
+        return $this->whereHas(
+            'individual',
+            function ($query) use ($situation) {
+                match ($situation) {
+                    'with_cpf' => $query->whereNotNull('cpf'),
+                    'justified_absence' => $query
+                        ->whereNull('cpf')
+                        ->whereHas('documentAbsenceReason', fn ($reason) => $reason->withTrashed()->where('from_system', false)),
+                    'unjustified_absence' => $query
+                        ->whereNull('cpf')
+                        ->where(fn ($absence) => $absence
+                            ->whereNull('document_absence_reason_id')
+                            ->orWhereHas('documentAbsenceReason', fn ($reason) => $reason->withTrashed()->where('from_system', true))),
+                    default => $query,
+                };
+            }
+        );
+    }
+
+    public function whereAbsenceReason(int $reasonId): self
+    {
+        return $this->whereHas(
+            'individual',
+            fn ($query) => $query->whereNull('cpf')->where('document_absence_reason_id', $reasonId)
+        );
+    }
+
     public function active(): self
     {
         return $this->whereHas(
