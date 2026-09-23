@@ -11,6 +11,8 @@ use App\Models\LegacyIssuingBody;
 use App\Models\LegacyRace;
 use App\Models\LegacyStudent;
 use App\Services\FileService;
+use App\Services\IndividualCpfStateService;
+use App\Services\IndividualCpfTimelineService;
 use App\Services\UrlPresigner;
 use App\User;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
@@ -457,11 +459,17 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->uf($options, $helperOptions);
 
         $nisPisPasep = '';
+        $possuiCpf = 1;
+        $motivoAusenciaCpf = null;
+        $observacaoAusenciaCpf = null;
 
         if (is_numeric($this->cod_pessoa_fj)) {
-            $fisica = LegacyIndividual::find($this->cod_pessoa_fj, ['cpf', 'nis_pis_pasep']);
+            $fisica = LegacyIndividual::find($this->cod_pessoa_fj, ['cpf', 'nis_pis_pasep', 'possui_cpf', 'document_absence_reason_id', 'document_absence_observation']);
             $valorCpf = is_numeric($fisica?->getRawOriginal('cpf')) ? int2CPF($fisica->getRawOriginal('cpf')) : '';
             $nisPisPasep = int2Nis($fisica?->nis_pis_pasep);
+            $possuiCpf = (int) ($fisica?->possui_cpf ?? true);
+            $motivoAusenciaCpf = $fisica?->document_absence_reason_id;
+            $observacaoAusenciaCpf = $fisica?->document_absence_observation;
         }
 
         /** @var User $user */
@@ -480,7 +488,34 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->campoOculto('pai_restricao_judicial_value', (int) $this->pai_restricao_judicial);
         $this->campoOculto('mae_restricao_judicial_value', (int) $this->mae_restricao_judicial);
         $this->campoOculto('responsavel_restricao_judicial_value', (int) $this->responsavel_restricao_judicial);
-        $this->campoCpf('id_federal', 'CPF', $valorCpf);
+        $this->campoRadio(
+            nome: 'possui_cpf',
+            campo: 'CPF',
+            valor: [1 => 'Possui CPF', 0 => 'Não possui / não informado'],
+            default: $possuiCpf
+        );
+
+        $this->campoCpf('id_federal', 'Número do CPF', $valorCpf);
+
+        $this->campoLista(
+            nome: 'document_absence_reason_id',
+            campo: 'Motivo',
+            valor: (new IndividualCpfStateService)->reasonOptions($motivoAusenciaCpf),
+            default: $motivoAusenciaCpf,
+            descricao: 'Justificativa da ausência de CPF',
+            obrigatorio: false
+        );
+
+        $this->campoTexto(
+            nome: 'document_absence_observation',
+            campo: 'Observações',
+            valor: $observacaoAusenciaCpf,
+            tamanhovisivel: 50,
+            tamanhomaximo: 255,
+            obrigatorio: false
+        );
+
+        $this->campoTrilhaCpf();
 
         $options = [
             'required' => false,
@@ -1232,6 +1267,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             '/vendor/legacy/Cadastro/Assets/Javascripts/Addresses.js',
         ]);
 
+        $motivosExigemObservacao = (new IndividualCpfStateService)->reasonsRequiringObservation();
+        $motivosInativos = (new IndividualCpfStateService)->inactiveReasons();
+
+        Portabilis_View_Helper_Application::embedJavascript($this, 'var motivosExigemObservacao = ' . json_encode($motivosExigemObservacao) . '; var motivosInativos = ' . json_encode($motivosInativos) . ';');
+
         $this->loadResourceAssets($this->getDispatcher());
 
         $clsInstituicao = new clsPmieducarInstituicao;
@@ -1327,6 +1367,25 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'hiddenInputOptions' => $hiddenInputOptions,
         ];
         $this->inputsHelper()->simpleSearchPaisSemBrasil('nome', $options, $helperOptions);
+    }
+
+    protected function campoTrilhaCpf()
+    {
+        if (!is_numeric($this->cod_pessoa_fj)) {
+            return;
+        }
+
+        $historico = (new IndividualCpfTimelineService)->history((int) $this->cod_pessoa_fj);
+
+        if ($historico->isEmpty()) {
+            return;
+        }
+
+        $this->campoRotulo(
+            nome: 'cpf_timeline',
+            campo: 'Última alteração do CPF',
+            valor: view(view: 'individual.cpf-timeline', data: ['historico' => $historico])->render()
+        );
     }
 
     protected function inputPai()
