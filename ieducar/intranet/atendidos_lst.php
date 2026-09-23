@@ -61,6 +61,7 @@ return new class extends clsListagem
                 ->where('from_system', false)
                 ->orderBy('name')
                 ->pluck('name', 'id')
+                ->map(fn ($name) => htmlspecialchars($name, ENT_QUOTES, 'UTF-8'))
                 ->prepend('Todos', '')
                 ->toArray(),
             default: $par_motivo_ausencia_cpf,

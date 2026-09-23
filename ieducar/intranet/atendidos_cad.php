@@ -962,9 +962,9 @@ return new class extends clsCadastro
         $this->campoLista(
             nome: 'document_absence_reason_id',
             campo: 'Motivo',
-            valor: (new IndividualCpfStateService)->reasonOptions(
+            valor: collect((new IndividualCpfStateService)->reasonOptions(
                 is_numeric($this->document_absence_reason_id) ? (int) $this->document_absence_reason_id : null
-            ),
+            ))->map(fn ($name) => htmlspecialchars($name, ENT_QUOTES, 'UTF-8'))->toArray(),
             default: $this->document_absence_reason_id,
             descricao: 'Justificativa da ausência de CPF',
             obrigatorio: false
