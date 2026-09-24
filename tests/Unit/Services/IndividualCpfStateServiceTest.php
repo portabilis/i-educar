@@ -103,6 +103,36 @@ test('validate accepts an inactive reason already saved for the person', functio
     $this->assertNull($error);
 });
 
+test('validate refuses the system reason that is not the saved one', function () {
+    $reason = DocumentAbsenceReasonFactory::new()->create(['requires_observation' => false, 'from_system' => true]);
+
+    $error = $this->service->validate([
+        'possui_cpf' => false,
+        'cpf' => null,
+        'document_absence_reason_id' => $reason->getKey(),
+        'document_absence_observation' => null,
+    ]);
+
+    $this->assertSame(['document_absence_reason_id' => 'O motivo da ausência do CPF informado não existe.'], $error);
+});
+
+test('validate accepts the system reason already saved for the person', function () {
+    $reason = DocumentAbsenceReasonFactory::new()->create(['requires_observation' => false, 'from_system' => true]);
+    $individual = LegacyIndividualFactory::new()->create([
+        'possui_cpf' => false,
+        'document_absence_reason_id' => $reason->getKey(),
+    ]);
+
+    $error = $this->service->validate([
+        'possui_cpf' => false,
+        'cpf' => null,
+        'document_absence_reason_id' => $reason->getKey(),
+        'document_absence_observation' => null,
+    ], $individual->getKey());
+
+    $this->assertNull($error);
+});
+
 test('validate requires the observation when the reason asks for it', function () {
     $reason = DocumentAbsenceReasonFactory::new()->create(['requires_observation' => true]);
 
@@ -139,6 +169,13 @@ test('reason options start with the placeholder and mark the saved inactive reas
     $this->assertSame($inactive->name . ' (inativo)', $options[$inactive->getKey()]);
     $this->assertArrayNotHasKey($otherInactive->getKey(), $options);
     $this->assertLessThan(array_search($active->getKey(), $keys, true), array_search($inactive->getKey(), $keys, true));
+});
+
+test('reason options hide the system reason unless it is the saved one', function () {
+    $system = DocumentAbsenceReasonFactory::new()->create(['from_system' => true]);
+
+    $this->assertArrayNotHasKey($system->getKey(), $this->service->reasonOptions());
+    $this->assertSame($system->name, $this->service->reasonOptions($system->getKey())[$system->getKey()]);
 });
 
 test('reasons requiring observation include inactive ones', function () {

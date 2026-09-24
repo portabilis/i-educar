@@ -1269,8 +1269,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $motivosExigemObservacao = (new IndividualCpfStateService)->reasonsRequiringObservation();
         $motivosInativos = (new IndividualCpfStateService)->inactiveReasons();
+        $motivosSistema = (new IndividualCpfStateService)->systemReasons();
 
-        Portabilis_View_Helper_Application::embedJavascript($this, 'var motivosExigemObservacao = ' . json_encode($motivosExigemObservacao) . '; var motivosInativos = ' . json_encode($motivosInativos) . ';');
+        Portabilis_View_Helper_Application::embedJavascript($this, 'var motivosExigemObservacao = ' . json_encode($motivosExigemObservacao) . '; var motivosInativos = ' . json_encode($motivosInativos) . '; var motivosSistema = ' . json_encode($motivosSistema) . ';');
 
         $this->loadResourceAssets($this->getDispatcher());
 
