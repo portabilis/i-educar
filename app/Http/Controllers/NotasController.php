@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostNotasRequest;
 use iEducar\Modules\EvaluationRules\Exceptions\DisciplineNotExistsForSchoolClass;
+use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use Illuminate\Http\Response;
 
 class NotasController extends DiarioController
@@ -72,7 +73,7 @@ class NotasController extends DiarioController
             }
 
             $this->service->atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId, $matricula);
-        } catch (\RuntimeException|DisciplineNotExistsForSchoolClass $exception) {
+        } catch (\RuntimeException|DisciplineNotExistsForSchoolClass|MissingStagesException $exception) {
             return response()->json([
                 'message' => $exception->getMessage(),
             ], Response::HTTP_UNPROCESSABLE_ENTITY);

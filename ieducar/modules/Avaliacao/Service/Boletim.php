@@ -3328,7 +3328,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     public function getNotaAtual($etapa, $componenteCurricularId)
     {
         // FIXME não entendi o motivo deste urldecode
-        $nota = urldecode($this->getNotaComponente($componenteCurricularId, $etapa)->nota ?? 0);
+        $nota = urldecode($this->getNotaComponente($componenteCurricularId, $etapa)?->nota ?? '');
 
         return str_replace(',', '.', $nota);
     }
