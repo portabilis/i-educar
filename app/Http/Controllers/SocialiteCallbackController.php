@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Contracts\User as UserSocialite;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 
 class SocialiteCallbackController
 {
@@ -19,7 +20,13 @@ class SocialiteCallbackController
             ]);
         }
 
-        $socialite = Socialite::driver('passport')->user();
+        try {
+            $socialite = Socialite::driver('passport')->user();
+        } catch (InvalidStateException) {
+            return redirect('/login')->withErrors([
+                'login' => 'Sessão de login expirada. Tente entrar novamente.',
+            ]);
+        }
 
         $user = $this->findUserByEmail($socialite);
 
