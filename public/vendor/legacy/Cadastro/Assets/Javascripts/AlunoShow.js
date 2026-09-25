@@ -681,7 +681,7 @@ $j(document).ready(function () {
     pessoaIdCpf = $botao.attr("data-pessoa-id");
     nomePessoaCpf.val($botao.attr("data-nome"));
     dataNascPessoaCpf.val($botao.attr("data-data-nascimento"));
-    $j('input[name=possui-cpf-pessoa-cpf][value="' + (motivoAtual ? 0 : 1) + '"]').prop("checked", true);
+    $j('input[name=possui-cpf-pessoa-cpf][value="1"]').prop("checked", true);
     motivoPessoaCpf.val(motivoAtual);
     observacaoMotivoPessoaCpf.val($botao.attr("data-observacao") || "");
     checkPossuiCpfPessoaCpf();

@@ -264,11 +264,31 @@ return new class extends clsDetalhe
         $cpfService = new IndividualCpfStateService;
         $podeAtualizarCpf = $this->obj_permissao->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
         $situacoesCpf = [];
+        $responsavelOutraPessoa = $this->tipo_responsavel === 'r'
+            && !in_array($registro['ref_idpes_responsavel'], [null, $this->idpes_pai, $this->idpes_mae]);
+        $responsavelCpf = $responsavelOutraPessoa ? LegacyIndividual::find($registro['ref_idpes_responsavel']) : null;
 
         $pessoasCpf = [
-            'aluno' => ['pessoa' => $fisica ?? null, 'sujeito' => 'O aluno', 'nome' => $registro['nome_aluno'] ?? null],
-            'pai' => ['pessoa' => $this->idpes_pai ? LegacyIndividual::find($this->idpes_pai) : null, 'sujeito' => 'O responsável pai', 'nome' => $registro['nm_pai']],
-            'mae' => ['pessoa' => $this->idpes_mae ? LegacyIndividual::find($this->idpes_mae) : null, 'sujeito' => 'A responsável mãe', 'nome' => $registro['nm_mae']],
+            'aluno' => [
+                'pessoa' => $fisica ?? null,
+                'sujeito' => 'O aluno',
+                'nome' => $registro['nome_aluno'] ?? null,
+            ],
+            'pai' => [
+                'pessoa' => $this->idpes_pai ? LegacyIndividual::find($this->idpes_pai) : null,
+                'sujeito' => 'O responsável pai',
+                'nome' => $registro['nm_pai'],
+            ],
+            'mae' => [
+                'pessoa' => $this->idpes_mae ? LegacyIndividual::find($this->idpes_mae) : null,
+                'sujeito' => 'A responsável mãe',
+                'nome' => $registro['nm_mae'],
+            ],
+            'responsavel' => [
+                'pessoa' => $responsavelCpf,
+                'sujeito' => 'O responsável',
+                'nome' => $responsavelCpf?->person?->nome,
+            ],
         ];
 
         foreach ($pessoasCpf as $chave => $dados) {
@@ -412,7 +432,7 @@ return new class extends clsDetalhe
                 );
             }
 
-            $this->addDetalhe(detalhe: ['Responsável', $registro['ref_idpes_responsavel']]);
+            $this->addDetalhe(detalhe: ['Responsável', $registro['ref_idpes_responsavel'] . (isset($situacoesCpf['responsavel']) ? ' ' . $this->seloCpf(situacao: $situacoesCpf['responsavel']) : '')]);
         }
 
         if ($registro['nm_pai']) {
@@ -1017,10 +1037,18 @@ return new class extends clsDetalhe
             '/vendor/legacy/Cadastro/Assets/Javascripts/AlunoShow.js?version=7',
         ];
 
-        if ($podeAtualizarCpf && collect($situacoesCpf)->contains(fn ($situacao) => $situacao['type'] !== 'with_cpf')) {
+        $alguemSemCpf = collect($situacoesCpf)->contains(fn ($situacao) => $situacao['type'] !== 'with_cpf');
+
+        if ($podeAtualizarCpf && $alguemSemCpf) {
+            $motivosAusenciaCpf = collect($cpfService->reasonOptions())
+                ->map(fn ($nome, $id) => [$id, $nome])
+                ->values();
+            $motivosExigemObservacao = $cpfService->reasonsRequiringObservation();
+            $motivosInativos = $cpfService->inactiveReasons();
+
             Portabilis_View_Helper_Application::embedJavascript(
                 viewInstance: $this,
-                script: 'var motivosAusenciaCpf = ' . json_encode(collect($cpfService->reasonOptions())->map(fn ($nome, $id) => [$id, $nome])->values()) . '; var motivosExigemObservacao = ' . json_encode($cpfService->reasonsRequiringObservation()) . '; var motivosInativos = ' . json_encode($cpfService->inactiveReasons()) . ';'
+                script: 'var motivosAusenciaCpf = ' . json_encode($motivosAusenciaCpf) . '; var motivosExigemObservacao = ' . json_encode($motivosExigemObservacao) . '; var motivosInativos = ' . json_encode($motivosInativos) . ';'
             );
         }
 
