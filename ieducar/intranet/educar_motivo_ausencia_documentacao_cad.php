@@ -34,6 +34,10 @@ return new class extends clsCadastro
         if (is_numeric($this->id)) {
             $motivo = DocumentAbsenceReason::withTrashed()->find($this->id);
 
+            if ($motivo?->from_system) {
+                $this->simpleRedirect("educar_motivo_ausencia_documentacao_det.php?id={$motivo->getKey()}");
+            }
+
             if ($motivo) {
                 $this->name = $motivo->name;
                 $this->requires_observation = (int) $motivo->requires_observation;
@@ -97,7 +101,7 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $motivo = DocumentAbsenceReason::withTrashed()->findOrFail($this->id);
+        $motivo = DocumentAbsenceReason::withTrashed()->where('from_system', false)->findOrFail($this->id);
 
         $motivo->fill([
             'name' => $this->name,

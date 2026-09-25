@@ -1105,16 +1105,16 @@ var checkPossuiCpf = function () {
   checkMotivoInativo();
 };
 
-var ajustaMotivosInativos = function ($motivo, motivo) {
+var ajustaMotivosOcultos = function ($motivo, motivo, motivosOcultos) {
   $motivo
     .find("option")
     .filter(function () {
-      return motivosInativos.hasOwnProperty(this.value) && this.value !== motivo;
+      return motivosOcultos.hasOwnProperty(this.value) && this.value !== motivo;
     })
     .remove();
 
-  if (motivosInativos.hasOwnProperty(motivo) && !$motivo.find('option[value="' + motivo + '"]').length) {
-    var $opcao = $j("<option>").val(motivo).text(motivosInativos[motivo]);
+  if (motivosOcultos.hasOwnProperty(motivo) && !$motivo.find('option[value="' + motivo + '"]').length) {
+    var $opcao = $j("<option>").val(motivo).text(motivosOcultos[motivo]);
     var $seguinte = $motivo
       .find("option")
       .filter(function () {
@@ -1134,6 +1134,12 @@ var ajustaMotivosInativos = function ($motivo, motivo) {
   }
 
   return motivo;
+};
+
+var ajustaMotivosInativos = function ($motivo, motivo) {
+  ajustaMotivosOcultos($motivo, motivo, motivosSistema);
+
+  return ajustaMotivosOcultos($motivo, motivo, motivosInativos);
 };
 
 var preencheEstadoCpf = function (dataResponse) {
@@ -2555,7 +2561,7 @@ function canShowParentsFields() {
     }
 
     $j("#document_absence_reason_id option").each(function () {
-      if (!motivosInativos.hasOwnProperty(this.value)) {
+      if (!motivosInativos.hasOwnProperty(this.value) && !motivosSistema.hasOwnProperty(this.value)) {
         motivoParent.append($j("<option>").val(this.value).text(this.text));
       }
     });

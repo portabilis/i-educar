@@ -2040,7 +2040,7 @@ class AlunoController extends ApiCoreController
 
     protected function createOrUpdatePessoa($idPessoa)
     {
-        $individual = LegacyIndividual::find($idPessoa, ['idpes', 'cpf', 'ref_cod_religiao', 'nis_pis_pasep', 'observacao', 'renda_mensal', 'possui_cpf', 'document_absence_reason_id', 'document_absence_observation']);
+        $individual = LegacyIndividual::find($idPessoa, ['idpes', 'cpf', 'ref_cod_religiao', 'nis_pis_pasep', 'observacao', 'renda_mensal', 'document_absence_reason_id', 'document_absence_observation']);
 
         if (!$individual) {
             return;
@@ -2064,7 +2064,6 @@ class AlunoController extends ApiCoreController
 
         if ($state !== null) {
             $data['cpf'] = idFederal2int($state['cpf'] ?? '') ?: null;
-            $data['possui_cpf'] = $state['possui_cpf'];
             $data['document_absence_reason_id'] = $state['document_absence_reason_id'] ?: null;
             $data['document_absence_observation'] = $state['document_absence_observation'] ?: null;
         }

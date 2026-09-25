@@ -145,7 +145,7 @@ class PessoaController extends ApiCoreController
              fisica.pais_residencia,
              fisica.sus,
              fisica.observacao,
-             fisica.possui_cpf,
+             (COALESCE(fisica.cpf, 0) <> 0) AS possui_cpf,
              fisica.document_absence_reason_id,
              fisica.document_absence_observation
             from cadastro.fisica
@@ -316,7 +316,7 @@ class PessoaController extends ApiCoreController
     protected function loadPessoaParent()
     {
         if ($this->getRequest()->id) {
-            $_sql = ' SELECT (select nome from cadastro.pessoa where pessoa.idpes = fisica.idpes) as nome ,ideciv as estadocivil, data_nasc, sexo, falecido, cpf, possui_cpf, document_absence_reason_id, document_absence_observation FROM cadastro.fisica WHERE idpes = $1; ';
+            $_sql = ' SELECT (select nome from cadastro.pessoa where pessoa.idpes = fisica.idpes) as nome ,ideciv as estadocivil, data_nasc, sexo, falecido, cpf, (COALESCE(cpf, 0) <> 0) AS possui_cpf, document_absence_reason_id, document_absence_observation FROM cadastro.fisica WHERE idpes = $1; ';
 
             $details = $this->fetchPreparedQuery($_sql, $this->getRequest()->id, false, 'first-row');
 
@@ -704,11 +704,11 @@ class PessoaController extends ApiCoreController
 
         if ($state !== null) {
             $individual->cpf = idFederal2int($state['cpf'] ?? '') ?: null;
-            $individual->possui_cpf = $state['possui_cpf'];
             $individual->document_absence_reason_id = $state['document_absence_reason_id'] ?: null;
             $individual->document_absence_observation = $state['document_absence_observation'] ?: null;
         }
 
+        DB::beginTransaction();
         $individual->saveOrFail();
 
         if ($state !== null) {
@@ -722,6 +722,7 @@ class PessoaController extends ApiCoreController
                 ]
             );
         }
+        DB::commit();
 
         $corRaca = $this->getRequest()->cor_raca;
         if ($corRaca && is_numeric($corRaca)) {
