@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyIndividual;
 use App\Services\IndividualCpfStateService;
 use Database\Factories\DocumentAbsenceReasonFactory;
 use Database\Factories\LegacyIndividualFactory;
@@ -172,6 +173,25 @@ test('situation with the system reason is an unjustified absence', function () {
     $individual = LegacyIndividualFactory::new()->create(['cpf' => null, 'document_absence_reason_id' => $reason->getKey()]);
 
     $this->assertSame(['type' => 'unjustified_absence'], $this->service->situation($individual));
+});
+
+test('situation with zero cpf and without reason is an unjustified absence', function () {
+    $individual = LegacyIndividualFactory::new()->create(['cpf' => 0]);
+
+    $this->assertSame(['type' => 'unjustified_absence'], $this->service->situation($individual));
+});
+
+test('situation with zero cpf and a reason is a justified absence', function () {
+    $reason = DocumentAbsenceReasonFactory::new()->create();
+    $individual = LegacyIndividualFactory::new()->create(['cpf' => 0]);
+    LegacyIndividual::query()->whereKey($individual->getKey())->update(['document_absence_reason_id' => $reason->getKey()]);
+
+    $this->assertSame([
+        'type' => 'justified_absence',
+        'reason' => $reason->name,
+        'user' => null,
+        'date' => null,
+    ], $this->service->situation($individual->refresh()));
 });
 
 test('situation with a reason brings the author and date of the last change', function () {

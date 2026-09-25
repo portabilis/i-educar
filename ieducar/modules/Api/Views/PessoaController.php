@@ -790,9 +790,10 @@ class PessoaController extends ApiCoreController
         ];
 
         $individual->cpf = idFederal2int($state['cpf'] ?? '') ?: null;
-        $individual->possui_cpf = $state['possui_cpf'];
         $individual->document_absence_reason_id = $state['document_absence_reason_id'] ?: null;
         $individual->document_absence_observation = $state['document_absence_observation'] ?: null;
+
+        DB::beginTransaction();
         $individual->saveOrFail();
 
         (new IndividualCpfTimelineService)->register(
@@ -804,6 +805,7 @@ class PessoaController extends ApiCoreController
                 'document_absence_observation' => $individual->document_absence_observation,
             ]
         );
+        DB::commit();
 
         $this->appendResponse('pessoa_id', $individual->getKey());
     }

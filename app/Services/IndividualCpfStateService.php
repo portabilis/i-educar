@@ -102,13 +102,13 @@ class IndividualCpfStateService
         return is_string($observation) ? $observation : null;
     }
 
-    public function situation(?LegacyIndividual $individual): array
+    public function situation(LegacyIndividual $individual): array
     {
-        if ($individual?->cpf) {
+        if ($individual->cpf) {
             return ['type' => 'with_cpf', 'cpf' => $individual->cpf];
         }
 
-        $reason = $individual?->document_absence_reason_id
+        $reason = $individual->document_absence_reason_id
             ? DocumentAbsenceReason::withTrashed()->find($individual->document_absence_reason_id)
             : null;
 
