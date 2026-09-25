@@ -107,6 +107,7 @@
     "scripts": {
         "format": "vendor/bin/pint",
         "test:browser": "ASSETS_SECURE=false vendor/bin/pest tests/Browser",
+        "test:browser:parallel": "ASSETS_SECURE=false LARAVEL_PARALLEL_TESTING_WITHOUT_DATABASES=1 vendor/bin/pest --parallel --processes=4 tests/Browser",
         "openapi": "vendor/uderline/openapi-php-attributes/opag tests public/openapi.json",
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
         "new-install": [
