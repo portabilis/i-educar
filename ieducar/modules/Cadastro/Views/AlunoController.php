@@ -500,7 +500,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->campoLista(
             nome: 'document_absence_reason_id',
             campo: 'Motivo',
-            valor: collect((new IndividualCpfStateService)->reasonOptions($motivoAusenciaCpf))->map(fn ($name) => htmlspecialchars($name, ENT_QUOTES, 'UTF-8'))->toArray(),
+            valor: collect((new IndividualCpfStateService)->reasonOptions($motivoAusenciaCpf))
+                ->map(fn ($name) => htmlspecialchars($name, ENT_QUOTES, 'UTF-8'))
+                ->toArray(),
             default: $motivoAusenciaCpf,
             descricao: 'Justificativa da ausência de CPF',
             obrigatorio: false
