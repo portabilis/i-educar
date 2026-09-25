@@ -264,9 +264,10 @@ return new class extends clsDetalhe
         $cpfService = new IndividualCpfStateService;
         $podeAtualizarCpf = $this->obj_permissao->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
         $situacoesCpf = [];
-        $responsavelOutraPessoa = $this->tipo_responsavel === 'r'
-            && !in_array($registro['ref_idpes_responsavel'], [null, $this->idpes_pai, $this->idpes_mae]);
-        $responsavelCpf = $responsavelOutraPessoa ? LegacyIndividual::find($registro['ref_idpes_responsavel']) : null;
+        $pessoasComAlerta = [];
+        $responsavelCpf = $this->tipo_responsavel === 'r' && $registro['ref_idpes_responsavel']
+            ? LegacyIndividual::find($registro['ref_idpes_responsavel'])
+            : null;
 
         $pessoasCpf = [
             'aluno' => [
@@ -298,9 +299,11 @@ return new class extends clsDetalhe
 
             $situacoesCpf[$chave] = $cpfService->situation($dados['pessoa']);
 
-            if ($situacoesCpf[$chave]['type'] === 'with_cpf') {
+            if ($situacoesCpf[$chave]['type'] === 'with_cpf' || in_array($dados['pessoa']->getKey(), $pessoasComAlerta)) {
                 continue;
             }
+
+            $pessoasComAlerta[] = $dados['pessoa']->getKey();
 
             $this->prependOutput(view(view: 'individual.cpf-absence-alert', data: [
                 'situacao' => $situacoesCpf[$chave],
