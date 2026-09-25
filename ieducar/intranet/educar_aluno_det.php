@@ -1065,7 +1065,10 @@ return new class extends clsDetalhe
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $scripts);
 
-        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/Aluno.css'];
+        $styles = [
+            '/vendor/legacy/Cadastro/Assets/Stylesheets/Aluno.css',
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
+        ];
 
         Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: $styles);
     }
