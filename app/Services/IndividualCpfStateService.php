@@ -71,7 +71,13 @@ class IndividualCpfStateService
         $currentReasonId = $this->reasonId($currentReasonId);
 
         return DocumentAbsenceReason::withTrashed()
-            ->where(fn ($query) => $query->where(fn ($query) => $query->whereNull('deleted_at')->where('from_system', false))->orWhere('id', $currentReasonId))
+            ->where(function ($query) use ($currentReasonId) {
+                $query->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                    $query->where('from_system', false);
+                });
+                $query->orWhere('id', $currentReasonId);
+            })
             ->orderBy('name')
             ->get()
             ->mapWithKeys(fn (DocumentAbsenceReason $reason) => [$reason->getKey() => $this->label($reason)])

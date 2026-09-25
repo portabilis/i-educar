@@ -88,7 +88,6 @@ test('validate refuses an inactive reason that is not the saved one', function (
 test('validate accepts an inactive reason already saved for the person', function () {
     $reason = DocumentAbsenceReasonFactory::new()->create(['requires_observation' => false]);
     $individual = LegacyIndividualFactory::new()->create([
-        'possui_cpf' => false,
         'document_absence_reason_id' => $reason->getKey(),
     ]);
     $reason->delete();
@@ -119,7 +118,6 @@ test('validate refuses the system reason that is not the saved one', function ()
 test('validate accepts the system reason already saved for the person', function () {
     $reason = DocumentAbsenceReasonFactory::new()->create(['requires_observation' => false, 'from_system' => true]);
     $individual = LegacyIndividualFactory::new()->create([
-        'possui_cpf' => false,
         'document_absence_reason_id' => $reason->getKey(),
     ]);
 
