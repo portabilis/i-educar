@@ -8,7 +8,6 @@ return new class extends clsListagem
     {
         $params = [];
         $params['ano'] = $this->getQueryString('ano');
-        // Sem curso fica nulo: lista vazia viraria "in ()" na consulta, que só usa o padrão de todos os cursos quando o valor é nulo.
         $params['curso'] = array_map('intval', (array) $this->getQueryString('curso')) ?: null;
         $params['data_inicial'] = $this->getQueryString('data_inicial');
         $params['data_final'] = $this->getQueryString('data_final');

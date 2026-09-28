@@ -19,7 +19,6 @@ class ConsultaMovimentoGeralTest extends TestCase
     {
         parent::setUp();
 
-        // O usuário e o nível de acesso ficam em cache estático entre as requisições do mesmo processo.
         Portabilis_Utils_User::$_currentUserId = null;
         Portabilis_Utils_User::$_nivelAcesso = null;
         Portabilis_Utils_User::$_permissoes = null;
