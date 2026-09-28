@@ -15,6 +15,8 @@ class LegacyNeighborhoodPersistenceTest extends TestCase
 {
     use DatabaseTransactions;
 
+    private const NEIGHBORHOOD = 'Bairro Teste Issue 1202';
+
     public function test_saves_new_neighborhood_and_associates_it_with_person(): void
     {
         $person = LegacyPersonFactory::new()->create();
@@ -26,7 +28,7 @@ class LegacyNeighborhoodPersistenceTest extends TestCase
             address: 'Rua Teste',
             number: '10',
             complement: null,
-            neighborhood: 'Bairro Teste Issue 1202',
+            neighborhood: self::NEIGHBORHOOD,
             cityId: $city->getKey(),
             postalCode: '70000000'
         );
@@ -34,14 +36,14 @@ class LegacyNeighborhoodPersistenceTest extends TestCase
         $addressing->saveFor($person->getKey());
 
         $place = Place::query()
-            ->where('neighborhood', 'Bairro Teste Issue 1202')
+            ->where('neighborhood', self::NEIGHBORHOOD)
             ->first();
 
         $this->assertNotNull($place);
 
         $this->assertDatabaseHas('places', [
             'id' => $place->getKey(),
-            'neighborhood' => 'Bairro Teste Issue 1202',
+            'neighborhood' => self::NEIGHBORHOOD,
         ]);
 
         $this->assertDatabaseHas('person_has_place', [
