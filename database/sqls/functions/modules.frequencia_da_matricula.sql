@@ -42,11 +42,17 @@ BEGIN
                                 ON (m.ref_ref_cod_serie = s.cod_serie)
             WHERE m.cod_matricula = p_matricula_id
         );
-        v_total_faltas := (
+        /*
+            Matrícula sem nenhuma falta lançada não possui registro em
+            modules.falta_aluno, então o SUM não encontra linhas e devolve
+            NULL. Sem o COALESCE o NULL se propaga pela aritmética abaixo e a
+            função retorna NULL em vez dos 100% que o aluno realmente tem.
+        */
+        v_total_faltas := COALESCE((
             SELECT SUM(quantidade)
             FROM modules.falta_geral
             WHERE falta_aluno_id = v_falta_aluno_id
-        );
+        ), 0);
 
         /*
             Evita divisão por zero quando a série está sem dias letivos cadastrados
@@ -66,7 +72,12 @@ BEGIN
             WHERE m.cod_matricula = p_matricula_id
         );
 
-        v_total_hora_falta := (
+        /*
+            Mesmo caso do ramo acima: sem faltas lançadas a subconsulta não
+            retorna linhas, o sum devolve NULL e o NULL propagaria para o
+            retorno da função.
+        */
+        v_total_hora_falta := COALESCE((
             /*
                Soma todos so sub_totais que foram calculados individualmente
              */
@@ -83,7 +94,7 @@ BEGIN
                     WHERE fcc.falta_aluno_id = v_falta_aluno_id
                     GROUP BY fcc.componente_curricular_id
                 ) as sub_totais
-        );
+        ), 0);
 
         /*
             Evita divisão por zero quando a série está sem carga horária cadastrada
