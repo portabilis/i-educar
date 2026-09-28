@@ -8,7 +8,8 @@ return new class extends clsListagem
     {
         $params = [];
         $params['ano'] = $this->getQueryString('ano');
-        $params['curso'] = $this->getQueryString('curso');
+        // Sem curso fica nulo: lista vazia viraria "in ()" na consulta, que só usa o padrão de todos os cursos quando o valor é nulo.
+        $params['curso'] = array_map('intval', (array) $this->getQueryString('curso')) ?: null;
         $params['data_inicial'] = $this->getQueryString('data_inicial');
         $params['data_final'] = $this->getQueryString('data_final');
 
@@ -73,6 +74,8 @@ return new class extends clsListagem
         $linkTemplate = '<a href="#" class="mostra-consulta" style="font-weight: bold;" data-api="ConsultaMovimentoGeral" data-params=\'%s\' data-tipo="%s">%d</a>';
 
         foreach ($data as $key => $value) {
+            $acessaEscola = Portabilis_Utils_User::canAccessEscola(id: $value['cod_escola']);
+
             foreach ($value as $k => $v) {
                 switch ($k) {
                     case 'cod_escola':
@@ -82,10 +85,12 @@ return new class extends clsListagem
                     case 'localizacao':
                         continue;
                     default:
-                        $paramsCopy = $params;
-                        $paramsCopy['escola'] = $value['cod_escola'];
-                        $paramsCopy = json_encode($paramsCopy);
-                        $data[$key][$k] = sprintf($linkTemplate, $paramsCopy, $k, $v);
+                        if ($acessaEscola) {
+                            $paramsCopy = $params;
+                            $paramsCopy['escola'] = $value['cod_escola'];
+                            $paramsCopy = json_encode($paramsCopy);
+                            $data[$key][$k] = sprintf($linkTemplate, $paramsCopy, $k, $v);
+                        }
                 }
             }
         }
