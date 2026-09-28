@@ -43,7 +43,8 @@ class ExemptionListController extends Controller
         ])->withoutTrashed()
             ->orderByCreatedAt()
             ->paginate(20)
-            ->appends($request->except('page'));
+            ->appends($request->except('page'))
+            ->appends('ano', $request->get('ano', date('Y')) ?? '');
 
         return view('exemption.index', compact('exemptions'));
     }

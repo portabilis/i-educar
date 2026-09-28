@@ -48,3 +48,13 @@ test('com o ano limpo, lista todos os anos', function () use ($idsNaLista) {
         ->toContain($this->doAnoCorrente->getKey())
         ->toContain($this->doAnoPassado->getKey());
 });
+
+test('com o ano limpo, o link da proxima pagina continua com o ano limpo', function () {
+    $request = Request::create('/consulta-dispensas', 'GET', ['ano' => null]);
+    $request->setUserResolver(fn () => $this->user);
+
+    $url = app(ExemptionListController::class)->index($request)->getData()['exemptions']->url(2);
+    parse_str(parse_url($url, PHP_URL_QUERY), $query);
+
+    expect($query)->toHaveKey('ano', '');
+});
