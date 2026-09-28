@@ -1105,23 +1105,16 @@ var checkPossuiCpf = function () {
   checkMotivoInativo();
 };
 
-var preencheEstadoCpf = function (dataResponse) {
-  if (dataResponse.possui_cpf === undefined) {
-    return;
-  }
-
-  var motivo = String(dataResponse.document_absence_reason_id || "");
-  var $motivo = $j("#document_absence_reason_id");
-
+var ajustaMotivosOcultos = function ($motivo, motivo, motivosOcultos) {
   $motivo
     .find("option")
     .filter(function () {
-      return motivosInativos.hasOwnProperty(this.value) && this.value !== motivo;
+      return motivosOcultos.hasOwnProperty(this.value) && this.value !== motivo;
     })
     .remove();
 
-  if (motivosInativos.hasOwnProperty(motivo) && !$motivo.find('option[value="' + motivo + '"]').length) {
-    var $opcao = $j("<option>").val(motivo).text(motivosInativos[motivo]);
+  if (motivosOcultos.hasOwnProperty(motivo) && !$motivo.find('option[value="' + motivo + '"]').length) {
+    var $opcao = $j("<option>").val(motivo).text(motivosOcultos[motivo]);
     var $seguinte = $motivo
       .find("option")
       .filter(function () {
@@ -1137,11 +1130,28 @@ var preencheEstadoCpf = function (dataResponse) {
   }
 
   if (motivo && !$motivo.find('option[value="' + motivo + '"]').length) {
-    motivo = "";
+    return "";
   }
 
+  return motivo;
+};
+
+var ajustaMotivosInativos = function ($motivo, motivo) {
+  ajustaMotivosOcultos($motivo, motivo, motivosSistema);
+
+  return ajustaMotivosOcultos($motivo, motivo, motivosInativos);
+};
+
+var preencheEstadoCpf = function (dataResponse) {
+  if (dataResponse.possui_cpf === undefined) {
+    return;
+  }
+
+  var $motivo = $j("#document_absence_reason_id");
+  var motivo = ajustaMotivosInativos($motivo, String(dataResponse.document_absence_reason_id || ""));
+
   $j('input[name=possui_cpf][value="' + dataResponse.possui_cpf + '"]').prop("checked", true);
-  $motivo.val(motivo || "");
+  $motivo.val(motivo);
   $j("#document_absence_observation").val(dataResponse.document_absence_observation || "");
 
   checkPossuiCpf();
@@ -2522,10 +2532,11 @@ function canShowParentsFields() {
     });
 
     $j("body").append(
-      '<div id="dialog-form-pessoa-parent"><form><h2></h2><table><tr><td valign="top"><fieldset><label for="cpf-pessoa-parent">CPF</label> <input type="text" name="cpf-pessoa-parent" id="cpf-pessoa-parent" size="16" maxlength="14" class="text" placeholder="000.000.000-00"> <label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="49" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option><option id="estado-civil-pessoa-parent_7" value="7">Não informado</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <div id="falecido-modal"> <label>Falecido?</label><input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent">Cadastro detalhado</a></p></form></div>'
+      '<div id="dialog-form-pessoa-parent"><form><h2></h2><table><tr><td valign="top"><fieldset><label for="cpf-pessoa-parent">CPF <span style="color:#cc0000">*</span></label> <label><input type="radio" name="possui-cpf-parent" value="1"> Possui CPF</label> <label><input type="radio" name="possui-cpf-parent" value="0"> Não possui / não informado</label> <input type="text" name="cpf-pessoa-parent" id="cpf-pessoa-parent" size="16" maxlength="14" class="text" placeholder="000.000.000-00"> <div id="motivo-pessoa-parent-campo"><label for="motivo-pessoa-parent">Motivo <span style="color:#cc0000">*</span></label> <select class="select ui-widget-content ui-corner-all" name="motivo-pessoa-parent" id="motivo-pessoa-parent"></select> <label for="observacao-motivo-pessoa-parent">Observações <span id="observacao-motivo-pessoa-parent-obrigatorio" style="color:#cc0000">*</span></label> <input type="text" name="observacao-motivo-pessoa-parent" id="observacao-motivo-pessoa-parent" size="49" maxlength="255" class="text"></div> <label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="49" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option><option id="estado-civil-pessoa-parent_7" value="7">Não informado</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <div id="falecido-modal"> <label>Falecido?</label><input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent">Cadastro detalhado</a></p></form></div>'
     );
 
     $j("#dialog-form-pessoa-parent").find(":input").css("display", "block");
+    $j("input[name=possui-cpf-parent]").css("display", "inline");
 
     var nameParent = $j("#nome-pessoa-parent"),
       sexoParent = $j("#sexo-pessoa-parent"),
@@ -2533,24 +2544,69 @@ function canShowParentsFields() {
       datanascParent = $j("#data-nasc-pessoa-parent"),
       falecidoParent = $j("#falecido-parent"),
       cpfParent = $j("#cpf-pessoa-parent"),
+      motivoParent = $j("#motivo-pessoa-parent"),
+      observacaoMotivoParent = $j("#observacao-motivo-pessoa-parent"),
       allFields = $j([])
         .add(nameParent)
         .add(sexoParent)
         .add(estadocivilParent)
         .add(datanascParent)
         .add(falecidoParent)
-        .add(cpfParent);
-
-    // CPF obrigatorio no modal quando o parametro da instituicao "Exigir CPF" esta ativo
-    var obrigarCPFModalParent = obrigarCPF.val() == 1;
+        .add(cpfParent)
+        .add(motivoParent)
+        .add(observacaoMotivoParent);
 
     if ($j.fn.mask) {
       cpfParent.mask("000.000.000-00");
     }
 
-    if (obrigarCPFModalParent) {
-      $j('label[for="cpf-pessoa-parent"]').append(' <span style="color:#cc0000">*</span>');
-    }
+    $j("#document_absence_reason_id option").each(function () {
+      if (!motivosInativos.hasOwnProperty(this.value) && !motivosSistema.hasOwnProperty(this.value)) {
+        motivoParent.append($j("<option>").val(this.value).text(this.text));
+      }
+    });
+
+    var $motivoParentNotice = $j("<span>")
+      .html("")
+      .addClass("error resource-notice")
+      .hide()
+      .insertAfter(motivoParent);
+
+    var possuiCpfParent = function () {
+      return $j("input[name=possui-cpf-parent]:checked").val() == "1";
+    };
+
+    var motivoParentExigeObservacao = function () {
+      return motivosExigemObservacao.indexOf(parseInt(motivoParent.val(), 10)) > -1;
+    };
+
+    var checkMotivoExigeObservacaoParent = function () {
+      $j("#observacao-motivo-pessoa-parent-obrigatorio").toggle(motivoParentExigeObservacao());
+    };
+
+    var checkMotivoInativoParent = function () {
+      if (motivosInativos.hasOwnProperty(motivoParent.val())) {
+        $motivoParentNotice.html("Motivo inativo. Recomenda-se escolher um motivo ativo.").slideDown("fast");
+      } else {
+        $motivoParentNotice.hide();
+      }
+    };
+
+    var checkPossuiCpfParent = function () {
+      cpfParent.toggle(possuiCpfParent());
+      $j("#motivo-pessoa-parent-campo").toggle(!possuiCpfParent());
+
+      if (!possuiCpfParent()) {
+        cpfParent.val("");
+      }
+
+      checkMotivoExigeObservacaoParent();
+      checkMotivoInativoParent();
+    };
+
+    $j("input[name=possui-cpf-parent]").on("change", checkPossuiCpfParent);
+    motivoParent.on("change", checkMotivoExigeObservacaoParent);
+    motivoParent.on("change", checkMotivoInativoParent);
 
     $j("#dialog-form-pessoa-parent").dialog({
       autoOpen: false,
@@ -2581,7 +2637,7 @@ function canShowParentsFields() {
           }
 
           var cpfValParent = cpfParent.val().trim();
-          if (obrigarCPFModalParent && cpfValParent === "") {
+          if (possuiCpfParent() && cpfValParent === "") {
             bValid = false;
             cpfParent.addClass("error");
             messageUtils.error("O campo CPF é obrigatório.");
@@ -2593,6 +2649,14 @@ function canShowParentsFields() {
             bValid = false;
             cpfParent.addClass("error");
             messageUtils.error("CPF inválido.");
+          } else if (!possuiCpfParent() && !motivoParent.val()) {
+            bValid = false;
+            motivoParent.addClass("error");
+            messageUtils.error("É necessário informar o motivo da ausência do CPF.");
+          } else if (!possuiCpfParent() && motivoParentExigeObservacao() && !observacaoMotivoParent.val().trim()) {
+            bValid = false;
+            observacaoMotivoParent.addClass("error");
+            messageUtils.error("Este motivo exige o preenchimento das observações.");
           }
 
           if (bValid) {
@@ -2621,7 +2685,10 @@ function canShowParentsFields() {
               null,
               null,
               null,
-              cpfParent.val().trim()
+              cpfParent.val().trim(),
+              possuiCpfParent() ? 1 : 0,
+              motivoParent.val(),
+              observacaoMotivoParent.val()
             );
           }
         },
@@ -2831,6 +2898,12 @@ function canShowParentsFields() {
       $j("#nome-pessoa-parent").focus();
       $j("#falecido-parent").attr("checked", false);
 
+      ajustaMotivosInativos(motivoParent, "");
+      $j('input[name=possui-cpf-parent][value="1"]').prop("checked", true);
+      motivoParent.val("");
+      observacaoMotivoParent.val("");
+      checkPossuiCpfParent();
+
       var tipoPessoa = "pai";
 
       switch (parentType) {
@@ -2881,6 +2954,16 @@ function canShowParentsFields() {
         window[parentType + "_details"].falecido
       );
       cpfParent.val(window[parentType + "_details"].cpf || "");
+
+      var motivoParentAtual = ajustaMotivosInativos(
+        motivoParent,
+        String(window[parentType + "_details"].document_absence_reason_id || "")
+      );
+
+      $j('input[name=possui-cpf-parent][value="' + (window[parentType + "_details"].possui_cpf === 0 ? 0 : 1) + '"]').prop("checked", true);
+      motivoParent.val(motivoParentAtual);
+      observacaoMotivoParent.val(window[parentType + "_details"].document_absence_observation || "");
+      checkPossuiCpfParent();
 
       if (parentType == "responsavel") {
         $j("#falecido-modal").hide();
@@ -3091,7 +3174,10 @@ function canShowParentsFields() {
     nome_social,
     pais_residencia,
     povo_indigena_educacenso_id,
-    cpf
+    cpf,
+    possui_cpf,
+    document_absence_reason_id,
+    document_absence_observation
   ) {
     var data = {
       nome: nome,
@@ -3116,6 +3202,12 @@ function canShowParentsFields() {
       observacao_aluno: $j("#observacao").val(),
       povo_indigena_educacenso_id: povo_indigena_educacenso_id
     };
+
+    if (possui_cpf !== undefined) {
+      data.possui_cpf = possui_cpf;
+      data.document_absence_reason_id = document_absence_reason_id;
+      data.document_absence_observation = document_absence_observation;
+    }
 
     var options = {
       url: postResourceUrlBuilder.buildUrl(

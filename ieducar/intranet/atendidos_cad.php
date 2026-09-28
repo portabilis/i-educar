@@ -1543,8 +1543,6 @@ return new class extends clsCadastro
             $dados['cpf'] = $cpfInt;
         }
 
-        $dados['possui_cpf'] = (int) $this->possui_cpf === 1;
-
         if (is_numeric($this->document_absence_reason_id)) {
             $dados['document_absence_reason_id'] = $this->document_absence_reason_id;
             $dados['document_absence_observation'] = $this->document_absence_observation ?: null;
@@ -1669,7 +1667,6 @@ return new class extends clsCadastro
         $cpfInt = $this->id_federal ? idFederal2int(str: $this->id_federal) : null;
         $dados['cpf'] = is_numeric($cpfInt) ? $cpfInt : null;
 
-        $dados['possui_cpf'] = (int) $this->possui_cpf === 1;
         $dados['document_absence_reason_id'] = is_numeric($this->document_absence_reason_id) ? $this->document_absence_reason_id : null;
         $dados['document_absence_observation'] = $dados['document_absence_reason_id'] ? ($this->document_absence_observation ?: null) : null;
 

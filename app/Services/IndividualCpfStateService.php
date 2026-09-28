@@ -48,7 +48,11 @@ class IndividualCpfStateService
             : null;
 
         $reason = DocumentAbsenceReason::query()
-            ->when((int) $savedReasonId === $reasonId, fn ($query) => $query->withTrashed())
+            ->when(
+                (int) $savedReasonId === $reasonId,
+                fn ($query) => $query->withTrashed(),
+                fn ($query) => $query->where('from_system', false)
+            )
             ->find($reasonId);
 
         if (!$reason) {
@@ -67,7 +71,13 @@ class IndividualCpfStateService
         $currentReasonId = $this->reasonId($currentReasonId);
 
         return DocumentAbsenceReason::withTrashed()
-            ->where(fn ($query) => $query->whereNull('deleted_at')->orWhere('id', $currentReasonId))
+            ->where(function ($query) use ($currentReasonId) {
+                $query->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                    $query->where('from_system', false);
+                });
+                $query->orWhere('id', $currentReasonId);
+            })
             ->orderBy('name')
             ->get()
             ->mapWithKeys(fn (DocumentAbsenceReason $reason) => [$reason->getKey() => $this->label($reason)])
@@ -78,6 +88,15 @@ class IndividualCpfStateService
     public function inactiveReasons(): Collection
     {
         return DocumentAbsenceReason::onlyTrashed()
+            ->orderBy('name')
+            ->get()
+            ->mapWithKeys(fn (DocumentAbsenceReason $reason) => [$reason->getKey() => $this->label($reason)]);
+    }
+
+    public function systemReasons(): Collection
+    {
+        return DocumentAbsenceReason::withTrashed()
+            ->where('from_system', true)
             ->orderBy('name')
             ->get()
             ->mapWithKeys(fn (DocumentAbsenceReason $reason) => [$reason->getKey() => $this->label($reason)]);
