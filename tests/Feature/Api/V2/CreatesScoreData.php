@@ -19,6 +19,7 @@ use Database\Factories\LegacySchoolGradeDisciplineFactory;
 use Database\Factories\LegacySchoolGradeFactory;
 use Database\Factories\LegacyStageTypeFactory;
 use Database\Factories\LegacyStudentFactory;
+use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
 use RegraAvaliacao_Model_Nota_TipoValor;
 use RegraAvaliacao_Model_TipoParecerDescritivo;
@@ -158,5 +159,11 @@ trait CreatesScoreData
     {
         return $this->withHeaders(['token' => 'valid-token'])
             ->postJson('/api/v2/pareceres-por-etapa-e-componente', $this->scorePayload($data, $overrides));
+    }
+
+    protected function postStageGeneralOpinion(array $data, array $overrides = []): TestResponse
+    {
+        return $this->withHeaders(['token' => 'valid-token'])
+            ->postJson('/api/v2/pareceres-por-etapa-geral', Arr::except($this->scorePayload($data, $overrides), 'componente_id'));
     }
 }
