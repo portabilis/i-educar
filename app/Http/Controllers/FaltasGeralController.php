@@ -34,10 +34,8 @@ class FaltasGeralController extends DiarioController
             $boletim->addFalta($falta);
             $boletim->saveFaltas();
             $boletim->promover();
-        } catch (EvaluationRuleNotAllowGeneralAbsence $exception) {
-            return response()->json([
-                'message' => $exception->getMessage(),
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (\CoreExt_Exception_InvalidArgumentException|EvaluationRuleNotAllowGeneralAbsence $exception) {
+            return $this->unprocessableResponse($exception);
         } catch (\CoreExt_Service_Exception) {
             // Evita Exception ao não promover matrículas pois não houve mudança de situação
         } catch (\Exception $exception) {

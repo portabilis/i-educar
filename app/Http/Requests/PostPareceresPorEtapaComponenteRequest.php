@@ -5,7 +5,6 @@ namespace App\Http\Requests;
 use App\Rules\RegistrationExistsInSchoolClass;
 use App\Services\DiarioControllerService;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class PostPareceresPorEtapaComponenteRequest extends FormRequest
 {
@@ -18,9 +17,10 @@ class PostPareceresPorEtapaComponenteRequest extends FormRequest
                 'nullable',
                 'string',
             ],
+            // O boletim valida a etapa pelo calendário da matrícula.
             'etapa' => [
                 'required',
-                Rule::in([1, 2, 3, 4, 'Rc']),
+                'regex:/^([1-9][0-9]*|Rc)$/',
             ],
             'aluno_id' => [
                 'required',

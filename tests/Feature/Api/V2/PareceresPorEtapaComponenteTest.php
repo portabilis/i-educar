@@ -47,7 +47,7 @@ test('requires mandatory fields', function () {
 test('rejects invalid stage', function () {
     $data = $this->createScoreData(stageDisciplineOpinionRule());
 
-    $this->postStageDisciplineOpinion($data, ['parecer' => 'Parecer', 'etapa' => 5])
+    $this->postStageDisciplineOpinion($data, ['parecer' => 'Parecer', 'etapa' => 'X'])
         ->assertStatus(422)
         ->assertJsonValidationErrors(['etapa']);
 
@@ -147,7 +147,38 @@ test('does not store when discipline does not belong to school class', function 
         ->assertStatus(422)
         ->assertJson([
             'message' => "Componente curricular de código {$otherDiscipline->getKey()} não existe para a turma {$data['school_class']->getKey()}.",
+            'code' => 1010,
+            'extra' => [
+                'school_class_id' => $data['school_class']->getKey(),
+                'discipline_id' => $otherDiscipline->getKey(),
+            ],
         ]);
 
     $this->assertDatabaseCount(LegacyDisciplineDescriptiveOpinion::class, 0);
+});
+
+// O boletim não confere a etapa do parecer com o calendário; o resource legado
+// também aceitava qualquer etapa.
+test('accepts stage outside the school calendar like the legacy resource', function () {
+    $data = $this->createScoreData(stageDisciplineOpinionRule());
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 4);
+
+    $this->postStageDisciplineOpinion($data, ['parecer' => 'Parecer', 'etapa' => 5])
+        ->assertStatus(201);
+
+    $this->assertDatabaseHas(LegacyDisciplineDescriptiveOpinion::class, ['etapa' => '5']);
+});
+
+test('stores opinion in stages above four when the school calendar has them', function () {
+    $data = $this->createScoreData(stageDisciplineOpinionRule());
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 6);
+
+    $this->postStageDisciplineOpinion($data, ['parecer' => 'Parecer da etapa 6', 'etapa' => 6])
+        ->assertStatus(201);
+
+    $this->assertDatabaseHas(LegacyDisciplineDescriptiveOpinion::class, [
+        'componente_curricular_id' => $data['discipline']->getKey(),
+        'etapa' => '6',
+        'parecer' => 'Parecer da etapa 6',
+    ]);
 });
