@@ -17,6 +17,7 @@ use Database\Factories\LegacyGradeFactory;
 use Database\Factories\LegacyKnowledgeAreaFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacySchoolClassFactory;
+use Database\Factories\LegacySchoolClassGradeFactory;
 use Database\Factories\LegacySchoolFactory;
 use Database\Factories\LegacySchoolGradeDisciplineFactory;
 use Database\Factories\LegacySchoolGradeFactory;
@@ -26,6 +27,7 @@ use RegraAvaliacao_Model_TipoPresenca;
 trait CreatesAbsenceData
 {
     use ConfiguresInstitutionToken;
+    use CreatesSchoolCalendar;
 
     protected function createAbsenceData(int $attendanceType = RegraAvaliacao_Model_TipoPresenca::GERAL): array
     {
@@ -115,6 +117,59 @@ trait CreatesAbsenceData
         ]);
 
         return $discipline;
+    }
+
+    /**
+     * Torna a turma multisseriada: adiciona uma segunda série, com um componente
+     * próprio e um aluno matriculado nela.
+     */
+    protected function addSecondGradeToSchoolClass(array $data): array
+    {
+        $grade = LegacyGradeFactory::new()->create([
+            'ref_cod_curso' => $data['school_grade']->grade->ref_cod_curso,
+            'dias_letivos' => '200',
+        ]);
+
+        $schoolGrade = LegacySchoolGradeFactory::new()->create([
+            'ref_cod_serie' => $grade,
+            'ref_cod_escola' => $data['school_grade']->ref_cod_escola,
+        ]);
+
+        foreach ([$data['school_grade'], $schoolGrade] as $classGrade) {
+            LegacySchoolClassGradeFactory::new()->create([
+                'escola_id' => $classGrade->ref_cod_escola,
+                'serie_id' => $classGrade->ref_cod_serie,
+                'turma_id' => $data['school_class'],
+            ]);
+        }
+
+        $discipline = $this->addDisciplineToSchoolClass($data['school_class'], $schoolGrade);
+
+        LegacyEvaluationRuleGradeYearFactory::new()->create([
+            'regra_avaliacao_id' => LegacyEvaluationRuleFactory::new()->create([
+                'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
+                'tipo_presenca' => RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE,
+            ]),
+            'serie_id' => $grade,
+            'ano_letivo' => $data['registration']->ano,
+        ]);
+
+        $registration = LegacyRegistrationFactory::new()->create([
+            'ano' => $data['registration']->ano,
+            'ref_ref_cod_serie' => $grade,
+            'ref_ref_cod_escola' => $data['school_grade']->ref_cod_escola,
+        ]);
+
+        LegacyEnrollmentFactory::new()->create([
+            'ref_cod_matricula' => $registration,
+            'ref_cod_turma' => $data['school_class'],
+        ]);
+
+        return [
+            'discipline' => $discipline,
+            'registration' => $registration,
+            'aluno_id' => $registration->ref_cod_aluno,
+        ];
     }
 
     protected function createGroupedKnowledgeArea(): LegacyKnowledgeArea

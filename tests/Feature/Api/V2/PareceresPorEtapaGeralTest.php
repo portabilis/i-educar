@@ -46,7 +46,7 @@ test('requires mandatory fields', function () {
 test('rejects invalid stage', function () {
     $data = $this->createScoreData(stageGeneralOpinionRule());
 
-    $this->postStageGeneralOpinion($data, ['parecer' => 'Parecer', 'etapa' => 5])
+    $this->postStageGeneralOpinion($data, ['parecer' => 'Parecer', 'etapa' => 'X'])
         ->assertStatus(422)
         ->assertJsonValidationErrors(['etapa']);
 
@@ -142,4 +142,29 @@ test('does not store when registration is not found', function () {
         ->assertJsonValidationErrors(['aluno_id']);
 
     $this->assertDatabaseCount(LegacyGeneralDescriptiveOpinion::class, 0);
+});
+
+// O boletim não confere a etapa do parecer com o calendário; o resource legado
+// também aceitava qualquer etapa.
+test('accepts stage outside the school calendar like the legacy resource', function () {
+    $data = $this->createScoreData(stageGeneralOpinionRule());
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 4);
+
+    $this->postStageGeneralOpinion($data, ['parecer' => 'Parecer', 'etapa' => 5])
+        ->assertStatus(201);
+
+    $this->assertDatabaseHas(LegacyGeneralDescriptiveOpinion::class, ['etapa' => '5']);
+});
+
+test('stores opinion in stages above four when the school calendar has them', function () {
+    $data = $this->createScoreData(stageGeneralOpinionRule());
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 6);
+
+    $this->postStageGeneralOpinion($data, ['parecer' => 'Parecer da etapa 6', 'etapa' => 6])
+        ->assertStatus(201);
+
+    $this->assertDatabaseHas(LegacyGeneralDescriptiveOpinion::class, [
+        'etapa' => '6',
+        'parecer' => 'Parecer da etapa 6',
+    ]);
 });

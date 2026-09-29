@@ -48,12 +48,12 @@ test('rejects negative absences', function () {
         ->assertJsonValidationErrors(['faltas']);
 });
 
-test('rejects stage out of range', function () {
+test('rejects stage lower than one', function () {
     $this->institutionWithToken();
 
     $this->withHeaders(['token' => 'valid-token'])
         ->postJson('/api/v2/falta-geral', [
-            'etapa' => 5,
+            'etapa' => 0,
             'faltas' => 2,
             'aluno_id' => 1,
             'turma_id' => 1,
@@ -133,6 +133,7 @@ test('does not allow general absence when rule is by component', function () {
         ->assertStatus(422)
         ->assertJson([
             'message' => "A regra da turma {$data['turma_id']} não permite lançamento de faltas geral.",
+            'code' => 1008,
         ]);
 
     $this->assertDatabaseCount(LegacyGeneralAbsence::class, 0);
@@ -154,4 +155,30 @@ test('does not store when registration is not found', function () {
         ]);
 
     $this->assertDatabaseCount(LegacyGeneralAbsence::class, 0);
+});
+
+test('rejects stage outside the school calendar', function () {
+    $data = $this->createAbsenceData();
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 4);
+
+    $this->withHeaders(['token' => 'valid-token'])
+        ->postJson('/api/v2/falta-geral', $this->generalAbsencePayload($data, ['etapa' => 5]))
+        ->assertStatus(422)
+        ->assertJson(['message' => 'A etapa informada é inválida.']);
+
+    $this->assertDatabaseCount(LegacyGeneralAbsence::class, 0);
+});
+
+test('stores absence in stages above four when the school calendar has them', function () {
+    $data = $this->createAbsenceData();
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 6);
+
+    $this->withHeaders(['token' => 'valid-token'])
+        ->postJson('/api/v2/falta-geral', $this->generalAbsencePayload($data, ['etapa' => 6]))
+        ->assertStatus(201);
+
+    $this->assertDatabaseHas(LegacyGeneralAbsence::class, [
+        'quantidade' => 2,
+        'etapa' => 6,
+    ]);
 });

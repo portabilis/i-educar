@@ -19,11 +19,11 @@ class PostRecuperacoesRequest extends FormRequest
                 'nullable',
                 'numeric',
             ],
+            // O boletim valida a etapa pelo calendário da matrícula.
             'etapa' => [
                 'required',
                 'integer',
                 'min:1',
-                'max:4',
             ],
             'aluno_id' => [
                 'required',
