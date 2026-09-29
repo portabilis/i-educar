@@ -7,6 +7,8 @@ use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGrade;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyOrganization;
+use App\Models\LegacySchool;
 use App\Models\LegacyUser;
 use App\Models\LegacyUserType;
 use App\Models\State;
@@ -25,10 +27,12 @@ use Database\Factories\LegacyGeneralConfigurationFactory;
 use Database\Factories\LegacyGradeFactory;
 use Database\Factories\LegacyIndividualFactory;
 use Database\Factories\LegacyInstitutionFactory;
+use Database\Factories\LegacyOrganizationFactory;
 use Database\Factories\LegacyPersonFactory;
 use Database\Factories\LegacyRegimeTypeFactory;
 use Database\Factories\LegacyRoleFactory;
 use Database\Factories\LegacySchoolClassTypeFactory;
+use Database\Factories\LegacySchoolFactory;
 use Database\Factories\LegacyStageTypeFactory;
 use Database\Factories\LegacyUserFactory;
 use Database\Factories\LegacyUserTypeFactory;
@@ -89,6 +93,8 @@ final class Scenario
     public const COURSE = 'Ensino Fundamental';
 
     public const GRADE = '1º Ano';
+
+    public const SCHOOL = 'Escola Municipal Modelo';
 
     /**
      * Dados de referência que, numa instalação real, vêm das migrations de
@@ -331,7 +337,10 @@ final class Scenario
     public static function individual(string $name): LegacyIndividual
     {
         return LegacyIndividualFactory::new()->create([
-            'idpes' => LegacyPersonFactory::new()->create(['nome' => $name]),
+            'idpes' => LegacyPersonFactory::new()->create([
+                'nome' => $name,
+                'tipo' => 'F',
+            ]),
         ]);
     }
 
@@ -397,6 +406,35 @@ final class Scenario
         ]);
 
         return $grade;
+    }
+
+    /**
+     * Cria a pessoa jurídica que a escola representa.
+     *
+     * O cadastro de escola tem uma etapa prévia: escolher a pessoa jurídica num
+     * campo de busca com autocomplete. O tipo da pessoa é fixado em "J" porque é
+     * por ele que a busca da tela filtra.
+     */
+    public static function organization(string $name = self::SCHOOL): LegacyOrganization
+    {
+        return LegacyOrganizationFactory::new()->create([
+            'idpes' => LegacyPersonFactory::new()->create([
+                'nome' => $name,
+                'tipo' => 'J',
+            ]),
+            'fantasia' => $name,
+        ]);
+    }
+
+    /**
+     * Cria uma escola ligada à instituição do cenário.
+     *
+     * Atalho por factory para os testes das telas que vêm depois da escola —
+     * ano letivo, série da escola, turma. A tela em si é coberta por SchoolTest.
+     */
+    public static function school(string $name = self::SCHOOL): LegacySchool
+    {
+        return LegacySchoolFactory::new()->withName($name)->create();
     }
 
     /**

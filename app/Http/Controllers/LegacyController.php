@@ -192,12 +192,20 @@ class LegacyController extends Controller
 
         // No SAPI de linha de comando — que é como roda o servidor in-process dos
         // testes de browser — header() não faz nada e headers_list() volta vazia.
-        // O `Content-Type: text/xml` que as telas *_xml.php definem se perde, o
-        // navegador devolve responseXML nulo e todas as cascatas de select do
-        // legado (educar_campo_lista.php) param de funcionar em silêncio. Quando
-        // não há Content-Type nenhum, ele é deduzido do corpo.
-        if (!$hasContentType && str_starts_with(ltrim($content), '<?xml')) {
-            $headers['Content-Type'] = 'text/xml; charset=utf-8';
+        // Perde-se então o `Content-Type: text/xml` das telas *_xml.php e o
+        // `application/json` do ApiCoreController, e o navegador passa a tratar
+        // as duas coisas como HTML: o responseXML vem nulo e as cascatas de
+        // select do legado param de funcionar, e o $.get do jQuery não converte a
+        // resposta da API, deixando todo autocomplete sem sugestões — tudo em
+        // silêncio. Sem nenhum Content-Type, ele é deduzido do corpo.
+        if (!$hasContentType) {
+            $body = ltrim($content);
+
+            if (str_starts_with($body, '<?xml')) {
+                $headers['Content-Type'] = 'text/xml; charset=utf-8';
+            } elseif (str_starts_with($body, '{') || str_starts_with($body, '[')) {
+                $headers['Content-Type'] = 'application/json; charset=utf-8';
+            }
         }
 
         return $headers;

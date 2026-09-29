@@ -38,8 +38,8 @@ it('cadastra uma série', function () {
         'nm_serie' => Scenario::GRADE,
         'carga_horaria' => '800',
         'dias_letivos' => '200',
-        // Entre colchetes o nome vira seletor CSS na marra no plugin, então
-        // precisa vir como seletor de atributo.
+        // Nomes com colchetes precisam vir como seletor de atributo: o plugin do
+        // Pest tentaria interpretá-los como seletor CSS.
         '[name="anos_letivos[0]"]' => (string) now()->year,
     ]);
 

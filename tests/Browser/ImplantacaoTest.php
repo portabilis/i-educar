@@ -138,6 +138,8 @@ it('percorre o roteiro de implantação', function () {
         'nm_serie' => Scenario::GRADE,
         'carga_horaria' => '800',
         'dias_letivos' => '200',
+        // Nomes com colchetes precisam vir como seletor de atributo: o plugin do
+        // Pest tentaria interpretá-los como seletor CSS.
         '[name="anos_letivos[0]"]' => (string) now()->year,
     ]);
 

@@ -212,6 +212,103 @@ final class Form
     }
 
     /**
+     * Clica num botão extra da tela (os que o clsCadastro monta a partir de
+     * `array_botao`, com id `arr_bot_<Rótulo>`).
+     *
+     * É o caso do "Continuar" da primeira etapa do cadastro de escola.
+     */
+    public static function action(
+        PendingAwaitablePage|AwaitableWebpage|Webpage $page,
+        string $label,
+    ): AwaitableWebpage|Webpage {
+        $selector = '#arr_bot_' . $label;
+
+        self::awaitHandler($page, $selector);
+
+        return $page->click($selector)->waitForEvent('networkidle');
+    }
+
+    /**
+     * Preenche um campo de busca com autocomplete (inputsHelper()->simpleSearch*).
+     *
+     * O campo visível guarda o rótulo e um hidden guarda o id; é o hidden que a
+     * tela grava, e ele só é preenchido quando uma sugestão é **escolhida**. A
+     * digitação tem que ser tecla a tecla, porque o autocomplete do jQuery UI
+     * reage a eventos de teclado, e não a um valor atribuído de uma vez.
+     */
+    public static function autocomplete(
+        PendingAwaitablePage|AwaitableWebpage|Webpage $page,
+        string $field,
+        string $term,
+        string $hidden,
+    ): AwaitableWebpage|Webpage {
+        $page = $page->typeSlowly($field, $term);
+
+        // O menu é procurado pelo que está visível: o jQuery UI 1.9 desta base
+        // não liga o campo ao menu por atributo, e nas telas do i-Educar só há um
+        // menu aberto de cada vez.
+        $aberto = '(() => Array.from(document.querySelectorAll("ul.ui-autocomplete"))'
+            . '.filter(u => u.offsetParent !== null && u.querySelectorAll("li").length).length'
+            . ' ? "ok" : "sem sugestões")()';
+
+        for ($attempt = 0; $attempt < 25; $attempt++) {
+            if ((string) $page->script($aberto) === 'ok') {
+                break;
+            }
+
+            $page->wait(0.2);
+        }
+
+        $page = $page->click('ul.ui-autocomplete li');
+
+        // Sem o hidden o formulário parece preenchido e grava vazio. O nome vem
+        // por parâmetro porque o simpleSearch monta o par como
+        // `{objeto}_{atributo}` visível e `{objeto}_id` oculto, e o objeto não dá
+        // para deduzir do nome do campo visível.
+        $preenchido = sprintf(
+            '(() => ((document.getElementsByName(%s)[0] || {}).value ? "ok" : "vazio"))()',
+            json_encode($hidden),
+        );
+
+        for ($attempt = 0; $attempt < 15; $attempt++) {
+            if ((string) $page->script($preenchido) === 'ok') {
+                return $page;
+            }
+
+            $page->wait(0.2);
+        }
+
+        throw new ExpectationFailedException(
+            "A busca [{$field}] não preencheu [{$hidden}] ao escolher [{$term}]."
+        );
+    }
+
+    /**
+     * Espera um elemento existir.
+     *
+     * Algumas telas reescrevem o próprio DOM depois do carregamento — o cadastro
+     * de escola remonta o bloco de cursos por JS, trocando os campos de nome.
+     * Mexer antes disso perde o preenchimento e deixa os handlers de `onchange`
+     * no nó antigo, de modo que as cascatas nunca disparam.
+     */
+    public static function awaitElement(
+        PendingAwaitablePage|AwaitableWebpage|Webpage $page,
+        string $selector,
+    ): AwaitableWebpage|Webpage {
+        $existe = sprintf('(() => (document.querySelector(%s) ? "ok" : "ausente"))()', json_encode($selector));
+
+        for ($attempt = 0; $attempt < 25; $attempt++) {
+            if ((string) $page->script($existe) === 'ok') {
+                return $page;
+            }
+
+            $page->wait(0.2);
+        }
+
+        throw new ExpectationFailedException("O elemento [{$selector}] não apareceu na tela.");
+    }
+
+    /**
      * Guarda uma imagem da etapa, para comparar o antes e o depois do rebranding.
      */
     public static function shot(
