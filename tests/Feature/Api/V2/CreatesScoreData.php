@@ -153,4 +153,10 @@ trait CreatesScoreData
         return $this->withHeaders(['token' => 'valid-token'])
             ->postJson('/api/v2/recuperacoes', $this->scorePayload($data, $overrides));
     }
+
+    protected function postStageDisciplineOpinion(array $data, array $overrides = []): TestResponse
+    {
+        return $this->withHeaders(['token' => 'valid-token'])
+            ->postJson('/api/v2/pareceres-por-etapa-e-componente', $this->scorePayload($data, $overrides));
+    }
 }

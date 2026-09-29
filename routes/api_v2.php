@@ -4,6 +4,7 @@ use App\Http\Controllers\FaltasComponenteController;
 use App\Http\Controllers\FaltasGeralController;
 use App\Http\Controllers\LaudoUploadController;
 use App\Http\Controllers\NotasController;
+use App\Http\Controllers\PareceresPorEtapaComponenteController;
 use App\Http\Controllers\RecuperacoesController;
 use App\Http\Middleware\ValidToken;
 
@@ -13,4 +14,5 @@ Route::group(['middleware' => ValidToken::class], function () {
     Route::post('/aluno-laudo-upload', LaudoUploadController::class);
     Route::post('/notas', NotasController::class);
     Route::post('/recuperacoes', RecuperacoesController::class);
+    Route::post('/pareceres-por-etapa-e-componente', PareceresPorEtapaComponenteController::class);
 });
