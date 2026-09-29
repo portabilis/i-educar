@@ -813,6 +813,19 @@ return new class extends clsCadastro
 
         Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: $styles);
 
+        $motivosExigemObservacao = (new IndividualCpfStateService)->reasonsRequiringObservation();
+        $motivosInativos = (new IndividualCpfStateService)->inactiveReasons();
+        $motivosSistema = (new IndividualCpfStateService)->systemReasons();
+        $opcoesJson = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP;
+
+        Portabilis_View_Helper_Application::embedJavascript(
+            viewInstance: $this,
+            script: 'var motivosExigemObservacao = ' . json_encode($motivosExigemObservacao, $opcoesJson)
+                . '; var motivosInativos = ' . json_encode($motivosInativos, $opcoesJson)
+                . '; var motivosSistema = ' . json_encode($motivosSistema, $opcoesJson) . ';',
+            afterReady: false
+        );
+
         $script = [
             '/vendor/legacy/Cadastro/Assets/Javascripts/PessoaFisica.js',
             '/vendor/legacy/Cadastro/Assets/Javascripts/Addresses.js',
@@ -821,15 +834,6 @@ return new class extends clsCadastro
         ];
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $script);
-
-        $motivosExigemObservacao = (new IndividualCpfStateService)->reasonsRequiringObservation();
-        $motivosInativos = (new IndividualCpfStateService)->inactiveReasons();
-
-        Portabilis_View_Helper_Application::embedJavascript(
-            viewInstance: $this,
-            script: 'var motivosExigemObservacao = ' . json_encode($motivosExigemObservacao) . '; var motivosInativos = ' . json_encode($motivosInativos) . ';',
-            afterReady: false
-        );
     }
 
     public function Novo()

@@ -1963,8 +1963,16 @@ function canShowParentsFields() {
                   <td valign="top">
                     <fieldset>
                       <legend>Dados básicos</legend>
-                      <label for="cpf-pessoa-aluno">CPF</label>
+                      <label for="cpf-pessoa-aluno">CPF<span class="campo_obrigatorio">*</span> </label>
+                      <label><input type="radio" name="possui-cpf-aluno" value="1"> Possui CPF</label>
+                      <label><input type="radio" name="possui-cpf-aluno" value="0"> Não possui / não informado</label>
                       <input type="text" name="cpf-pessoa-aluno" id="cpf-pessoa-aluno" size="16" maxlength="14" class="text" placeholder="000.000.000-00">
+                      <div id="motivo-pessoa-aluno-campo">
+                        <label for="motivo-pessoa-aluno">Motivo<span class="campo_obrigatorio">*</span> </label>
+                        <select class="select ui-widget-content ui-corner-all" name="motivo-pessoa-aluno" id="motivo-pessoa-aluno"></select>
+                        <label for="observacao-motivo-pessoa-aluno">Observações<span id="observacao-motivo-pessoa-aluno-obrigatorio" class="campo_obrigatorio">*</span> </label>
+                        <input type="text" name="observacao-motivo-pessoa-aluno" id="observacao-motivo-pessoa-aluno" size="49" maxlength="255" class="text">
+                      </div>
                       <label for="nome-pessoa-aluno">Nome<span class="campo_obrigatorio">*</span> </label>
                       <input type="text" name="nome-pessoa-aluno" id="nome-pessoa-aluno" size="49" maxlength="255" class="text">
                       <label for="nome-social-pessoa-aluno">Nome social e/ou afetivo</label>
@@ -2095,6 +2103,8 @@ function canShowParentsFields() {
       bloco = $j("#bloco"),
       andar = $j("#andar"),
       cpfAluno = $j("#cpf-pessoa-aluno"),
+      motivoAluno = $j("#motivo-pessoa-aluno"),
+      observacaoMotivoAluno = $j("#observacao-motivo-pessoa-aluno"),
       allFields = $j([])
         .add(name)
         .add(observacao)
@@ -2114,18 +2124,61 @@ function canShowParentsFields() {
         .add(apartamento)
         .add(bloco)
         .add(andar)
-        .add(cpfAluno);
-
-    // CPF obrigatorio no modal do aluno quando o parametro "Exigir CPF" esta ativo
-    var obrigarCPFModalAluno = obrigarCPF.val() == 1;
+        .add(cpfAluno)
+        .add(motivoAluno)
+        .add(observacaoMotivoAluno);
 
     if ($j.fn.mask) {
       cpfAluno.mask("000.000.000-00");
     }
 
-    if (obrigarCPFModalAluno) {
-      $j('label[for="cpf-pessoa-aluno"]').append(' <span style="color:#cc0000">*</span>');
-    }
+    $j("#document_absence_reason_id option").each(function () {
+      if (!motivosInativos.hasOwnProperty(this.value) && !motivosSistema.hasOwnProperty(this.value)) {
+        motivoAluno.append($j("<option>").val(this.value).text(this.text));
+      }
+    });
+
+    var $motivoAlunoNotice = $j("<span>")
+      .html("")
+      .addClass("error resource-notice")
+      .hide()
+      .insertAfter(motivoAluno);
+
+    var possuiCpfAluno = function () {
+      return $j("input[name=possui-cpf-aluno]:checked").val() == "1";
+    };
+
+    var motivoAlunoExigeObservacao = function () {
+      return motivosExigemObservacao.indexOf(parseInt(motivoAluno.val(), 10)) > -1;
+    };
+
+    var checkMotivoExigeObservacaoAluno = function () {
+      $j("#observacao-motivo-pessoa-aluno-obrigatorio").toggle(motivoAlunoExigeObservacao());
+    };
+
+    var checkMotivoInativoAluno = function () {
+      if (motivosInativos.hasOwnProperty(motivoAluno.val())) {
+        $motivoAlunoNotice.html("Motivo inativo. Recomenda-se escolher um motivo ativo.").slideDown("fast");
+      } else {
+        $motivoAlunoNotice.hide();
+      }
+    };
+
+    var checkPossuiCpfAluno = function () {
+      cpfAluno.toggle(possuiCpfAluno());
+      $j("#motivo-pessoa-aluno-campo").toggle(!possuiCpfAluno());
+
+      if (!possuiCpfAluno()) {
+        cpfAluno.val("");
+      }
+
+      checkMotivoExigeObservacaoAluno();
+      checkMotivoInativoAluno();
+    };
+
+    $j("input[name=possui-cpf-aluno]").on("change", checkPossuiCpfAluno);
+    motivoAluno.on("change", checkMotivoExigeObservacaoAluno);
+    motivoAluno.on("change", checkMotivoInativoAluno);
 
     municipio
       .show()
@@ -2389,6 +2442,7 @@ function canShowParentsFields() {
     $j("#tipo_nacionalidade").change(checkTipoNacionalidade);
 
     $j("#dialog-form-pessoa-aluno").find(":input").css("display", "block");
+    $j("input[name=possui-cpf-aluno]").css("display", "inline");
     $j("#postal_code").css("display", "inline");
     $j("#ddd_telefone_fixo").css("display", "inline");
     $j("#telefone_fixo").css("display", "inline");
@@ -2466,7 +2520,7 @@ function canShowParentsFields() {
           }
 
           var cpfValAluno = cpfAluno.val().trim();
-          if (obrigarCPFModalAluno && cpfValAluno === "") {
+          if (possuiCpfAluno() && cpfValAluno === "") {
             bValid = false;
             cpfAluno.addClass("error");
             messageUtils.error("O campo CPF é obrigatório.");
@@ -2478,6 +2532,14 @@ function canShowParentsFields() {
             bValid = false;
             cpfAluno.addClass("error");
             messageUtils.error("CPF inválido.");
+          } else if (!possuiCpfAluno() && !motivoAluno.val()) {
+            bValid = false;
+            motivoAluno.addClass("error");
+            messageUtils.error("É necessário informar o motivo da ausência do CPF.");
+          } else if (!possuiCpfAluno() && motivoAlunoExigeObservacao() && !observacaoMotivoAluno.val().trim()) {
+            bValid = false;
+            observacaoMotivoAluno.addClass("error");
+            messageUtils.error("Este motivo exige o preenchimento das observações.");
           }
 
           if (bValid) {
@@ -2504,7 +2566,10 @@ function canShowParentsFields() {
               nome_social.val(),
               $j("#pais_residencia").val(),
               $j("#povo_indigena_educacenso_id").val(),
-              cpfAluno.val().trim()
+              cpfAluno.val().trim(),
+              possuiCpfAluno() ? 1 : 0,
+              motivoAluno.val(),
+              observacaoMotivoAluno.val()
             );
           }
         },
@@ -2743,6 +2808,12 @@ function canShowParentsFields() {
 
       $j("#nome-pessoa-aluno").focus();
 
+      ajustaMotivosInativos(motivoAluno, "");
+      $j('input[name=possui-cpf-aluno][value="1"]').prop("checked", true);
+      motivoAluno.val("");
+      observacaoMotivoAluno.val("");
+      checkPossuiCpfAluno();
+
       $j("#dialog-form-pessoa-aluno form h2:first-child")
         .html("Cadastrar pessoa aluno")
         .css("margin-left", "0.75em");
@@ -2762,6 +2833,16 @@ function canShowParentsFields() {
       estadocivil.val(person_details.estadocivil);
       sexo.val(person_details.sexo);
       cpfAluno.val(person_details.cpf || "");
+
+      var motivoAlunoAtual = ajustaMotivosInativos(
+        motivoAluno,
+        String(person_details.document_absence_reason_id || "")
+      );
+
+      $j('input[name=possui-cpf-aluno][value="' + (person_details.possui_cpf === 0 ? 0 : 1) + '"]').prop("checked", true);
+      motivoAluno.val(motivoAlunoAtual);
+      observacaoMotivoAluno.val(person_details.document_absence_observation || "");
+      checkPossuiCpfAluno();
 
       if (person_details.idmun_nascimento) {
         $j("#naturalidade_aluno_id").val(
