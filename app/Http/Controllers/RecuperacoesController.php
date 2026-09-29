@@ -67,10 +67,8 @@ class RecuperacoesController extends DiarioController
             } catch (\CoreExt_Service_Exception) {
                 // Evita Exception ao não promover matrículas, pois não houve mudança de situação
             }
-        } catch (\RuntimeException|DisciplineNotExistsForSchoolClass $exception) {
-            return response()->json([
-                'message' => $exception->getMessage(),
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException|DisciplineNotExistsForSchoolClass $exception) {
+            return $this->unprocessableResponse($exception);
         } catch (\Exception $exception) {
             return response()->json([
                 'message' => 'Não foi possível salvar a recuperação para o aluno e turma informados. (' . $exception->getMessage() . ')',

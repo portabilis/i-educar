@@ -16,11 +16,11 @@ class PostFaltaGeralRequest extends FormRequest
                 'integer',
                 'min:0',
             ],
+            // O boletim valida a etapa pelo calendário da matrícula.
             'etapa' => [
                 'required',
                 'integer',
                 'min:1',
-                'max:4',
             ],
             'aluno_id' => [
                 'required',
