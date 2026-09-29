@@ -186,7 +186,8 @@ class AlunoController extends ApiCoreController
     // validations
     protected function canGetMatriculas()
     {
-        return $this->validatesId('aluno');
+        return $this->validatesId('aluno')
+            && $this->validatesAuthorizationToView();
     }
 
     protected function canGetTodosAlunos()
