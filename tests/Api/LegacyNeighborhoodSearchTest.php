@@ -11,6 +11,10 @@ class LegacyNeighborhoodSearchTest extends TestCase
 {
     use DatabaseTransactions;
 
+    private const ACCENTED_NEIGHBORHOOD = 'Vila São José';
+
+    private const NEIGHBORHOOD_FIELD = 'neighborhood';
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -23,11 +27,11 @@ class LegacyNeighborhoodSearchTest extends TestCase
     public function test_searches_neighborhood_by_partial_text(): void
     {
         PlaceFactory::new()->create([
-            'neighborhood' => 'Vila Nova',
+            self::NEIGHBORHOOD_FIELD => 'Vila Nova',
         ]);
 
         PlaceFactory::new()->create([
-            'neighborhood' => 'Centro',
+            self::NEIGHBORHOOD_FIELD => 'Centro',
         ]);
 
         $result = $this->searchNeighborhood('Vila');
@@ -39,24 +43,27 @@ class LegacyNeighborhoodSearchTest extends TestCase
     public function test_search_ignores_accents_and_case(): void
     {
         PlaceFactory::new()->create([
-            'neighborhood' => 'Vila São José',
+            self::NEIGHBORHOOD_FIELD => self::ACCENTED_NEIGHBORHOOD,
         ]);
 
         $result = $this->searchNeighborhood('VILA SAO JOSE');
 
-        $this->assertArrayHasKey('Vila São José', $result);
-        $this->assertSame('Vila São José', $result['Vila São José']);
+        $this->assertArrayHasKey(self::ACCENTED_NEIGHBORHOOD, $result);
+        $this->assertSame(
+            self::ACCENTED_NEIGHBORHOOD,
+            $result[self::ACCENTED_NEIGHBORHOOD]
+        );
     }
 
     public function test_does_not_return_duplicate_neighborhoods(): void
     {
         PlaceFactory::new()->create([
-            'neighborhood' => 'Vila',
+            self::NEIGHBORHOOD_FIELD => 'Vila',
             'address' => 'Rua Um',
         ]);
 
         PlaceFactory::new()->create([
-            'neighborhood' => 'Vila',
+            self::NEIGHBORHOOD_FIELD => 'Vila',
             'address' => 'Rua Dois',
         ]);
 
@@ -70,15 +77,15 @@ class LegacyNeighborhoodSearchTest extends TestCase
     public function test_returns_neighborhoods_in_alphabetical_order(): void
     {
         PlaceFactory::new()->create([
-            'neighborhood' => 'Vila Zeta',
+            self::NEIGHBORHOOD_FIELD => 'Vila Zeta',
         ]);
 
         PlaceFactory::new()->create([
-            'neighborhood' => 'Vila Alfa',
+            self::NEIGHBORHOOD_FIELD => 'Vila Alfa',
         ]);
 
         PlaceFactory::new()->create([
-            'neighborhood' => 'Vila Meio',
+            self::NEIGHBORHOOD_FIELD => 'Vila Meio',
         ]);
 
         $result = $this->searchNeighborhood('Vila');
@@ -94,7 +101,7 @@ class LegacyNeighborhoodSearchTest extends TestCase
     {
         for ($i = 1; $i <= 20; $i++) {
             PlaceFactory::new()->create([
-                'neighborhood' => sprintf('Bairro Limite %02d', $i),
+                self::NEIGHBORHOOD_FIELD => sprintf('Bairro Limite %02d', $i),
             ]);
         }
 
@@ -108,11 +115,11 @@ class LegacyNeighborhoodSearchTest extends TestCase
         $neighborhood = 'Bairro Teste Issue 1202';
 
         PlaceFactory::new()->create([
-            'neighborhood' => $neighborhood,
+            self::NEIGHBORHOOD_FIELD => $neighborhood,
         ]);
 
         $this->assertDatabaseHas('places', [
-            'neighborhood' => $neighborhood,
+            self::NEIGHBORHOOD_FIELD => $neighborhood,
         ]);
 
         $result = $this->searchNeighborhood('Issue 1202');
