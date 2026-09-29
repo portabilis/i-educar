@@ -2,7 +2,7 @@
 
 use App\Models\LegacyKnowledgeArea;
 
-class IndexController extends Core_Controller_Page_ListController
+class AreaConhecimento_Views_IndexController extends Core_Controller_Page_ListController
 {
     public $limite;
 
