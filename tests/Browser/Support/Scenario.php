@@ -152,7 +152,8 @@ final class Scenario
      * seeders gravam quem cadastrou, então rodam depois do administrador.
      *
      * O login do administrador é parâmetro porque `test:browser:parallel` roda
-     * os quatro processos no mesmo banco `testing` — cada arquivo usa o seu.
+     * os quatro processos no mesmo banco `testing` — cada arquivo usa o seu. Ele
+     * vira a matrícula do funcionário, que tem no máximo 12 caracteres.
      */
     public static function install(
         string $adminLogin,
@@ -432,9 +433,17 @@ final class Scenario
      * Atalho por factory para os testes das telas que vêm depois da escola —
      * ano letivo, série da escola, turma. A tela em si é coberta por SchoolTest.
      */
-    public static function school(string $name = self::SCHOOL): LegacySchool
+    public static function school(?LegacyCourse $course = null, string $name = self::SCHOOL): LegacySchool
     {
-        return LegacySchoolFactory::new()->withName($name)->create();
+        $factory = LegacySchoolFactory::new()->withName($name);
+
+        // Com o curso, o factory grava também escola_curso e escola_serie — o
+        // vínculo que as telas de série da escola e de turma exigem.
+        if ($course instanceof LegacyCourse) {
+            $factory = $factory->withCourse($course);
+        }
+
+        return $factory->create();
     }
 
     /**
