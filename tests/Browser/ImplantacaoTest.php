@@ -45,12 +45,12 @@ it('percorre o roteiro de implantação', function () {
         ->assertSee('Instituição - Listagem')
         ->click($scenario->institution->nm_instituicao)
         ->click('Editar')
-        ->fill('#nm_instituicao', 'Prefeitura Municipal de Içara')
+        ->fill('#nm_instituicao', 'Prefeitura Municipal de Nova Modelópolis')
         ->fill('#nm_responsavel', 'Secretaria Municipal de Educação');
 
     $page = Form::save($page)->assertPathIs('/intranet/educar_instituicao_lst.php');
 
-    expect($scenario->institution->fresh()->nm_instituicao)->toBe('Prefeitura Municipal de Içara');
+    expect($scenario->institution->fresh()->nm_instituicao)->toBe('Prefeitura Municipal de Nova Modelópolis');
 
     Form::shot($page, '01-instituicao');
 

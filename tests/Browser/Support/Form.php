@@ -251,12 +251,25 @@ final class Form
             . '.filter(u => u.offsetParent !== null && u.querySelectorAll("li").length).length'
             . ' ? "ok" : "sem sugestões")()';
 
+        // O laço termina em throw, e não em break: sem sugestão na tela o clique
+        // abaixo não casa com nada, e um clique sem alvo deixa o plugin do Pest
+        // esperando para sempre em vez de falhar.
+        $sugestoes = 'sem sugestões';
+
         for ($attempt = 0; $attempt < 25; $attempt++) {
-            if ((string) $page->script($aberto) === 'ok') {
+            $sugestoes = (string) $page->script($aberto);
+
+            if ($sugestoes === 'ok') {
                 break;
             }
 
             $page->wait(0.2);
+        }
+
+        if ($sugestoes !== 'ok') {
+            throw new ExpectationFailedException(
+                "A busca [{$field}] não abriu sugestões para [{$term}]: {$sugestoes}."
+            );
         }
 
         $page = $page->click('ul.ui-autocomplete li');

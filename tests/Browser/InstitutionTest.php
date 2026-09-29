@@ -64,7 +64,7 @@ it('edita os dados da instituição', function () {
         ->assertPathIs('/intranet/educar_instituicao_cad.php');
 
     $page = Form::fill($page, [
-        '#nm_instituicao' => 'Prefeitura Municipal de Içara',
+        '#nm_instituicao' => 'Prefeitura Municipal de Nova Modelópolis',
         '#nm_responsavel' => 'Secretaria Municipal de Educação',
         '#bairro' => 'Centro Histórico',
     ]);
@@ -72,7 +72,7 @@ it('edita os dados da instituição', function () {
     Form::save($page)->assertPathIs('/intranet/educar_instituicao_lst.php');
 
     expect($institution->fresh())
-        ->nm_instituicao->toBe('Prefeitura Municipal de Içara')
+        ->nm_instituicao->toBe('Prefeitura Municipal de Nova Modelópolis')
         ->nm_responsavel->toBe('Secretaria Municipal de Educação')
         ->bairro->toBe('Centro Histórico');
 });

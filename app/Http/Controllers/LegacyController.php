@@ -178,8 +178,7 @@ class LegacyController extends Controller
         $headers = [];
 
         foreach (headers_list() as $header) {
-            // Limite 2 no explode: sem ele um valor com ":" (uma URL, por
-            // exemplo) era cortado no primeiro dois-pontos.
+            // O limite 2 mantém inteiro um valor que contenha ":", como uma URL.
             [$name, $value] = array_pad(explode(':', $header, 2), 2, '');
 
             $headers[trim($name)] = trim($value);
@@ -191,14 +190,16 @@ class LegacyController extends Controller
         );
 
         // No SAPI de linha de comando — que é como roda o servidor in-process dos
-        // testes de browser — header() não faz nada e headers_list() volta vazia.
-        // Perde-se então o `Content-Type: text/xml` das telas *_xml.php e o
-        // `application/json` do ApiCoreController, e o navegador passa a tratar
-        // as duas coisas como HTML: o responseXML vem nulo e as cascatas de
-        // select do legado param de funcionar, e o $.get do jQuery não converte a
-        // resposta da API, deixando todo autocomplete sem sugestões — tudo em
-        // silêncio. Sem nenhum Content-Type, ele é deduzido do corpo.
-        if (!$hasContentType) {
+        // testes de browser — header() não tem efeito e headers_list() volta
+        // vazia. Sem o `Content-Type: text/xml` das telas *_xml.php e sem o
+        // `application/json` do ApiCoreController, o navegador trata as duas
+        // coisas como HTML: o responseXML fica nulo, as cascatas de select do
+        // legado não têm o que ler e o $.get do jQuery entrega a resposta da API
+        // como texto, deixando o autocomplete sem sugestões — tudo em silêncio.
+        // A dedução só vale nesse SAPI: sob php-fpm headers_list() traz o que as
+        // telas declararam, e farejar o corpo mudaria o Content-Type de páginas
+        // que hoje respondem sem declarar nenhum.
+        if (PHP_SAPI === 'cli' && !$hasContentType) {
             $body = ltrim($content);
 
             if (str_starts_with($body, '<?xml')) {
@@ -243,13 +244,12 @@ class LegacyController extends Controller
      */
     private function requireFileFromLegacy($filename)
     {
-        // O nível de buffer é guardado e restaurado porque o código legado mexe
-        // em buffers de saída sem equilíbrio: CoreExt_Controller_Abstract faz
-        // ob_end_flush() seguido de ob_get_clean(), e um redirecionamento por
-        // permissão sai daqui por exceção, deixando o ob_start() aberto. Sob
-        // php-fpm isso é indiferente, porque o processo morre no fim da
-        // requisição; o servidor in-process dos testes de browser reaproveita o
-        // processo, então o que sobra vaza para a requisição seguinte.
+        // O nível de buffer é guardado e restaurado porque o código legado pode
+        // deixar a pilha desequilibrada: um redirecionamento por permissão sai
+        // daqui por exceção, com o ob_start() abaixo ainda aberto. Sob php-fpm o
+        // processo morre no fim da requisição e isso se resolve sozinho; no
+        // servidor in-process dos testes de browser o processo é reaproveitado, e
+        // o que sobra vaza para a requisição seguinte.
         $level = ob_get_level();
 
         ob_start();
@@ -257,6 +257,7 @@ class LegacyController extends Controller
         try {
             $this->overrideGlobals();
             $this->forgetLegacyAssets();
+            $this->forgetLegacyStatusCode();
             $this->configureErrorsAndExceptions();
             $this->changeDirectory();
             $this->loadLegacyFile($filename);
@@ -297,6 +298,21 @@ class LegacyController extends Controller
         if (class_exists(\Portabilis_View_Helper_Application::class)) {
             \Portabilis_View_Helper_Application::forgetLoadedAssets();
         }
+    }
+
+    /**
+     * Devolve o código de resposta ao padrão antes de entrar no legado.
+     *
+     * getHttpStatusCode() lê http_response_code(), que é global de processo. Sob
+     * php-fpm ele nasce em 200 a cada requisição; num processo reaproveitado o
+     * código que a tela anterior definiu continua valendo, e uma página que
+     * renderizou bem sairia com o status de erro da anterior.
+     *
+     * @return void
+     */
+    private function forgetLegacyStatusCode()
+    {
+        http_response_code(Response::HTTP_OK);
     }
 
     /**

@@ -17,12 +17,12 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
      * Esquece os assets já emitidos.
      *
      * As listas são estáticas para o mesmo <script> ou <link> não sair duas vezes
-     * na mesma página. Sob php-fpm o processo morre no fim da requisição e isso
-     * se resolve sozinho; num processo reaproveitado — como o servidor
-     * in-process dos testes de browser — a segunda página em diante deixava de
-     * receber os assets já emitidos, e o sintoma eram erros de JavaScript
-     * variados ("valida is not defined", "$escolaField.chosen is not a
-     * function"), além de CSS faltando.
+     * na mesma página. Sob php-fpm o processo morre no fim da requisição e elas
+     * nascem vazias de novo; num processo reaproveitado — como o servidor
+     * in-process dos testes de browser — elas atravessam requisições, e a página
+     * seguinte sai sem os assets que a anterior já emitiu. O sintoma são erros de
+     * JavaScript variados ("valida is not defined", "$escolaField.chosen is not a
+     * function") e CSS faltando.
      */
     public static function forgetLoadedAssets(): void
     {

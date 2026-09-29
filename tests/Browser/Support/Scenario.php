@@ -265,7 +265,7 @@ final class Scenario
 
         $city = CityFactory::new()->create([
             'state_id' => $state,
-            'name' => 'Içara',
+            'name' => 'Modelópolis',
         ]);
 
         DistrictFactory::new()->create([
@@ -294,7 +294,7 @@ final class Scenario
             'logradouro' => 'Rua João Paulo Segundo',
             'numero' => 100,
             'bairro' => 'Centro',
-            'cidade' => 'Içara',
+            'cidade' => 'Modelópolis',
             'nm_responsavel' => 'Secretaria de Educação e Cultura',
             'obrigar_campos_censo' => false,
         ]);

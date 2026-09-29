@@ -26,7 +26,7 @@ use Tests\Browser\Support\Scenario;
  * Sem escolher, o campo fica em "Selecione uma instituição" e a validação do
  * clsCadastro barra o submit.
  */
-function choose($page, int $institution)
+function chooseUserFormSelects($page, int $institution)
 {
     return Form::cascade($page, [
         'ref_cod_tipo_usuario' => 'Secretaria',
@@ -65,7 +65,7 @@ it('cadastra um usuário para uma pessoa já existente', function () {
         '_senha' => Scenario::PASSWORD,
     ]);
 
-    $page = choose($page, $this->scenario->institution->getKey());
+    $page = chooseUserFormSelects($page, $this->scenario->institution->getKey());
 
     Form::save($page)->assertPathIs('/intranet/educar_usuario_lst.php');
 
@@ -86,7 +86,7 @@ it('não cria usuário com senha fora da política', function () {
     $page = $this->scenario->loginAsAdmin()
         ->navigate('/intranet/educar_usuario_cad.php?ref_pessoa=' . $individual->idpes);
 
-    $page = choose(
+    $page = chooseUserFormSelects(
         Form::fill($page, ['matricula' => 'bruno', '_senha' => 'bruno']),
         $this->scenario->institution->getKey(),
     );
@@ -103,7 +103,7 @@ it('não cria usuário com senha fora da política', function () {
 it('recusa gravar sem matrícula', function () {
     $individual = Scenario::individual('Bruno Secretário');
 
-    $page = choose(
+    $page = chooseUserFormSelects(
         $this->scenario->loginAsAdmin()
             ->navigate('/intranet/educar_usuario_cad.php?ref_pessoa=' . $individual->idpes),
         $this->scenario->institution->getKey(),

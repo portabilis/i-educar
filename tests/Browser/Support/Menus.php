@@ -4,6 +4,7 @@ namespace Tests\Browser\Support;
 
 use App\Menu;
 use App\Services\MenuCacheService;
+use InvalidArgumentException;
 
 /**
  * Árvore de menus usada pelos testes de browser.
@@ -172,7 +173,17 @@ final class Menus
      */
     public static function id(int $process): int
     {
-        return Menu::query()->where('process', $process)->value('id');
+        $id = Menu::query()->where('process', $process)->value('id');
+
+        // Processo fora da árvore reduzida não tem menu, e devolver nulo daqui
+        // estouraria um TypeError sem dizer qual processo faltou.
+        if ($id === null) {
+            throw new InvalidArgumentException(
+                "O processo [{$process}] não está na árvore de menus dos testes de browser."
+            );
+        }
+
+        return $id;
     }
 
     private static function menu(
