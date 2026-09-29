@@ -286,7 +286,7 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
             return $this->notaMaximaGeral;
         }
 
-        return $this->getRegraRecuperacaoByEtapa($etapa)->notaMaxima;
+        return $this->getRegraRecuperacaoByEtapa($etapa)?->notaMaxima;
     }
 
     /**
