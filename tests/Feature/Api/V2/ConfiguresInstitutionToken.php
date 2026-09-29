@@ -8,7 +8,7 @@ use Database\Factories\LegacyInstitutionFactory;
 
 trait ConfiguresInstitutionToken
 {
-    protected function configureInstitutionToken(LegacyInstitution $institution): void
+    protected function configureInstitutionToken(LegacyInstitution $institution, ?string $token = 'valid-token'): void
     {
         $institution->update(['ativo' => 1]);
 
@@ -20,12 +20,16 @@ trait ConfiguresInstitutionToken
 
         LegacyGeneralConfigurationFactory::new()->create([
             'ref_cod_instituicao' => $institution,
-            'token_novo_educacao' => 'valid-token',
+            'token_novo_educacao' => $token,
         ]);
     }
 
-    protected function institutionWithToken(): void
+    protected function institutionWithToken(?string $token = 'valid-token'): LegacyInstitution
     {
-        $this->configureInstitutionToken(LegacyInstitutionFactory::new()->create(['ativo' => 1]));
+        $institution = LegacyInstitutionFactory::new()->create(['ativo' => 1]);
+
+        $this->configureInstitutionToken($institution, $token);
+
+        return $institution;
     }
 }
