@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostNotasRequest;
 use iEducar\Modules\EvaluationRules\Exceptions\DisciplineNotExistsForSchoolClass;
+use iEducar\Modules\EvaluationRules\Exceptions\ExamScoreGreaterThanMaxAllowed;
+use iEducar\Modules\EvaluationRules\Exceptions\ScoreGreaterThanMaxAllowed;
+use iEducar\Modules\EvaluationRules\Exceptions\ScoreLesserThanMinAllowed;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use Illuminate\Http\Response;
 
@@ -73,10 +76,8 @@ class NotasController extends DiarioController
             }
 
             $this->service->atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId, $matricula);
-        } catch (\RuntimeException|DisciplineNotExistsForSchoolClass|MissingStagesException $exception) {
-            return response()->json([
-                'message' => $exception->getMessage(),
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException|DisciplineNotExistsForSchoolClass|MissingStagesException|ScoreGreaterThanMaxAllowed|ScoreLesserThanMinAllowed|ExamScoreGreaterThanMaxAllowed $exception) {
+            return $this->unprocessableResponse($exception);
         } catch (\Exception $exception) {
             return response()->json([
                 'message' => 'Não foi possível salvar as notas para o aluno e turma informados. (' . $exception->getMessage() . ')',
@@ -91,21 +92,15 @@ class NotasController extends DiarioController
     private function validateScoreByEvaluationRule($notaValidacao, $valorNota, $etapa, $regra, bool $isSumScoreCalculation)
     {
         if ($etapa === 'Rc' && $notaValidacao > $regra->notaMaximaExameFinal) {
-            throw new \RuntimeException(
-                "A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaExameFinal}."
-            );
+            throw new ExamScoreGreaterThanMaxAllowed($valorNota, $regra->notaMaximaExameFinal);
         }
 
         if ($etapa !== 'Rc' && $notaValidacao > $regra->notaMaximaGeral && !$isSumScoreCalculation) {
-            throw new \RuntimeException(
-                "A nota {$valorNota} está acima da configurada para nota máxima geral que é {$regra->notaMaximaGeral}."
-            );
+            throw new ScoreGreaterThanMaxAllowed($valorNota, $regra->notaMaximaGeral);
         }
 
         if ($notaValidacao < $regra->notaMinimaGeral) {
-            throw new \RuntimeException(
-                "A nota {$valorNota} está abaixo da configurada para nota mínima geral que é {$regra->notaMinimaGeral}."
-            );
+            throw new ScoreLesserThanMinAllowed($valorNota, $regra->notaMinimaGeral);
         }
     }
 }
