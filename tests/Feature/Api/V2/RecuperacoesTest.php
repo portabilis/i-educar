@@ -215,7 +215,23 @@ test('does not store when discipline does not belong to school class', function 
         ->assertStatus(422)
         ->assertJson([
             'message' => "Componente curricular de código {$otherDiscipline->getKey()} não existe para a turma {$data['school_class']->getKey()}.",
+            'code' => 1010,
+            'extra' => [
+                'school_class_id' => $data['school_class']->getKey(),
+                'discipline_id' => $otherDiscipline->getKey(),
+            ],
         ]);
+
+    $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
+});
+
+test('rejects stage outside the school calendar', function () {
+    $data = $this->createScoreData();
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 4);
+
+    $this->postRemedialScore($data, ['nota' => 5, 'recuperacao' => 7, 'etapa' => 5])
+        ->assertStatus(422)
+        ->assertJson(['message' => 'A etapa informada é inválida.']);
 
     $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
 });
