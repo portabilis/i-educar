@@ -61,7 +61,7 @@ return new class extends clsListagem
 
                 $cpf = $pessoa->individual?->cpf ?? int2CPF(int: $pessoa->individual->cpf);
                 $this->addLinhas(linha: [
-                    "<img src='imagens/noticia.jpg' border=0><a href='atendidos_det.php?cod_pessoa={$cod}'>$nome</a>",
+                    "<img src='imagens/noticia.jpg' border=0><a href='atendidos_det.php?cod_pessoa={$cod}'>" . e($nome) . '</a>',
                     $cpf,
                 ]);
             }

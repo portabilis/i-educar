@@ -40,17 +40,17 @@ return new class extends clsDetalhe
         }
 
         if ($registro['cod_tipo_regime']) {
-            $this->addDetalhe(['Tipo Regime', "{$registro['cod_tipo_regime']}"]);
+            $this->addDetalhe(['Tipo Regime', e($registro['cod_tipo_regime'])]);
         }
         if ($registro['ref_cod_instituicao']) {
             $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
             $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
             $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
-            $this->addDetalhe(['Instituição', "{$registro['ref_cod_instituicao']}"]);
+            $this->addDetalhe(['Instituição', e($registro['ref_cod_instituicao'])]);
         }
         if ($registro['nm_tipo']) {
-            $this->addDetalhe(['Nome Tipo', "{$registro['nm_tipo']}"]);
+            $this->addDetalhe(['Nome Tipo', e($registro['nm_tipo'])]);
         }
 
         $this->url_cancelar = 'educar_tipo_regime_lst.php';
