@@ -48,11 +48,40 @@ final class Form
     }
 
     /**
+     * Clica em "Salvar" esperando que a validação barre o envio.
+     *
+     * É o save() sem o waitForEvent('networkidle'): quando não há navegação, a
+     * espera pela rede ociosa só termina no estouro do tempo limite, e a mesma
+     * garantia sai de graça das asserções seguintes — a tela continua sendo a do
+     * formulário e nada foi gravado.
+     */
+    public static function reject(
+        PendingAwaitablePage|AwaitableWebpage|Webpage $page,
+        string $label = 'Salvar',
+    ): AwaitableWebpage|Webpage {
+        self::awaitHandler($page, '#btn_enviar');
+
+        return $page->assertValue('#btn_enviar', $label)
+            ->click('#btn_enviar');
+    }
+
+    /**
      * Exclui o registro em edição.
+     *
+     * O `excluir()` do clsCampos pede confirmação com um `confirm()`, e o
+     * Playwright **recusa** qualquer diálogo para o qual não haja tratador
+     * registrado — sem tratador o confirm devolve false e o formulário nunca é
+     * enviado, sem erro nenhum. O plugin do Pest ainda não expõe esse tratador,
+     * então a confirmação é respondida trocando a função na própria página, o
+     * que só vale até a navegação seguinte.
      */
     public static function remove(
         PendingAwaitablePage|AwaitableWebpage|Webpage $page,
     ): AwaitableWebpage|Webpage {
+        self::awaitHandler($page, '#btn_excluir');
+
+        $page->script('window.confirm = () => true;');
+
         return $page->assertPresent('#btn_excluir')
             ->click('#btn_excluir')
             ->waitForEvent('networkidle');
