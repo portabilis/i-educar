@@ -350,6 +350,10 @@ function postPessoa(
     document_absence_reason_id,
     document_absence_observation
 ) {
+    var $botaoGravar = $j('#dialog-form-pessoa-parent').closest('.ui-dialog').find('.ui-dialog-buttonpane button').first();
+
+    $botaoGravar.button('disable');
+
     var data = {
         nome: nome,
         sexo: sexo,
@@ -391,6 +395,9 @@ function postPessoa(
                     afterChangePessoaParent(dataResponse.pessoa_id, 'pai');
                 }
             }
+        },
+        complete: function () {
+            $botaoGravar.button('enable');
         }
     };
 

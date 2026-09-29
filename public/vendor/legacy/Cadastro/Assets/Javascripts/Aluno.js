@@ -3260,6 +3260,10 @@ function canShowParentsFields() {
     document_absence_reason_id,
     document_absence_observation
   ) {
+    var $botaoGravar = $container.closest(".ui-dialog").find(".ui-dialog-buttonpane button").first();
+
+    $botaoGravar.button("disable");
+
     var data = {
       nome: nome,
       cpf: cpf,
@@ -3316,6 +3320,9 @@ function canShowParentsFields() {
             );
           else postEnderecoPessoa(dataResponse.pessoa_id);
         }
+      },
+      complete: function () {
+        $botaoGravar.button("enable");
       },
     };
 
