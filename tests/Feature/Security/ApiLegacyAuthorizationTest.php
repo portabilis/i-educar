@@ -8,12 +8,14 @@ use App\Models\LegacyUserType;
 use App\Process;
 use App\User;
 use Database\Factories\LegacyIndividualFactory;
+use Database\Factories\LegacyMenuUserTypeFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacySchoolClassFactory;
 use Database\Factories\LegacySchoolFactory;
 use Database\Factories\LegacyUserFactory;
 use Database\Factories\LegacyUserSchoolFactory;
 use Database\Factories\LegacyUserTypeFactory;
+use Database\Factories\MenuFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
@@ -32,17 +34,28 @@ class ApiLegacyAuthorizationTest extends TestCase
 
     private const PROCESSO_HISTORICO = 999613;
 
+    /**
+     * O menu do processo é criado como filho de outro menu, como em produção.
+     * Um menu raiz liberaria a visualização a qualquer usuário pela regra de
+     * ProcessPolicy::view, e os testes de acesso permitido não provariam nada.
+     */
     private function schoolUser(?int $process = null, ?LegacySchool $school = null, bool $modify = true): User
     {
-        $factory = LegacyUserFactory::new();
+        $type = LegacyUserTypeFactory::new()->create(['nivel' => LegacyUserType::LEVEL_SCHOOLING]);
+        $user = LegacyUserFactory::new()->create(['ref_cod_tipo_usuario' => $type->getKey()]);
 
         if ($process) {
-            $factory = $factory->withAccess($process, modify: $modify);
+            LegacyMenuUserTypeFactory::new()->create([
+                'menu_id' => MenuFactory::new()->create([
+                    'parent_id' => MenuFactory::new()->create()->getKey(),
+                    'process' => $process,
+                ])->getKey(),
+                'ref_cod_tipo_usuario' => $type->getKey(),
+                'visualiza' => 1,
+                'cadastra' => (int) $modify,
+                'exclui' => 0,
+            ]);
         }
-
-        $user = $factory->create([
-            'ref_cod_tipo_usuario' => LegacyUserTypeFactory::new()->create(['nivel' => LegacyUserType::LEVEL_SCHOOLING]),
-        ]);
 
         LegacyUserSchoolFactory::new()->create([
             'ref_cod_usuario' => $user->getKey(),
@@ -145,6 +158,16 @@ class ApiLegacyAuthorizationTest extends TestCase
         $this->assertNotNull($individual);
     }
 
+    public function test_api_pessoa_bloqueia_usuario_com_permissao_em_outro_processo()
+    {
+        $individual = LegacyIndividualFactory::new()->create();
+
+        $response = $this->getPessoa(['id' => $individual->getKey()], $this->schoolUser(self::PROCESSO_TURMA));
+
+        $response->assertJsonMissingPath('cpf');
+        $response->assertJsonFragment(['msg' => "Usuário sem permissão para acessar 'pessoa'."]);
+    }
+
     public function test_api_pessoa_permite_usuario_do_cadastro_de_pessoa_fisica()
     {
         $individual = LegacyIndividualFactory::new()->create();
@@ -211,6 +234,16 @@ class ApiLegacyAuthorizationTest extends TestCase
 
         $response->assertSuccessful();
         $response->assertJsonFragment(['msg' => "Usuário sem permissão para acessar 'abandono' desta escola."]);
+        $this->assertSame(\App_Model_MatriculaSituacao::ABANDONO, $registration->refresh()->aprovado);
+    }
+
+    public function test_api_abandono_bloqueia_usuario_com_permissao_em_outro_processo()
+    {
+        $registration = $this->abandonedRegistration();
+
+        $response = $this->deleteAbandono($registration, $this->schoolUser(Process::REGISTRATIONS, $registration->school));
+
+        $response->assertJsonFragment(['msg' => "Usuário sem permissão para acessar 'abandono'."]);
         $this->assertSame(\App_Model_MatriculaSituacao::ABANDONO, $registration->refresh()->aprovado);
     }
 
@@ -329,6 +362,16 @@ class ApiLegacyAuthorizationTest extends TestCase
         $response = $this->getDiarioMatriculas($schoolClass, $this->schoolUser(school: $schoolClass->school));
 
         $response->assertSuccessful();
+        $response->assertJsonPath('matriculas', []);
+        $response->assertJsonFragment(['msg' => "Usuário sem permissão para visualizar 'matriculas'."]);
+    }
+
+    public function test_diario_api_bloqueia_usuario_com_permissao_em_outro_processo()
+    {
+        $schoolClass = LegacySchoolClassFactory::new()->create();
+
+        $response = $this->getDiarioMatriculas($schoolClass, $this->schoolUser(self::PROCESSO_TURMA, $schoolClass->school));
+
         $response->assertJsonPath('matriculas', []);
         $response->assertJsonFragment(['msg' => "Usuário sem permissão para visualizar 'matriculas'."]);
     }
