@@ -86,6 +86,7 @@ test('rejects score above the rule maximum', function () {
         ->assertStatus(422)
         ->assertJson([
             'message' => 'A nota 11 está acima da configurada para nota máxima geral que é 10.',
+            'code' => 1003,
         ]);
 
     $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
@@ -112,6 +113,7 @@ test('rejects remedial score that raises the score above the maximum', function 
         ->assertStatus(422)
         ->assertJson([
             'message' => 'A nota 11 está acima da configurada para nota máxima geral que é 10.',
+            'code' => 1003,
         ]);
 
     $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
@@ -141,6 +143,7 @@ test('rejects score below the rule minimum', function () {
         ->assertStatus(422)
         ->assertJson([
             'message' => 'A nota 1 está abaixo da configurada para nota mínima geral que é 2.',
+            'code' => 1004,
         ]);
 
     $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
@@ -153,6 +156,7 @@ test('rejects exam score above the exam maximum', function () {
         ->assertStatus(422)
         ->assertJson([
             'message' => 'A nota 9 está acima da configurada para nota máxima para exame que é 8.',
+            'code' => 1005,
         ]);
 
     $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
@@ -180,7 +184,9 @@ test('does not store when previous stages have no scores', function () {
         ->assertStatus(422);
 
     expect($response->json('message'))
-        ->toContain('Nota somente pode ser lançada após lançar notas nas etapas: 1');
+        ->toContain('Nota somente pode ser lançada após lançar notas nas etapas: 1')
+        ->and($response->json('code'))->toBe(1001)
+        ->and($response->json('extra'))->toHaveKey('missing_stages');
 
     $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
 });
@@ -229,7 +235,38 @@ test('does not store when discipline does not belong to school class', function 
         ->assertStatus(422)
         ->assertJson([
             'message' => "Componente curricular de código {$otherDiscipline->getKey()} não existe para a turma {$data['school_class']->getKey()}.",
+            'code' => 1010,
+            'extra' => [
+                'school_class_id' => $data['school_class']->getKey(),
+                'discipline_id' => $otherDiscipline->getKey(),
+            ],
         ]);
 
     $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
+});
+
+test('rejects stage in an invalid format', function () {
+    $data = $this->createScoreData();
+
+    $this->postScore($data, ['nota' => 6, 'etapa' => 'X'])
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['etapa']);
+
+    $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
+});
+
+test('stores scores in stages above four when the school calendar has them', function () {
+    $data = $this->createScoreData();
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 6);
+
+    foreach (range(1, 6) as $stage) {
+        $this->postScore($data, ['nota' => 6, 'recuperacao' => null, 'etapa' => $stage])->assertStatus(201);
+    }
+
+    $this->assertDatabaseCount(LegacyDisciplineScore::class, 6);
+    $this->assertDatabaseHas(LegacyDisciplineScore::class, [
+        'componente_curricular_id' => $data['discipline']->getKey(),
+        'nota' => 6,
+        'etapa' => '6',
+    ]);
 });

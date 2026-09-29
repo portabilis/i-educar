@@ -28,6 +28,7 @@ use RegraAvaliacao_Model_TipoRecuperacaoParalela;
 trait CreatesScoreData
 {
     use ConfiguresInstitutionToken;
+    use CreatesSchoolCalendar;
 
     protected function createScoreData(array $evaluationRuleAttributes = []): array
     {
