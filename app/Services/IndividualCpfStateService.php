@@ -48,7 +48,11 @@ class IndividualCpfStateService
             : null;
 
         $reason = DocumentAbsenceReason::query()
-            ->when((int) $savedReasonId === $reasonId, fn ($query) => $query->withTrashed())
+            ->when(
+                (int) $savedReasonId === $reasonId,
+                fn ($query) => $query->withTrashed(),
+                fn ($query) => $query->where('from_system', false)
+            )
             ->find($reasonId);
 
         if (!$reason) {
@@ -67,7 +71,13 @@ class IndividualCpfStateService
         $currentReasonId = $this->reasonId($currentReasonId);
 
         return DocumentAbsenceReason::withTrashed()
-            ->where(fn ($query) => $query->whereNull('deleted_at')->orWhere('id', $currentReasonId))
+            ->where(function ($query) use ($currentReasonId) {
+                $query->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                    $query->where('from_system', false);
+                });
+                $query->orWhere('id', $currentReasonId);
+            })
             ->orderBy('name')
             ->get()
             ->mapWithKeys(fn (DocumentAbsenceReason $reason) => [$reason->getKey() => $this->label($reason)])
@@ -83,12 +93,21 @@ class IndividualCpfStateService
             ->mapWithKeys(fn (DocumentAbsenceReason $reason) => [$reason->getKey() => $this->label($reason)]);
     }
 
+    public function systemReasons(): Collection
+    {
+        return DocumentAbsenceReason::withTrashed()
+            ->where('from_system', true)
+            ->orderBy('name')
+            ->get()
+            ->mapWithKeys(fn (DocumentAbsenceReason $reason) => [$reason->getKey() => $this->label($reason)]);
+    }
+
     private function label(DocumentAbsenceReason $reason): string
     {
         return $reason->trashed() ? $reason->name . ' (inativo)' : $reason->name;
     }
 
-    private function reasonId(mixed $value): ?int
+    public function reasonId(mixed $value): ?int
     {
         $id = filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => self::MAX_REASON_ID]]);
 
@@ -100,6 +119,31 @@ class IndividualCpfStateService
         $observation = $state['document_absence_observation'] ?? null;
 
         return is_string($observation) ? $observation : null;
+    }
+
+    public function situation(LegacyIndividual $individual): array
+    {
+        if ($individual->cpf) {
+            return ['type' => 'with_cpf', 'cpf' => $individual->cpf];
+        }
+
+        $reason = $individual->document_absence_reason_id
+            ? DocumentAbsenceReason::withTrashed()->find($individual->document_absence_reason_id)
+            : null;
+
+        if (!$reason || $reason->from_system) {
+            return ['type' => 'unjustified_absence'];
+        }
+
+        $timeline = new IndividualCpfTimelineService;
+        $lastChange = $timeline->history($individual->getKey())->first();
+
+        return [
+            'type' => 'justified_absence',
+            'reason' => $reason->name,
+            'user' => $lastChange ? $timeline->userName($lastChange->payload) : null,
+            'date' => $lastChange?->created_at->format('d/m/Y'),
+        ];
     }
 
     public function reasonsRequiringObservation(): Collection
