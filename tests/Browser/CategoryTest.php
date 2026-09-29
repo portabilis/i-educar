@@ -1,8 +1,6 @@
 <?php
 
 use App\Models\DocumentAbsenceReason;
-use App\Models\LegacyCalendarDayReason;
-use Database\Factories\LegacySchoolFactory;
 use Tests\Browser\Support\Category;
 use Tests\Browser\Support\Form;
 use Tests\Browser\Support\Scenario;
@@ -86,8 +84,15 @@ it('recusa gravar sem o campo obrigatório', function (Category $category) {
 })->with(Category::all());
 
 /**
+ * Duas telas ficam só com a listagem no conjunto acima, e têm o resto aqui.
+ *
  * "Motivos de ausência de documentação" não tem Excluir(): o registro sai de
  * circulação pelo campo "Situação", que grava deleted_at.
+ *
+ * "Tipos de evento do calendário" é a única destas telas que não pertence à
+ * instituição, e sim a uma escola, e o cadastro dela fica esperando a escola
+ * existir. Só a listagem é coberta aqui; o cadastro entra junto com o cenário de
+ * escola, que está sendo montado à parte.
  */
 it('inativa um motivo de ausência de documentação', function () {
     $reason = DocumentAbsenceReason::query()->create(['name' => 'Documento retido em cartório']);
@@ -100,37 +105,14 @@ it('inativa um motivo de ausência de documentação', function () {
         ->assertPathIs('/intranet/educar_motivo_ausencia_documentacao_lst.php')
         ->assertSee('Inativo');
 
-    expect($reason->fresh())->toBeNull()
+    // fresh() não serve aqui: ele consulta sem os escopos globais e devolve o
+    // registro mesmo depois do soft delete.
+    expect(DocumentAbsenceReason::query()->find($reason->getKey()))->toBeNull()
         ->and(DocumentAbsenceReason::withTrashed()->find($reason->getKey())->trashed())->toBeTrue();
 });
 
-/**
- * "Tipos de evento do calendário" é a única destas telas que não pertence à
- * instituição, e sim a uma escola: o select de escola é preenchido por AJAX
- * depois do de instituição, como no cadastro de curso.
- */
-it('cadastra um tipo de evento do calendário', function () {
-    $school = LegacySchoolFactory::new()->withName('Escola Municipal Modelo')->create();
-
-    $page = $this->scenario->loginAsAdmin()
-        ->navigate('/intranet/educar_calendario_dia_motivo_cad.php');
-
-    $page = Form::cascade($page, [
-        'ref_cod_instituicao' => $this->scenario->institution->getKey(),
-        'ref_cod_escola' => $school->getKey(),
-    ]);
-
-    $page = Form::fill($page, [
-        'nm_motivo' => 'Feriado municipal',
-        'sigla' => 'FERM',
-    ])->select('tipo', 'não-letivo');
-
-    Form::save($page)
-        ->assertPathIs('/intranet/educar_calendario_dia_motivo_lst.php')
-        ->assertSee('Feriado municipal');
-
-    $reason = LegacyCalendarDayReason::query()->where('nm_motivo', 'Feriado municipal')->sole();
-
-    expect($reason->ref_cod_escola)->toBe($school->getKey())
-        ->and($reason->tipo)->toBe('n');
+it('lista os tipos de evento do calendário', function () {
+    $this->scenario->loginAsAdmin()
+        ->navigate('/intranet/educar_calendario_dia_motivo_lst.php')
+        ->assertSee('Calendário Dia Motivo - Listagem');
 });

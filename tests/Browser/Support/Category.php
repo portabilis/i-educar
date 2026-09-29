@@ -161,8 +161,8 @@ final class Category
      * média", "Tabelas de arredondamento" e "Áreas de conhecimento" são módulos
      * novos (/module/...), e "Componentes da série" e "Sequências de enturmação"
      * dependem de curso e série já cadastrados. "Tipos de evento do calendário"
-     * também sai daqui, porque exige uma escola — está em SchoolTypeTest, com o
-     * pré-requisito montado por factory.
+     * também sai daqui, porque o cadastro exige uma escola: no CategoryTest ela
+     * aparece só com a listagem.
      *
      * @return array<string, self>
      */
