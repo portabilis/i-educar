@@ -121,6 +121,31 @@ class IndividualCpfStateService
         return is_string($observation) ? $observation : null;
     }
 
+    public function situation(LegacyIndividual $individual): array
+    {
+        if ($individual->cpf) {
+            return ['type' => 'with_cpf', 'cpf' => $individual->cpf];
+        }
+
+        $reason = $individual->document_absence_reason_id
+            ? DocumentAbsenceReason::withTrashed()->find($individual->document_absence_reason_id)
+            : null;
+
+        if (!$reason || $reason->from_system) {
+            return ['type' => 'unjustified_absence'];
+        }
+
+        $timeline = new IndividualCpfTimelineService;
+        $lastChange = $timeline->history($individual->getKey())->first();
+
+        return [
+            'type' => 'justified_absence',
+            'reason' => $reason->name,
+            'user' => $lastChange ? $timeline->userName($lastChange->payload) : null,
+            'date' => $lastChange?->created_at->format('d/m/Y'),
+        ];
+    }
+
     public function reasonsRequiringObservation(): Collection
     {
         return DocumentAbsenceReason::withTrashed()
