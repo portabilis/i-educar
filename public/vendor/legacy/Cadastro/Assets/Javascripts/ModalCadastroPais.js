@@ -350,9 +350,13 @@ function postPessoa(
     document_absence_reason_id,
     document_absence_observation
 ) {
-    var $botaoGravar = $j('#dialog-form-pessoa-parent').closest('.ui-dialog').find('.ui-dialog-buttonpane button').first();
+    var $dialogo = $j('#dialog-form-pessoa-parent');
+    var $botaoGravar = $dialogo.closest('.ui-dialog').find('.ui-dialog-buttonpane button').first();
 
     $botaoGravar.button('disable');
+    $dialogo.one('dialogclose', function () {
+        $botaoGravar.button('enable');
+    });
 
     var data = {
         nome: nome,
@@ -366,14 +370,11 @@ function postPessoa(
         ddd_telefone_mov: ddd_telefone_mov,
         telefone_mov: telefone_mov,
         falecido: falecido,
-        cpf: cpf
+        cpf: cpf,
+        possui_cpf: possui_cpf,
+        document_absence_reason_id: document_absence_reason_id,
+        document_absence_observation: document_absence_observation
     };
-
-    if (possui_cpf !== undefined) {
-        data.possui_cpf = possui_cpf;
-        data.document_absence_reason_id = document_absence_reason_id;
-        data.document_absence_observation = document_absence_observation;
-    }
 
     var options = {
         url: postResourceUrlBuilder.buildUrl('/module/Api/pessoa', 'pessoa', {}),
@@ -397,7 +398,9 @@ function postPessoa(
             }
         },
         complete: function () {
-            $botaoGravar.button('enable');
+            if ($dialogo.dialog('isOpen')) {
+                $botaoGravar.button('enable');
+            }
         }
     };
 

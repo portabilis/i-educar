@@ -3263,6 +3263,9 @@ function canShowParentsFields() {
     var $botaoGravar = $container.closest(".ui-dialog").find(".ui-dialog-buttonpane button").first();
 
     $botaoGravar.button("disable");
+    $container.one("dialogclose", function () {
+      $botaoGravar.button("enable");
+    });
 
     var data = {
       nome: nome,
@@ -3322,7 +3325,9 @@ function canShowParentsFields() {
         }
       },
       complete: function () {
-        $botaoGravar.button("enable");
+        if ($container.dialog("isOpen")) {
+          $botaoGravar.button("enable");
+        }
       },
     };
 
