@@ -19,7 +19,14 @@ use Tests\TestCase;
  */
 class UserTypePrivilegeEscalationTest extends TestCase
 {
-    use DatabaseTransactions;
+    use ActivatesSystem, DatabaseTransactions;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->activateSystem();
+    }
 
     private function schoolUserManagingUserTypes(): User
     {

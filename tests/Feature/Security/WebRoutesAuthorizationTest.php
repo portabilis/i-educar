@@ -24,7 +24,14 @@ use Tests\TestCase;
 
 class WebRoutesAuthorizationTest extends TestCase
 {
-    use DatabaseTransactions;
+    use ActivatesSystem, DatabaseTransactions;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->activateSystem();
+    }
 
     private function schoolUser(?int $process = null, ?LegacySchool $school = null): User
     {
