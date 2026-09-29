@@ -21,16 +21,9 @@ class DiarioController extends ApiCoreController
         return App_Model_IedFinder::getRegraAvaliacaoPorMatricula($matriculaId);
     }
 
-    protected function getComponentesPorMatricula($matriculaId)
-    {
-        return App_Model_IedFinder::getComponentesPorMatricula($matriculaId);
-    }
-
     protected function validateComponenteCurricular($matriculaId, $componenteCurricularId)
     {
-        $componentes = $this->getComponentesPorMatricula($matriculaId);
-        $componentes = CoreExt_Entity::entityFilterAttr($componentes, 'id', 'id');
-        $valid = in_array($componenteCurricularId, $componentes);
+        $valid = (new DiarioControllerService)->validateComponenteMatricula($componenteCurricularId, $matriculaId);
 
         if (!$valid) {
             throw new CoreExt_Exception("Componente curricular de código {$componenteCurricularId} não existe para essa turma/matrícula.");
