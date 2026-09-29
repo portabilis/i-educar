@@ -16,11 +16,11 @@ class PostFaltaComponenteRequest extends FormRequest
                 'integer',
                 'min:0',
             ],
+            // O boletim valida a etapa pelo calendário da matrícula.
             'etapa' => [
                 'required',
                 'integer',
                 'min:1',
-                'max:4',
             ],
             'aluno_id' => [
                 'required',
@@ -34,8 +34,10 @@ class PostFaltaComponenteRequest extends FormRequest
                 'required',
                 'integer',
             ],
+            // Com a área do conhecimento, a falta vai para os componentes agrupados nela.
             'componente_id' => [
-                'required',
+                'required_without:area_do_conhecimento_id',
+                'nullable',
                 'integer',
             ],
             'area_do_conhecimento_id' => [

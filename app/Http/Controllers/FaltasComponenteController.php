@@ -62,10 +62,8 @@ class FaltasComponenteController extends DiarioController
                     // Evita Exception ao não promover matrículas pois não houve mudança de situação
                 }
             }
-        } catch (EvaluationRuleNotAllowDisciplineAbsence|DisciplineNotExistsForSchoolClass|\RuntimeException $exception) {
-            return response()->json([
-                'message' => $exception->getMessage(),
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException|EvaluationRuleNotAllowDisciplineAbsence|DisciplineNotExistsForSchoolClass $exception) {
+            return $this->unprocessableResponse($exception);
         } catch (\Exception $exception) {
             return response()->json([
                 'message' => 'Não foi possível salvar a falta por componente para o aluno e turma informados. (' . $exception->getMessage() . ')',
