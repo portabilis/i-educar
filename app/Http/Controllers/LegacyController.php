@@ -173,17 +173,31 @@ class LegacyController extends Controller
      *
      * @return array
      */
-    private function getHttpHeaders()
+    private function getHttpHeaders(string $content = '')
     {
         $headers = [];
 
         foreach (headers_list() as $header) {
-            $header = explode(':', $header);
+            // Limite 2 no explode: sem ele um valor com ":" (uma URL, por
+            // exemplo) era cortado no primeiro dois-pontos.
+            [$name, $value] = array_pad(explode(':', $header, 2), 2, '');
 
-            $name = trim($header[0]);
-            $value = trim($header[1]);
+            $headers[trim($name)] = trim($value);
+        }
 
-            $headers[$name] = $value;
+        $hasContentType = array_any(
+            array_keys($headers),
+            static fn (string $name) => strcasecmp($name, 'Content-Type') === 0,
+        );
+
+        // No SAPI de linha de comando — que é como roda o servidor in-process dos
+        // testes de browser — header() não faz nada e headers_list() volta vazia.
+        // O `Content-Type: text/xml` que as telas *_xml.php definem se perde, o
+        // navegador devolve responseXML nulo e todas as cascatas de select do
+        // legado (educar_campo_lista.php) param de funcionar em silêncio. Quando
+        // não há Content-Type nenhum, ele é deduzido do corpo.
+        if (!$hasContentType && str_starts_with(ltrim($content), '<?xml')) {
+            $headers['Content-Type'] = 'text/xml; charset=utf-8';
         }
 
         return $headers;
@@ -234,6 +248,7 @@ class LegacyController extends Controller
 
         try {
             $this->overrideGlobals();
+            $this->forgetLegacyAssets();
             $this->configureErrorsAndExceptions();
             $this->changeDirectory();
             $this->loadLegacyFile($filename);
@@ -252,8 +267,28 @@ class LegacyController extends Controller
         return new Response(
             $content,
             $this->getHttpStatusCode(),
-            $this->getHttpHeaders()
+            $this->getHttpHeaders($content)
         );
+    }
+
+    /**
+     * Zera o registro de assets do código legado.
+     *
+     * Portabilis_View_Helper_Application guarda em propriedade estática o que já
+     * emitiu, para não repetir <script> e <link> na mesma página. Isso só
+     * funciona porque, sob php-fpm, o processo atende uma requisição e morre;
+     * num processo reaproveitado a lista atravessa requisições e as páginas
+     * seguintes ficam sem os assets.
+     *
+     * @return void
+     */
+    private function forgetLegacyAssets()
+    {
+        // Com autoload: a classe vem do classmap do código legado e pode ainda
+        // não ter sido carregada neste ponto da requisição.
+        if (class_exists(\Portabilis_View_Helper_Application::class)) {
+            \Portabilis_View_Helper_Application::forgetLoadedAssets();
+        }
     }
 
     /**

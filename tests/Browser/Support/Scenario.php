@@ -2,7 +2,9 @@
 
 namespace Tests\Browser\Support;
 
+use App\Models\LegacyCourse;
 use App\Models\LegacyEvaluationRule;
+use App\Models\LegacyGrade;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyUser;
@@ -13,11 +15,14 @@ use App_Model_NivelTipoUsuario;
 use Database\Factories\CityFactory;
 use Database\Factories\CountryFactory;
 use Database\Factories\DistrictFactory;
+use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyEducationLevelFactory;
 use Database\Factories\LegacyEducationTypeFactory;
 use Database\Factories\LegacyEmployeeFactory;
 use Database\Factories\LegacyEvaluationRuleFactory;
+use Database\Factories\LegacyEvaluationRuleGradeYearFactory;
 use Database\Factories\LegacyGeneralConfigurationFactory;
+use Database\Factories\LegacyGradeFactory;
 use Database\Factories\LegacyIndividualFactory;
 use Database\Factories\LegacyInstitutionFactory;
 use Database\Factories\LegacyPersonFactory;
@@ -78,6 +83,10 @@ final class Scenario
     public const PERIOD = 'Matutino';
 
     public const EVALUATION_RULE = 'Regra de Avaliação Padrão';
+
+    public const COURSE = 'Ensino Fundamental';
+
+    public const GRADE = '1º Ano';
 
     /**
      * Dados de referência que, numa instalação real, vêm das migrations de
@@ -330,6 +339,54 @@ final class Scenario
         ]);
 
         return $individual;
+    }
+
+    /**
+     * Cria um curso ligado ao catálogo do cenário.
+     *
+     * Atalho por factory para os testes de outras telas; a tela de curso é
+     * coberta por CourseTest. As factories resolvem nível de ensino, tipo de
+     * ensino e instituição com `current()`, que devolve os do install().
+     */
+    public static function course(string $name = self::COURSE): LegacyCourse
+    {
+        return LegacyCourseFactory::new()->create([
+            'nm_curso' => $name,
+            // A descrição entra no rótulo do <select> de curso ("Nome (descrição)"),
+            // então o factory deixaria uma frase do faker no meio da opção.
+            'descricao' => '',
+            'sgl_curso' => 'EF',
+            'qtd_etapas' => 4,
+            'padrao_ano_escolar' => 1,
+        ]);
+    }
+
+    /**
+     * Cria uma série do curso, já com a regra de avaliação do ano corrente.
+     *
+     * Sem a regra em modules.regra_avaliacao_serie_ano a série existe mas não
+     * serve para matrícula, que é onde este roteiro vai parar.
+     */
+    public static function grade(?LegacyCourse $course = null, string $name = self::GRADE): LegacyGrade
+    {
+        $grade = LegacyGradeFactory::new()->create([
+            'nm_serie' => $name,
+            'ref_cod_curso' => $course ?? self::course(),
+            'etapa_curso' => 1,
+            'concluinte' => 1,
+            'dias_letivos' => 200,
+        ]);
+
+        LegacyEvaluationRuleGradeYearFactory::new()->create([
+            'serie_id' => $grade->getKey(),
+            'ano_letivo' => now()->year,
+            // Sem isto o factory criaria outra regra, com outra fórmula e outra
+            // tabela de arredondamento, em vez de usar a padrão do cenário.
+            'regra_avaliacao_id' => LegacyEvaluationRuleFactory::new()->current(),
+            'regra_avaliacao_diferenciada_id' => null,
+        ]);
+
+        return $grade;
     }
 
     /**

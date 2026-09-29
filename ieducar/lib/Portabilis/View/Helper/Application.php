@@ -14,6 +14,23 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
     protected function __construct() {}
 
     /**
+     * Esquece os assets já emitidos.
+     *
+     * As listas são estáticas para o mesmo <script> ou <link> não sair duas vezes
+     * na mesma página. Sob php-fpm o processo morre no fim da requisição e isso
+     * se resolve sozinho; num processo reaproveitado — como o servidor
+     * in-process dos testes de browser — a segunda página em diante deixava de
+     * receber os assets já emitidos, e o sintoma eram erros de JavaScript
+     * variados ("valida is not defined", "$escolaField.chosen is not a
+     * function"), além de CSS faltando.
+     */
+    public static function forgetLoadedAssets(): void
+    {
+        self::$javascriptsLoaded = [];
+        self::$stylesheetsLoaded = [];
+    }
+
+    /**
      * Retorna uma instância singleton.
      *
      * @return CoreExt_View_Helper_Abstract
