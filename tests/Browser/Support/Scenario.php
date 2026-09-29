@@ -68,6 +68,8 @@ final class Scenario
      * rótulo (o selectOption do Playwright casa por valor **ou** rótulo), que é o
      * que o usuário vê — e é justamente isso que o rebranding não pode mudar.
      */
+    public const ADMIN_USER_TYPE = 'Administrador';
+
     public const EDUCATION_LEVEL = 'Ano';
 
     public const EDUCATION_TYPE = 'Ensino Regular';
@@ -303,8 +305,16 @@ final class Scenario
      */
     public static function admin(string $login, string $name): LegacyUser
     {
-        return LegacyUserFactory::new()->admin()->create([
+        return LegacyUserFactory::new()->create([
             'cod_usuario' => self::person($name, $login)->idpes,
+            // O tipo é criado aqui, e não pelo estado admin() do factory, para o
+            // nome ser o mesmo da instalação real ("Administrador") em vez de um
+            // nome do faker — ele aparece na listagem de tipos de usuário.
+            'ref_cod_tipo_usuario' => LegacyUserTypeFactory::new()->create([
+                'nm_tipo' => self::ADMIN_USER_TYPE,
+                'descricao' => self::ADMIN_USER_TYPE,
+                'nivel' => App_Model_NivelTipoUsuario::POLI_INSTITUCIONAL,
+            ]),
         ]);
     }
 
