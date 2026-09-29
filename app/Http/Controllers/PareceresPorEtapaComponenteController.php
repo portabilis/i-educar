@@ -45,9 +45,7 @@ class PareceresPorEtapaComponenteController extends DiarioController
                 // Evita Exception ao não promover matrículas, pois não houve mudança de situação
             }
         } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException|DisciplineNotExistsForSchoolClass $exception) {
-            return response()->json([
-                'message' => $exception->getMessage(),
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->unprocessableResponse($exception);
         } catch (\Exception $exception) {
             return response()->json([
                 'message' => 'Não foi possível salvar o parecer para o aluno e turma informados. (' . $exception->getMessage() . ')',
