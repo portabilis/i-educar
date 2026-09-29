@@ -22,9 +22,10 @@ class ValidToken
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $configs = $this->institution?->generalConfiguration;
+        $expected = trim((string) $this->institution?->generalConfiguration?->token_novo_educacao);
+        $received = $request->headers->get('token');
 
-        if ($request->headers->get('token') !== trim($configs->token_novo_educacao)) {
+        if ($expected === '' || !is_string($received) || !hash_equals($expected, $received)) {
             return response()->json([
                 'message' => 'Unauthorized',
             ], 401);

@@ -2,6 +2,7 @@
 
 use iEducar\Support\Exceptions\Exception as iEducarException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ApiCoreController extends Core_Controller_Page_EditController
 {
@@ -26,6 +27,8 @@ class ApiCoreController extends Core_Controller_Page_EditController
     protected $_processoAp = 0;
 
     protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
+
+    protected $_authenticatedByAccessKey = false;
 
     public function __construct()
     {
@@ -67,6 +70,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
         if (!$canAccess) {
             $canAccess = ($this->validatesAccessKey() && $this->validatesSignature());
+            $this->_authenticatedByAccessKey = $canAccess;
         }
 
         if (!$canAccess) {
@@ -116,6 +120,21 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
         if (!$can) {
             $this->messenger->append("Usuário sem permissão para cadastrar '{$this->getRequest()->resource}'.");
+        }
+
+        return $can;
+    }
+
+    protected function validatesAuthorizationToView()
+    {
+        if ($this->_processoAp === 0 || $this->_authenticatedByAccessKey) {
+            return true;
+        }
+
+        $can = Gate::allows('view', $this->getBaseProcessoAp());
+
+        if (!$can) {
+            $this->messenger->append("Usuário sem permissão para visualizar '{$this->getRequest()->resource}'.");
         }
 
         return $can;

@@ -27,7 +27,10 @@ return new class extends clsDetalhe
 
         if ($obj_permissao->permissao_cadastra(int_processo_ap: Process::DOCUMENT_ABSENCE_REASON, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->url_novo = 'educar_motivo_ausencia_documentacao_cad.php';
-            $this->url_editar = "educar_motivo_ausencia_documentacao_cad.php?id={$motivo->getKey()}";
+
+            if (!$motivo->from_system) {
+                $this->url_editar = "educar_motivo_ausencia_documentacao_cad.php?id={$motivo->getKey()}";
+            }
         }
 
         $this->url_cancelar = 'educar_motivo_ausencia_documentacao_lst.php';
