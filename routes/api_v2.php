@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ComponentBatchCallbackController;
 use App\Http\Controllers\FaltasComponenteController;
 use App\Http\Controllers\FaltasGeralController;
 use App\Http\Controllers\LaudoUploadController;
@@ -21,4 +22,5 @@ Route::group(['middleware' => ValidToken::class], function () {
     Route::post('/pareceres-por-etapa-geral', PareceresPorEtapaGeralController::class);
     Route::post('/pareceres-anual-por-componente', PareceresAnualPorComponenteController::class);
     Route::post('/pareceres-anual-geral', PareceresAnualGeralController::class);
+    Route::post('/component-batch-callback', ComponentBatchCallbackController::class);
 });
