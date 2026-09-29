@@ -221,16 +221,33 @@ class LegacyController extends Controller
      */
     private function requireFileFromLegacy($filename)
     {
+        // O nível de buffer é guardado e restaurado porque o código legado mexe
+        // em buffers de saída sem equilíbrio: CoreExt_Controller_Abstract faz
+        // ob_end_flush() seguido de ob_get_clean(), e um redirecionamento por
+        // permissão sai daqui por exceção, deixando o ob_start() aberto. Sob
+        // php-fpm isso é indiferente, porque o processo morre no fim da
+        // requisição; o servidor in-process dos testes de browser reaproveita o
+        // processo, então o que sobra vaza para a requisição seguinte.
+        $level = ob_get_level();
+
         ob_start();
 
-        $this->overrideGlobals();
-        $this->configureErrorsAndExceptions();
-        $this->changeDirectory();
-        $this->loadLegacyFile($filename);
+        try {
+            $this->overrideGlobals();
+            $this->configureErrorsAndExceptions();
+            $this->changeDirectory();
+            $this->loadLegacyFile($filename);
 
-        $content = ob_get_contents();
-
-        ob_end_clean();
+            // Só lê o próprio buffer: se o legado já fechou o nosso, ob_get_contents()
+            // devolveria o conteúdo de quem chamou.
+            $content = ob_get_level() > $level ? (string) ob_get_contents() : '';
+        } finally {
+            // A condição inclui o retorno do ob_end_clean() para o laço terminar
+            // se o buffer não puder ser removido, em vez de girar para sempre.
+            while (ob_get_level() > $level && ob_end_clean()) {
+                continue;
+            }
+        }
 
         return new Response(
             $content,

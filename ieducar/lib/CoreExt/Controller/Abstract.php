@@ -212,9 +212,13 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
             $code = 302;
         }
 
-        ob_end_flush();
-        ob_get_clean();
-
+        // Não se mexe em buffer de saída aqui: isto fechava dois buffers que não
+        // abriu (ob_end_flush + ob_get_clean), derrubando o do LegacyController e
+        // o de quem o chamou. Sob php-fpm passava batido porque o processo morre
+        // no fim da requisição; no servidor in-process dos testes de browser a
+        // pilha de buffers ficava corrompida para as requisições seguintes. O
+        // conteúdo já produzido é descartado pelo próprio LegacyController, que
+        // fecha o buffer que abriu ao desempilhar esta exceção.
         throw new HttpResponseException(
             new RedirectResponse($url, $code)
         );
