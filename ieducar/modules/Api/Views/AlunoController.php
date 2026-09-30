@@ -1653,8 +1653,8 @@ class AlunoController extends ApiCoreController
 
     protected function saveParents()
     {
-        $maeId = request('mae_id');
-        $paiId = request('pai_id');
+        $maeId = request('mae_id') ?: null;
+        $paiId = request('pai_id') ?: null;
 
         if ($maeId && $paiId && $maeId == $paiId) {
             $this->messenger->append('Não é possível informar a mesma pessoa para Pai e Mãe.');
@@ -1662,7 +1662,13 @@ class AlunoController extends ApiCoreController
             return false;
         }
 
-        $individual = LegacyIndividual::query()->find(request('pessoa_id'));
+        $individual = LegacyIndividual::query()->find($this->getRequest()->pessoa_id);
+
+        if (!$individual) {
+            $this->messenger->append('Não foi possível localizar a pessoa informada.');
+
+            return false;
+        }
 
         return $individual->update([
             'idpes_mae' => $maeId,
@@ -1774,16 +1780,14 @@ class AlunoController extends ApiCoreController
 
     protected function post()
     {
+        $id = null;
+
         if ($this->canPost()) {
             DB::beginTransaction();
             $id = $this->createOrUpdateAluno();
             $pessoaId = $this->getRequest()->pessoa_id;
 
-            if (!$this->saveParents()) {
-                return [];
-            }
-
-            if (is_numeric($id)) {
+            if (is_numeric($id) && $this->saveParents()) {
                 $this->updateBeneficios($id);
                 $this->updateResponsavel();
                 $this->saveSus($pessoaId);
@@ -1799,10 +1803,12 @@ class AlunoController extends ApiCoreController
                 $this->createOrUpdateLaudos($id);
 
                 $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
+                DB::commit();
             } else {
-                $this->messenger->append('Aparentemente o aluno não pode ser cadastrado, por favor, verifique.');
+                $this->messenger->append('Aparentemente o aluno não pode ser cadastrado, por favor, verifique.', 'error', false, 'error');
+                DB::rollBack();
+                $id = null;
             }
-            DB::commit();
         }
 
         return ['id' => $id];
@@ -1813,12 +1819,8 @@ class AlunoController extends ApiCoreController
         $id = $this->getRequest()->id;
         $pessoaId = $this->getRequest()->pessoa_id;
 
-        if (!$this->saveParents()) {
-            return [];
-        }
-
         DB::beginTransaction();
-        if ($this->canPut() && $this->createOrUpdateAluno($id)) {
+        if ($this->canPut() && $this->saveParents() && $this->createOrUpdateAluno($id)) {
             $this->updateBeneficios($id);
             $this->updateResponsavel();
             $this->saveSus($pessoaId);
@@ -1834,10 +1836,11 @@ class AlunoController extends ApiCoreController
             $this->createOrUpdateLaudos($id);
 
             $this->messenger->append('Cadastro alterado com sucesso', 'success', false, 'error');
+            DB::commit();
         } else {
             $this->messenger->append('Aparentemente o cadastro não pode ser alterado, por favor, verifique.', 'error', false, 'error');
+            DB::rollBack();
         }
-        DB::commit();
 
         return ['id' => $id];
     }
