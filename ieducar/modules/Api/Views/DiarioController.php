@@ -345,7 +345,13 @@ class DiarioController extends ApiCoreController
 
     private function defineCampoTipoRecuperacao($matriculaId)
     {
-        return (new DiarioControllerService)->getCampoTipoRecuperacao($matriculaId, $this->getRegra($matriculaId));
+        $regra = $this->getRegra($matriculaId);
+
+        return match ((int) $regra->get('tipoRecuperacaoParalela')) {
+            RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA => 'notaRecuperacaoParalela',
+            RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS => 'notaRecuperacaoEspecifica',
+            default => '',
+        };
     }
 
     protected function getComponentesTurma(int $turmaId): Collection
