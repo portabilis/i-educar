@@ -813,6 +813,19 @@ return new class extends clsCadastro
 
         Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: $styles);
 
+        $motivosExigemObservacao = (new IndividualCpfStateService)->reasonsRequiringObservation();
+        $motivosInativos = (new IndividualCpfStateService)->inactiveReasons();
+        $motivosSistema = (new IndividualCpfStateService)->systemReasons();
+        $opcoesJson = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP;
+
+        Portabilis_View_Helper_Application::embedJavascript(
+            viewInstance: $this,
+            script: 'var motivosExigemObservacao = ' . json_encode($motivosExigemObservacao, $opcoesJson)
+                . '; var motivosInativos = ' . json_encode($motivosInativos, $opcoesJson)
+                . '; var motivosSistema = ' . json_encode($motivosSistema, $opcoesJson) . ';',
+            afterReady: false
+        );
+
         $script = [
             '/vendor/legacy/Cadastro/Assets/Javascripts/PessoaFisica.js',
             '/vendor/legacy/Cadastro/Assets/Javascripts/Addresses.js',
@@ -821,15 +834,6 @@ return new class extends clsCadastro
         ];
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $script);
-
-        $motivosExigemObservacao = (new IndividualCpfStateService)->reasonsRequiringObservation();
-        $motivosInativos = (new IndividualCpfStateService)->inactiveReasons();
-
-        Portabilis_View_Helper_Application::embedJavascript(
-            viewInstance: $this,
-            script: 'var motivosExigemObservacao = ' . json_encode($motivosExigemObservacao) . '; var motivosInativos = ' . json_encode($motivosInativos) . ';',
-            afterReady: false
-        );
     }
 
     public function Novo()
@@ -962,9 +966,11 @@ return new class extends clsCadastro
         $this->campoLista(
             nome: 'document_absence_reason_id',
             campo: 'Motivo',
-            valor: (new IndividualCpfStateService)->reasonOptions(
+            valor: collect((new IndividualCpfStateService)->reasonOptions(
                 is_numeric($this->document_absence_reason_id) ? (int) $this->document_absence_reason_id : null
-            ),
+            ))
+                ->map(fn ($name) => htmlspecialchars($name, ENT_QUOTES, 'UTF-8'))
+                ->toArray(),
             default: $this->document_absence_reason_id,
             descricao: 'Justificativa da ausência de CPF',
             obrigatorio: false
@@ -1543,8 +1549,6 @@ return new class extends clsCadastro
             $dados['cpf'] = $cpfInt;
         }
 
-        $dados['possui_cpf'] = (int) $this->possui_cpf === 1;
-
         if (is_numeric($this->document_absence_reason_id)) {
             $dados['document_absence_reason_id'] = $this->document_absence_reason_id;
             $dados['document_absence_observation'] = $this->document_absence_observation ?: null;
@@ -1669,7 +1673,6 @@ return new class extends clsCadastro
         $cpfInt = $this->id_federal ? idFederal2int(str: $this->id_federal) : null;
         $dados['cpf'] = is_numeric($cpfInt) ? $cpfInt : null;
 
-        $dados['possui_cpf'] = (int) $this->possui_cpf === 1;
         $dados['document_absence_reason_id'] = is_numeric($this->document_absence_reason_id) ? $this->document_absence_reason_id : null;
         $dados['document_absence_observation'] = $dados['document_absence_reason_id'] ? ($this->document_absence_observation ?: null) : null;
 

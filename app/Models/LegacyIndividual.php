@@ -106,7 +106,6 @@ class LegacyIndividual extends Model
         'pai_restricao_judicial',
         'mae_restricao_judicial',
         'responsavel_restricao_judicial',
-        'possui_cpf',
         'document_absence_reason_id',
         'document_absence_observation',
     ];
@@ -288,8 +287,7 @@ class LegacyIndividual extends Model
         });
 
         static::saving(function ($model) {
-            if ($model->isDirty('cpf') && filled($model->getDirty()['cpf'] ?? null)) {
-                $model->possui_cpf = true;
+            if ($model->isDirty('cpf') && (int) ($model->getDirty()['cpf'] ?? 0) !== 0) {
                 $model->document_absence_reason_id = null;
                 $model->document_absence_observation = null;
             }
@@ -314,6 +312,13 @@ class LegacyIndividual extends Model
         );
     }
 
+    protected function possuiCpf(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->cpf !== null,
+        );
+    }
+
     protected function genderName(): Attribute
     {
         return Attribute::make(
@@ -324,7 +329,7 @@ class LegacyIndividual extends Model
     protected function nationalityName(): Attribute
     {
         return Attribute::make(
-            get: fn () => (new Nationality)->getDescriptiveValues()[$this->nacionalidade]
+            get: fn () => (new Nationality)->getDescriptiveValues()[(int) $this->nacionalidade] ?? null
         );
     }
 

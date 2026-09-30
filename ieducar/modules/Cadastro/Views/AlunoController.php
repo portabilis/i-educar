@@ -464,7 +464,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $observacaoAusenciaCpf = null;
 
         if (is_numeric($this->cod_pessoa_fj)) {
-            $fisica = LegacyIndividual::find($this->cod_pessoa_fj, ['cpf', 'nis_pis_pasep', 'possui_cpf', 'document_absence_reason_id', 'document_absence_observation']);
+            $fisica = LegacyIndividual::find($this->cod_pessoa_fj, ['cpf', 'nis_pis_pasep', 'document_absence_reason_id', 'document_absence_observation']);
             $valorCpf = is_numeric($fisica?->getRawOriginal('cpf')) ? int2CPF($fisica->getRawOriginal('cpf')) : '';
             $nisPisPasep = int2Nis($fisica?->nis_pis_pasep);
             $possuiCpf = (int) ($fisica?->possui_cpf ?? true);
@@ -500,7 +500,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->campoLista(
             nome: 'document_absence_reason_id',
             campo: 'Motivo',
-            valor: (new IndividualCpfStateService)->reasonOptions($motivoAusenciaCpf),
+            valor: collect((new IndividualCpfStateService)->reasonOptions($motivoAusenciaCpf))
+                ->map(fn ($name) => htmlspecialchars($name, ENT_QUOTES, 'UTF-8'))
+                ->toArray(),
             default: $motivoAusenciaCpf,
             descricao: 'Justificativa da ausência de CPF',
             obrigatorio: false
@@ -1269,8 +1271,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $motivosExigemObservacao = (new IndividualCpfStateService)->reasonsRequiringObservation();
         $motivosInativos = (new IndividualCpfStateService)->inactiveReasons();
+        $motivosSistema = (new IndividualCpfStateService)->systemReasons();
 
-        Portabilis_View_Helper_Application::embedJavascript($this, 'var motivosExigemObservacao = ' . json_encode($motivosExigemObservacao) . '; var motivosInativos = ' . json_encode($motivosInativos) . ';');
+        Portabilis_View_Helper_Application::embedJavascript($this, 'var motivosExigemObservacao = ' . json_encode($motivosExigemObservacao) . '; var motivosInativos = ' . json_encode($motivosInativos) . '; var motivosSistema = ' . json_encode($motivosSistema) . ';');
 
         $this->loadResourceAssets($this->getDispatcher());
 
