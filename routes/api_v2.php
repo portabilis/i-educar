@@ -8,7 +8,6 @@ use App\Http\Controllers\PareceresAnualGeralController;
 use App\Http\Controllers\PareceresAnualPorComponenteController;
 use App\Http\Controllers\PareceresPorEtapaComponenteController;
 use App\Http\Controllers\PareceresPorEtapaGeralController;
-use App\Http\Controllers\RecuperacoesController;
 use App\Http\Middleware\ValidToken;
 
 Route::group(['middleware' => ValidToken::class], function () {
@@ -16,7 +15,6 @@ Route::group(['middleware' => ValidToken::class], function () {
     Route::post('/falta-componente', FaltasComponenteController::class);
     Route::post('/aluno-laudo-upload', LaudoUploadController::class);
     Route::post('/notas', NotasController::class);
-    Route::post('/recuperacoes', RecuperacoesController::class);
     Route::post('/pareceres-por-etapa-e-componente', PareceresPorEtapaComponenteController::class);
     Route::post('/pareceres-por-etapa-geral', PareceresPorEtapaGeralController::class);
     Route::post('/pareceres-anual-por-componente', PareceresAnualPorComponenteController::class);
