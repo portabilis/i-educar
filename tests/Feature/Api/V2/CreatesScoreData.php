@@ -129,7 +129,6 @@ trait CreatesScoreData
             'student' => $student,
             'discipline' => $discipline,
             'registration' => $registration,
-            'evaluation_rule' => $evaluationRule,
         ];
     }
 
@@ -147,11 +146,5 @@ trait CreatesScoreData
     {
         return $this->withHeaders(['token' => 'valid-token'])
             ->postJson('/api/v2/notas', $this->scorePayload($data, $overrides));
-    }
-
-    protected function postRemedialScore(array $data, array $overrides = []): TestResponse
-    {
-        return $this->withHeaders(['token' => 'valid-token'])
-            ->postJson('/api/v2/recuperacoes', $this->scorePayload($data, $overrides));
     }
 }
