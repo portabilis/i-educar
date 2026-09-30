@@ -2611,7 +2611,7 @@ function canShowParentsFields() {
       cpfParent = $j("#cpf-pessoa-parent"),
       motivoParent = $j("#motivo-pessoa-parent"),
       observacaoMotivoParent = $j("#observacao-motivo-pessoa-parent"),
-      allFields = $j([])
+      allFieldsParent = $j([])
         .add(nameParent)
         .add(sexoParent)
         .add(estadocivilParent)
@@ -2683,7 +2683,7 @@ function canShowParentsFields() {
       buttons: {
         Gravar: function () {
           var bValid = true;
-          allFields.removeClass("ui-state-error");
+          allFieldsParent.removeClass("ui-state-error");
 
           bValid = bValid && checkLength(nameParent, "nome", 3, 255);
           bValid = bValid && checkSelect(sexoParent, "sexo");
@@ -2768,7 +2768,7 @@ function canShowParentsFields() {
           .addClass("btn-green");
       },
       close: function () {
-        allFields.val("").removeClass("error");
+        allFieldsParent.val("").removeClass("error");
       },
       hide: {
         effect: "clip",
