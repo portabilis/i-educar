@@ -46,6 +46,12 @@ final class Menus
 
     public const EMPLOYEES = 635;
 
+    /**
+     * Mapeado, mas sem teste: a tela monta uma grade a partir de escola, curso,
+     * série e turma, que é a faixa que está sendo coberta à parte.
+     */
+    public const TIMETABLES = 641;
+
     public const KNOWLEDGE_AREAS = 945;
 
     public const DISCIPLINES = 946;
@@ -210,6 +216,7 @@ final class Menus
                     ['Vínculos da alocação', self::BOND_TYPES, '/intranet/funcionario_vinculo_lst.php'],
                 ],
                 ['Servidores', self::EMPLOYEES, '/intranet/educar_servidor_lst.php'],
+                ['Quadros de horários', self::TIMETABLES, '/intranet/educar_quadro_horario_lst.php'],
             ],
         ]],
         'Configurações' => [25, '/intranet/educar_configuracoes_index.php', 'fa-gear', [
