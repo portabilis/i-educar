@@ -2683,7 +2683,7 @@ function canShowParentsFields() {
       buttons: {
         Gravar: function () {
           var bValid = true;
-          allFieldsParent.removeClass("ui-state-error");
+          allFieldsParent.removeClass("error");
 
           bValid = bValid && checkLength(nameParent, "nome", 3, 255);
           bValid = bValid && checkSelect(sexoParent, "sexo");

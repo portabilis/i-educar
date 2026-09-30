@@ -242,7 +242,7 @@ $j("#dialog-form-pessoa-parent").dialog({
     buttons: {
         "Gravar": function () {
             var bValid = true;
-            allFields.removeClass("ui-state-error");
+            allFields.removeClass("error");
 
             bValid = bValid && checkLength(nameParent, "nome", 3, 255);
             bValid = bValid && checkSelect(sexoParent, "sexo");
