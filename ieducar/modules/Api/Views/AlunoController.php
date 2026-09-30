@@ -649,7 +649,7 @@ class AlunoController extends ApiCoreController
     {
         $individual = LegacyIndividual::find($this->getRequest()->pessoa_id, ['idpes']);
         $old = $individual->deficiency()->pluck('ref_cod_deficiencia')->toArray();
-        $news = array_filter(array_merge($this->getRequest()->deficiencias, $this->getRequest()->transtornos));
+        $news = array_filter(array_merge($this->getRequest()->deficiencias ?? [], $this->getRequest()->transtornos ?? []));
         $individual->deficiency()->sync($news);
 
         $diff = array_merge(array_diff($old, $news), array_diff($news, $old));
