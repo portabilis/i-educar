@@ -107,6 +107,7 @@
     "scripts": {
         "format": "vendor/bin/pint",
         "test:browser": "ASSETS_SECURE=false vendor/bin/pest tests/Browser",
+        "test:browser:coverage": "ASSETS_SECURE=false XDEBUG_MODE=coverage vendor/bin/pest tests/Browser --coverage-html coverage",
         "openapi": "vendor/uderline/openapi-php-attributes/opag tests public/openapi.json",
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
         "new-install": [

@@ -6,8 +6,13 @@
 # ondrej/php, já que o Ubuntu Noble só oferece o 8.3).
 #
 # Roda apenas headless, de propósito: sem X virtual e sem VNC, a imagem fica
-# pequena e não há servidor nenhum de pé. Para depurar PHP, use o container
-# `php`, que tem Xdebug.
+# pequena e não há servidor nenhum de pé.
+#
+# O Xdebug entra desligado (`xdebug.mode=off`) e é ligado por chamada, pela
+# variável XDEBUG_MODE — `coverage` para medir cobertura, `debug` para depurar
+# um teste de browser. Ele mede o legado porque o servidor HTTP do Pest é
+# in-process: o `ieducar/` carregado para atender o browser roda no mesmo
+# processo do teste.
 
 ARG PHP_VERSION=8.5
 ARG COMPOSER_VERSION=2.10
@@ -60,10 +65,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         php${PHP_VERSION}-pgsql \
         php${PHP_VERSION}-readline \
         php${PHP_VERSION}-redis \
+        php${PHP_VERSION}-xdebug \
         php${PHP_VERSION}-xml \
         php${PHP_VERSION}-zip \
         unzip \
     && rm -rf /var/lib/apt/lists/*
+
+# O pacote do Xdebug entra em `develop`, que cobra um pedágio pequeno mas
+# permanente em toda rodada. O arquivo é numerado 99 para ser lido depois do
+# 20-xdebug.ini do pacote, e desliga a extensão por padrão; quem precisa dela
+# passa XDEBUG_MODE na chamada, que tem precedência sobre o ini.
+RUN echo 'xdebug.mode=off' > /etc/php/${PHP_VERSION}/cli/conf.d/99-xdebug-off.ini
 
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 
