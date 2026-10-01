@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -12,6 +15,14 @@
 */
 
 // uses(Tests\TestCase::class)->in('Feature');
+
+// Os testes de browser passam por HTTP de verdade e precisam do app Laravel
+// bootado. O DatabaseTransactions isola porque o servidor HTTP do Pest 4 é
+// in-process: ele roda no mesmo processo do teste.
+uses(
+    TestCase::class,
+    DatabaseTransactions::class,
+)->in('Browser');
 
 /*
 |--------------------------------------------------------------------------

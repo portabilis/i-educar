@@ -58,6 +58,7 @@
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-browser": "^4.0",
         "spatie/laravel-ignition": "^2.0",
         "symfony/yaml": "^7.0"
     },
@@ -105,6 +106,7 @@
     },
     "scripts": {
         "format": "vendor/bin/pint",
+        "test:browser": "ASSETS_SECURE=false vendor/bin/pest tests/Browser",
         "openapi": "vendor/uderline/openapi-php-attributes/opag tests public/openapi.json",
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
         "new-install": [
