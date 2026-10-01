@@ -60,6 +60,23 @@ final class Screens
     ];
 
     /**
+     * Telas do núcleo que só abrem com um pacote opcional instalado, e a classe
+     * do pacote de que cada uma depende.
+     *
+     * O cadastro de turma usa direto uma classe do `portabilis/i-educar-reports`.
+     * Com o pacote presente a tela abre; sem ele — que é a configuração do CI
+     * público, onde `packages/` fica vazio — ela devolve 500 por classe não
+     * encontrada. Não é defeito da tela nem da varredura, é acoplamento do núcleo
+     * a um pacote, então ela não cabe nem na varredura nem no BROKEN: o teste a
+     * pula quando a classe não existe, dizendo por quê, e a varre quando existe.
+     *
+     * @var array<string, string>
+     */
+    public const NEEDS_PACKAGE = [
+        'educar_turma_cad.php' => 'Portabilis_Model_Report_TipoBoletim',
+    ];
+
+    /**
      * As telas quebradas, do nome do arquivo para a rota.
      *
      * @return array<string, string>
