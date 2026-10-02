@@ -96,6 +96,8 @@ class clsPmieducarSerie extends Model
             $mapper = new RegraAvaliacao_Model_RegraDataMapper;
 
             if (isset($curso)) {
+                // Inalcançável: `$curso` nunca é definida neste construtor.
+                // @codeCoverageIgnoreStart
                 $regras = $mapper->findAll(
                     [],
                     ['id' => $regra_avaliacao_id, 'instituicao' => $curso['ref_cod_instituicao']]
@@ -104,6 +106,7 @@ class clsPmieducarSerie extends Model
                 if (count($regras) == 1) {
                     $regra = $regras[0];
                 }
+                // @codeCoverageIgnoreEnd
             } else {
                 $regra = $mapper->find($regra_avaliacao_id);
             }
@@ -118,6 +121,8 @@ class clsPmieducarSerie extends Model
             $mapper = new RegraAvaliacao_Model_RegraDataMapper;
 
             if (isset($curso)) {
+                // Inalcançável: `$curso` nunca é definida neste construtor.
+                // @codeCoverageIgnoreStart
                 $regras = $mapper->findAll(
                     [],
                     ['id' => $regra_avaliacao_diferenciada_id, 'instituicao' => $curso['ref_cod_instituicao']]
@@ -126,6 +131,7 @@ class clsPmieducarSerie extends Model
                 if (count($regras) == 1) {
                     $regra = $regras[0];
                 }
+                // @codeCoverageIgnoreEnd
             } else {
                 $regra = $mapper->find($regra_avaliacao_diferenciada_id);
             }
