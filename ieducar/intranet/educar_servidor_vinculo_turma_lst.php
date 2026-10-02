@@ -37,7 +37,7 @@ return new class extends clsListagem
         $this->servidor_id = $_GET['ref_cod_servidor'];
         $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
-        $this->titulo = 'Servidor Vínculo Turma - Listagem';
+        $this->titulo = 'Vínculos com turmas - Listagem';
 
         // passa todos os valores obtidos no GET para atributos do objeto
         foreach ($_GET as $var => $val) {
@@ -148,7 +148,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->title = 'Servidores - Servidor Vínculo Turma';
+        $this->title = 'Vínculos com turmas';
         $this->processoAp = 635;
     }
 
