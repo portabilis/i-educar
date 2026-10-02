@@ -141,7 +141,7 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Registro de vínculos do professor', breadcrumbs: [
+        $this->breadcrumb(currentPage: 'Registro de vínculos do servidor', breadcrumbs: [
             url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
         ]);
     }

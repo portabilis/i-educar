@@ -43,7 +43,7 @@ return new class extends clsListagem
         $lista_busca = [
             'Nome Funcão',
             'Abreviatura',
-            'Professor',
+            'Permitir vincular a turmas?',
         ];
 
         $obj_permissoes = new clsPermissoes;
@@ -66,7 +66,7 @@ return new class extends clsListagem
             'S' => 'Sim',
         ];
 
-        $this->campoLista(nome: 'professor', campo: 'Professor', valor: $opcoes, default: $this->professor, obrigatorio: false);
+        $this->campoLista(nome: 'professor', campo: 'Permitir vincular a turmas?', valor: $opcoes, default: $this->professor, obrigatorio: false);
 
         if ($this->professor == 'N') {
             $this->professor = '0';
