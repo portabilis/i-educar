@@ -44,7 +44,10 @@ return new class extends clsListagem
             if ($this->ref_cod_instituicao) {
                 $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
             } else {
+                // O `exit` encerra o processo, e com ele a suíte de testes.
+                // @codeCoverageIgnoreStart
                 exit('Erro: Usuário não é do nível poli-institucional e não possui uma instituição');
+                // @codeCoverageIgnoreEnd
             }
         }
 
