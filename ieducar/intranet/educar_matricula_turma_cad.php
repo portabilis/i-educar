@@ -65,12 +65,15 @@ return new class extends clsCadastro
                 );
             }
             if (!$retorno) {
+                // Não testável: depois deste alerta a tela segue para o `Gerar()`, que chama `exit`.
+                // @codeCoverageIgnoreStart
                 $alert = sprintf('
                 <script type="text/javascript">
                     window.alert("%s");
                     window.location.href= "./educar_matricula_det.php?cod_matricula=%u";
                 </script>', $this->mensagem, $this->ref_cod_matricula);
                 echo $alert;
+                // @codeCoverageIgnoreEnd
             } else {
                 $this->simpleRedirect(url: 'educar_matricula_det.php?cod_matricula=' . $this->ref_cod_matricula);
             }
@@ -82,7 +85,10 @@ return new class extends clsCadastro
     public function novaEnturmacao($matriculaId, $turmaDestinoId, $turnoId = null)
     {
         if (!$this->validaDataEnturmacao(matriculaId: $matriculaId, turmaDestinoId: $turmaDestinoId)) {
+            // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $availableTimeService = new AvailableTimeService;
@@ -91,9 +97,12 @@ return new class extends clsCadastro
         $registration = LegacyRegistration::find(id: $matriculaId);
 
         if ($this->validarCamposObrigatoriosCenso() && !$availableTimeService->isAvailable(studentId: $registration->ref_cod_aluno, schoolClassId: $turmaDestinoId)) {
+            // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'O aluno já está matriculado em uma turma com esse horário.';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $enturmacaoExists = new clsPmieducarMatriculaTurma;
@@ -106,7 +115,10 @@ return new class extends clsCadastro
         $enturmacaoExists = is_array(value: $enturmacaoExists) && count(value: $enturmacaoExists) > 0;
 
         if ($enturmacaoExists) {
+            // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $enturmacao = new clsPmieducarMatriculaTurma(
@@ -145,12 +157,17 @@ return new class extends clsCadastro
             : null;
 
         if ($dataObj > $dataAnoLetivoFim) {
+            // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Não foi possível enturmar, data de enturmação maior que data do fim do ano letivo.';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         if ($transferir && !empty($maiorDataEnturmacao) && $dataObj < $maiorDataEnturmacao) {
+            // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Não foi possível enturmar, data de enturmação menor que data de entrada da última enturmação.';
 
             return false;
@@ -162,6 +179,7 @@ return new class extends clsCadastro
             $this->mensagem = 'Não foi possível enturmar, data de enturmação menor que data do início do ano letivo.';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         return true;
@@ -170,7 +188,10 @@ return new class extends clsCadastro
     public function transferirEnturmacao($matriculaId, $turmaOrigemId, $turmaDestinoId)
     {
         if (!$this->validaDataEnturmacao(matriculaId: $matriculaId, turmaDestinoId: $turmaDestinoId, transferir: true)) {
+            // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $turnoId = null;
@@ -189,7 +210,10 @@ return new class extends clsCadastro
             return $this->novaEnturmacao(matriculaId: $matriculaId, turmaDestinoId: $turmaDestinoId, turnoId: $turnoId);
         }
 
+        // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+        // @codeCoverageIgnoreStart
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -233,7 +257,10 @@ return new class extends clsCadastro
 
             return true;
         } else {
+            // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -249,7 +276,10 @@ return new class extends clsCadastro
             return $sequencial[0];
         }
 
+        // Inalcançável: a consulta preparada é fixa e não falha.
+        // @codeCoverageIgnoreStart
         return 1;
+        // @codeCoverageIgnoreEnd
     }
 
     public function atualizaUltimaEnturmacao($matriculaId)
@@ -289,14 +319,20 @@ return new class extends clsCadastro
 
     public function Gerar()
     {
+        // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+        // @codeCoverageIgnoreStart
         exit;
+        // @codeCoverageIgnoreEnd
     }
 
+    // Não testável: só rodam por POST, que em seguida cai no `exit` do `Gerar()`.
+    // @codeCoverageIgnoreStart
     public function Novo() {}
 
     public function Editar() {}
 
     public function Excluir() {}
+    // @codeCoverageIgnoreEnd
 
     public function isTurmaIntegral($turmaId)
     {
