@@ -33,7 +33,7 @@ test('mostra instituição, escola, curso e série do vínculo', function () {
 
     $this->get($this->url)
         ->assertOk()
-        ->assertSee($this->user->institution->nm_instituicao)
+        ->assertSee($this->user->institution->nm_instituicao, false)
         ->assertSee('Escola Aurora')
         ->assertSee('Fundamental')
         ->assertSee('Primeiro Ano')

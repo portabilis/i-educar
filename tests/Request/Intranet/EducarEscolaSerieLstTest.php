@@ -38,7 +38,7 @@ test('lista as séries das escolas com série, curso, escola e instituição', f
         ->assertSee('Primeiro Ano (Ciclo de alfabetização)')
         ->assertSee('Fundamental (Nove anos)')
         ->assertSee('Escola ' . $link->ref_cod_serie)
-        ->assertSee($this->user->institution->nm_instituicao)
+        ->assertSee($this->user->institution->nm_instituicao, false)
         ->assertSee('go("educar_escola_serie_cad.php")', false);
 });
 

@@ -22,7 +22,7 @@ test('lista os cursos com nível, tipo de ensino e instituição', function () {
         ->assertSee('Curso Alfa')
         ->assertSee($this->course->educationLevel->nm_nivel)
         ->assertSee($this->course->educationType->nm_tipo)
-        ->assertSee($this->course->institution->nm_instituicao);
+        ->assertSee($this->course->institution->nm_instituicao, false);
 });
 
 // Defeito conhecido: o campo "Curso" aparece na tela, mas o valor dele não é

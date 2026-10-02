@@ -31,7 +31,7 @@ beforeEach(function () {
 test('mostra todos os dados da série ao administrador', function () {
     $this->get($this->url)
         ->assertOk()
-        ->assertSeeInOrder(['Instituição', $this->course->institution->nm_instituicao])
+        ->assertSeeInOrder(['Instituição', $this->course->institution->nm_instituicao], false)
         ->assertSeeInOrder(['Curso', 'Curso Alfa'])
         ->assertSeeInOrder(['Série', 'Série Alfa'])
         ->assertSeeInOrder(['Etapa Curso', '2'])
@@ -79,7 +79,7 @@ test('fora do nível de administrador não mostra a instituição nem os botões
     $this->get($this->url)
         ->assertOk()
         ->assertSee('Série Alfa')
-        ->assertDontSee($this->course->institution->nm_instituicao)
+        ->assertDontSee($this->course->institution->nm_instituicao, false)
         ->assertDontSee('educar_serie_cad.php?cod_serie=' . $this->grade->getKey(), false);
 });
 

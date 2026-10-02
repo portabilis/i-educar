@@ -39,7 +39,7 @@ test('mostra os dados básicos da escola', function () {
     $this->get($this->url)
         ->assertOk()
         ->assertSee('Escola - Detalhe')
-        ->assertSee($this->school->institution->nm_instituicao)
+        ->assertSee($this->school->institution->nm_instituicao, false)
         ->assertSee('Escola Alfa')
         ->assertSee('EALFA')
         ->assertSee('Urbana')

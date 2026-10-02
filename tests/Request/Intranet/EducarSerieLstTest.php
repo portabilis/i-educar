@@ -25,7 +25,7 @@ test('lista as séries ativas com a coluna de instituição para o administrador
         ->assertOk()
         ->assertSee(($this->link)($this->grade), false)
         ->assertDontSee(($this->link)($inactive), false)
-        ->assertSee($this->course->institution->nm_instituicao)
+        ->assertSee($this->course->institution->nm_instituicao, false)
         ->assertSee('go("educar_serie_cad.php")', false);
 });
 

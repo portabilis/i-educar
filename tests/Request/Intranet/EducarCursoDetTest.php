@@ -28,7 +28,7 @@ beforeEach(function () {
 test('mostra todos os dados do curso ao administrador', function () {
     $this->get($this->url)
         ->assertOk()
-        ->assertSeeInOrder(['Instituição', $this->course->institution->nm_instituicao])
+        ->assertSeeInOrder(['Instituição', $this->course->institution->nm_instituicao], false)
         ->assertSeeInOrder(['Tipo Regime', LegacyRegimeType::query()->findOrFail($this->course->ref_cod_tipo_regime)->nm_tipo])
         ->assertSeeInOrder(['Nível Ensino', $this->course->educationLevel->nm_nivel])
         ->assertSeeInOrder(['Tipo Ensino', $this->course->educationType->nm_tipo])
@@ -62,7 +62,7 @@ test('fora do nível de administrador não mostra a instituição nem os botões
     $this->get($this->url)
         ->assertOk()
         ->assertSee('Curso Alfa')
-        ->assertDontSee($this->course->institution->nm_instituicao)
+        ->assertDontSee($this->course->institution->nm_instituicao, false)
         ->assertDontSee('educar_curso_cad.php?cod_curso=' . $this->course->getKey(), false);
 });
 
