@@ -16,7 +16,7 @@ class UpdateDisciplinesCommandTest extends TestCase
     #[DataProvider('movementRowsProvider')]
     public function test_update_disciplines_command_records_each_valid_movement_and_ignores_non_numeric_rows(bool $includesIgnoredRows): void
     {
-        \Tests\Feature\Commands\UpdateDisciplinesCommand\RecordingMoveDisciplineDataFake::reset();
+        RecordingMoveDisciplineDataFake::reset();
 
         $disciplineFrom = LegacyDisciplineFactory::new()->create();
         $disciplineTo = LegacyDisciplineFactory::new()->create();
@@ -35,7 +35,7 @@ class UpdateDisciplinesCommandTest extends TestCase
         try {
             $this->artisan('update:disciplines', [
                 'filename' => $filePath,
-                '--copier' => [\Tests\Feature\Commands\UpdateDisciplinesCommand\RecordingMoveDisciplineDataFake::class],
+                '--copier' => [RecordingMoveDisciplineDataFake::class],
             ])->assertExitCode(0);
 
             $migration = MigratedDiscipline::query()
@@ -46,13 +46,13 @@ class UpdateDisciplinesCommandTest extends TestCase
                 ->first();
 
             $this->assertNotNull($migration);
-            $this->assertCount(1, \Tests\Feature\Commands\UpdateDisciplinesCommand\RecordingMoveDisciplineDataFake::$calls);
+            $this->assertCount(1, RecordingMoveDisciplineDataFake::$calls);
             $this->assertSame([
                 'disciplineFrom' => $disciplineFrom->getKey(),
                 'disciplineTo' => $disciplineTo->getKey(),
                 'year' => $year,
                 'gradeId' => $grade->getKey(),
-            ], \Tests\Feature\Commands\UpdateDisciplinesCommand\RecordingMoveDisciplineDataFake::$calls[0]);
+            ], RecordingMoveDisciplineDataFake::$calls[0]);
             $this->assertSame(1, MigratedDiscipline::query()
                 ->where('old_discipline_id', $disciplineFrom->getKey())
                 ->where('new_discipline_id', $disciplineTo->getKey())

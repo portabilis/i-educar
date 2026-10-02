@@ -17,7 +17,7 @@ return new class extends clsListagem
 
     public $ref_cod_escola;
 
-    public $ref_ref_cod_instituicao;
+    public $ref_cod_instituicao;
 
     public $ref_usuario_exc;
 
@@ -177,7 +177,7 @@ return new class extends clsListagem
             $this->array_botao_url[] = sprintf(
                 'educar_falta_atraso_cad.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
                 $this->ref_cod_servidor,
-                $this->ref_ref_cod_instituicao
+                $this->ref_cod_instituicao
             );
         }
 

@@ -83,11 +83,11 @@ return new class extends clsListagem
                 $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
                 $lista_busca = [
-                    "<a href=\"educar_turma_tipo_det.php?cod_turma_tipo={$registro['cod_turma_tipo']}\">{$registro['nm_tipo']}</a>",
+                    "<a href=\"educar_turma_tipo_det.php?cod_turma_tipo={$registro['cod_turma_tipo']}\">" . e($registro['nm_tipo']) . '</a>',
                 ];
 
                 if ($nivel_usuario == 1) {
-                    $lista_busca[] = "<a href=\"educar_turma_tipo_det.php?cod_turma_tipo={$registro['cod_turma_tipo']}\">{$registro['ref_cod_instituicao']}</a>";
+                    $lista_busca[] = "<a href=\"educar_turma_tipo_det.php?cod_turma_tipo={$registro['cod_turma_tipo']}\">" . e($registro['ref_cod_instituicao']) . '</a>';
                 }
 
                 $this->addLinhas(linha: $lista_busca);

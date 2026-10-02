@@ -17,7 +17,7 @@
     ],
     "homepage": "https://github.com/portabilis/i-educar",
     "require": {
-        "php": ">=8.3",
+        "php": "^8.5",
         "ext-gd": "*",
         "ext-json": "*",
         "ext-pdo": "*",
@@ -42,7 +42,6 @@
         "league/flysystem-ftp": "^3.0",
         "league/flysystem-sftp-v3": "^3.0",
         "maatwebsite/excel": "^4.0",
-        "phpoffice/phpspreadsheet": "^5.8",
         "predis/predis": "^2.3",
         "psr/simple-cache": "^3.0",
         "socialiteproviders/laravelpassport": "^4.3",
@@ -59,7 +58,7 @@
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^4.0",
-        "roave/security-advisories": "dev-latest",
+        "pestphp/pest-plugin-browser": "^4.0",
         "spatie/laravel-ignition": "^2.0",
         "symfony/yaml": "^7.0"
     },
@@ -107,6 +106,8 @@
     },
     "scripts": {
         "format": "vendor/bin/pint",
+        "test:browser": "ASSETS_SECURE=false vendor/bin/pest tests/Browser",
+        "test:browser:coverage": "ASSETS_SECURE=false XDEBUG_MODE=coverage vendor/bin/pest tests/Browser --coverage-html coverage",
         "openapi": "vendor/uderline/openapi-php-attributes/opag tests public/openapi.json",
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
         "new-install": [
@@ -145,7 +146,6 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
-        "platform-check": false,
         "allow-plugins": {
             "dex/composer-plug-and-play": true,
             "pestphp/pest-plugin": true,

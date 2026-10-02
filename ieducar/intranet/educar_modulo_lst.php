@@ -102,13 +102,13 @@ return new class extends clsListagem
                 $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
                 $lista_busca = [
-                    "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">{$registro['nm_tipo']}</a>",
-                    "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">{$registro['num_etapas']}</a>",
-                    "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">{$registro['num_meses']}</a>",
+                    "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">" . e($registro['nm_tipo']) . '</a>',
+                    "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">" . e($registro['num_etapas']) . '</a>',
+                    "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">" . e($registro['num_meses']) . '</a>',
                 ];
 
                 if ($nivel_usuario == 1) {
-                    $lista_busca[] = "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">{$registro['ref_cod_instituicao']}</a>";
+                    $lista_busca[] = "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">" . e($registro['ref_cod_instituicao']) . '</a>';
                 }
                 $this->addLinhas(linha: $lista_busca);
             }

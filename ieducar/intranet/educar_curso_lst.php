@@ -146,9 +146,9 @@ return new class extends clsListagem
         // monta a lista
         foreach ($cursos as $curso) {
             $lista_busca = [
-                '<a href="educar_curso_det.php?cod_curso=' . $curso->getKey() . '">' . $curso->nm_curso . '</a>',
-                '<a href="educar_curso_det.php?cod_curso=' . $curso->getKey() . '">' . $curso->nm_nivel . '</a>',
-                '<a href="educar_curso_det.php?cod_curso=' . $curso->getKey() . '">' . $curso->nm_tipo . '</a>',
+                '<a href="educar_curso_det.php?cod_curso=' . $curso->getKey() . '">' . e($curso->nm_curso) . '</a>',
+                '<a href="educar_curso_det.php?cod_curso=' . $curso->getKey() . '">' . e($curso->nm_nivel) . '</a>',
+                '<a href="educar_curso_det.php?cod_curso=' . $curso->getKey() . '">' . e($curso->nm_tipo) . '</a>',
             ];
 
             $this->addLinhas($lista_busca);

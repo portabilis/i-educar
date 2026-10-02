@@ -137,10 +137,10 @@ return new class extends clsListagem
             $options['query']['iddis'] = $district->id;
 
             $this->addLinhas([
-                $url->l($district->name, 'public_distrito_det.php', $options),
-                $url->l($district->city->name, 'public_distrito_det.php', $options),
-                $url->l($district->city->state->name, 'public_distrito_det.php', $options),
-                $url->l($district->city->state->country->name, 'public_distrito_det.php', $options),
+                $url->l(e($district->name), 'public_distrito_det.php', $options),
+                $url->l(e($district->city->name), 'public_distrito_det.php', $options),
+                $url->l(e($district->city->state->name), 'public_distrito_det.php', $options),
+                $url->l(e($district->city->state->country->name), 'public_distrito_det.php', $options),
             ]);
         }
 

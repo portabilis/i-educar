@@ -240,18 +240,45 @@ class LegacyController extends Controller
     }
 
     /**
-     * Override PHP Globals if not exists.
+     * Completa as superglobais a partir da requisição corrente.
+     *
+     * Sob um SAPI de servidor as superglobais são as que o próprio PHP montou, e
+     * é delas que o código legado depende: $_FILES como o array cru de upload, e
+     * $_GET/$_POST sem a limpeza dos middleware globais TrimStrings e
+     * ConvertEmptyStringsToNull, que reescrevem os bags da requisição do Laravel
+     * mas não as superglobais. Aqui só se preenche o que estiver faltando.
+     *
+     * No SAPI de linha de comando não há superglobais de requisição, e o
+     * processo é reaproveitado entre requisições — é o caso do servidor
+     * in-process dos testes de browser. Aí elas são reescritas por inteiro, ou o
+     * legado lê o que sobrou da requisição anterior.
      *
      * @return void
      */
     private function overrideGlobals()
     {
-        $_SERVER['REQUEST_URI'] = $_SERVER['REQUEST_URI'] ?? $this->request->getRequestUri();
+        if (PHP_SAPI !== 'cli') {
+            $_SERVER['REQUEST_URI'] = $_SERVER['REQUEST_URI'] ?? $this->request->getRequestUri();
 
-        $_GET = empty($_GET) ? $this->request->query->all() : $_GET;
-        $_POST = (empty($_POST) && $this->request->isMethod('post')) ? $this->request->request->all() : $_POST;
-        $_FILES = empty($_FILES) ? $this->request->files->all() : $_FILES;
-        $_COOKIE = empty($_COOKIE) ? $this->request->cookies->all() : $_COOKIE;
+            $_GET = empty($_GET) ? $this->request->query->all() : $_GET;
+            $_POST = (empty($_POST) && $this->request->isMethod('post')) ? $this->request->request->all() : $_POST;
+            $_FILES = empty($_FILES) ? $this->request->files->all() : $_FILES;
+            $_COOKIE = empty($_COOKIE) ? $this->request->cookies->all() : $_COOKIE;
+
+            return;
+        }
+
+        // A requisição vem do container, e não de $this->request: a rota guarda
+        // a instância do controller, e num processo reaproveitado ela continua
+        // sendo a da primeira requisição — com o GET e o POST daquela.
+        $request = request();
+
+        $_SERVER['REQUEST_URI'] = $request->getRequestUri();
+
+        $_GET = $request->query->all();
+        $_POST = $request->isMethod('post') ? $request->request->all() : [];
+        $_FILES = $request->files->all();
+        $_COOKIE = $request->cookies->all();
     }
 
     /**

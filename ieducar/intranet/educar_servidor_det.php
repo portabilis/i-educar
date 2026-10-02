@@ -115,7 +115,7 @@ return new class extends clsDetalhe
             $link = sprintf(
                 '<a href="/intranet/atendidos_det.php?cod_pessoa=%s" target="_blank">%s</a>',
                 $registro['cod_servidor'],
-                $registro['nome']
+                e($registro['nome'])
             );
             $this->addDetalhe(['Nome', $link]);
         }
@@ -133,12 +133,12 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Código Educacenso/Inep', $docenteInep->docenteInep]);
 
             if (isset($docenteInep->nomeInep)) {
-                $this->addDetalhe(['Nome Educacenso/Inep', $docenteInep->nomeInep]);
+                $this->addDetalhe(['Nome Educacenso/Inep', e($docenteInep->nomeInep)]);
             }
         }
 
         if ($registro['idpes']) {
-            $this->addDetalhe(['Nome', $registro['Nome']]);
+            $this->addDetalhe(['Nome', e($registro['Nome'])]);
         }
 
         if ($registro['ref_cod_instituicao']) {
