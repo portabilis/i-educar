@@ -167,10 +167,13 @@ return new class extends clsCadastro
                 turma: $this->ref_cod_turma,
                 ano: $ano
             );
+            // Inalcançável: a busca lança `DisciplineNotLinkedToRegistrationException`, que não é `App_Model_Exception`.
+            // @codeCoverageIgnoreStart
         } catch (App_Model_Exception $e) {
             $this->mensagem = $e->getMessage();
 
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         foreach ($componentes as $componente) {
@@ -199,7 +202,10 @@ return new class extends clsCadastro
     private function dependenciaValida(): bool
     {
         if (!LegacyRegistration::query()->whereKey($this->ref_cod_matricula)->exists()) {
+            // Inalcançável: a tela sai antes para matrícula inexistente.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         return LegacyDisciplineAcademicYear::query()
@@ -326,7 +332,10 @@ SQL;
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
         $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
 
+        // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+        // @codeCoverageIgnoreStart
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
