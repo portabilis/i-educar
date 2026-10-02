@@ -28,7 +28,7 @@ test('lista os tipos de ocorrência disciplinar em ordem de nome, com a institui
         ->assertSeeInOrder(['Registro Alfa', 'Registro Beta'])
         ->assertSee(($this->detail)($alfa), false)
         ->assertSee(($this->detail)($beta), false)
-        ->assertSee($this->user->institution->nm_instituicao)
+        ->assertSee($this->user->institution->nm_instituicao, false)
         ->assertSee('go("educar_tipo_ocorrencia_disciplinar_cad.php")', false);
 });
 

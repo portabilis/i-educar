@@ -22,7 +22,7 @@ beforeEach(function () {
 test('mostra os dados do tipo de ocorrência disciplinar, a instituição e o link de edição', function () {
     $this->get($this->url)
         ->assertOk()
-        ->assertSee($this->user->institution->nm_instituicao)
+        ->assertSee($this->user->institution->nm_instituicao, false)
         ->assertSee('Atraso recorrente')
         ->assertSee('Chegou depois do sinal')
         ->assertSee('7')

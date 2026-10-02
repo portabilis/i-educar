@@ -21,7 +21,7 @@ beforeEach(function () {
 test('mostra os dados do tipo de dispensa, a instituição e o link de edição', function () {
     $this->get($this->url)
         ->assertOk()
-        ->assertSee($this->user->institution->nm_instituicao)
+        ->assertSee($this->user->institution->nm_instituicao, false)
         ->assertSee('Atestado médico')
         ->assertSee('Dispensa por motivo de saúde')
         ->assertSee('educar_tipo_dispensa_cad.php?cod_tipo_dispensa=' . $this->type->getKey(), false);

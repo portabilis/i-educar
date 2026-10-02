@@ -21,7 +21,7 @@ beforeEach(function () {
 test('mostra os dados do tipo de transferência, a instituição e o link de edição', function () {
     $this->get($this->url)
         ->assertOk()
-        ->assertSee($this->user->institution->nm_instituicao)
+        ->assertSee($this->user->institution->nm_instituicao, false)
         ->assertSee('Mudança de endereço')
         ->assertSee('A família mudou de bairro')
         ->assertSee('educar_transferencia_tipo_cad.php?cod_transferencia_tipo=' . $this->type->getKey(), false);

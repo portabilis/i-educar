@@ -57,7 +57,7 @@ test('mostra os dados da matrícula e da enturmação', function () {
         'Data Enturmação', '10/02/2030',
         'Situação', 'Cursando',
         'Formando', 'Não',
-    ]);
+    ], false);
 });
 
 test('mostra o turno da enturmação quando ela tem turno próprio', function () {
@@ -188,7 +188,7 @@ test('na matrícula transferida mostra a escola de destino interna e oferece can
     ($this->transfer)($registration, ['ref_cod_escola_destino' => $destination]);
 
     ($this->detail)($registration)
-        ->assertSeeInOrder(['Situação', 'Transferido', 'Escola destino', $destination->organization->fantasia, 'Observação', 'Mudou de cidade'])
+        ->assertSeeInOrder(['Situação', 'Transferido', 'Escola destino', $destination->organization->fantasia, 'Observação', 'Mudou de cidade'], false)
         ->assertDontSee('Estado escola destino')
         ->assertSee('Cancelar transferência')
         ->assertDontSee('Cancelar matrícula');

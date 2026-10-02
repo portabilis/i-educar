@@ -43,7 +43,7 @@ test('mostra os dados da turma e as ações', function () {
             'TAL',
             'Máximo de Alunos', '32',
             'Situação', 'Ativo',
-        ])
+        ], false)
         ->assertSee('educar_turma_cad.php?cod_turma=' . $schoolClass->getKey(), false)
         ->assertSee('Reclassificar alunos alfabeticamente')
         ->assertSee('Reclassificar alunos por data base')
