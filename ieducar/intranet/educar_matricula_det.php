@@ -432,8 +432,11 @@ return new class extends clsDetalhe
         $this->url_cancelar = 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno'];
         $this->largura = '100%';
 
+        // Início > Escola > Alunos > Nome (social, se houver) > Matrícula
         $this->breadcrumb(currentPage: 'Matrícula', breadcrumbs: [
-            'educar_index.php' => 'Escola',
+            url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_aluno_lst.php') => 'Alunos',
+            url(path: "intranet/educar_aluno_det.php?cod_aluno={$registro['ref_cod_aluno']}") => ($det_aluno['nome_social'] ?? null) ?: ($det_aluno['nome_aluno'] ?? null),
         ]);
 
         // js

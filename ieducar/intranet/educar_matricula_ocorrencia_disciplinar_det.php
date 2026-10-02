@@ -125,6 +125,10 @@ return new class extends clsDetalhe
         $registration = LegacyRegistration::find($registro['ref_cod_matricula']);
         $this->breadcrumb('Ocorrência disciplinar', [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url("intranet/educar_matricula_det.php?cod_matricula={$registro['ref_cod_matricula']}") => 'Matrícula',
+            url("intranet/educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$registro['ref_cod_matricula']}") => 'Ocorrências disciplinares',
         ]);
     }
 

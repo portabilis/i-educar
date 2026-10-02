@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacySchoolHistory;
+use App\Models\LegacyStudent;
 use App\Models\LegacyUserSchool;
 use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 
@@ -282,6 +283,9 @@ return new class extends clsDetalhe
         // Início > Escola > Alunos > Nome > Históricos escolares > Histórico escolar
         $this->breadcrumb(currentPage: 'Histórico escolar', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$registro['ref_cod_aluno']}") => LegacyStudent::find($registro['ref_cod_aluno'])?->real_name,
+            url("intranet/educar_historico_escolar_lst.php?ref_cod_aluno={$registro['ref_cod_aluno']}") => 'Históricos escolares',
         ]);
     }
 

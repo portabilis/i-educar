@@ -42,6 +42,8 @@ return new class extends clsCadastro
         // Início > Escola > Turmas > Turma (ano) > Pareceres
         $this->breadcrumb(currentPage: 'Pareceres', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_turma_lst.php') => 'Turmas',
+            url(path: "intranet/educar_turma_det.php?cod_turma={$this->cod_turma}") => $this->ano ? "{$this->nm_turma} ({$this->ano})" : $this->nm_turma,
         ]);
 
         $this->nome_url_cancelar = 'Cancelar';

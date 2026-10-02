@@ -4,6 +4,7 @@ use App\Models\Country;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolHistory;
 use App\Models\LegacySchoolHistoryDiscipline;
+use App\Models\LegacyStudent;
 use App\Models\RegistrationStatus;
 use App\Models\State;
 use App\Services\SchoolHistoryService;
@@ -127,6 +128,9 @@ return new class extends clsCadastro
         // Início > Escola > Alunos > Nome > Históricos escolares > Novo (ou Editar)
         $this->breadcrumb(currentPage: $retorno == 'Editar' ? 'Editar' : 'Novo', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}") => LegacyStudent::find($this->ref_cod_aluno)?->real_name,
+            url("intranet/educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}") => 'Históricos escolares',
         ]);
 
         return $retorno;

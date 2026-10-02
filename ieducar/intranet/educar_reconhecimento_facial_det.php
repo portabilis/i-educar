@@ -45,6 +45,8 @@ return new class extends clsDetalhe
         // Início > Escola > Alunos > Nome > Reconhecimento facial
         $this->breadcrumb(currentPage: 'Reconhecimento facial', breadcrumbs: [
             'educar_index.php' => 'Escola',
+            'educar_aluno_lst.php' => 'Alunos',
+            "educar_aluno_det.php?cod_aluno={$student?->getKey()}" => $student?->real_name,
         ]);
     }
 
