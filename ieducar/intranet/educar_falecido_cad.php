@@ -13,7 +13,10 @@ return new class extends clsCadastro
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -105,9 +108,12 @@ return new class extends clsCadastro
                     $enturmacao = new clsPmieducarMatriculaTurma(ref_cod_matricula: $this->ref_cod_matricula, ref_cod_turma: $enturmacao['ref_cod_turma'], ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, data_cadastro: null, data_exclusao: null, ativo: 0, ref_cod_turma_transf: null, sequencial: $enturmacao['sequencial']);
 
                     if (!$enturmacao->edita()) {
+                        // Inalcançável: `edita()` só falha sem matrícula e turma, e as duas acabaram de ser lidas.
+                        // @codeCoverageIgnoreStart
                         $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
 
                         return false;
+                        // @codeCoverageIgnoreEnd
                     } else {
                         $enturmacao->marcaAlunoFalecido($this->data_cancel);
                     }
@@ -125,9 +131,12 @@ return new class extends clsCadastro
                 $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             }
 
+            // Inalcançável: `cadastraObservacaoFalecido()` só falha sem o código da matrícula, que o `edita()` acima já exigiu.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'A alteração não pode ser salva.<br>';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
         $this->mensagem = 'A alteração não pode ser realizado.<br>';
 
