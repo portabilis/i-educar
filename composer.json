@@ -57,7 +57,8 @@
         "laravel/telescope": "^5.18",
         "mockery/mockery": "^1.6",
         "pestphp/pest": "^5.0",
-        "pestphp/pest-plugin-browser": "^5.0"
+        "pestphp/pest-plugin-browser": "^5.0",
+        "phpunit/phpcov": "^13.1"
     },
     "autoload": {
         "classmap": [
