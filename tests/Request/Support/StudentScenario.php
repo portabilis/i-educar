@@ -169,11 +169,19 @@ final class StudentScenario
      */
     public function document(array $attributes = []): LegacyDocument
     {
-        return LegacyDocumentFactory::new()->create($attributes + [
+        // Nem toda coluna é preenchível no model (certidao_casamento, por
+        // exemplo), então os atributos entram sem passar pelo fillable; e tudo
+        // vai num único INSERT, porque um gatilho do banco apaga a linha de
+        // documento que fica sem nenhum dado.
+        $document = LegacyDocumentFactory::new()->make([
             'idpes' => $this->person->getKey(),
             'rg' => null,
             'certidao_nascimento' => null,
         ]);
+
+        $document->forceFill($attributes)->save();
+
+        return $document;
     }
 
     public function race(string $name): self
