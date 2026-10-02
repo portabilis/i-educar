@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\LegacyCourse;
 use App\Models\LegacyPeriod;
+use App\Models\LegacyPhone;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use App_Model_ZonaLocalizacao;
@@ -70,6 +71,69 @@ class LegacySchoolFactory extends Factory
             LegacyPhoneFactory::new()->create([
                 'idpes' => $school->person,
                 'tipo' => 1,
+            ]);
+        });
+    }
+
+    /**
+     * Adiciona os quatro telefones que o cadastro de escola aceita: os dois
+     * fixos, o celular e o fax.
+     */
+    public function withPhones(): static
+    {
+        return $this->afterCreating(function (LegacySchool $school) {
+            $phones = [
+                LegacyPhone::TYPE_LANDLINE => '34221001',
+                LegacyPhone::TYPE_MOBILE => '34221002',
+                LegacyPhone::TYPE_MOBILE_ALT => '991221003',
+                LegacyPhone::TYPE_FAX => '34221004',
+            ];
+
+            foreach ($phones as $type => $number) {
+                LegacyPhoneFactory::new()->create([
+                    'idpes' => $school->ref_idpes,
+                    'tipo' => $type,
+                    'ddd' => '48',
+                    'fone' => $number,
+                ]);
+            }
+        });
+    }
+
+    /**
+     * Adiciona o endereço da escola, que pertence à pessoa jurídica dela.
+     */
+    public function withAddress(): static
+    {
+        return $this->afterCreating(function (LegacySchool $school) {
+            PersonHasPlaceFactory::new()->create([
+                'person_id' => $school->ref_idpes,
+                'place_id' => PlaceFactory::new()->create(),
+            ]);
+        });
+    }
+
+    /**
+     * Adiciona o código INEP da escola.
+     */
+    public function withInep(string $code = '42000001'): static
+    {
+        return $this->afterCreating(function (LegacySchool $school) use ($code) {
+            SchoolInepFactory::new()->create([
+                'cod_escola' => $school,
+                'cod_escola_inep' => $code,
+            ]);
+        });
+    }
+
+    /**
+     * Adiciona espaços escolares à escola.
+     */
+    public function withSpaces(int $count = 2): static
+    {
+        return $this->afterCreating(function (LegacySchool $school) use ($count) {
+            SchoolSpaceFactory::new()->count($count)->create([
+                'school_id' => $school,
             ]);
         });
     }
