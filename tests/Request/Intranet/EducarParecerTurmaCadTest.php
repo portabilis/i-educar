@@ -1,5 +1,6 @@
 <?php
 
+use Database\Factories\EmployeeFactory;
 use Database\Factories\LegacyGeneralConfigurationFactory;
 use Database\Factories\LegacyUserFactory;
 use Tests\Request\Support\EnrollmentScenario;
@@ -51,6 +52,31 @@ test('grava os quatro pareceres e volta para a turma', function () {
         ->parecer_3_etapa->toBe('Global do segundo semestre')
         ->parecer_4_etapa->toBe('Educação física do segundo semestre')
         ->ref_usuario_exc->toBe($this->user->getKey());
+});
+
+// Defeito conhecido: a tela grava os pareceres pela edição da classe legada
+// de turma, que escreve NULL em tudo o que não recebeu valor. Lançar um
+// parecer apaga o regente, a etapa do Educacenso e a disciplina dispensada da
+// turma.
+test('defeito: gravar os pareceres apaga outros dados da turma', function () {
+    $schoolClass = ($this->schoolClass)([
+        'ref_cod_regente' => $regent = EmployeeFactory::new()->create(['institution_id' => $this->scenario->institution])->getKey(),
+        'ref_cod_instituicao_regente' => $this->scenario->institution,
+        'etapa_educacenso' => 14,
+        'ref_cod_disciplina_dispensada' => $this->scenario->discipline('Ensino Religioso'),
+    ]);
+
+    expect($schoolClass->refresh()->ref_cod_regente)->toBe($regent);
+
+    $payload = LegacyFields::from($this->get(($this->url)($schoolClass))->assertOk()->getContent(), ['parecer_1_etapa' => 'Turma participativa']);
+
+    $this->post(($this->url)($schoolClass), $payload)->assertRedirect('educar_turma_det.php?cod_turma=' . $schoolClass->getKey());
+
+    expect($schoolClass->refresh())
+        ->parecer_1_etapa->toBe('Turma participativa')
+        ->ref_cod_regente->toBeNull()
+        ->etapa_educacenso->toBeNull()
+        ->ref_cod_disciplina_dispensada->toBeNull();
 });
 
 test('avisa o erro quando a turma não vem no envio', function () {
