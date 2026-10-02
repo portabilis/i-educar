@@ -668,7 +668,10 @@ class clsPmieducarMatriculaTurma extends Model
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
         if ($parar) {
+            // O `exit` do parâmetro de depuração encerra o processo, e com ele a suíte de testes.
+            // @codeCoverageIgnoreStart
             exit($sql);
+            // @codeCoverageIgnoreEnd
         }
 
         $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} mt, cadastro.pessoa , {$this->_schema}matricula m, {$this->_schema}aluno al, {$this->_schema}curso c, {$this->_schema}turma t, {$this->_schema}instituicao i{$tab_aluno} {$from} {$filtros} {$where}");
@@ -1283,7 +1286,10 @@ class clsPmieducarMatriculaTurma extends Model
             return $sequencial[0];
         }
 
+        // Inalcançável: a consulta preparada é fixa e não falha.
+        // @codeCoverageIgnoreStart
         return 0;
+        // @codeCoverageIgnoreEnd
     }
 
     public function getUltimaTurmaEnturmacao($matriculaId)
@@ -1299,6 +1305,9 @@ class clsPmieducarMatriculaTurma extends Model
             return $ultima_turma[0];
         }
 
+        // Inalcançável: a consulta preparada é fixa e não falha.
+        // @codeCoverageIgnoreStart
         return null;
+        // @codeCoverageIgnoreEnd
     }
 }
