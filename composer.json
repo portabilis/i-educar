@@ -111,7 +111,7 @@
             "Composer\\Config::disableProcessTimeout",
             "rm -rf coverage",
             "for suite in Diario Feature Pages Educacenso Unit; do XDEBUG_MODE=coverage vendor/bin/pest --testsuite=$suite --coverage-php=coverage/cov/$suite.cov || exit 1; done",
-            "vendor/bin/phpcov merge coverage/cov --html coverage/html --text coverage/coverage.txt",
+            "php -d memory_limit=-1 vendor/bin/phpcov merge coverage/cov --html coverage/html --text coverage/coverage.txt",
             "sed -n '/Summary:/,/Lines:/p' coverage/coverage.txt"
         ],
         "openapi": "vendor/uderline/openapi-php-attributes/opag tests public/openapi.json",
