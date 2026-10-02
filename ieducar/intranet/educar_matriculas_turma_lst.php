@@ -81,6 +81,7 @@ return new class extends clsListagem
 
         if (empty($this->ano)) {
             $this->ano = date(format: 'Y');
+            $this->filtrosPadrao[] = 'ano';
         }
 
         if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {

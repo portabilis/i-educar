@@ -138,6 +138,9 @@ return new class extends clsDetalhe
         // Início > Escola > Alunos > Nome > Distribuições de uniforme > Distribuição de uniforme
         $this->breadcrumb(currentPage: 'Distribuição de uniforme', breadcrumbs: [
             'educar_index.php' => 'Escola',
+            'educar_aluno_lst.php' => 'Alunos',
+            "educar_aluno_det.php?cod_aluno={$uniformDistribution->student_id}" => $uniformDistribution->student?->real_name,
+            "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$uniformDistribution->student_id}" => 'Distribuições de uniforme',
         ]);
     }
 
