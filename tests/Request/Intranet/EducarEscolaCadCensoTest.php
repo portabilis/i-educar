@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyInstitution;
+use App\Models\LegacyOrganization;
 use Database\Factories\LegacySchoolFactory;
 use Database\Factories\LegacyUserFactory;
 use Database\Factories\SchoolManagerFactory;
@@ -180,6 +181,86 @@ test('recusa pelas regras do Censo', function (array $overrides, string $message
     'escola pública com contratação pela secretaria municipal' => [
         ['formas_contratacao_parceria_escola_secretaria_municipal' => [1]],
         'O campo <b>Forma(s) de contratação da parceria ou convênio entre a escola e a Secretaria municipal de educação</b> foi preenchido incorretamente.',
+    ],
+]);
+
+/**
+ * Escola privada: a categoria decide quais formas de contratação com as
+ * secretarias de educação são aceitas.
+ */
+function escolaPrivada(object $test, array $overrides = []): array
+{
+    $school = LegacySchoolFactory::new()->withName('Escola Privada')->complete()->private()->withAddress()->create([
+        'ref_cod_instituicao' => $test->user->ref_cod_instituicao,
+        'sigla' => 'EPRIV',
+    ]);
+    SchoolManagerFactory::new()->create(['school_id' => $school, 'chief' => true]);
+    LegacyOrganization::query()->whereKey($school->ref_idpes)->update(['cnpj' => '11222333000181']);
+
+    $url = '/intranet/educar_escola_cad.php?cod_escola=' . $school->getKey();
+
+    $payload = LegacyFields::from($test->get($url)->assertOk()->getContent(), $overrides + [
+        'sigla' => 'MUDOU',
+        'escola_inep_id' => '42000001',
+        'mantenedora_escola_privada' => [1],
+        'categoria_escola_privada' => 1,
+        'formas_contratacao_parceria_escola_secretaria_estadual' => [4],
+        'formas_contratacao_parceria_escola_secretaria_municipal' => [4],
+    ] + SchoolFormData::MULTIPLE);
+
+    return [$school, $url, $payload];
+}
+
+test('abre a edição de uma escola privada com o CNPJ formatado e a mantenedora dela', function () {
+    [, , $payload] = escolaPrivada($this);
+
+    expect($payload['tipoacao'])->toBe('Editar')
+        ->and(urldecode($payload['cnpj_']))->toBe('11.222.333/0001-81')
+        ->and($payload['cnpj_mantenedora_principal'])->toBe('11.222.333/0001-81')
+        ->and($payload['categoria_escola_privada'])->toBe(1);
+});
+
+test('grava a escola privada particular com contrato de prestação de serviço', function () {
+    [$school, $url, $payload] = escolaPrivada($this);
+
+    $this->post($url, $payload)->assertRedirect('educar_escola_lst.php');
+
+    expect($school->refresh())
+        ->sigla->toBe('MUDOU')
+        ->formas_contratacao_parceria_escola_secretaria_estadual->toBe('{4}')
+        ->formas_contratacao_parceria_escola_secretaria_municipal->toBe('{4}');
+});
+
+test('recusa forma de contratação incompatível com a categoria da escola privada', function (array $overrides, string $message) {
+    [$school, $url, $payload] = escolaPrivada($this, $overrides);
+
+    $this->post($url, $payload)->assertOk()->assertSee($message, false);
+
+    expect($school->refresh()->sigla)->toBe('EPRIV');
+})->with([
+    'secretaria estadual: comunitária com termo de colaboração' => [
+        ['categoria_escola_privada' => 2, 'formas_contratacao_parceria_escola_secretaria_estadual' => [5]],
+        'O campo <b>Forma(s) de contratação da parceria ou convênio entre a escola e a Secretaria estadual de educação</b> foi preenchido incorretamente.',
+    ],
+    'secretaria estadual: particular sem contrato de prestação de serviço' => [
+        ['formas_contratacao_parceria_escola_secretaria_estadual' => [1]],
+        'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"',
+    ],
+    'secretaria estadual: particular com mais de uma forma' => [
+        ['formas_contratacao_parceria_escola_secretaria_estadual' => [4, 1]],
+        'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"',
+    ],
+    'secretaria municipal: comunitária com termo de colaboração' => [
+        ['categoria_escola_privada' => 2, 'formas_contratacao_parceria_escola_secretaria_estadual' => [1], 'formas_contratacao_parceria_escola_secretaria_municipal' => [5]],
+        'O campo <b>Forma(s) de contratação da parceria ou convênio entre a escola e a Secretaria municipal de educação</b> foi preenchido incorretamente.',
+    ],
+    'secretaria municipal: particular sem contrato de prestação de serviço' => [
+        ['formas_contratacao_parceria_escola_secretaria_municipal' => [1]],
+        'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"',
+    ],
+    'secretaria municipal: particular com mais de uma forma' => [
+        ['formas_contratacao_parceria_escola_secretaria_municipal' => [4, 1]],
+        'Quando o campo "Categoria da escola privada" for igual à "Particular" só é possível cadastrar "Contrato de prestação de serviço"',
     ],
 ]);
 
