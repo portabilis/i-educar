@@ -31,6 +31,8 @@ npm-debug.log
 yarn-error.log
 .phpunit.result.cache
 
+/tests/Browser/Screenshots
+
 # IDE Files
 ## PHPStorm InteliJ
 *.idea
