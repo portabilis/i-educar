@@ -3,6 +3,7 @@
 namespace Tests\Request\Support;
 
 use App\Models\LegacyCourse;
+use App\Models\LegacyDiscipline;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyGrade;
 use App\Models\LegacyRegistration;
@@ -10,6 +11,8 @@ use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacyUser;
 use Database\Factories\LegacyCourseFactory;
+use Database\Factories\LegacyDisciplineAcademicYearFactory;
+use Database\Factories\LegacyDisciplineFactory;
 use Database\Factories\LegacyEnrollmentFactory;
 use Database\Factories\LegacyGradeFactory;
 use Database\Factories\LegacyRegistrationFactory;
@@ -17,6 +20,7 @@ use Database\Factories\LegacySchoolAcademicYearFactory;
 use Database\Factories\LegacySchoolClassFactory;
 use Database\Factories\LegacySchoolCourseFactory;
 use Database\Factories\LegacySchoolFactory;
+use Database\Factories\LegacySchoolGradeDisciplineFactory;
 use Database\Factories\LegacySchoolGradeFactory;
 
 /**
@@ -81,6 +85,32 @@ final class EnrollmentScenario
         ]);
 
         return $grade;
+    }
+
+    /**
+     * Um componente curricular da série (a primeira, se nenhuma for dada),
+     * oferecido pela escola no ano do cenário.
+     */
+    public function discipline(string $name, int $workload = 80, ?LegacyGrade $grade = null): LegacyDiscipline
+    {
+        $grade ??= $this->grade;
+        $discipline = LegacyDisciplineFactory::new()->create(['instituicao_id' => $this->institution, 'nome' => $name]);
+
+        LegacyDisciplineAcademicYearFactory::new()->create([
+            'componente_curricular_id' => $discipline,
+            'ano_escolar_id' => $grade,
+            'carga_horaria' => $workload,
+            'anos_letivos' => '{' . $this->year . '}',
+        ]);
+
+        LegacySchoolGradeDisciplineFactory::new()->create([
+            'ref_ref_cod_escola' => $this->school,
+            'ref_ref_cod_serie' => $grade,
+            'ref_cod_disciplina' => $discipline,
+            'anos_letivos' => '{' . $this->year . '}',
+        ]);
+
+        return $discipline;
     }
 
     public function schoolClass(array $attributes = []): LegacySchoolClass
