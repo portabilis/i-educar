@@ -23,7 +23,10 @@ class LegacyEducationTypeFactory extends Factory
             'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
             'nm_tipo' => $this->faker->firstName(),
             'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
-            'atividade_complementar' => $this->faker->boolean(),
+            // Fixo: o valor muda as regras de matrícula (um curso de atividade
+            // complementar aceita matrículas simultâneas), e sorteá-lo tornava
+            // instáveis os testes que criam um curso.
+            'atividade_complementar' => false,
         ];
     }
 
