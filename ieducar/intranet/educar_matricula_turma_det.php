@@ -77,7 +77,10 @@ return new class extends clsDetalhe
         $this->ref_cod_curso = $registro['ref_cod_curso'];
 
         if (!$registro || !$_POST) {
+            // Inalcançável: sem POST a tela já saiu antes, e a turma inexistente estoura em `array_shift()` acima.
+            // @codeCoverageIgnoreStart
             $this->simpleRedirect(url: 'educar_matricula_lst.php');
+            // @codeCoverageIgnoreEnd
         }
 
         // Tipo da turma
