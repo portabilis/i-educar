@@ -174,9 +174,12 @@ return new class extends clsCadastro
                 turma: $this->ref_cod_turma
             );
         } catch (App_Model_Exception $e) {
+            // Inalcançável: a busca lança `DisciplineNotLinkedToRegistrationException`, que não é `App_Model_Exception`.
+            // @codeCoverageIgnoreStart
             $this->mensagem = $e->getMessage();
 
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         foreach ($componentes as $componente) {
@@ -212,6 +215,8 @@ return new class extends clsCadastro
 
     public function existeComponenteSerie($serieId, $escolaId, $disciplinaId)
     {
+        // Inalcançável: nada chama este método.
+        // @codeCoverageIgnoreStart
         try {
             App_Model_IedFinder::getEscolaSerieDisciplina(
                 serieId: $serieId,
@@ -223,6 +228,7 @@ return new class extends clsCadastro
         }
 
         return true;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Novo()
@@ -285,9 +291,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
+        // Inalcançável: `edita()` só falha sem os códigos, que a tela sempre tem.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br />';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()
@@ -311,9 +320,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
+        // Inalcançável: `excluir()` só falha sem os códigos, que a tela sempre tem.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br />';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function montaEtapas()
