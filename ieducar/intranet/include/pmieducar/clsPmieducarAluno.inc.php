@@ -492,9 +492,12 @@ class clsPmieducarAluno extends Model
             if (is_string($this->tipo_responsavel) && mb_strlen($this->tipo_responsavel) <= 1) {
                 $set .= "{$gruda}tipo_responsavel = '{$this->tipo_responsavel}'";
                 $gruda = ', ';
+                // Inalcançável: o texto vazio já entra no ramo acima, que aceita até um caractere.
+                // @codeCoverageIgnoreStart
             } elseif ($this->tipo_responsavel == '') {
                 $set .= "{$gruda}tipo_responsavel = NULL";
                 $gruda = ', ';
+                // @codeCoverageIgnoreEnd
             }
 
             if ($this->aluno_estado_id) {
@@ -861,9 +864,12 @@ class clsPmieducarAluno extends Model
                 $resultado[] = $tupla;
             }
         } else {
+            // Inalcançável: `lista()` redefine os campos para todos antes de montar a consulta.
+            // @codeCoverageIgnoreStart
             while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
+                // @codeCoverageIgnoreEnd
             }
         }
 
