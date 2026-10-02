@@ -67,6 +67,10 @@ return new class extends clsDetalhe
             $this->simpleRedirect(url: 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno']);
         }
 
+        if (!Portabilis_Utils_User::canAccessEscola(id: $registro['ref_ref_cod_escola'])) {
+            $this->simpleRedirect(url: 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno']);
+        }
+
         $verificaMatriculaUltimoAno = $obj_matricula->verificaMatriculaUltimoAno(codAluno: $registro['ref_cod_aluno'], codMatricula: $registro['cod_matricula']);
 
         $existeSaidaEscola = $obj_matricula->existeSaidaEscola(codMatricula: $registro['cod_matricula']);
