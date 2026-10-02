@@ -97,7 +97,9 @@ return new class extends clsCadastro
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb(currentPage: 'Disciplinas de dependência', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Matrícula > Disciplinas de dependência > Nova (ou Editar)
+        $registration = LegacyRegistration::find($this->ref_cod_matricula);
+        $this->breadcrumb(currentPage: $retorno == 'Editar' ? 'Editar' : 'Nova', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
 

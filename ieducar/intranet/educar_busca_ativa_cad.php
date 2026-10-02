@@ -87,7 +87,8 @@ return new class extends clsCadastro
             }
         }
 
-        $this->breadcrumb(currentPage: 'Registro do busca ativa', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Matrícula > Busca ativa > Nova (ou Editar)
+        $this->breadcrumb(currentPage: $retorno == 'Editar' ? 'Editar' : 'Nova', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
 

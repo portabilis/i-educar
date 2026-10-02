@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyRegistration;
+
 return new class extends clsCadastro
 {
     public $pessoa_logada;
@@ -29,7 +31,9 @@ return new class extends clsCadastro
 
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
 
-        $this->breadcrumb(currentPage: 'Registro do falecimento do aluno', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Matrícula > Falecimento
+        $registration = LegacyRegistration::find($this->ref_cod_matricula);
+        $this->breadcrumb(currentPage: 'Falecimento', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
 

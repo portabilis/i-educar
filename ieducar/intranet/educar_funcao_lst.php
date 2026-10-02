@@ -35,6 +35,7 @@ return new class extends clsListagem
     public function Gerar()
     {
         $this->titulo = 'Função - Listagem';
+        $this->buscaRapida = 'nm_funcao';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;

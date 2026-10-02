@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyExemptionType;
+use App\Models\LegacyRegistration;
 
 return new class extends clsDetalhe
 {
@@ -135,7 +136,9 @@ return new class extends clsDetalhe
         $this->url_cancelar = 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Dispensa de componentes curriculares', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Matrícula > Dispensa de componentes curriculares > Dispensa
+        $registration = LegacyRegistration::find($this->ref_cod_matricula);
+        $this->breadcrumb(currentPage: 'Dispensa', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }

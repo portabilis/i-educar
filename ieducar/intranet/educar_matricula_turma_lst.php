@@ -264,11 +264,11 @@ return new class extends clsListagem
         $this->largura = '100%';
 
         if ($acao === 'remanejar') {
-            $this->breadcrumb(currentPage: 'Turmas disponíveis para remanejamento', breadcrumbs: [
+            $this->breadcrumb(currentPage: 'Remanejamento', breadcrumbs: [
                 url(path: 'intranet/educar_index.php') => 'Escola',
             ]);
         } else {
-            $this->breadcrumb(currentPage: 'Enturmações da matrícula', breadcrumbs: [
+            $this->breadcrumb(currentPage: 'Enturmações', breadcrumbs: [
                 url(path: 'intranet/educar_index.php') => 'Escola',
             ]);
         }

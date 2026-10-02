@@ -88,7 +88,8 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Distribuições de uniforme escolar', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Distribuições de uniforme
+        $this->breadcrumb(currentPage: 'Distribuições de uniforme', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
     }

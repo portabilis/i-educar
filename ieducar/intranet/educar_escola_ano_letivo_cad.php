@@ -40,7 +40,8 @@ return new class extends clsCadastro
         $this->nome_url_sucesso = 'Continuar';
         $this->url_cancelar = 'educar_escola_det.php?cod_escola=' . $this->ref_cod_escola;
 
-        $this->breadcrumb(currentPage: 'Definição do ano letivo', breadcrumbs: [
+        // Início > Escola > Escolas > Nome > Novo ano letivo
+        $this->breadcrumb(currentPage: 'Novo ano letivo', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
 

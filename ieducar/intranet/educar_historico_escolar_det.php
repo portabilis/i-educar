@@ -279,7 +279,8 @@ return new class extends clsDetalhe
         $this->url_cancelar = "educar_historico_escolar_lst.php?ref_cod_aluno={$registro['ref_cod_aluno']}";
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Atualização de históricos escolares', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Históricos escolares > Histórico escolar
+        $this->breadcrumb(currentPage: 'Histórico escolar', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }

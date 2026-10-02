@@ -124,7 +124,8 @@ return new class extends clsCadastro
         $this->nome_url_cancelar = 'Cancelar';
         $this->dependencia = dbBool($this->dependencia);
 
-        $this->breadcrumb(currentPage: 'Atualização de históricos escolares', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Históricos escolares > Novo (ou Editar)
+        $this->breadcrumb(currentPage: $retorno == 'Editar' ? 'Editar' : 'Novo', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
