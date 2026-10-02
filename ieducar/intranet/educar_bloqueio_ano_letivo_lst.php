@@ -30,6 +30,9 @@ return new class extends clsListagem
 
         $this->ref_ano = $this->ano;
 
+        // Ano é filtro, não busca: fica só na gaveta, sem cópia no toolbar
+        $this->buscaRapida = false;
+
         $this->addCabecalhos(coluna: [
             'Instituição',
             'Ano',

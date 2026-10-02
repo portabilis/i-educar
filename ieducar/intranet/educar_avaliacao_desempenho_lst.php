@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyPerson;
 use App\Models\PerformanceEvaluation;
 
 return new class extends clsListagem
@@ -101,8 +102,11 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Registro da avaliação de desempenho do servidor', breadcrumbs: [
-            url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
+        // As avaliações são do servidor, então ele é um nível do caminho:
+        // Início > Servidores > Nome > Avaliação de desempenho
+        $this->breadcrumb(currentPage: 'Avaliação de desempenho', breadcrumbs: [
+            url(path: 'intranet/educar_servidor_lst.php') => 'Servidores',
+            url(path: "intranet/educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}") => LegacyPerson::whereKey($this->ref_cod_servidor)->value('nome'),
         ]);
     }
 

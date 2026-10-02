@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacySchoolHistory;
+use App\Models\LegacyStudent;
 use App\Models\LegacyUserSchool;
 
 return new class extends clsListagem
@@ -48,7 +49,8 @@ return new class extends clsListagem
 
         include 'include/pmieducar/educar_campo_lista.php';
 
-        // outros Filtros
+        // outros Filtros. Ano é filtro, não busca: fica só na gaveta
+        $this->buscaRapida = false;
         $this->campoNumero(nome: 'ano', campo: 'Ano', valor: $this->ano, tamanhovisivel: 4, tamanhomaximo: 4);
 
         $opcoes = ['' => 'Selecione', 2 => 'Não', 1 => 'Sim'];
@@ -146,6 +148,8 @@ return new class extends clsListagem
         // Início > Escola > Alunos > Nome > Históricos escolares
         $this->breadcrumb(currentPage: 'Históricos escolares', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}") => LegacyStudent::find($this->ref_cod_aluno)?->real_name,
         ]);
     }
 
