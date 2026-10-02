@@ -9,12 +9,15 @@ use App\Models\LegacyGrade;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacyStudent;
 use App\Models\LegacyUser;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyDisciplineAcademicYearFactory;
 use Database\Factories\LegacyDisciplineFactory;
 use Database\Factories\LegacyEnrollmentFactory;
 use Database\Factories\LegacyGradeFactory;
+use Database\Factories\LegacyIndividualFactory;
+use Database\Factories\LegacyPersonFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacySchoolAcademicYearFactory;
 use Database\Factories\LegacySchoolClassFactory;
@@ -22,6 +25,9 @@ use Database\Factories\LegacySchoolCourseFactory;
 use Database\Factories\LegacySchoolFactory;
 use Database\Factories\LegacySchoolGradeDisciplineFactory;
 use Database\Factories\LegacySchoolGradeFactory;
+use Database\Factories\LegacyStudentFactory;
+use Database\Seeders\DefaultRelatorioSituacaoMatriculaTableSeeder;
+use Illuminate\Support\Facades\DB;
 
 /**
  * A cadeia escola > curso > série que as telas de turma, matrícula e
@@ -45,6 +51,12 @@ final class EnrollmentScenario
 
     public static function for(LegacyUser $user, ?int $year = null): self
     {
+        // As views de situação da matrícula cruzam com esta tabela, que o
+        // banco de testes não traz preenchida.
+        if (DB::table('relatorio.situacao_matricula')->doesntExist()) {
+            (new DefaultRelatorioSituacaoMatriculaTableSeeder)->run();
+        }
+
         $scenario = new self($year ?? now()->year);
         $institution = ['ref_cod_instituicao' => $user->ref_cod_instituicao];
 
@@ -122,6 +134,28 @@ final class EnrollmentScenario
             'ref_cod_instituicao' => $this->institution,
             'ano' => $this->year,
         ]);
+    }
+
+    public function student(string $name, array $attributes = []): LegacyStudent
+    {
+        return LegacyStudentFactory::new()->create($attributes + [
+            'ref_idpes' => LegacyIndividualFactory::new()->create([
+                'idpes' => LegacyPersonFactory::new()->create(['nome' => $name, 'tipo' => 'F']),
+            ]),
+        ]);
+    }
+
+    /**
+     * Um aluno com esse nome, matriculado na série do cenário e enturmado na
+     * turma dada.
+     */
+    public function enrolled(string $name, LegacySchoolClass $schoolClass, array $enrollment = [], array $registration = []): LegacyEnrollment
+    {
+        return $this->enroll(
+            $this->registration($registration + ['ref_cod_aluno' => $this->student($name)]),
+            $schoolClass,
+            $enrollment
+        );
     }
 
     public function registration(array $attributes = []): LegacyRegistration
