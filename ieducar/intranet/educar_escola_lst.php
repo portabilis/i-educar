@@ -15,6 +15,8 @@ return new class extends clsListagem
     public function Gerar()
     {
         $this->titulo = 'Escola - Listagem';
+        $this->buscaRapida = 'nm_escola';
+        $this->buscaRapidaRotulo = 'Buscar por nome da escola';
 
         $this->nm_escola = request('nm_escola');
         $this->ref_cod_instituicao = request('ref_cod_instituicao');

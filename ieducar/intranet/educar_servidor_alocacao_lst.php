@@ -155,8 +155,11 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Registro de alocações do servidor', [
-            url('intranet/educar_servidores_index.php') => 'Servidores',
+        // As alocações são do servidor, então ele é um nível do caminho:
+        // Início > Servidores > Nome > Alocações
+        $this->breadcrumb('Alocações', [
+            url('intranet/educar_servidor_lst.php') => 'Servidores',
+            url("intranet/educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}") => $nome,
         ]);
     }
 

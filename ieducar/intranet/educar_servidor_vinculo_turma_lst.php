@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyPerson;
 use iEducar\Support\View\SelectOptions;
 
 return new class extends clsListagem
@@ -141,8 +142,11 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Registro de vínculos do servidor', breadcrumbs: [
-            url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
+        // Os vínculos são do servidor, então ele é um nível do caminho:
+        // Início > Servidores > Nome > Vínculos com turmas
+        $this->breadcrumb(currentPage: 'Vínculos com turmas', breadcrumbs: [
+            url(path: 'intranet/educar_servidor_lst.php') => 'Servidores',
+            url(path: "intranet/educar_servidor_det.php?cod_servidor={$this->servidor_id}&ref_cod_instituicao={$this->ref_cod_instituicao}") => LegacyPerson::whereKey($this->servidor_id)->value('nome'),
         ]);
     }
 

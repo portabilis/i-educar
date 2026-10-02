@@ -191,8 +191,11 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Registro das faltas e atrasos do servidor', breadcrumbs: [
-            url('intranet/educar_servidores_index.php') => 'Servidores',
+        // As faltas são do servidor, então ele é um nível do caminho:
+        // Início > Servidores > Nome > Faltas e atrasos
+        $this->breadcrumb(currentPage: 'Faltas e atrasos', breadcrumbs: [
+            url('intranet/educar_servidor_lst.php') => 'Servidores',
+            url("intranet/educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}") => $nome,
         ]);
     }
 
