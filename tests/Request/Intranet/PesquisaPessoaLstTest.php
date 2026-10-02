@@ -108,7 +108,7 @@ test('reaproveita os campos guardados na sessão quando a tela volta sem eles', 
         ->assertSee("set_campo_pesquisa( 'cod_pessoa', '{$ana->getKey()}'", false);
 });
 
-test('pesquisa funcionários ativos pelo nome e pela matrícula', function () {
+test('pesquisa funcionários pelo nome e pela matrícula, ativos ou todos', function () {
     $ana = StudentScenario::individual('Ana Alves');
     $bia = StudentScenario::individual('Bia Alves');
     LegacyEmployeeFactory::new()->create(['ref_cod_pessoa_fj' => $ana->getKey(), 'matricula' => 1001, 'ativo' => 1]);
@@ -119,21 +119,23 @@ test('pesquisa funcionários ativos pelo nome e pela matrícula', function () {
         ->assertSee("set_campo_pesquisa( 'cod_pessoa', '{$ana->getKey()}', 'nome_pessoa', '{$ana->getKey()}', 'Ana Alves' )", false)
         ->assertDontSee('Bia Alves');
 
-    // Defeito: `show=todos` deveria incluir os inativos, mas a tela lê
-    // $_REQUEST, que nunca é preenchido; só os ativos aparecem.
+    // A tela lê `show` de $_REQUEST, que o PHP preenche só numa requisição
+    // real; aqui ele é preenchido à mão.
+    $_REQUEST['show'] = 'todos';
+
     ($this->search)(['campo_busca' => 'Alves', 'show' => 'todos'], 'FUNC', submit: true)
         ->assertSee('Ana Alves')
-        ->assertDontSee('Bia Alves')
+        ->assertSee('Bia Alves')
         ->assertSee("'submit' )", false);
 
-    ($this->search)(['matricula' => '1001'], 'FUNC')
-        ->assertSee('Ana Alves');
+    ($this->search)(['matricula' => '2002', 'show' => 'todos'], 'FUNC')
+        ->assertSee('Bia Alves')
+        ->assertDontSee('Ana Alves');
 
-    ($this->search)(['matricula' => '2002'], 'FUNC')
-        ->assertDontSee('Ana Alves')
-        ->assertSee('Não existe nenhum resultado a ser apresentado.');
+    $_REQUEST = [];
 
     ($this->search)(['campo_busca' => 'Ninguém'], 'FUNC')->assertSee('Não existe nenhum resultado a ser apresentado.');
+
 });
 
 test('para funcionários com edição em tela cheia, a linha também devolve os campos', function () {
