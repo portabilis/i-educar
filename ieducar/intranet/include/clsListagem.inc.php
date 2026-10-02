@@ -77,6 +77,25 @@ class clsListagem extends clsCampos
 
     public $exibirBotaoSubmit = true;
 
+    // Nome do campo da busca promovido para o toolbar da listagem no tema
+    // Pulsare (opt-in por tela); os demais campos ficam na gaveta de filtros.
+    public $buscaRapida;
+
+    // Placeholder da busca rápida quando o campo aceita mais de um dado
+    // (ex.: "Buscar por nome, matrícula ou CPF") — a interpretação é da tela.
+    public $buscaRapidaRotulo;
+
+    // Filtros que a tela aplica por padrão sem estarem na URL (ex.: ano
+    // atual). O tema conta cada um no badge do botão Filtrar, para a lista
+    // não vir filtrada em silêncio.
+    public $filtrosPadrao = [];
+
+    // Telas de processo (lançamento, promoção, histórico) usam o formulário
+    // de "busca" como formulário de trabalho: o JS delas troca o botão para
+    // "Carregar" e processa na própria página. Nelas o tema não recolhe os
+    // campos na gaveta de filtros.
+    public $filtrosEmGaveta = true;
+
     public function __construct()
     {
         parent::__construct();
