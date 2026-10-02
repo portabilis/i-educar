@@ -20,6 +20,7 @@ class StudentFilter
         public readonly ?int $school = null,
         public readonly ?int $course = null,
         public readonly ?int $grade = null,
+        public readonly ?int $enrollmentStatus = null,
         public readonly ?int $perPage = null,
         public readonly ?string $pageName = null,
         public readonly ?bool $similarity = null,

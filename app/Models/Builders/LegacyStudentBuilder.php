@@ -3,6 +3,8 @@
 namespace App\Models\Builders;
 
 use App\Models\DataSearch\StudentFilter;
+use App\Models\RegistrationStatus;
+use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyStudentBuilder extends LegacyBuilder
@@ -146,17 +148,20 @@ class LegacyStudentBuilder extends LegacyBuilder
         return $this->whereDoesntHave('medicalReports');
     }
 
-    public function whereRegistration($year, $course, $grade, $school)
+    public function whereRegistration($year, $course, $grade, $school, $status = null)
     {
-        return $this->where(function ($query) use ($year, $course, $grade, $school) {
+        return $this->where(function ($query) use ($year, $course, $grade, $school, $status) {
             $query->whereHas(
                 'registrations',
-                function ($query) use ($year, $course, $grade, $school) {
+                function ($query) use ($year, $course, $grade, $school, $status) {
                     $query->active();
                     $query->when($year, fn ($q) => $q->where('ano', $year));
                     $query->when($course, fn ($q) => $q->where('ref_cod_curso', $course));
                     $query->when($school, fn ($q) => $q->where('ref_ref_cod_escola', $school));
                     $query->when($grade, fn ($q) => $q->where('ref_ref_cod_serie', $grade));
+                    $query->when($status, fn ($q) => (int) $status === EnrollmentStatusFilter::EXCEPT_TRANSFERRED_OR_ABANDONMENT
+                        ? $q->whereNotIn('aprovado', [RegistrationStatus::TRANSFERRED, RegistrationStatus::ABANDONED])
+                        : $q->where('aprovado', $status));
                 }
             );
         });
@@ -195,6 +200,7 @@ class LegacyStudentBuilder extends LegacyBuilder
                         'course' => $studentFilter->course,
                         'school' => $studentFilter->school,
                         'year' => $studentFilter->year,
+                        'status' => $studentFilter->enrollmentStatus,
                     ],
                 ]
             )
