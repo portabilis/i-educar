@@ -75,12 +75,12 @@ return new class extends clsListagem
 
         $avaliacoes->each(function (PerformanceEvaluation $avaliacao) use ($nivel_usuario) {
             $lista_busca = [
-                "<a href=\"educar_avaliacao_desempenho_det.php?id={$avaliacao->id}\">{$avaliacao->title}</a>",
-                "<a href=\"educar_avaliacao_desempenho_det.php?id={$avaliacao->id}\">{$avaliacao->employee->person->name}</a>",
+                "<a href=\"educar_avaliacao_desempenho_det.php?id={$avaliacao->id}\">" . e($avaliacao->title) . '</a>',
+                "<a href=\"educar_avaliacao_desempenho_det.php?id={$avaliacao->id}\">" . e($avaliacao->employee->person->name) . '</a>',
             ];
 
             if ($nivel_usuario == 1) {
-                $lista_busca[] = $avaliacao->institution->name;
+                $lista_busca[] = e($avaliacao->institution->name);
             }
 
             $this->addLinhas(linha: $lista_busca);

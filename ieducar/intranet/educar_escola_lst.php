@@ -80,12 +80,12 @@ return new class extends clsListagem
             foreach ($lista as $registro) {
                 $linha = [];
 
-                $linha[] = "<a href=\"educar_escola_det.php?cod_escola={$registro['cod_escola']}\">{$registro['nome']}</a>";
+                $linha[] = "<a href=\"educar_escola_det.php?cod_escola={$registro['cod_escola']}\">" . e($registro['nome']) . '</a>';
                 if ($nivel == 1) {
                     $objInstituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
                     $detInstituicao = $objInstituicao->detalhe();
 
-                    $linha[] = "<a href=\"educar_escola_det.php?cod_escola={$registro['cod_escola']}\">{$detInstituicao['nm_instituicao']}</a>";
+                    $linha[] = "<a href=\"educar_escola_det.php?cod_escola={$registro['cod_escola']}\">" . e($detInstituicao['nm_instituicao']) . '</a>';
                 }
                 $this->addLinhas($linha);
             }

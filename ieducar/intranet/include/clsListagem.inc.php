@@ -177,12 +177,14 @@ class clsListagem extends clsCampos
             if (is_array($mixVariaveisMantidas)) {
                 foreach ($mixVariaveisMantidas as $key => $value) {
                     if ($key != $getVar) {
-                        $linkFixo .= "$key=$value&";
+                        $linkFixo .= http_build_query([$key => $value ?? '']) . '&';
                     }
                 }
             } elseif (is_string($mixVariaveisMantidas)) {
                 $linkFixo .= "$mixVariaveisMantidas&";
             }
+
+            $linkFixo = htmlspecialchars($linkFixo, ENT_QUOTES);
 
             $strReturn = <<<HTML
 <table>
@@ -203,7 +205,8 @@ HTML;
             // Meio
             $strReturn .= '';
 
-            $ordenacao = $_POST['ordenacao'] ?? $_GET['ordenacao'] ?? $_POST['ordenacao'] ?? null;
+            $ordenacao = $_POST['ordenacao'] ?? $_GET['ordenacao'] ?? '';
+            $ordenacao = is_scalar($ordenacao) ? urlencode((string) $ordenacao) : '';
 
             for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
                 $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . ($pagStart + $i + $pag_modifier) : '';
@@ -371,8 +374,8 @@ HTML;
                 reset($this->colunas);
             }
 
-            $ordenacao = $_POST['ordenacao'] ?? '';
-            $fonte = $_POST['fonte'] ?? '';
+            $ordenacao = htmlspecialchars((string) ($_POST['ordenacao'] ?? ''), ENT_QUOTES);
+            $fonte = htmlspecialchars((string) ($_POST['fonte'] ?? ''), ENT_QUOTES);
             $retorno .= "<input type='hidden' id='ordenacao' name='ordenacao' value='{$ordenacao}'>";
             $retorno .= "<input type='hidden' id='fonte' name='fonte' value='{$fonte}'>";
             $retorno .= '<tr>';

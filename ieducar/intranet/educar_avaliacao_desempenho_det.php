@@ -24,12 +24,12 @@ return new class extends clsDetalhe
         $obj_permissoes = new clsPermissoes;
         $nivel_usuario = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
-            $this->addDetalhe(detalhe: ['Instituição', "{$avaliacao->institution->name}"]);
+            $this->addDetalhe(detalhe: ['Instituição', e($avaliacao->institution->name)]);
         }
 
-        $this->addDetalhe(detalhe: ['Servidor', $avaliacao->employee->person->name]);
-        $this->addDetalhe(detalhe: ['Avaliação', $avaliacao->sequential]);
-        $this->addDetalhe(detalhe: ['Descrição', $avaliacao->description]);
+        $this->addDetalhe(detalhe: ['Servidor', e($avaliacao->employee->person->name)]);
+        $this->addDetalhe(detalhe: ['Avaliação', e($avaliacao->sequential)]);
+        $this->addDetalhe(detalhe: ['Descrição', e($avaliacao->description)]);
 
         $obj_permissoes = new clsPermissoes;
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
