@@ -411,7 +411,10 @@ return new class extends clsCadastro
                 $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $conteudo);
                 $disciplinas .= '</table>';
             } else {
+                // Inalcançável: `$lista` é sempre uma Collection, portanto iterável.
+                // @codeCoverageIgnoreStart
                 $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';
+                // @codeCoverageIgnoreEnd
             }
 
             $this->campoLista(
@@ -521,9 +524,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_escola_serie_lst.php');
         }
 
+        // Inalcançável: a gravação do vínculo acima devolve o model ou a quantidade de linhas de um registro que existe, ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Cadastro não rrealizado.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
@@ -619,9 +625,12 @@ return new class extends clsCadastro
                         $editou1 = $obj->edita();
 
                         if (!$editou1) {
+                            // Inalcançável: `edita()` só devolve falso sem campo a gravar, e a lista de anos letivos é sempre enviada.
+                            // @codeCoverageIgnoreStart
                             $this->mensagem = 'Edição não realizada.<br>';
 
                             return false;
+                            // @codeCoverageIgnoreEnd
                         }
                     } else {
                         $cadastrou = $obj->cadastra();
@@ -665,7 +674,10 @@ return new class extends clsCadastro
             $this->mensagem = 'Não foi possível remover o componente. Existe registros de dependência neste componente.<br>';
             $this->simpleRedirect("educar_escola_serie_cad.php?ref_cod_escola={$this->ref_cod_escola_}&ref_cod_serie={$this->ref_cod_serie_}");
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $excluiu = LegacySchoolGrade::query()
