@@ -61,7 +61,10 @@ return new class extends clsCadastro
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -178,9 +181,12 @@ return new class extends clsCadastro
                     $enturmacao->data_enturmacao = $detEnturmacao['data_enturmacao'];
 
                     if (!$enturmacao->edita()) {
+                        // Inalcançável: `edita()` só falha sem matrícula, turma ou sequencial, e os três vêm da listagem acima.
+                        // @codeCoverageIgnoreStart
                         $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
 
                         return false;
+                        // @codeCoverageIgnoreEnd
                     } else {
                         $enturmacao->marcaAlunoAbandono(data: $this->data_cancel);
                     }
@@ -207,9 +213,12 @@ return new class extends clsCadastro
                 $this->simpleRedirect(url: "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             }
 
+            // Inalcançável: `cadastraObs()` só devolve falso sem código de matrícula, e nesse caso o `edita()` acima já falhou.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Observação não pode ser salva.<br>';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
         $this->mensagem = 'Deixou de Frequentar não pode ser realizado.<br>';
 
