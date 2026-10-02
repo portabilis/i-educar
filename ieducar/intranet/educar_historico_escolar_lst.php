@@ -143,7 +143,8 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Atualização de históricos escolares', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Históricos escolares
+        $this->breadcrumb(currentPage: 'Históricos escolares', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }

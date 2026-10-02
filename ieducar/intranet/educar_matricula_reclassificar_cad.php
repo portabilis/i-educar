@@ -89,7 +89,9 @@ return new class extends clsCadastro
 
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
-        $this->breadcrumb('Registro da reclassificação da matrícula', [
+        // Início > Escola > Alunos > Nome > Matrícula > Reclassificação
+        $registration = LegacyRegistration::find($this->cod_matricula);
+        $this->breadcrumb('Reclassificação', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
 

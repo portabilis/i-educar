@@ -2,6 +2,7 @@
 
 use App\Models\LegacyAbandonmentType;
 use App\Models\LegacyActiveLooking;
+use App\Models\LegacyRegistration;
 use Carbon\Carbon;
 use iEducar\Modules\School\Model\ActiveLooking;
 
@@ -78,7 +79,9 @@ return new class extends clsCadastro
 
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
 
-        $this->breadcrumb(currentPage: 'Registro de aluno que deixou de frequentar', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Matrícula > Deixou de frequentar
+        $registration = LegacyRegistration::find($this->ref_cod_matricula);
+        $this->breadcrumb(currentPage: 'Deixou de frequentar', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
 

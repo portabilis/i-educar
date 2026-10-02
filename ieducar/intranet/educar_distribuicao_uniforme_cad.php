@@ -48,7 +48,8 @@ return new class extends clsCadastro
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb(currentPage: 'Distribuições de uniforme escolar', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Distribuições de uniforme > Nova (ou Editar)
+        $this->breadcrumb(currentPage: $retorno == 'Editar' ? 'Editar' : 'Nova', breadcrumbs: [
             'educar_index.php' => 'Escola',
         ]);
 

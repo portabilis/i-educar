@@ -42,7 +42,8 @@ return new class extends clsDetalhe
         $this->url_editar = 'educar_reconhecimento_facial_cad.php?ref_cod_aluno=' . $this->cod_aluno;
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Reconhecimento Facial - Detalhes', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Reconhecimento facial
+        $this->breadcrumb(currentPage: 'Reconhecimento facial', breadcrumbs: [
             'educar_index.php' => 'Escola',
         ]);
     }

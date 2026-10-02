@@ -30,7 +30,7 @@ return new class extends clsListagem
 
     public function Gerar()
     {
-        $this->titulo = 'Alocação servidor - Listagem';
+        $this->titulo = 'Alocações - Listagem';
 
         // passa todos os valores obtidos no GET para atributos do objeto
         foreach ($_GET as $var => $val) {
@@ -162,7 +162,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->title = 'Servidores - Servidor';
+        $this->title = 'Alocações';
         $this->processoAp = 635;
     }
 };

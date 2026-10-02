@@ -155,7 +155,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Servidores - Avaliação Desempenho';
+        $this->title = 'Servidores - Avaliação de desempenho';
         $this->processoAp = '635';
     }
 };

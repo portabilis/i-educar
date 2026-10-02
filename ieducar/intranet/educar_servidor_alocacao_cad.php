@@ -412,7 +412,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Servidores - Servidor Alocação';
+        $this->title = 'Servidores - Alocação';
         $this->processoAp = 635;
     }
 };

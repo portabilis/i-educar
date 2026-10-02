@@ -55,6 +55,8 @@ return new class extends clsListagem
     public function Gerar()
     {
         $this->titulo = 'Curso - Listagem';
+        $this->buscaRapida = 'nm_curso';
+        $this->buscaRapidaRotulo = 'Buscar por nome do curso';
 
         // passa todos os valores obtidos no GET para atributos do objeto
         foreach ($_GET as $var => $val) {

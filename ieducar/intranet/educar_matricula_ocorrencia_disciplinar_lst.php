@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyDisciplinaryOccurrenceType;
+use App\Models\LegacyRegistration;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
 
 return new class extends clsListagem
@@ -76,7 +77,7 @@ return new class extends clsListagem
 
     public function Gerar()
     {
-        $this->titulo = 'Matricula Ocorrência Disciplinar - Listagem';
+        $this->titulo = 'Ocorrências disciplinares - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;
@@ -195,14 +196,16 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Ocorrências disciplinares da matrícula', [
+        // Início > Escola > Alunos > Nome > Matrícula > Ocorrências disciplinares
+        $registration = LegacyRegistration::find($this->ref_cod_matricula);
+        $this->breadcrumb('Ocorrências disciplinares', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'Ocorrência Disciplinar';
+        $this->title = 'Ocorrências disciplinares';
         $this->processoAp = '578';
     }
 };
