@@ -9,6 +9,7 @@ use App\Models\LegacyDocument;
 use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
+use App\Models\LegacyIssuingBody;
 use App\Models\LegacyMaritalStatus;
 use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
@@ -249,10 +250,12 @@ return new class extends clsDetalhe
             }
 
             $registro['sigla_uf_cart_trabalho'] = $detalheDocumento['sigla_uf_cart_trabalho'];
-            $registro['num_tit_eleitor'] = $detalheDocumento['num_titulo_eleitor'] ?? null;
-            $registro['zona_tit_eleitor'] = $detalheDocumento['zona_titulo_eleitor'] ?? null;
-            $registro['secao_tit_eleitor'] = $detalheDocumento['secao_titulo_eleitor'] ?? null;
-            $registro['idorg_exp_rg'] = $detalheDocumento['ref_idorg_rg'] ?? null;
+            $registro['num_tit_eleitor'] = $detalheDocumento['num_tit_eleitor'] ?? null;
+            $registro['zona_tit_eleitor'] = $detalheDocumento['zona_tit_eleitor'] ?? null;
+            $registro['secao_tit_eleitor'] = $detalheDocumento['secao_tit_eleitor'] ?? null;
+            $registro['idorg_exp_rg'] = isset($detalheDocumento['idorg_exp_rg'])
+                ? LegacyIssuingBody::query()->whereKey($detalheDocumento['idorg_exp_rg'])->value('sigla')
+                : null;
 
             $endereco = PersonHasPlace::query()
                 ->with(relations: 'place.city.state')
