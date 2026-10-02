@@ -18,7 +18,7 @@ return new class extends clsDetalhe
         $this->titulo = 'Comunicado Escolar - Detalhe';
 
         $registro = SchoolNotice::query()
-            ->with('institution', 'school', 'user')
+            ->with(['institution', 'schools.person', 'schools.organization', 'user'])
             ->find(request()->integer('id'));
 
         if (!$registro) {
@@ -37,7 +37,7 @@ return new class extends clsDetalhe
             }
         }
 
-        $this->addDetalhe(detalhe: ['Escola', $registro->school->name]);
+        $this->addDetalhe(detalhe: ['Escolas', $registro->schools->map(fn ($e) => $e->name)->implode('<br>')]);
         $this->addDetalhe(detalhe: ['Título', $registro->title]);
         $this->addDetalhe(detalhe: ['Descrição', $registro->description]);
         $this->addDetalhe(detalhe: ['Data', $registro->date->format('d/m/Y')]);

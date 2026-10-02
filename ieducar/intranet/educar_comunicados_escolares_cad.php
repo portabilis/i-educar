@@ -24,6 +24,8 @@ return new class extends clsCadastro
 
     public string $date = '';
 
+    public array $escolas = [];
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -39,7 +41,7 @@ return new class extends clsCadastro
             if ($registro) {
 
                 $this->ref_cod_instituicao = $registro->institution_id;
-                $this->ref_cod_escola = $registro->school_id;
+                $this->escolas = $registro->schools()->pluck('cod_escola')->all();
                 $this->titulo = $registro->title;
                 $this->descricao = $registro->description;
                 $this->local = $registro->local;
@@ -68,7 +70,8 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'id', valor: $this->id);
 
         $this->inputsHelper()->dynamic(helperNames: 'instituicao', inputOptions: ['value' => $this->ref_cod_instituicao]);
-        $this->inputsHelper()->dynamic(helperNames: 'escola', inputOptions: ['value' => $this->ref_cod_escola]);
+        $this->campoLista(nome: 'escolas', campo: 'Escola(s)', valor: ['all' => 'Todas as escolas'] + $this->escolasDisponiveis(), multiple: 10);
+        $this->campoOculto(nome: 'escolas_selecionadas', valor: implode(',', $this->escolas));
 
         // text
         $this->campoTexto(nome: 'titulo', campo: 'Título', valor: $this->titulo, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
@@ -77,17 +80,64 @@ return new class extends clsCadastro
         $this->inputsHelper()->date(attrName: 'data', inputOptions: ['label' => 'Data', 'placeholder' => 'dd/mm/yyyy', 'value' => $this->date]);
         $this->campoHora(nome: 'hora', campo: 'Hora', valor: $this->hora, obrigatorio: true);
 
+        Portabilis_View_Helper_Application::loadChosenLib(viewInstance: $this);
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
             '/vendor/legacy/Cadastro/Assets/Javascripts/ComunicadosEscolares.js',
         ]);
     }
 
+    private function escolasDisponiveis(): array
+    {
+        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
+            $escolas = [];
+            foreach (App_Model_IedFinder::getEscolasUser(cod_usuario: $this->pessoa_logada) as $escola) {
+                $escolas[$escola['ref_cod_escola']] = $escola['nome'];
+            }
+
+            return $escolas;
+        }
+
+        $instituicao = request()->integer('ref_cod_instituicao') ?: ($this->ref_cod_instituicao ?: (new clsPermissoes)->getInstituicao(int_idpes_usuario: $this->pessoa_logada));
+
+        return App_Model_IedFinder::getEscolas(instituicaoId: $instituicao);
+    }
+
+    private function obterEscolasValidadas(): ?array
+    {
+        $escolas = request()->input('escolas', []);
+        if (!is_array($escolas)) {
+            $escolas = [$escolas];
+        }
+
+        $selecionadas = array_values(array_filter(array_map('intval', $escolas)));
+
+        if (empty($selecionadas)) {
+            $this->mensagem = 'Selecione ao menos uma escola.<br>';
+
+            return null;
+        }
+
+        $permitidas = array_map('intval', array_keys($this->escolasDisponiveis()));
+
+        if (array_diff($selecionadas, $permitidas) !== []) {
+            $this->mensagem = 'Você não tem permissão para publicar comunicados para uma ou mais escolas selecionadas.<br>';
+
+            return null;
+        }
+
+        return $selecionadas;
+    }
+
     public function Novo()
     {
+        $escolas = $this->obterEscolasValidadas();
+        if ($escolas === null) {
+            return false;
+        }
+
         $notice = SchoolNotice::create([
             'institution_id' => request()->integer('ref_cod_instituicao'),
             'user_id' => $this->pessoa_logada,
-            'school_id' => request()->integer('ref_cod_escola'),
             'title' => request()->string('titulo'),
             'description' => request()->string('descricao'),
             'date' => Carbon::createFromFormat('d/m/Y', request()->string('data')),
@@ -96,6 +146,7 @@ return new class extends clsCadastro
         ]);
 
         if ($notice) {
+            $notice->schools()->sync($escolas);
             $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_comunicados_escolares_lst.php');
         }
@@ -107,26 +158,33 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $notice = SchoolNotice::query()
-            ->whereKey($this->id)
-            ->update([
-                'institution_id' => request()->integer('ref_cod_instituicao'),
-                'school_id' => request()->integer('ref_cod_escola'),
-                'title' => request()->string('titulo'),
-                'description' => request()->string('descricao'),
-                'date' => Carbon::createFromFormat('d/m/Y', request()->string('data')),
-                'hour' => request()->string('hora'),
-                'local' => request()->string('local'),
-            ]);
-
-        if ($notice) {
-            $this->mensagem = 'Edição efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_comunicados_escolares_lst.php');
+        $escolas = $this->obterEscolasValidadas();
+        if ($escolas === null) {
+            return false;
         }
 
-        $this->mensagem = 'Edição não realizada.<br>';
+        $notice = SchoolNotice::find($this->id);
 
-        return false;
+        if (!$notice) {
+            $this->mensagem = 'Edição não realizada.<br>';
+
+            return false;
+        }
+
+        $notice->fill([
+            'institution_id' => request()->integer('ref_cod_instituicao'),
+            'title' => request()->string('titulo'),
+            'description' => request()->string('descricao'),
+            'date' => Carbon::createFromFormat('d/m/Y', request()->string('data')),
+            'hour' => request()->string('hora'),
+            'local' => request()->string('local'),
+        ]);
+
+        $notice->save();
+        $notice->schools()->sync($escolas);
+
+        $this->mensagem = 'Edição efetuada com sucesso.<br>';
+        $this->simpleRedirect('educar_comunicados_escolares_lst.php');
     }
 
     public function Excluir()
