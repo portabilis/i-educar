@@ -406,9 +406,12 @@ return new class extends clsCadastro
             $this->redirectIf(condition: true, url: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
         }
 
+        // Inalcançável: `create()` devolve o registro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
@@ -441,9 +444,12 @@ return new class extends clsCadastro
             $this->redirectIf(condition: true, url: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
         }
 
+        // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()
@@ -457,9 +463,12 @@ return new class extends clsCadastro
             $this->redirectIf(condition: true, url: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
         }
 
+        // Inalcançável: `delete()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function makeExtra()
