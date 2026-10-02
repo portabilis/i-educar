@@ -92,7 +92,10 @@ return new class extends clsDetalhe
         }
 
         if ($det_mat_turma['det_turma']) {
+            // Inalcançável: a listagem de enturmações não devolve a chave `det_turma`.
+            // @codeCoverageIgnoreStart
             $this->addDetalhe(['Turma', "{$det_mat_turma['det_turma']}"]);
+            // @codeCoverageIgnoreEnd
         }
 
         if ($registro['sequencial']) {
