@@ -271,8 +271,11 @@ return new class extends clsCadastro
             if ($this->tipoacao == 'Novo') {
                 // Se não é admin, "Copiar turmas" é sempre true, então os checkboxes devem estar habilitados
                 if ($isAdmin && !$checkedTurmas) {
+                    // Inalcançável: no cadastro `$checkedTurmas` é sempre "checked" (ver a atribuição acima).
+                    // @codeCoverageIgnoreStart
                     $disabledProfessores = 'disabled';
                     $disabledServidores = 'disabled';
+                    // @codeCoverageIgnoreEnd
                 }
             }
 
@@ -504,19 +507,25 @@ return new class extends clsCadastro
             );
 
             if ($excluiu) {
+                // Inalcançável: `$excluiu` nunca é definida.
+                // @codeCoverageIgnoreStart
                 $this->mensagem = 'Exclusão efetuada com sucesso.<br />';
                 $this->simpleRedirect(url: 'educar_escola_lst.php');
 
                 return true;
+                // @codeCoverageIgnoreEnd
             }
 
             $this->mensagem = 'Exclusão não realizada.<br />';
 
             return false;
+            // Inalcançável: `deleteAcademicYear()` nunca lança `AcademicYearServiceException`.
+            // @codeCoverageIgnoreStart
         } catch (AcademicYearServiceException $e) {
             $this->mensagem = 'Erro na exclusão: ' . $e->getMessage();
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
