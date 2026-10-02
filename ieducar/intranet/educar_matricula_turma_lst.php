@@ -59,7 +59,10 @@ return new class extends clsListagem
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -290,7 +293,10 @@ return new class extends clsListagem
         $user = Auth::user();
         $allow = Gate::allows('view', $process);
         if ($user->isLibrary()) {
+            // Inalcançável: o construtor já mandou o usuário de biblioteca para o início.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         return $allow;
@@ -298,6 +304,8 @@ return new class extends clsListagem
 
     private function getPermissaoModificar($process)
     {
+        // Inalcançável: nada chama este método.
+        // @codeCoverageIgnoreStart
         $user = Auth::user();
         $allow = Gate::allows('view', $process);
         if ($user->isLibrary()) {
@@ -305,5 +313,6 @@ return new class extends clsListagem
         }
 
         return $allow;
+        // @codeCoverageIgnoreEnd
     }
 };
