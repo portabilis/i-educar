@@ -54,6 +54,16 @@ beforeEach(function () {
         ->all();
 });
 
+// Rede de segurança: se uma asserção falhar antes de o teste desfazer a
+// transação que a tela deixou aberta, ela é desfeita aqui. Sem isso o teste
+// seguinte ficaria esperando o que ela trancou, e a suíte travaria em vez de
+// acusar a falha.
+afterEach(function () {
+    while (DB::transactionLevel() > 1) {
+        DB::rollBack();
+    }
+});
+
 test('abre a edição com os cursos da escola na tabela', function () {
     $course = ($this->course)('Curso Alfa');
     ($this->link)($course);
