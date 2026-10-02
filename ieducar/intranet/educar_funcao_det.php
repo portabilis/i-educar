@@ -55,7 +55,7 @@ return new class extends clsDetalhe
         ];
 
         if (is_numeric($registro['professor'])) {
-            $this->addDetalhe(['Professor', "{$opcoes[$registro['professor']]}"]);
+            $this->addDetalhe(['Permitir vincular a turmas?', "{$opcoes[$registro['professor']]}"]);
         }
 
         $obj_permissoes = new clsPermissoes;

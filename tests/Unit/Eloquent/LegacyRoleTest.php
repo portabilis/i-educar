@@ -6,6 +6,7 @@ use App\Models\LegacyEmployeeRole;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRole;
 use App\Models\LegacyUser;
+use Database\Factories\LegacyRoleFactory;
 use Tests\EloquentTestCase;
 
 class LegacyRoleTest extends EloquentTestCase
@@ -29,15 +30,16 @@ class LegacyRoleTest extends EloquentTestCase
 
     public function test_scope_professor(): void
     {
-        $this->createNewModel();
+        $allowed = LegacyRoleFactory::new()->create(['professor' => 1]);
+        $denied = LegacyRoleFactory::new()->create(['professor' => 0]);
 
         $roleQuery = LegacyRole::query()
             ->professor()
             ->ativo()
-            ->first();
+            ->whereKey([$allowed->getKey(), $denied->getKey()])
+            ->get();
 
-        $this->assertInstanceOf(LegacyRole::class, $roleQuery);
-        $this->assertEquals(1, $roleQuery->professor);
-        $this->assertEquals(1, $roleQuery->ativo);
+        $this->assertSame([$allowed->getKey()], $roleQuery->modelKeys());
+        $this->assertEquals(1, $roleQuery->first()->ativo);
     }
 }
