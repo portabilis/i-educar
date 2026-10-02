@@ -72,6 +72,14 @@ test('mostra o turno da enturmação quando ela tem turno próprio', function ()
         ->assertSee('Matutino<br />Vespertino<br />Noturno', false);
 });
 
+test('a enturmação com turno integral não tem nome de turno próprio', function () {
+    $registration = ($this->enrolled)(['turma_turno_id' => $this->scenario->period(4)], ['turno_id' => 4]);
+
+    ($this->detail)($registration)
+        ->assertSeeInOrder(['Turma', 'Turma Alfa', 'Turno', 'Data Enturmação'])
+        ->assertDontSee('Integral');
+});
+
 test('sem turno próprio na enturmação mostra o turno da turma', function (int $shift, string $name) {
     $registration = ($this->enrolled)(['turma_turno_id' => $this->scenario->period($shift)]);
 
