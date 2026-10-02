@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostFaltaGeralRequest;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowGeneralAbsence;
+use Illuminate\Http\Response;
 
 class FaltasGeralController extends DiarioController
 {
@@ -15,12 +16,6 @@ class FaltasGeralController extends DiarioController
         $turmaId = $request->integer('turma_id');
 
         $matricula = $this->service->findMatricula($turmaId, $alunoId);
-
-        if (empty($matricula)) {
-            return response()->json([
-                'message' => 'Matrícula não encontrada para o aluno e turma informados.',
-            ]);
-        }
 
         $regra = $this->service->getRegraAvaliacaoPorMatricula($matricula->getKey());
 
@@ -39,20 +34,18 @@ class FaltasGeralController extends DiarioController
             $boletim->addFalta($falta);
             $boletim->saveFaltas();
             $boletim->promover();
-        } catch (EvaluationRuleNotAllowGeneralAbsence $exception) {
-            return response()->json([
-                'message' => $exception->getMessage(),
-            ], 422);
+        } catch (\CoreExt_Exception_InvalidArgumentException|EvaluationRuleNotAllowGeneralAbsence $exception) {
+            return $this->unprocessableResponse($exception);
         } catch (\CoreExt_Service_Exception) {
             // Evita Exception ao não promover matrículas pois não houve mudança de situação
         } catch (\Exception $exception) {
             return response()->json([
                 'message' => 'Não foi possível salvar as faltas gerais para o aluno e turma informados. (' . $exception->getMessage() . ')',
-            ], 500);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return response()->json([
             'message' => 'Faltas gerais salvas com sucesso.',
-        ], 202);
+        ], Response::HTTP_CREATED);
     }
 }
