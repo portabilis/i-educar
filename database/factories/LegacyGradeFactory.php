@@ -21,7 +21,8 @@ class LegacyGradeFactory extends Factory
             'idade_inicial' => $initial = $this->faker->numberBetween(0, 20),
             'idade_final' => $initial + 1,
             'descricao' => $this->faker->word(),
-            'concluinte' => $this->faker->randomNumber(1),
+            // A tela só conhece 1 (não) e 2 (sim).
+            'concluinte' => 1,
             'ativo' => 1,
             'importar_serie_pre_matricula' => false,
             'dias_letivos' => $this->faker->numberBetween(100, 200),
