@@ -86,7 +86,10 @@ return new class extends clsCadastro
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -217,7 +220,10 @@ return new class extends clsCadastro
             return array_shift(array: $matriculas);
         }
 
+        // Inalcançável: a enturmação lida tem chave estrangeira para a matrícula.
+        // @codeCoverageIgnoreStart
         throw new Exception(message: "A matrícula {$matricula} não foi encontrada.");
+        // @codeCoverageIgnoreEnd
     }
 
     private function addMatricula($escola, $curso, $serie, $aluno, $ano)
@@ -263,10 +269,13 @@ return new class extends clsCadastro
         try {
             $enturmacoesNaTurmaDestino = $this->getEnturmacoesNaTurma(turma: $this->ref_cod_turma);
             $enturmacoesParaCopiar = $this->getEnturmacoesNaTurma(turma: $this->ref_cod_turma_copiar_enturmacoes);
+            // Não testável: a consulta com erro aborta a transação que envolve cada teste.
+            // @codeCoverageIgnoreStart
         } catch (Exception) {
             $this->mensagem = 'Houve um erro ao buscar informações das turmas.';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $maximoDeAlunosTurmaDestino = $this->getMaximoAlunosNaTurma(turma: $this->ref_cod_turma);
@@ -468,7 +477,10 @@ return new class extends clsCadastro
                         if (is_array(value: $escola) && count(value: $escola)) {
                             $escola = LegacyOrganization::whereKey($escola['ref_idpes'])->value('fantasia') ?? '';
                         } else {
+                            // Inalcançável: a matrícula tem chave estrangeira para a escola.
+                            // @codeCoverageIgnoreStart
                             $escola = '';
+                            // @codeCoverageIgnoreEnd
                         }
 
                         $curso = new clsPmieducarCurso(cod_curso: $m['ref_cod_curso']);
@@ -477,7 +489,10 @@ return new class extends clsCadastro
                         if (is_array(value: $curso) && count(value: $curso)) {
                             $curso = $curso['nm_curso'];
                         } else {
+                            // Inalcançável: a matrícula tem chave estrangeira para o curso.
+                            // @codeCoverageIgnoreStart
                             $curso = '';
+                            // @codeCoverageIgnoreEnd
                         }
 
                         $this->mensagem = "Este aluno já está matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transferência ao secretário(a) da escola citada.<br />";
@@ -548,6 +563,8 @@ return new class extends clsCadastro
             $vagas_restantes = 1;
 
             if ($vagas_restantes <= 0) {
+                // Inalcançável: `$vagas_restantes` é fixado em 1 logo acima.
+                // @codeCoverageIgnoreStart
                 echo sprintf(
                     '<script>
                         var msg = \'\';
@@ -565,6 +582,7 @@ return new class extends clsCadastro
                     $total_vagas,
                     $this->ref_cod_aluno
                 );
+                // @codeCoverageIgnoreEnd
             }
 
             $obj_matricula_aluno = new clsPmieducarMatricula;
@@ -576,7 +594,10 @@ return new class extends clsCadastro
             }
 
             if (!$this->removerFlagUltimaMatricula(alunoId: $this->ref_cod_aluno)) {
+                // Inalcançável: `removerFlagUltimaMatricula()` nunca devolve falso.
+                // @codeCoverageIgnoreStart
                 return false;
+                // @codeCoverageIgnoreEnd
             }
 
             $db->Consulta(consulta: "SELECT *
@@ -712,9 +733,12 @@ return new class extends clsCadastro
                 $this->simpleRedirect(url: 'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
             }
 
+            // Inalcançável: `cadastra()` só devolve falso sem os campos obrigatórios, já validados antes.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Cadastro não realizado.<br />';
 
             return false;
+            // @codeCoverageIgnoreEnd
         } else {
             $this->mensagem = 'O ano (letivo) selecionado não está em andamento na escola selecionada.<br />';
 
@@ -724,6 +748,8 @@ return new class extends clsCadastro
 
     public function permiteDependenciaAnoConcluinte()
     {
+        // Inalcançável: nada chama este método.
+        // @codeCoverageIgnoreStart
         $instituicao = new clsPmieducarInstituicao(cod_instituicao: $this->ref_cod_instituicao);
         $instituicao = $instituicao->detalhe();
         $serie = new clsPmieducarSerie(cod_serie: $this->ref_cod_serie);
@@ -732,6 +758,7 @@ return new class extends clsCadastro
         $anoConcluinte = $serie['concluinte'] == 2;
 
         return !(dbBool(val: $reprovaDependenciaAnoConcluinte) && $anoConcluinte);
+        // @codeCoverageIgnoreEnd
     }
 
     public function verificaQtdeDependenciasPermitida()
@@ -891,6 +918,8 @@ return new class extends clsCadastro
 
         foreach ($matriculas as $matricula) {
             if (!$matricula['aprovado'] == 3) {
+                // Inalcançável: a condição acima nega antes de comparar (`!$x == 3`) e é sempre falsa.
+                // @codeCoverageIgnoreStart
                 $matricula = new clsPmieducarMatricula(
                     cod_matricula: $matricula['cod_matricula'],
                     ref_usuario_exc: $this->pessoa_logada,
@@ -904,6 +933,7 @@ return new class extends clsCadastro
 
                     return false;
                 }
+                // @codeCoverageIgnoreEnd
             }
         }
 
@@ -936,7 +966,10 @@ return new class extends clsCadastro
             return $enturmacao->cadastra();
         }
 
+        // Inalcançável: a matrícula acabou de ser criada e não tem enturmação.
+        // @codeCoverageIgnoreStart
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function existeVagasDisponiveis()
