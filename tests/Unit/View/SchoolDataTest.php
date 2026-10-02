@@ -34,9 +34,8 @@ class SchoolDataTest extends TestCase
         $this->assertEquals('ESCOLA MUNICIPAL IÇARA', $schoolData->name);
         $this->assertEquals('Rua Marechal Deodoro, Nº.: 1200, Jardim Elizabete - Içara - SC - CEP: 88820-000', $schoolData->address);
         $this->assertEquals('42000001', $schoolData->inep);
-        $this->assertStringEndsWith('3432-1234', $schoolData->phone);
-        $this->assertStringStartsWith('(48) ', $schoolData->phone);
-        $this->assertStringEndsWith('99123-4567', $schoolData->cellphone);
+        $this->assertEquals('(48) 3432-1234', $schoolData->phone);
+        $this->assertEquals('(48) 99123-4567', $schoolData->cellphone);
     }
 
     public function test_school_relation(): void
