@@ -6,6 +6,7 @@ use App\Models\LegacyCourse;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyGrade;
+use App\Models\LegacyPeriod;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
@@ -17,6 +18,7 @@ use Database\Factories\LegacyDisciplineFactory;
 use Database\Factories\LegacyEnrollmentFactory;
 use Database\Factories\LegacyGradeFactory;
 use Database\Factories\LegacyIndividualFactory;
+use Database\Factories\LegacyPeriodFactory;
 use Database\Factories\LegacyPersonFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacySchoolAcademicYearFactory;
@@ -134,6 +136,18 @@ final class EnrollmentScenario
             'ref_cod_instituicao' => $this->institution,
             'ano' => $this->year,
         ]);
+    }
+
+    /**
+     * O turno com o código fixo que as telas comparam com as constantes
+     * `clsPmieducarTurma::TURNO_*` (1 matutino, 2 vespertino, 3 noturno,
+     * 4 integral). As factories de turno criam códigos sequenciais.
+     */
+    public function period(int $id): LegacyPeriod
+    {
+        $names = [1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno', 4 => 'Integral'];
+
+        return LegacyPeriod::query()->find($id) ?? LegacyPeriodFactory::new()->create(['id' => $id, 'nome' => $names[$id]]);
     }
 
     public function student(string $name, array $attributes = []): LegacyStudent
