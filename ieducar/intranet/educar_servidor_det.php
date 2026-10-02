@@ -351,7 +351,7 @@ return new class extends clsDetalhe
             }
 
             if ($this->isTeacher($this->cod_servidor)) {
-                $this->array_botao[] = 'Vincular professor a turmas';
+                $this->array_botao[] = 'Vincular servidor a turma';
                 $this->array_botao_url_script[] = "go(\"educar_servidor_vinculo_turma_lst.php?{$get_padrao}\");";
             }
         }
