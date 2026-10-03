@@ -7,12 +7,17 @@ class BairroController extends ApiCoreController
     protected function getNeighborhoods()
     {
         return Place::query()
-            ->select('neighborhood')
+            ->select('neighborhood', 'city_id')
+            ->with('city')
             ->whereUnaccent('neighborhood', $this->getQueryString('query'))
-            ->groupBy('neighborhood')
-            ->orderBy('neighborhood')
+            ->groupBy('city_id', 'neighborhood')
             ->limit(15)
-            ->pluck('neighborhood', 'neighborhood')
+            ->get()
+            ->mapWithKeys(function ($place) {
+                return [
+                    "{$place->neighborhood} / {$place->city_id}" => "{$place->neighborhood} / {$place->city->name}",
+                ];
+            })
             ->all();
     }
 
