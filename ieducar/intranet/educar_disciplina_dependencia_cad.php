@@ -98,8 +98,14 @@ return new class extends clsCadastro
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb(currentPage: 'Disciplinas de dependência', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Matrícula > Disciplinas de dependência > Nova (ou Editar)
+        $registration = LegacyRegistration::find($this->ref_cod_matricula);
+        $this->breadcrumb(currentPage: $retorno == 'Editar' ? 'Editar' : 'Nova', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url("intranet/educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}") => 'Matrícula',
+            url("intranet/educar_disciplina_dependencia_lst.php?ref_cod_matricula={$this->ref_cod_matricula}") => 'Disciplinas de dependência',
         ]);
 
         return $retorno;

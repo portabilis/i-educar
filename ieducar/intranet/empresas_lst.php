@@ -73,7 +73,7 @@ return new class extends clsListagem
                 $cod_empresa = $empresa['idpes'];
                 $razao_social = $db->escapeString(string: $empresa['nome']);
                 $nome_fantasia = $db->escapeString(string: $empresa['fantasia']);
-                $this->addLinhas(linha: ["<a href='empresas_det.php?cod_empresa={$cod_empresa}'><img src='imagens/noticia.jpg' border=0>$razao_social</a>", "<a href='empresas_det.php?cod_empresa={$cod_empresa}'>{$nome_fantasia}</a>"]);
+                $this->addLinhas(linha: ["<a href='empresas_det.php?cod_empresa={$cod_empresa}'><img src='imagens/noticia.jpg' border=0>" . e($razao_social) . '</a>', "<a href='empresas_det.php?cod_empresa={$cod_empresa}'>" . e($nome_fantasia) . '</a>']);
             }
         }
         // Paginador

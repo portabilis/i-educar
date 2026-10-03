@@ -125,8 +125,12 @@ return new class extends clsCadastro
         $this->nome_url_cancelar = 'Cancelar';
         $this->dependencia = dbBool($this->dependencia);
 
-        $this->breadcrumb(currentPage: 'Atualização de históricos escolares', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Históricos escolares > Novo (ou Editar)
+        $this->breadcrumb(currentPage: $retorno == 'Editar' ? 'Editar' : 'Novo', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}") => LegacyStudent::find($this->ref_cod_aluno)?->real_name,
+            url("intranet/educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}") => 'Históricos escolares',
         ]);
 
         return $retorno;

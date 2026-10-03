@@ -33,17 +33,17 @@ return new class extends clsDetalhe
         $pessoa = LegacyPerson::with('individual')->whereKey($cod_pessoa)->first(['idpes', 'nome']);
         $funcionario = LegacyEmployee::whereKey($cod_pessoa)->first(['email', 'matricula', 'matricula_interna']);
 
-        $this->addDetalhe(detalhe: ['Nome', $pessoa?->nome]);
+        $this->addDetalhe(detalhe: ['Nome', e($pessoa?->nome)]);
         $this->addDetalhe(detalhe: ['CPF', $pessoa?->individual?->cpf]);
-        $this->addDetalhe(detalhe: ['E-mail usuário', $funcionario?->email]);
+        $this->addDetalhe(detalhe: ['E-mail usuário', e($funcionario?->email)]);
 
         if (!empty($funcionario?->matricula_interna)) {
-            $this->addDetalhe(detalhe: ['Matrícula interna', $funcionario->matricula_interna]);
+            $this->addDetalhe(detalhe: ['Matrícula interna', e($funcionario->matricula_interna)]);
         }
 
         $sexo = ($pessoa?->individual?->sexo == 'M') ? 'Masculino' : 'Feminino';
         $this->addDetalhe(detalhe: ['Sexo', $sexo]);
-        $this->addDetalhe(detalhe: ['Matrícula', $funcionario?->matricula]);
+        $this->addDetalhe(detalhe: ['Matrícula', e($funcionario?->matricula)]);
 
         $usuario = LegacyUser::query()
             ->find($this->cod_usuario, [
@@ -76,11 +76,11 @@ return new class extends clsDetalhe
         $registro['ref_cod_escola'] = $nomesEscola;
 
         if ($registro['ref_cod_tipo_usuario']) {
-            $this->addDetalhe(detalhe: ['Tipo Usuário', "{$registro['ref_cod_tipo_usuario']}"]);
+            $this->addDetalhe(detalhe: ['Tipo Usuário', e($registro['ref_cod_tipo_usuario'])]);
         }
 
         if ($registro['ref_cod_instituicao']) {
-            $this->addDetalhe(detalhe: ['Instituição', "{$registro['ref_cod_instituicao']}"]);
+            $this->addDetalhe(detalhe: ['Instituição', e($registro['ref_cod_instituicao'])]);
         }
 
         if ($registro['ref_cod_escola']) {

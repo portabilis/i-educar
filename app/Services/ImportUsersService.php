@@ -142,7 +142,7 @@ class ImportUsersService implements ToCollection
         return LegacyUser::create([
             'cod_usuario' => $employee->getKey(),
             'ref_cod_instituicao' => app(LegacyInstitution::class)->getKey(),
-            'ref_funcionario_cad' => 1,
+            'ref_funcionario_cad' => $employee->getKey(),
             'ref_cod_tipo_usuario' => LegacyUserType::LEVEL_ADMIN,
             'data_cadastro' => now(),
             'ativo' => 1,

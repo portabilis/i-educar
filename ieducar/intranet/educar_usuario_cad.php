@@ -121,7 +121,7 @@ return new class extends clsCadastro
         if ($_GET['ref_pessoa']) {
             $this->nome = LegacyPerson::query()->whereKey($this->ref_pessoa)->value('nome');
 
-            $this->campoRotulo(nome: 'nome', campo: 'Nome', valor: $this->nome);
+            $this->campoRotulo(nome: 'nome', campo: 'Nome', valor: e($this->nome));
         } else {
             $parametros = new SearchParameters;
             $parametros->setSubmit(1);

@@ -32,6 +32,9 @@ class AccessLevelController extends Controller
      */
     private function store(Request $request, LegacyUserType $userType)
     {
+        /** @var User $user */
+        $user = $request->user();
+
         $userType->fill([
             'nm_tipo' => $request->input('name'),
             'nivel' => $request->input('level'),
@@ -41,7 +44,13 @@ class AccessLevelController extends Controller
             'updated_at' => now(),
         ]);
 
-        $processes = collect($request->input('processes'))->mapWithKeys(function ($level, $process) {
+        $userProcesses = $user->type->getProcesses();
+
+        $processes = collect($request->input('processes'))->mapWithKeys(function ($level, $process) use ($user, $userProcesses) {
+            if (!$user->isAdmin()) {
+                $level = min((int) $level, (int) ($userProcesses[$process] ?? 0));
+            }
+
             return [
                 $process => [
                     'visualiza' => intval($level >= LegacyUserType::CAN_VIEW),
@@ -56,6 +65,23 @@ class AccessLevelController extends Controller
         $userType->menus()->syncWithoutDetaching($processes);
 
         app(MenuCacheService::class)->flushMenuTag($userType->cod_tipo_usuario);
+    }
+
+    /**
+     * Impede que o usuário crie ou altere tipos de usuário com nível de acesso
+     * acima do seu. Quanto menor o número do nível, maior o privilégio.
+     */
+    private function authorizeUserTypeLevel(User $user, int $level): void
+    {
+        if ($user->isAdmin()) {
+            return;
+        }
+
+        abort_if(
+            $level < $user->getLevel(),
+            403,
+            'Não é permitido gerenciar tipos de usuário com nível de acesso superior ao seu.'
+        );
     }
 
     /**
@@ -111,6 +137,8 @@ class AccessLevelController extends Controller
      */
     public function create(Request $request, LegacyUserType $userType)
     {
+        $this->authorizeUserTypeLevel($request->user(), (int) $request->input('level'));
+
         try {
             $this->store($request, $userType);
         } catch (Throwable $throwable) {
@@ -129,6 +157,9 @@ class AccessLevelController extends Controller
      */
     public function update(Request $request, LegacyUserType $userType)
     {
+        $this->authorizeUserTypeLevel($request->user(), (int) $userType->nivel);
+        $this->authorizeUserTypeLevel($request->user(), (int) $request->input('level'));
+
         try {
             $this->store($request, $userType);
         } catch (Throwable $throwable) {
@@ -147,8 +178,10 @@ class AccessLevelController extends Controller
      *
      * @throws Exception
      */
-    public function delete(LegacyUserType $userType, Connection $connection)
+    public function delete(Request $request, LegacyUserType $userType, Connection $connection)
     {
+        $this->authorizeUserTypeLevel($request->user(), (int) $userType->nivel);
+
         try {
             $connection->beginTransaction();
             $userType->menus()->detach();

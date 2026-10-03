@@ -13,6 +13,9 @@ use Illuminate\Validation\ValidationException;
 
 class MatriculaController extends ApiCoreController
 {
+    // Mesmo processo que exibe o botão "Desfazer deixou de frequentar" na matrícula.
+    private const PROCESSO_DEIXOU_DE_FREQUENTAR = 685;
+
     protected function canGetMatriculas()
     {
         return $this->validatesId('escola') &&
@@ -23,7 +26,9 @@ class MatriculaController extends ApiCoreController
     {
         return
             $this->validatesPresenceOf('id') &&
-            $this->validatesExistenceOf('matricula', $this->getRequest()->id);
+            $this->validatesExistenceOf('matricula', $this->getRequest()->id) &&
+            $this->validatesAuthorizationToAnyProcess([self::PROCESSO_DEIXOU_DE_FREQUENTAR]) &&
+            $this->validatesAccessToRegistrationSchool($this->getRequest()->id);
     }
 
     // search options

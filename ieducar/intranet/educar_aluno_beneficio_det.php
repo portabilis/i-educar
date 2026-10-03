@@ -33,13 +33,13 @@ return new class extends clsDetalhe
         }
 
         if ($registro['cod_aluno_beneficio']) {
-            $this->addDetalhe(detalhe: ['Código Benefício', "{$registro['cod_aluno_beneficio']}"]);
+            $this->addDetalhe(detalhe: ['Código Benefício', e($registro['cod_aluno_beneficio'])]);
         }
         if ($registro['nm_beneficio']) {
-            $this->addDetalhe(detalhe: ['Benefício', "{$registro['nm_beneficio']}"]);
+            $this->addDetalhe(detalhe: ['Benefício', e($registro['nm_beneficio'])]);
         }
         if ($registro['desc_beneficio']) {
-            $this->addDetalhe(detalhe: ['Descrição', nl2br(string: "{$registro['desc_beneficio']}")]);
+            $this->addDetalhe(detalhe: ['Descrição', nl2br(string: e($registro['desc_beneficio']))]);
         }
 
         $this->addDetalhe(detalhe: ['Bolsa Família', $registro['bolsa_familia'] ? 'Sim' : 'Não']);

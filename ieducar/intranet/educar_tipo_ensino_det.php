@@ -38,7 +38,7 @@ return new class extends clsDetalhe
         }
 
         if ($registro['cod_tipo_ensino']) {
-            $this->addDetalhe(['Tipo Ensino', "{$registro['cod_tipo_ensino']}"]);
+            $this->addDetalhe(['Tipo Ensino', e($registro['cod_tipo_ensino'])]);
         }
 
         if ($registro['ref_cod_instituicao']) {
@@ -46,10 +46,10 @@ return new class extends clsDetalhe
             $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
             $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
-            $this->addDetalhe(['Instituição', "{$registro['ref_cod_instituicao']}"]);
+            $this->addDetalhe(['Instituição', e($registro['ref_cod_instituicao'])]);
         }
         if ($registro['nm_tipo']) {
-            $this->addDetalhe(['Nome Tipo', "{$registro['nm_tipo']}"]);
+            $this->addDetalhe(['Nome Tipo', e($registro['nm_tipo'])]);
         }
 
         // ** Verificacao de permissao para cadastro ou edicao

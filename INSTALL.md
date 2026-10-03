@@ -92,13 +92,7 @@ durante o desenvolvimento. Para configurá-la, modifique os valores das variáve
 ### Testes automatizados
 
 Para executar os testes automatizados, é necessário ter o i-Educar rodando com uma base limpa, apenas a estrutura
-inicial e suas migrations, crie o arquivo de configuração:
-
-```bash
-cp .env.example .env.testing
-```
-
-Execute o comando:
+inicial e suas migrations e execute os comandos:
 
 ```bash
 docker compose exec postgres dropdb testing --if-exists
