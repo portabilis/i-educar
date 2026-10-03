@@ -88,12 +88,12 @@ return new class extends clsListagem
                 $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
                 $lista_busca = [
-                    "<a href=\"educar_tipo_ocorrencia_disciplinar_det.php?cod_tipo_ocorrencia_disciplinar={$registro['cod_tipo_ocorrencia_disciplinar']}\">{$registro['nm_tipo']}</a>",
-                    "<a href=\"educar_tipo_ocorrencia_disciplinar_det.php?cod_tipo_ocorrencia_disciplinar={$registro['cod_tipo_ocorrencia_disciplinar']}\">{$registro['max_ocorrencias']}</a>",
+                    "<a href=\"educar_tipo_ocorrencia_disciplinar_det.php?cod_tipo_ocorrencia_disciplinar={$registro['cod_tipo_ocorrencia_disciplinar']}\">" . e($registro['nm_tipo']) . '</a>',
+                    "<a href=\"educar_tipo_ocorrencia_disciplinar_det.php?cod_tipo_ocorrencia_disciplinar={$registro['cod_tipo_ocorrencia_disciplinar']}\">" . e($registro['max_ocorrencias']) . '</a>',
                 ];
 
                 if ($nivel_usuario == 1) {
-                    $lista_busca[] = "<a href=\"educar_tipo_ocorrencia_disciplinar_det.php?cod_tipo_ocorrencia_disciplinar={$registro['cod_tipo_ocorrencia_disciplinar']}\">{$registro['ref_cod_instituicao']}</a>";
+                    $lista_busca[] = "<a href=\"educar_tipo_ocorrencia_disciplinar_det.php?cod_tipo_ocorrencia_disciplinar={$registro['cod_tipo_ocorrencia_disciplinar']}\">" . e($registro['ref_cod_instituicao']) . '</a>';
                 }
                 $this->addLinhas($lista_busca);
             }

@@ -100,7 +100,7 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
         // Paginador
         $this->limite = 20;
         $this->offset = ($_GET['pagina_' . $this->nome])
-            ? $_GET['pagina_' . $this->nome] * $this->limite - $this->limite
+            ? request()->integer('pagina_' . $this->nome, 1) * $this->limite - $this->limite
             : 0;
 
         foreach ($entries as $entry) {
@@ -110,7 +110,7 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
 
             foreach ($headers as $attr) {
                 $item[] = CoreExt_View_Helper_UrlHelper::l(
-                    $entry->$attr,
+                    htmlspecialchars((string) $entry->$attr, ENT_QUOTES),
                     'view',
                     $options
                 );

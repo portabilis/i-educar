@@ -135,8 +135,12 @@ return new class extends clsDetalhe
         $this->url_cancelar = "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$uniformDistribution->student_id}";
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Distribuições de uniforme escolar', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Distribuições de uniforme > Distribuição de uniforme
+        $this->breadcrumb(currentPage: 'Distribuição de uniforme', breadcrumbs: [
             'educar_index.php' => 'Escola',
+            'educar_aluno_lst.php' => 'Alunos',
+            "educar_aluno_det.php?cod_aluno={$uniformDistribution->student_id}" => $uniformDistribution->student?->real_name,
+            "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$uniformDistribution->student_id}" => 'Distribuições de uniforme',
         ]);
     }
 

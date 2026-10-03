@@ -65,6 +65,8 @@ return new class extends clsListagem
     public function Gerar()
     {
         $this->titulo = 'Aluno - Listagem';
+        $this->buscaRapida = 'nome_aluno';
+        $this->buscaRapidaRotulo = 'Buscar por nome, código ou CPF do aluno';
 
         $configuracoes = LegacyGeneralConfiguration::query()
             ->forActiveInstitution()
