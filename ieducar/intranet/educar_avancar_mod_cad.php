@@ -211,7 +211,7 @@ return new class extends clsCadastro
         $alunosSemInep = [];
 
         $alunosComInep = LegacyStudent::query()
-            ->whereIn('cod_aluno', array_column($lstMatricula, 'ref_cod_aluno'))
+            ->whereIn('cod_aluno', collect($lstMatricula)->pluck('ref_cod_aluno')->all())
             ->whereHas('inep')
             ->pluck('cod_aluno');
 
