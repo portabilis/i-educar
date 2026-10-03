@@ -12,8 +12,6 @@ class LegacyNeighborhoodSearchTest extends TestCase
 {
     use DatabaseTransactions;
 
-    private const ACCENTED_NEIGHBORHOOD = 'Vila São José';
-
     private const NEIGHBORHOOD_FIELD = 'neighborhood';
 
     protected function setUp(): void
