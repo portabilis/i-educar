@@ -117,7 +117,7 @@ return new class extends clsCadastro
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb(currentPage: 'Vínculo do professor à turma', breadcrumbs: [
+        $this->breadcrumb(currentPage: 'Vínculo do servidor à turma', breadcrumbs: [
             'educar_servidores_index.php' => 'Servidores',
         ]);
 
