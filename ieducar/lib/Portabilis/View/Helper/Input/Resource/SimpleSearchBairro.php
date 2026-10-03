@@ -5,7 +5,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchBairro extends Portabili
     public function simpleSearchBairro($attrName, $options = [])
     {
         $defaultOptions = [
-            'objectName' => 'bairro',
+            'objectName' => 'neighborhood',
             'apiController' => 'Bairro',
             'apiResource' => 'bairro-search',
             'showIdOnValue' => false,
@@ -18,15 +18,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchBairro extends Portabili
 
     protected function resourceValue($id)
     {
-        if ($id) {
-            $sql = 'SELECT neighborhood as nome, 1 as zona_localizacao FROM places WHERE id = $1';
-            $options = ['params' => $id, 'return_only' => 'first-row'];
-            $municipio = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
-            $nome = $municipio['nome'];
-            $zona = ($municipio['zona_localizacao'] == 1 ? 'Urbana' : 'Rural');
-
-            return $nome . " / Zona $zona";
-        }
+        return $id;
     }
 
     protected function inputPlaceholder($inputOptions)
