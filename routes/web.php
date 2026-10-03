@@ -55,6 +55,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         ->middleware('can:modify:' . Process::RELOCATE)
         ->name('enrollments.relocate');
     Route::get('/enrollment-history/{id}', 'EnrollmentHistoryController@show')
+        ->middleware('can:view:' . Process::ENROLLMENT_HISTORY)
         ->name('enrollments.enrollment-history');
     Route::get('/enrollment-inep/{enrollment}', [EnrollmentInepController::class, 'edit'])
         ->name('enrollments.enrollment-inep.edit');
@@ -62,38 +63,55 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         ->name('enrollments.enrollment-inep.update');
 
     Route::get('/educacenso/consulta', 'EducacensoController@consult')
+        ->middleware('can:view:' . Process::EDUCACENSO_CONSULT)
         ->name('educacenso.consult');
 
     Route::get('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@indexEnroll')
+        ->middleware('can:view:' . Process::BATCH_ENROLLMENT)
         ->name('enrollments.batch.enroll.index');
     Route::post('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@enroll')
+        ->middleware('can:modify:' . Process::BATCH_ENROLLMENT)
         ->name('enrollments.batch.enroll');
 
     Route::get('/usuarios/tipos', 'LegacyController@intranet')
         ->defaults('uri', 'educar_tipo_usuario_lst.php')
         ->name('usertype.index');
     Route::get('/usuarios/tipos/novo', 'AccessLevelController@new')
+        ->middleware('can:modify:' . Process::USER_TYPES)
         ->name('usertype.new');
     Route::get('/usuarios/tipos/{userType}', 'AccessLevelController@show')
+        ->middleware('can:view:' . Process::USER_TYPES)
         ->name('usertype.show');
     Route::post('/usuarios/tipos', 'AccessLevelController@create')
+        ->middleware('can:modify:' . Process::USER_TYPES)
         ->name('usertype.create');
     Route::put('/usuarios/tipos/{userType}', 'AccessLevelController@update')
+        ->middleware('can:modify:' . Process::USER_TYPES)
         ->name('usertype.update');
     Route::delete('/usuarios/tipos/{userType}', 'AccessLevelController@delete')
+        ->middleware('can:remove:' . Process::USER_TYPES)
         ->name('usertype.delete');
 
     Route::get('/cancelar-enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@indexCancelEnrollments')
+        ->middleware('can:view:' . Process::BATCH_ENROLLMENT)
         ->name('enrollments.batch.cancel.index');
     Route::post('/cancelar-enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@cancelEnrollments')
+        ->middleware('can:modify:' . Process::BATCH_ENROLLMENT)
         ->name('enrollments.batch.cancel');
+
+    Route::get('/cancelar-matricula-em-lote/{schoolClass}', 'BatchEnrollmentController@indexCancelRegistrations')
+        ->middleware(['can:modify:' . Process::REGISTRATIONS, 'can:remove:' . Process::CANCEL_REGISTRATION])
+        ->name('registrations.batch.cancel.index');
+    Route::post('/cancelar-matricula-em-lote/{schoolClass}', 'BatchEnrollmentController@cancelRegistrations')
+        ->middleware(['can:modify:' . Process::REGISTRATIONS, 'can:remove:' . Process::CANCEL_REGISTRATION])
+        ->name('registrations.batch.cancel');
 
     Route::get('/escolaridade/{schoolingDegree}', 'SchoolingDegreeController@show')
         ->name('schooling_degrees.show');
 
-    Route::get('/unificacao-aluno', 'StudentLogUnificationController@index')->name('student-log-unification.index');
-    Route::get('/unificacao-aluno/{unification}', 'StudentLogUnificationController@show')->name('student-log-unification.show');
-    Route::get('/unificacao-aluno/{unification}/undo', 'StudentLogUnificationController@undo')->name('student-log-unification.undo');
+    Route::get('/unificacao-aluno', 'StudentLogUnificationController@index')->middleware('can:view:' . Process::STUDENT_UNIFICATION)->name('student-log-unification.index');
+    Route::get('/unificacao-aluno/{unification}', 'StudentLogUnificationController@show')->middleware('can:view:' . Process::STUDENT_UNIFICATION)->name('student-log-unification.show');
+    Route::get('/unificacao-aluno/{unification}/undo', 'StudentLogUnificationController@undo')->middleware('can:remove:' . Process::STUDENT_UNIFICATION)->name('student-log-unification.undo');
 
     Route::get('/unificacao-pessoa', 'PersonLogUnificationController@index')->name('person-log-unification.index');
     Route::get('/unificacao-pessoa/{unification}', 'PersonLogUnificationController@show')->name('person-log-unification.show');
@@ -115,14 +133,14 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         Route::get('validar/{validator}', 'ValidatorController@validation');
     });
 
-    Route::get('/consulta-dispensas', 'ExemptionListController@index')->name('exemption-list.index');
+    Route::get('/consulta-dispensas', 'ExemptionListController@index')->middleware('can:view:' . Process::EXEMPTION_LIST)->name('exemption-list.index');
     Route::get('/backup-download', 'BackupController@download')->name('backup.download');
 
     Route::get('/atualiza-situacao-matriculas', 'UpdateRegistrationStatusController@index')->middleware('can:view:' . Process::UPDATE_REGISTRATION_STATUS)->name('update-registration-status.index');
     Route::post('/atualiza-situacao-matriculas', 'UpdateRegistrationStatusController@updateStatus')->middleware('can:modify:' . Process::UPDATE_REGISTRATION_STATUS)->name('update-registration-status.update-status');
 
-    Route::get('/exportacao-para-o-seb', 'SebExportController@index')->name('seb-export.index');
-    Route::post('/exportacao-para-o-seb', 'SebExportController@export')->name('seb-export.export');
+    Route::get('/exportacao-para-o-seb', 'SebExportController@index')->middleware('can:view:' . Process::SEB_EXPORT)->name('seb-export.index');
+    Route::post('/exportacao-para-o-seb', 'SebExportController@export')->middleware('can:modify:' . Process::SEB_EXPORT)->name('seb-export.export');
 
     Route::get('/abre-url-privada', 'OpenPrivateUrlController@open')->name('open_private_url.open');
 
@@ -184,12 +202,12 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::get('/configuracoes/configuracoes-de-sistema', 'SettingController@index')->name('settings.index');
     Route::post('/configuracoes/configuracoes-de-sistema', 'SettingController@saveInputs')->name('settings.update');
-    Route::get('/periodo-lancamento/excluir', 'ReleasePeriodController@delete')->name('release-period.delete');
-    Route::get('/periodo-lancamento/fomulario/{releasePeriod?}', 'ReleasePeriodController@form')->name('release-period.form');
-    Route::post('/periodo-lancamento/criar', 'ReleasePeriodController@create')->name('release-period.create');
-    Route::post('/periodo-lancamento/atualizar/{releasePeriod}', 'ReleasePeriodController@update')->name('release-period.update');
-    Route::get('/periodo-lancamento', 'ReleasePeriodController@index')->name('release-period.index');
-    Route::get('/periodo-lancamento/{releasePeriod}', 'ReleasePeriodController@show')->name('release-period.show');
+    Route::get('/periodo-lancamento/excluir', 'ReleasePeriodController@delete')->middleware('can:remove:' . Process::RELEASE_PERIOD)->name('release-period.delete');
+    Route::get('/periodo-lancamento/fomulario/{releasePeriod?}', 'ReleasePeriodController@form')->middleware('can:modify:' . Process::RELEASE_PERIOD)->name('release-period.form');
+    Route::post('/periodo-lancamento/criar', 'ReleasePeriodController@create')->middleware('can:modify:' . Process::RELEASE_PERIOD)->name('release-period.create');
+    Route::post('/periodo-lancamento/atualizar/{releasePeriod}', 'ReleasePeriodController@update')->middleware('can:modify:' . Process::RELEASE_PERIOD)->name('release-period.update');
+    Route::get('/periodo-lancamento', 'ReleasePeriodController@index')->middleware('can:view:' . Process::RELEASE_PERIOD)->name('release-period.index');
+    Route::get('/periodo-lancamento/{releasePeriod}', 'ReleasePeriodController@show')->middleware('can:view:' . Process::RELEASE_PERIOD)->name('release-period.show');
 
     Route::post('/upload', 'FileController@upload')->name('file-upload');
     Route::get('/files/{file}', 'FileController@show')->name('files.show');

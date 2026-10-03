@@ -26,6 +26,8 @@ class Process
 
     public const REGISTRATIONS = 578;
 
+    public const CANCEL_REGISTRATION = 627;
+
     public const ENROLLMENT_HISTORY = 1001;
 
     public const RECLASSIFY_REGISTRATION = 1004;
@@ -99,4 +101,14 @@ class Process
     public const UNENROLLMENT = 696;
 
     public const COMPONENT_BATCH_MANAGER = 9999121;
+
+    public const DOCUMENT_ABSENCE_REASON = 5842;
+
+    public const USER_TYPES = 554;
+
+    public const BATCH_ENROLLMENT = 659;
+
+    public const EDUCACENSO_CONSULT = 847;
+
+    public const STUDENT_UNIFICATION = 999847;
 }

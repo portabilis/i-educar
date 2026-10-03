@@ -138,15 +138,12 @@ class LegacyStudentBuilder extends LegacyBuilder
 
     public function whereWithReport(): self
     {
-        return $this->whereNotNull('url_laudo_medico')->whereRaw('url_laudo_medico::text <> ?', '[]');
+        return $this->whereHas('medicalReports');
     }
 
     public function whereWithoutReport(): self
     {
-        return $this->where(function ($q) {
-            $q->whereNull('url_laudo_medico');
-            $q->orWhereRaw('url_laudo_medico::text = ?', '[]');
-        });
+        return $this->whereDoesntHave('medicalReports');
     }
 
     public function whereRegistration($year, $course, $grade, $school)

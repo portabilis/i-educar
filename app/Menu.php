@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\LegacyUserType;
+use App\Services\MenuCacheService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -66,15 +67,6 @@ class Menu extends Model
         }, static function () {
             return self::tree()->orderBy('order')->get();
         })->toTree();
-    }
-
-    public static function getMenuAncestors(Menu $menu)
-    {
-        return Menu::find($menu->getKey())
-            ->ancestors()
-            ->get()
-            ->pluck('id')
-            ->toArray();
     }
 
     private static function getMenusByIds($ids): Collection
@@ -262,6 +254,8 @@ class Menu extends Model
                 $menu->description = str_replace('Declaração', 'Atestado', $menu->description);
                 $menu->save();
             });
+
+        app(MenuCacheService::class)->flushAll();
     }
 
     /**
@@ -292,6 +286,8 @@ class Menu extends Model
                 $menu->description = str_replace('Atestado', 'Declaração', $menu->description);
                 $menu->save();
             });
+
+        app(MenuCacheService::class)->flushAll();
     }
 
     /**

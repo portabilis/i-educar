@@ -78,13 +78,13 @@ class Kernel extends HttpKernel
             EnsureFrontendRequestsAreStateful::class,
             AcceptJson::class,
             'bindings',
-            'throttle:60,1',
+            'throttle:api',
         ],
 
         'api:rest' => [
             'bindings',
             CheckToken::class,
-            'throttle:60,1',
+            'throttle:api',
         ],
     ];
 

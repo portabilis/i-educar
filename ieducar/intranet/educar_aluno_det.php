@@ -1,14 +1,15 @@
 <?php
 
 use App\Models\City;
-use App\Models\Country;
 use App\Models\DeficiencyType;
+use App\Models\FileRelation;
 use App\Models\LegacyBenefit;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyDocument;
 use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
+use App\Models\LegacyIssuingBody;
 use App\Models\LegacyMaritalStatus;
 use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
@@ -21,8 +22,8 @@ use App\Models\Religion;
 use App\Models\TransportationProvider;
 use App\Models\UniformDistribution;
 use App\Services\FileService;
+use App\Services\IndividualCpfStateService;
 use App\Services\UrlPresigner;
-use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -106,14 +107,14 @@ return new class extends clsDetalhe
             $cel = $telefones->get(LegacyPhone::TYPE_MOBILE_ALT);
             $fax = $telefones->get(LegacyPhone::TYPE_FAX);
 
-            $det_fisica = LegacyIndividual::find($this->ref_idpes)?->getAttributes();
+            $fisica = LegacyIndividual::find($this->ref_idpes);
+            $det_fisica = $fisica?->getAttributes();
 
             $nameRace = LegacyRace::query()->whereHas('individual', fn ($q) => $q->whereKey($this->ref_idpes))->value('nm_raca');
 
             $caminhoFoto = LegacyIndividualPicture::whereKey($this->ref_idpes)->value('caminho');
 
             $registro['nome_aluno'] = mb_strtoupper((string) $pessoa?->nome);
-            $registro['cpf'] = int2IdFederal(int: $det_fisica['cpf']);
             $registro['data_nasc'] = Portabilis_Date_Utils::pgSQLToBr(timestamp: $det_fisica['data_nasc']);
 
             $opcoes = [
@@ -134,8 +135,7 @@ return new class extends clsDetalhe
 
             $registro['naturalidade'] = City::getNameById(id: $det_fisica['idmun_nascimento']);
 
-            $countryName = Country::query()->find(id: $det_fisica['idpais_estrangeiro']);
-            $registro['pais_origem'] = $countryName->name;
+            $registro['pais_origem'] = $fisica?->country_of_origin_name;
 
             $registro['ref_idpes_responsavel'] = $det_fisica['idpes_responsavel'];
 
@@ -250,16 +250,73 @@ return new class extends clsDetalhe
             }
 
             $registro['sigla_uf_cart_trabalho'] = $detalheDocumento['sigla_uf_cart_trabalho'];
-            $registro['num_tit_eleitor'] = $detalheDocumento['num_titulo_eleitor'] ?? null;
-            $registro['zona_tit_eleitor'] = $detalheDocumento['zona_titulo_eleitor'] ?? null;
-            $registro['secao_tit_eleitor'] = $detalheDocumento['secao_titulo_eleitor'] ?? null;
-            $registro['idorg_exp_rg'] = $detalheDocumento['ref_idorg_rg'] ?? null;
+            $registro['num_tit_eleitor'] = $detalheDocumento['num_tit_eleitor'] ?? null;
+            $registro['zona_tit_eleitor'] = $detalheDocumento['zona_tit_eleitor'] ?? null;
+            $registro['secao_tit_eleitor'] = $detalheDocumento['secao_tit_eleitor'] ?? null;
+            $registro['idorg_exp_rg'] = isset($detalheDocumento['idorg_exp_rg'])
+                ? LegacyIssuingBody::query()->whereKey($detalheDocumento['idorg_exp_rg'])->value('sigla')
+                : null;
 
             $endereco = PersonHasPlace::query()
                 ->with(relations: 'place.city.state')
                 ->where(column: 'person_id', operator: $this->ref_idpes)
                 ->orderBy(column: 'type')
                 ->first();
+        }
+
+        $cpfService = new IndividualCpfStateService;
+        $podeAtualizarCpf = $this->obj_permissao->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7);
+        $situacoesCpf = [];
+        $pessoasComAlerta = [];
+        $responsavelCpf = $this->tipo_responsavel === 'r' && $registro['ref_idpes_responsavel']
+            ? LegacyIndividual::find($registro['ref_idpes_responsavel'])
+            : null;
+
+        $pessoasCpf = [
+            'aluno' => [
+                'pessoa' => $fisica ?? null,
+                'sujeito' => 'O aluno',
+                'nome' => $registro['nome_aluno'] ?? null,
+            ],
+            'pai' => [
+                'pessoa' => $this->idpes_pai ? LegacyIndividual::find($this->idpes_pai) : null,
+                'sujeito' => 'O responsável pai',
+                'nome' => $registro['nm_pai'],
+            ],
+            'mae' => [
+                'pessoa' => $this->idpes_mae ? LegacyIndividual::find($this->idpes_mae) : null,
+                'sujeito' => 'A responsável mãe',
+                'nome' => $registro['nm_mae'],
+            ],
+            'responsavel' => [
+                'pessoa' => $responsavelCpf,
+                'sujeito' => 'O responsável',
+                'nome' => $responsavelCpf?->person?->nome,
+            ],
+        ];
+
+        foreach ($pessoasCpf as $chave => $dados) {
+            if (!$dados['pessoa']) {
+                continue;
+            }
+
+            $situacoesCpf[$chave] = $cpfService->situation($dados['pessoa']);
+
+            if ($situacoesCpf[$chave]['type'] === 'with_cpf' || in_array($dados['pessoa']->getKey(), $pessoasComAlerta)) {
+                continue;
+            }
+
+            $pessoasComAlerta[] = $dados['pessoa']->getKey();
+
+            $this->prependOutput(view(view: 'individual.cpf-absence-alert', data: [
+                'situacao' => $situacoesCpf[$chave],
+                'sujeito' => $dados['sujeito'],
+                'nome' => $dados['nome'],
+                'aluno' => $chave === 'aluno',
+                'pessoa' => $dados['pessoa'],
+                'dataNascimento' => $dados['pessoa']->data_nasc?->format('d/m/Y'),
+                'podeAtualizar' => $podeAtualizarCpf,
+            ])->render());
         }
 
         if ($registro['cod_aluno']) {
@@ -311,8 +368,8 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Nome social e/ou afetivo', mb_strtoupper(string: $det_fisica['nome_social'])]);
         }
 
-        if (idFederal2int(str: $registro['cpf'])) {
-            $this->addDetalhe(detalhe: ['CPF', $registro['cpf']]);
+        if (isset($situacoesCpf['aluno'])) {
+            $this->addDetalhe(detalhe: ['CPF', $this->seloCpf(situacao: $situacoesCpf['aluno'])]);
         }
 
         if ($registro['data_nasc']) {
@@ -360,7 +417,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Nacionalidade', $registro['nacionalidade']]);
         }
 
-        if ($registro['pais_origem'] && $registro['nacionalidade'] != Nacionalidade::BRASILEIRA) {
+        if ($registro['pais_origem']) {
             $this->addDetalhe(detalhe: ['País de Origem', $registro['pais_origem']]);
         }
 
@@ -381,15 +438,15 @@ return new class extends clsDetalhe
                 );
             }
 
-            $this->addDetalhe(detalhe: ['Responsável', $registro['ref_idpes_responsavel']]);
+            $this->addDetalhe(detalhe: ['Responsável', $registro['ref_idpes_responsavel'] . (isset($situacoesCpf['responsavel']) ? ' ' . $this->seloCpf(situacao: $situacoesCpf['responsavel']) : '')]);
         }
 
         if ($registro['nm_pai']) {
-            $this->addDetalhe(detalhe: ['Pai', $registro['nm_pai']]);
+            $this->addDetalhe(detalhe: ['Pai', $registro['nm_pai'] . (isset($situacoesCpf['pai']) ? ' ' . $this->seloCpf(situacao: $situacoesCpf['pai']) : '')]);
         }
 
         if ($registro['nm_mae']) {
-            $this->addDetalhe(detalhe: ['Mãe', $registro['nm_mae']]);
+            $this->addDetalhe(detalhe: ['Mãe', $registro['nm_mae'] . (isset($situacoesCpf['mae']) ? ' ' . $this->seloCpf(situacao: $situacoesCpf['mae']) : '')]);
         }
 
         if ($registro['fone_1']) {
@@ -524,7 +581,7 @@ return new class extends clsDetalhe
         $fileService = new FileService(new UrlPresigner);
         $files = $fileService->getFiles(
             relation: LegacyStudent::find($this->cod_aluno),
-            type: 'laudo'
+            type: FileRelation::TYPE_MEDICAL_REPORT
         );
 
         if ($files->isNotEmpty()) {
@@ -644,8 +701,14 @@ return new class extends clsDetalhe
 
             $this->array_botao[] = 'Atualizar histórico';
             $this->array_botao_url_script[] = sprintf('go("educar_historico_escolar_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']);
+
             $this->array_botao[] = 'Distribuição de uniforme';
             $this->array_botao_url_script[] = sprintf('go("educar_distribuicao_uniforme_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']);
+
+            if ($this->permissaoReconhecimentoFacial()) {
+                $this->array_botao[] = 'Fotos para reconhecimento facial';
+                $this->array_botao_url_script[] = sprintf('go("educar_reconhecimento_facial_det.php?ref_cod_aluno=%d");', $registro['cod_aluno']);
+            }
 
             if ($titulo = config(key: 'legacy.app.alunos.sistema_externo.titulo')) {
                 $link = config(key: 'legacy.app.alunos.sistema_externo.link');
@@ -976,20 +1039,71 @@ return new class extends clsDetalhe
         $scripts = [
             '/vendor/legacy/Portabilis/Assets/Javascripts/Utils.js',
             '/vendor/legacy/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/vendor/legacy/Cadastro/Assets/Javascripts/AlunoShow.js?version=6',
+            '/vendor/legacy/Portabilis/Assets/Javascripts/Validator.js',
+            '/vendor/legacy/Cadastro/Assets/Javascripts/AlunoShow.js?version=7',
         ];
+
+        $alguemSemCpf = collect($situacoesCpf)->contains(fn ($situacao) => $situacao['type'] !== 'with_cpf');
+
+        if ($podeAtualizarCpf && $alguemSemCpf) {
+            $motivosAusenciaCpf = collect($cpfService->reasonOptions())
+                ->map(fn ($nome, $id) => [$id, $nome])
+                ->values();
+            $motivosExigemObservacao = $cpfService->reasonsRequiringObservation();
+            $motivosInativos = $cpfService->inactiveReasons();
+
+            Portabilis_View_Helper_Application::embedJavascript(
+                viewInstance: $this,
+                script: 'var motivosAusenciaCpf = ' . json_encode($motivosAusenciaCpf) . '; var motivosExigemObservacao = ' . json_encode($motivosExigemObservacao) . '; var motivosInativos = ' . json_encode($motivosInativos) . ';'
+            );
+        }
+
+        Portabilis_View_Helper_Application::embedStylesheet(
+            viewInstance: $this,
+            css: '.cpf-situacao { display: inline-block; padding: 3px 9px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
+                .cpf-situacao-com { background: #e6f4e6; color: #2e7d32; }
+                .cpf-situacao-sem { background: #fcefef; color: #c05e5e; }
+                .cpf-ausencia { margin: 2px 0; }'
+        );
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $scripts);
 
-        $styles = ['/vendor/legacy/Cadastro/Assets/Stylesheets/Aluno.css'];
+        $styles = [
+            '/vendor/legacy/Cadastro/Assets/Stylesheets/Aluno.css',
+            '/vendor/legacy/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
+        ];
 
         Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: $styles);
+    }
+
+    private function seloCpf(array $situacao): string
+    {
+        if ($situacao['type'] === 'with_cpf') {
+            return "<span class='cpf-situacao cpf-situacao-com'>{$situacao['cpf']}</span>";
+        }
+
+        $detalhe = $situacao['type'] === 'justified_absence'
+            ? $situacao['reason'] . ($situacao['user'] ? " · {$situacao['user']}, {$situacao['date']}" : '')
+            : 'Sem justificativa registrada';
+
+        return sprintf("<span class='cpf-situacao cpf-situacao-sem' title='%s'>Sem CPF</span>", e($detalhe));
     }
 
     private function permissaoNovaMatricula()
     {
         $user = Auth::user();
         $allow = Gate::allows(ability: 'view', arguments: 680);
+        if ($user->isLibrary()) {
+            return false;
+        }
+
+        return $allow;
+    }
+
+    private function permissaoReconhecimentoFacial()
+    {
+        $user = Auth::user();
+        $allow = Gate::allows(ability: 'view', arguments: 5781);
         if ($user->isLibrary()) {
             return false;
         }

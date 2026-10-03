@@ -5,8 +5,7 @@ use App\Models\LegacyEducacensoStages;
 use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
 use App\Models\LegacyRegimeType;
-use App\Models\LegacySchoolClass;
-use App\Models\LegacySchoolClassStage;
+use App\Services\SchoolClassStageService;
 
 return new class extends clsCadastro
 {
@@ -288,15 +287,12 @@ return new class extends clsCadastro
     public function Novo()
     {
         if ($this->incluir != 'S' && empty($this->excluir_)) {
-            $this->carga_horaria = str_replace(search: '.', replace: '', subject: $this->carga_horaria);
-            $this->carga_horaria = str_replace(search: ',', replace: '.', subject: $this->carga_horaria);
-            $this->hora_falta = str_replace(search: '.', replace: '', subject: $this->hora_falta);
-            $this->hora_falta = str_replace(search: ',', replace: '.', subject: $this->hora_falta);
+            // Refatoração: Centraliza limpeza e flags
+            $this->prepararDados();
 
-            $this->padrao_ano_escolar = is_null(value: $this->padrao_ano_escolar) ? 0 : 1;
-            $this->multi_seriado = is_null(value: $this->multi_seriado) ? 0 : 1;
-            $this->importar_curso_pre_matricula = is_null(value: $this->importar_curso_pre_matricula) ? 0 : 1;
-            $this->bloquear_novas_matriculas = is_null(value: $this->bloquear_novas_matriculas) ? 0 : 1;
+            if (!$this->validarNomeCurso() || !$this->validarQuantidadeEtapas() || !$this->validarHoraFalta()) {
+                return false;
+            }
 
             $obj = new clsPmieducarCurso(
                 ref_usuario_cad: $this->pessoa_logada,
@@ -340,15 +336,12 @@ return new class extends clsCadastro
     public function Editar()
     {
         if ($this->incluir != 'S' && empty($this->excluir_)) {
-            $this->carga_horaria = str_replace(search: '.', replace: '', subject: $this->carga_horaria);
-            $this->carga_horaria = str_replace(search: ',', replace: '.', subject: $this->carga_horaria);
-            $this->hora_falta = str_replace(search: '.', replace: '', subject: $this->hora_falta);
-            $this->hora_falta = str_replace(search: ',', replace: '.', subject: $this->hora_falta);
+            // Refatoração: Usa o mesmo método de preparação
+            $this->prepararDados();
 
-            $this->padrao_ano_escolar = is_null(value: $this->padrao_ano_escolar) ? 0 : 1;
-            $this->multi_seriado = is_null(value: $this->multi_seriado) ? 0 : 1;
-            $this->importar_curso_pre_matricula = is_null(value: $this->importar_curso_pre_matricula) ? 0 : 1;
-            $this->bloquear_novas_matriculas = is_null(value: $this->bloquear_novas_matriculas) ? 0 : 1;
+            if (!$this->validarNomeCurso() || !$this->validarQuantidadeEtapas() || !$this->validarHoraFalta()) {
+                return false;
+            }
 
             $obj = new clsPmieducarCurso(
                 cod_curso: $this->cod_curso,
@@ -440,54 +433,15 @@ return new class extends clsCadastro
 
     public function atualizaEtapasDasTurmasDoCurso($curso, $padraoAnoEscolar, $ano): void
     {
-        $this->removeEtapasDasTurmasDoCurso(curso: $curso, ano: $ano);
-
-        if ($padraoAnoEscolar == 0) {
-            $this->copiaEtapasDaEscolaParaTurmasDoCurso(curso: $curso, ano: $ano);
-        }
-    }
-
-    private function removeEtapasDasTurmasDoCurso($curso, $ano): void
-    {
         if (!is_numeric($curso) || !is_numeric($ano)) {
             return;
         }
 
-        LegacySchoolClassStage::query()
-            ->whereHas('schoolClass', fn ($q) => $q->whereCourse($curso)->whereYearEq($ano))
-            ->delete();
-    }
-
-    private function copiaEtapasDaEscolaParaTurmasDoCurso($curso, $ano): void
-    {
-        if (!is_numeric($curso) || !is_numeric($ano)) {
-            return;
-        }
-
-        $etapasDaEscola = LegacySchoolClass::query()
-            ->join('pmieducar.ano_letivo_modulo', function ($j) {
-                $j->on('pmieducar.ano_letivo_modulo.ref_ref_cod_escola', 'pmieducar.turma.ref_ref_cod_escola');
-                $j->on('pmieducar.ano_letivo_modulo.ref_ano', 'pmieducar.turma.ano');
-            })
-            ->whereCourse($curso)
-            ->whereYearEq($ano)
-            ->select([
-                'cod_turma',
-                'ref_cod_modulo',
-                'sequencial',
-                'data_inicio',
-                'data_fim',
-                'dias_letivos',
-            ]);
-
-        LegacySchoolClassStage::query()->insertUsing([
-            'ref_cod_turma',
-            'ref_cod_modulo',
-            'sequencial',
-            'data_inicio',
-            'data_fim',
-            'dias_letivos',
-        ], $etapasDaEscola);
+        (new SchoolClassStageService)->updateByCourse(
+            course: (int) $curso,
+            year: (int) $ano,
+            isStandardCalendar: (bool) $padraoAnoEscolar
+        );
     }
 
     public function makeExtra()
@@ -499,5 +453,55 @@ return new class extends clsCadastro
     {
         $this->title = 'Curso';
         $this->processoAp = '566';
+    }
+
+    // Método auxiliar criado na refatoração
+    private function validarHoraFalta()
+    {
+        if ($this->hora_falta < 0) {
+            $this->mensagem = "O campo 'Hora Falta (min)' não pode ser negativo.<br>";
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validarNomeCurso()
+    {
+        if (preg_match(pattern: '/\p{L}/u', subject: $this->nm_curso) !== 1) {
+            $this->mensagem = "O campo 'Curso' deve conter ao menos uma letra.<br>";
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validarQuantidadeEtapas()
+    {
+        if (!is_numeric(value: $this->qtd_etapas) || (int) $this->qtd_etapas <= 0) {
+            $this->mensagem = "O campo 'Quantidade Etapas' deve ser maior que zero.<br>";
+
+            return false;
+        }
+
+        return true;
+    }
+
+    // Método novo para reduzir a Complexidade e Duplicação
+    private function prepararDados()
+    {
+        // Sanitização de números (troca vírgula por ponto, etc)
+        $this->carga_horaria = str_replace(search: '.', replace: '', subject: $this->carga_horaria);
+        $this->carga_horaria = str_replace(search: ',', replace: '.', subject: $this->carga_horaria);
+        $this->hora_falta = str_replace(search: '.', replace: '', subject: $this->hora_falta);
+        $this->hora_falta = str_replace(search: ',', replace: '.', subject: $this->hora_falta);
+
+        // Definição de flags/booleanos
+        $this->padrao_ano_escolar = is_null(value: $this->padrao_ano_escolar) ? 0 : 1;
+        $this->multi_seriado = is_null(value: $this->multi_seriado) ? 0 : 1;
+        $this->importar_curso_pre_matricula = is_null(value: $this->importar_curso_pre_matricula) ? 0 : 1;
+        $this->bloquear_novas_matriculas = is_null(value: $this->bloquear_novas_matriculas) ? 0 : 1;
     }
 };

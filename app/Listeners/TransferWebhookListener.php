@@ -34,6 +34,10 @@ class TransferWebhookListener
 
         $registration = $event->transfer->oldRegistration;
 
+        $registration->update([
+            'bloquear_troca_de_situacao' => true,
+        ]);
+
         $callbackUrl = route('webhook.transfer.callback', ['id' => $event->transfer->getKey()]);
 
         $response = Http::withHeader('token', trim($this->token))

@@ -206,9 +206,15 @@ return new class extends clsCadastro
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb('Funções do servidor', [
-            url('intranet/educar_servidores_index.php') => 'Servidores',
-        ]);
+        // Novo é um nível abaixo da listagem; Editar é um modo do servidor,
+        // que entra no caminho: Início > Servidores > Nome > Editar
+        $caminho = [url('intranet/educar_servidor_lst.php') => 'Servidores'];
+
+        if ($retorno == 'Editar') {
+            $caminho[$this->url_cancelar] = LegacyPerson::whereKey($this->cod_servidor)->value('nome');
+        }
+
+        $this->breadcrumb($retorno == 'Editar' ? 'Editar' : 'Novo servidor', $caminho);
 
         return $retorno;
     }
@@ -480,7 +486,7 @@ JS;
         $min = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
         $this->carga_horaria = $hour + $min;
 
-        $this->curso_formacao_continuada = transformDBArrayInString($this->curso_formacao_continuada);
+        $this->curso_formacao_continuada = transformDBArrayInString($this->curso_formacao_continuada ?? []);
 
         $escolaridade = $this->ref_idesco ? LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade : null;
         $ensinoSuperior = $escolaridade == Escolaridade::EDUCACAO_SUPERIOR;
@@ -554,7 +560,7 @@ JS;
         $min = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
         $this->carga_horaria = $hour + $min;
 
-        $this->curso_formacao_continuada = transformDBArrayInString($this->curso_formacao_continuada);
+        $this->curso_formacao_continuada = transformDBArrayInString($this->curso_formacao_continuada ?? []);
 
         $escolaridade = $this->ref_idesco ? LegacySchoolingDegree::findOrFail($this->ref_idesco)->escolaridade : null;
         $ensinoSuperior = $escolaridade == Escolaridade::EDUCACAO_SUPERIOR;

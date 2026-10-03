@@ -3,8 +3,8 @@
 use App\Events\RegistrationEvent;
 use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
+use App\Jobs\UpdateBlockedSituationRegistration;
 use App\Models\LegacyCourse;
-use App\Models\LegacyEnrollment;
 use App\Models\LegacyGradeSequence;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
@@ -14,8 +14,8 @@ use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolGrade;
 use App\Models\LegacyStudent;
 use App\Models\RegistrationStatus;
-use App\Services\EnrollmentService;
 use App\Services\PromotionService;
+use App\Services\RegistrationService;
 use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
@@ -683,6 +683,9 @@ return new class extends clsCadastro
                 if ($ultimaMatriculaSerieAno->aprovado == App_Model_MatriculaSituacao::TRANSFERIDO) {
                     /** @var LegacyRegistration $registration */
                     $registration = LegacyRegistration::find(id: $this->cod_matricula);
+                    $registration->update([
+                        'bloquear_troca_de_situacao' => true,
+                    ]);
 
                     $mensagem = '';
 
@@ -699,6 +702,8 @@ return new class extends clsCadastro
 
                     $promocao = new PromotionService(enrollment: $registration->enrollments()->first());
                     $promocao->fakeRequest();
+
+                    UpdateBlockedSituationRegistration::dispatch($registration)->delay(now()->addMinute());
                 }
 
                 $this->mensagem = 'Cadastro efetuado com sucesso.<br />' . $mensagem;
@@ -833,43 +838,6 @@ return new class extends clsCadastro
         return $dataMatricula <= $dataFechamento;
     }
 
-    public function desativaEnturmacoesMatricula($matriculaId)
-    {
-        $result = true;
-
-        $enturmacoes = new clsPmieducarMatriculaTurma;
-        $enturmacoes = $enturmacoes->lista(
-            int_ref_cod_matricula: $matriculaId,
-            int_ativo: 1
-        );
-
-        if ($enturmacoes) {
-            foreach ($enturmacoes as $enturmacao) {
-                $enturmacao = new clsPmieducarMatriculaTurma(
-                    ref_cod_matricula: $matriculaId,
-                    ref_cod_turma: $enturmacao['ref_cod_turma'],
-                    ref_usuario_exc: $this->pessoa_logada,
-                    ativo: 0,
-                    sequencial: $enturmacao['sequencial']
-                );
-
-                $detEnturmacao = $enturmacao->detalhe();
-                $enturmacao->data_enturmacao = $detEnturmacao['data_enturmacao'];
-
-                if ($result && !$enturmacao->edita()) {
-                    $result = false;
-                }
-            }
-        }
-
-        if (!$result) {
-            $this->mensagem = 'Não foi possível desativar as ' .
-                'enturmações da matrícula.';
-        }
-
-        return $result;
-    }
-
     public function Excluir()
     {
         $obj_permissoes = new clsPermissoes;
@@ -881,85 +849,34 @@ return new class extends clsCadastro
             str_pagina_redirecionar: 'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno
         );
 
-        if (!$this->desativaEnturmacoesMatricula(matriculaId: $this->cod_matricula)) {
+        $matricula = LegacyRegistration::find($this->cod_matricula);
+
+        if (!$matricula) {
+            $this->mensagem = 'Exclusão não realizada.<br />';
+
             return false;
         }
 
-        $obj_matricula = new clsPmieducarMatricula(cod_matricula: $this->cod_matricula);
-        $det_matricula = $obj_matricula->detalhe();
-        $ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
+        try {
+            $registrationService = new RegistrationService(auth()->user());
+            $registrationService->cancelRegistration($matricula);
+        } catch (RegistrationException $exception) {
+            $this->mensagem = $exception->getMessage() . '<br />';
 
-        $lst_sequencia = LegacyGradeSequence::query()
-            ->whereGradeDestiny($ref_cod_serie)
-            ->active()
-            ->get()
-            ->toArray();
+            return false;
+        } catch (Throwable $throwable) {
+            report($throwable);
 
-        // Verifica se a série da matrícula cancelada é sequência de alguma outra série
-        if (is_array(value: $lst_sequencia)) {
-            $det_sequencia = array_shift(array: $lst_sequencia);
-            $ref_serie_origem = $det_sequencia['ref_serie_origem'];
+            $this->mensagem = 'Exclusão não realizada.<br />';
 
-            $obj_matricula = new clsPmieducarMatricula;
-
-            $lst_matricula = $obj_matricula->lista(
-                int_ref_ref_cod_serie: $ref_serie_origem,
-                ref_cod_aluno: $this->ref_cod_aluno,
-                int_ativo: 1,
-                int_ultima_matricula: 0
-            );
-
-            // Verifica se o aluno tem matrícula na série encontrada
-            if (is_array(value: $lst_matricula)) {
-                $det_matricula = array_shift(array: $lst_matricula);
-                $ref_cod_matricula = $det_matricula['cod_matricula'];
-
-                $obj = new clsPmieducarMatricula(
-                    cod_matricula: $ref_cod_matricula,
-                    ref_usuario_exc: $this->pessoa_logada,
-                    ativo: 1,
-                    ultima_matricula: 1
-                );
-
-                $editou1 = $obj->edita();
-
-                if (!$editou1) {
-                    $this->mensagem = 'Não foi possível editar a "&Uacute;ltima Matrícula da Sequência".<br />';
-
-                    return false;
-                }
-            }
+            return false;
         }
 
-        $obj = new clsPmieducarMatricula(
-            cod_matricula: $this->cod_matricula,
-            ref_usuario_exc: $this->pessoa_logada,
-            ativo: 0
+        $this->mensagem = 'Exclusão efetuada com sucesso.<br />';
+
+        throw new HttpResponseException(
+            response: new RedirectResponse(url: "educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}")
         );
-
-        $excluiu = $obj->excluir();
-
-        if ($excluiu) {
-            $enrollments = LegacyEnrollment::query()
-                ->where('ref_cod_matricula', $this->cod_matricula)
-                ->get();
-
-            $enrollmentService = new EnrollmentService(auth()->user());
-
-            foreach ($enrollments as $enrollment) {
-                $enrollmentService->reorderSchoolClass($enrollment);
-            }
-
-            $this->mensagem = 'Exclusão efetuada com sucesso.<br />';
-
-            throw new HttpResponseException(
-                response: new RedirectResponse(url: "educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}")
-            );
-        }
-
-        $this->mensagem = 'Exclusão não realizada.<br />';
-
-        return false;
     }
 
     protected function removerFlagUltimaMatricula($alunoId)

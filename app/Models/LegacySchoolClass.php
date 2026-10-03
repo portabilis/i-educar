@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Builders\LegacySchoolClassBuilder;
 use App\Models\Enums\DayOfWeek;
 use App\Models\View\Discipline;
+use App_Model_MatriculaSituacao;
 use Carbon\Carbon;
 use iEducar\Modules\Educacenso\Model\EtapaEnsino;
 use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
@@ -482,6 +483,34 @@ class LegacySchoolClass extends Model
                     $query->with('student.person');
                 },
             ])
+            ->where('ativo', 1)
+            ->orderBy('sequencial_fechamento')
+            ->get();
+    }
+
+    /**
+     * Retorna as enturmações ativas cujas matrículas podem ser canceladas.
+     *
+     * Critérios: matrícula ativa, em andamento e sem solicitação de
+     * transferência ativa, como no cancelamento individual disponível em
+     * `educar_matricula_det.php`, além do ano da matrícula igual ao da turma,
+     * restrição adicional herdada de `getActiveEnrollments`. O `whereHas`
+     * filtra as enturmações de fato, diferente do `with` restrito do método
+     * irmão, que apenas deixa a relação nula.
+     *
+     * @return Collection<int, LegacyEnrollment>
+     */
+    public function getActiveEnrollmentsWithCancellableRegistration() // @phpstan-ignore-line
+    {
+        return $this->enrollments()
+            ->whereHas('registration', function ($query) {
+                /** @var Builder $query */
+                $query->where('ano', $this->year); // @phpstan-ignore-line
+                $query->where('ativo', 1);
+                $query->where('aprovado', App_Model_MatriculaSituacao::EM_ANDAMENTO);
+                $query->whereDoesntHave('transferEnd');
+            })
+            ->with('registration.student.person')
             ->where('ativo', 1)
             ->orderBy('sequencial_fechamento')
             ->get();

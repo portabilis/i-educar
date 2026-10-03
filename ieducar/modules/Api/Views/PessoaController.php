@@ -5,6 +5,9 @@ use App\Models\LegacyInstitution;
 use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use App\Models\PersonHasPlace;
+use App\Process;
+use App\Services\IndividualCpfStateService;
+use App\Services\IndividualCpfTimelineService;
 use App\Services\PhoneService;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
@@ -16,8 +19,21 @@ class PessoaController extends ApiCoreController
 {
     use LegacyAddressingFields;
 
+    // Cadastro de pessoa física (43) e de aluno (578), telas que consultam
+    // os dados pessoais por esta API.
+    private const PROCESSOS_DADOS_PESSOAIS = [43, Process::REGISTRATIONS];
+
+    protected function validatesAuthorizationToViewPersonalData()
+    {
+        return $this->validatesAuthorizationToAnyProcess(self::PROCESSOS_DADOS_PESSOAIS);
+    }
+
     protected function canGet()
     {
+        if (!$this->validatesAuthorizationToViewPersonalData()) {
+            return false;
+        }
+
         $can = true;
 
         if (!$this->getRequest()->id && !$this->getRequest()->cpf) {
@@ -141,7 +157,10 @@ class PessoaController extends ApiCoreController
 
              fisica.pais_residencia,
              fisica.sus,
-             fisica.observacao
+             fisica.observacao,
+             (COALESCE(fisica.cpf, 0) <> 0) AS possui_cpf,
+             fisica.document_absence_reason_id,
+             fisica.document_absence_observation
             from cadastro.fisica
             where idpes = $2';
 
@@ -200,6 +219,9 @@ class PessoaController extends ApiCoreController
             'sus',
             'observacao',
             'povo_indigena_educacenso_id',
+            'possui_cpf',
+            'document_absence_reason_id',
+            'document_absence_observation',
         ];
 
         $details = Portabilis_Array_Utils::filter($details, $attrs);
@@ -210,6 +232,8 @@ class PessoaController extends ApiCoreController
         $details['nome_responsavel'] = $this->toUtf8($details['nome_responsavel'], ['transform' => true]);
         $details['cep'] = int2CEP($details['cep']);
         $details['cpf'] = int2CPF($details['cpf']);
+        $details['possui_cpf'] = (int) dbBool($details['possui_cpf']);
+        $details['document_absence_observation'] = $this->toUtf8($details['document_absence_observation']);
 
         $details['nis_pis_pasep'] = int2Nis($details['nis_pis_pasep']);
 
@@ -304,8 +328,12 @@ class PessoaController extends ApiCoreController
 
     protected function loadPessoaParent()
     {
+        if (!$this->validatesAuthorizationToViewPersonalData()) {
+            return '';
+        }
+
         if ($this->getRequest()->id) {
-            $_sql = ' SELECT (select nome from cadastro.pessoa where pessoa.idpes = fisica.idpes) as nome ,ideciv as estadocivil, data_nasc, sexo, falecido FROM cadastro.fisica WHERE idpes = $1; ';
+            $_sql = ' SELECT (select nome from cadastro.pessoa where pessoa.idpes = fisica.idpes) as nome ,ideciv as estadocivil, data_nasc, sexo, falecido, cpf, (COALESCE(cpf, 0) <> 0) AS possui_cpf, document_absence_reason_id, document_absence_observation FROM cadastro.fisica WHERE idpes = $1; ';
 
             $details = $this->fetchPreparedQuery($_sql, $this->getRequest()->id, false, 'first-row');
 
@@ -313,6 +341,9 @@ class PessoaController extends ApiCoreController
             $details['nome'] = Portabilis_String_Utils::toUtf8($details['nome']);
             $details['id'] = $this->getRequest()->id;
             $details['falecido'] = dbBool($details['falecido']);
+            $details['cpf'] = $details['cpf'] ? int2CPF($details['cpf']) : '';
+            $details['possui_cpf'] = (int) dbBool($details['possui_cpf']);
+            $details['document_absence_observation'] = $this->toUtf8($details['document_absence_observation']);
 
             return $details;
         } else {
@@ -538,9 +569,82 @@ class PessoaController extends ApiCoreController
         return true;
     }
 
+    private function cpfState(): ?array
+    {
+        if ($this->getRequest()->possui_cpf === null) {
+            return null;
+        }
+
+        return (new IndividualCpfStateService)->normalize([
+            'possui_cpf' => (int) $this->getRequest()->possui_cpf === 1,
+            'cpf' => $this->getRequest()->cpf,
+            'document_absence_reason_id' => $this->getRequest()->document_absence_reason_id,
+            'document_absence_observation' => $this->getRequest()->document_absence_observation,
+        ]);
+    }
+
+    private function validateCpfState(): bool
+    {
+        $state = $this->cpfState();
+
+        if ($state === null) {
+            return true;
+        }
+
+        $error = (new IndividualCpfStateService)->validate(
+            state: $state,
+            individualId: is_numeric($this->getRequest()->pessoa_id) ? (int) $this->getRequest()->pessoa_id : null
+        );
+
+        if ($error) {
+            $this->messenger->append(reset($error));
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validateCpf()
+    {
+        $cpf = $this->getRequest()->cpf;
+        $obrigarCpf = app(LegacyInstitution::class)->obrigar_cpf;
+        $state = $this->cpfState();
+
+        if ($state !== null && !$state['possui_cpf']) {
+            return $this->validateCpfState();
+        }
+
+        if (empty($cpf)) {
+            if ($obrigarCpf || $state !== null) {
+                $this->messenger->append('É necessário o preenchimento do CPF.');
+
+                return false;
+            }
+
+            return true;
+        }
+
+        if (!Portabilis_Utils_Validation::validatesCpf(cpf: $cpf)) {
+            $this->messenger->append('CPF inválido.');
+
+            return false;
+        }
+
+        $existing = LegacyIndividual::findByCpf($cpf);
+
+        if ($existing && (int) $existing->idpes !== (int) $this->getRequest()->pessoa_id) {
+            $this->messenger->append("CPF já utilizado pela pessoa {$existing->idpes}.");
+
+            return false;
+        }
+
+        return true;
+    }
+
     protected function canPost()
     {
-        return $this->validateName() && $this->validaNomeSocial() && $this->validateBirthDate() && $this->validateDifferentiatedLocation();
+        return $this->validateName() && $this->validaNomeSocial() && $this->validateBirthDate() && $this->validateDifferentiatedLocation() && $this->validateCpf();
     }
 
     protected function post()
@@ -580,6 +684,12 @@ class PessoaController extends ApiCoreController
     protected function createOrUpdatePessoaFisica($pessoaId)
     {
         $individual = LegacyIndividual::findOrNew($pessoaId);
+        $state = $this->cpfState();
+        $before = [
+            'cpf' => $individual->getRawOriginal('cpf'),
+            'document_absence_reason_id' => $individual->document_absence_reason_id,
+            'document_absence_observation' => $individual->document_absence_observation,
+        ];
         $individual->idpes = $pessoaId;
         $individual->data_nasc = empty($this->getRequest()->datanasc) ? null : Portabilis_Date_Utils::brToPgSQL($this->getRequest()->datanasc);
         $individual->sexo = $this->getRequest()->sexo;
@@ -604,7 +714,32 @@ class PessoaController extends ApiCoreController
         }
         $individual->povo_indigena_educacenso_id = $povo_indigena_educacenso_id;
 
+        $cpf = $this->getRequest()->cpf;
+        if (!empty($cpf)) {
+            $individual->cpf = idFederal2int(str: $cpf);
+        }
+
+        if ($state !== null) {
+            $individual->cpf = idFederal2int($state['cpf'] ?? '') ?: null;
+            $individual->document_absence_reason_id = $state['document_absence_reason_id'] ?: null;
+            $individual->document_absence_observation = $state['document_absence_observation'] ?: null;
+        }
+
+        DB::beginTransaction();
         $individual->saveOrFail();
+
+        if ($state !== null) {
+            (new IndividualCpfTimelineService)->register(
+                individualId: $individual->getKey(),
+                before: $before,
+                after: [
+                    'cpf' => $individual->getRawOriginal('cpf'),
+                    'document_absence_reason_id' => $individual->document_absence_reason_id,
+                    'document_absence_observation' => $individual->document_absence_observation,
+                ]
+            );
+        }
+        DB::commit();
 
         $corRaca = $this->getRequest()->cor_raca;
         if ($corRaca && is_numeric($corRaca)) {
@@ -634,6 +769,63 @@ class PessoaController extends ApiCoreController
                 phone: $fone_mov
             );
         }
+    }
+
+    protected function updateCpf()
+    {
+        if (!Gate::allows('modify', Process::REGISTRATIONS)) {
+            $this->messenger->append("Usuário sem permissão para cadastrar '{$this->getRequest()->resource}'.");
+
+            return;
+        }
+
+        $individual = is_numeric($this->getRequest()->pessoa_id)
+            ? LegacyIndividual::find($this->getRequest()->pessoa_id)
+            : null;
+
+        if (!$individual) {
+            $this->messenger->append('Pessoa não encontrada.');
+
+            return;
+        }
+
+        $state = $this->cpfState();
+
+        if ($state === null) {
+            $this->messenger->append('É necessário informar se a pessoa possui CPF.');
+
+            return;
+        }
+
+        if (!$this->validateCpf()) {
+            return;
+        }
+
+        $before = [
+            'cpf' => $individual->getRawOriginal('cpf'),
+            'document_absence_reason_id' => $individual->document_absence_reason_id,
+            'document_absence_observation' => $individual->document_absence_observation,
+        ];
+
+        $individual->cpf = idFederal2int($state['cpf'] ?? '') ?: null;
+        $individual->document_absence_reason_id = $state['document_absence_reason_id'] ?: null;
+        $individual->document_absence_observation = $state['document_absence_observation'] ?: null;
+
+        DB::beginTransaction();
+        $individual->saveOrFail();
+
+        (new IndividualCpfTimelineService)->register(
+            individualId: $individual->getKey(),
+            before: $before,
+            after: [
+                'cpf' => $individual->getRawOriginal('cpf'),
+                'document_absence_reason_id' => $individual->document_absence_reason_id,
+                'document_absence_observation' => $individual->document_absence_observation,
+            ]
+        );
+        DB::commit();
+
+        $this->appendResponse('pessoa_id', $individual->getKey());
     }
 
     protected function createOrUpdateEndereco()
@@ -772,6 +964,8 @@ class PessoaController extends ApiCoreController
             $this->appendResponse($this->isExistServant());
         } elseif ($this->isRequestFor('post', 'pessoa-endereco')) {
             $this->appendResponse($this->createOrUpdateEndereco());
+        } elseif ($this->isRequestFor('post', 'pessoa-cpf')) {
+            $this->appendResponse($this->updateCpf());
         } elseif ($this->isRequestFor('get', 'pessoa-parent')) {
             $this->appendResponse($this->loadPessoaParent());
         } elseif ($this->isRequestFor('get', 'reativarPessoa')) {

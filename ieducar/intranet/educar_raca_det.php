@@ -40,7 +40,7 @@ return new class extends clsDetalhe
         }
 
         if ($race->nm_raca) {
-            $this->addDetalhe(detalhe: ['Raça', $race->nm_raca]);
+            $this->addDetalhe(detalhe: ['Raça', e($race->nm_raca)]);
         }
 
         $obj_permissao = new clsPermissoes;

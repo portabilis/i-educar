@@ -49,6 +49,7 @@ RUN docker-php-ext-install  \
     pdo \
     pdo_pgsql \
     pgsql \
+    sockets \
     zip \
     ftp
 
@@ -59,6 +60,7 @@ RUN docker-php-ext-enable  \
      pdo \
      pdo_pgsql \
      pgsql \
+     sockets \
      zip \
      ftp
 

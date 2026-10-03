@@ -47,6 +47,8 @@ class LegacySchoolFactory extends Factory
     {
         $person = LegacyPersonFactory::new()->create([
             'nome' => $name,
+            // Escola é pessoa jurídica, e a busca das telas filtra por tipo.
+            'tipo' => 'J',
         ]);
 
         $organization = LegacyOrganizationFactory::new()->create([

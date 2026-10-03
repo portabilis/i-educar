@@ -106,6 +106,7 @@ class LegacyUnificationPersonSuccessfulTest extends TestCase
         $logsOldData = LogUnificationOldData::query()
             ->where('unification_id', $log->getKey())
             ->where('table', $fone->getTable())
+            ->orderBy('id')
             ->get();
 
         $this->assertNotNull($logsOldData);
@@ -120,6 +121,7 @@ class LegacyUnificationPersonSuccessfulTest extends TestCase
         $logsOldData = LogUnificationOldData::query()
             ->where('unification_id', $log->getKey())
             ->where('table', $race->getTable())
+            ->orderBy('id')
             ->get();
 
         $this->assertNotNull($logsOldData);
@@ -134,6 +136,7 @@ class LegacyUnificationPersonSuccessfulTest extends TestCase
         $logsOldData = LogUnificationOldData::query()
             ->where('unification_id', $log->getKey())
             ->where('table', $document->getTable())
+            ->orderBy('id')
             ->get();
 
         $this->assertNotNull($logsOldData);
@@ -151,6 +154,7 @@ class LegacyUnificationPersonSuccessfulTest extends TestCase
         $logsOldData = LogUnificationOldData::query()
             ->where('unification_id', $log->getKey())
             ->where('table', $person->getTable())
+            ->orderBy('id')
             ->get();
 
         $this->assertNotNull($logsOldData);
