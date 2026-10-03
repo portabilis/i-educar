@@ -1,11 +1,13 @@
 <?php
 
 use App\Models\LegacyEnrollment;
+use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolHistory;
 use App\Models\LegacySchoolHistoryDiscipline;
 use App\Services\SchoolHistoryService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 // TODO migrar classe novo padrao api controller
 class ProcessamentoApiController extends Core_Controller_Page_EditController
@@ -379,7 +381,55 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             return false;
         }
 
-        return true;
+        return $this->validatesAuthorization() && $this->validatesAccessToSchool();
+    }
+
+    // A tela de processamento exige permissão de cadastro no processo.
+    protected function validatesAuthorization()
+    {
+        if (Gate::allows('modify', $this->_processoAp)) {
+            return true;
+        }
+
+        $this->appendMsg('Usuário sem permissão para processar o histórico escolar.');
+
+        return false;
+    }
+
+    // Usuários de nível escola só acessam matrículas das próprias escolas.
+    protected function validatesAccessToSchool()
+    {
+        $user = Auth::user();
+
+        if (!$user->isSchooling()) {
+            return true;
+        }
+
+        $schoolId = $this->getRequest()->escola_id;
+        $registrationId = $this->getRequest()->matricula_id;
+        $schoolIds = [];
+
+        // Valores não numéricos contam como escola inválida, pois fariam o
+        // filtro por escola ser ignorado na consulta das matrículas.
+        if (!empty($schoolId)) {
+            $schoolIds[] = is_numeric($schoolId) ? (int) $schoolId : 0;
+        }
+
+        if (!empty($registrationId)) {
+            $schoolIds[] = is_numeric($registrationId)
+                ? (int) LegacyRegistration::query()->whereKey((int) $registrationId)->value('ref_ref_cod_escola')
+                : 0;
+        }
+
+        $userSchoolIds = $user->schools()->pluck('cod_escola')->all();
+
+        if (array_diff($schoolIds, $userSchoolIds) === []) {
+            return true;
+        }
+
+        $this->appendMsg('Usuário sem permissão para acessar matrículas desta escola.');
+
+        return false;
     }
 
     protected function canGetMatriculas()

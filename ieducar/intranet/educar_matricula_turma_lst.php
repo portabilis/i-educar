@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyEnrollment;
+use App\Models\LegacyRegistration;
 use App\Process;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -266,13 +267,21 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
+        // Início > Escola > Alunos > Nome > Matrícula > Remanejamento (ou Enturmações)
+        $registration = LegacyRegistration::find($this->ref_cod_matricula);
         if ($acao === 'remanejar') {
-            $this->breadcrumb(currentPage: 'Turmas disponíveis para remanejamento', breadcrumbs: [
+            $this->breadcrumb(currentPage: 'Remanejamento', breadcrumbs: [
                 url(path: 'intranet/educar_index.php') => 'Escola',
+                url(path: 'intranet/educar_aluno_lst.php') => 'Alunos',
+                url(path: "intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+                url(path: "intranet/educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}") => 'Matrícula',
             ]);
         } else {
-            $this->breadcrumb(currentPage: 'Enturmações da matrícula', breadcrumbs: [
+            $this->breadcrumb(currentPage: 'Enturmações', breadcrumbs: [
                 url(path: 'intranet/educar_index.php') => 'Escola',
+                url(path: 'intranet/educar_aluno_lst.php') => 'Alunos',
+                url(path: "intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+                url(path: "intranet/educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}") => 'Matrícula',
             ]);
         }
     }

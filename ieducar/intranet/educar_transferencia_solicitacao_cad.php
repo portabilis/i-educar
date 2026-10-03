@@ -113,8 +113,13 @@ return new class extends clsCadastro
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb(currentPage: 'Registro da solicitação de transferência da matrícula', breadcrumbs: [
-            'educar_index.php' => 'Escola',
+        // Início > Escola > Alunos > Nome > Matrícula > Solicitação de transferência
+        $registration ??= LegacyRegistration::find(id: $this->ref_cod_matricula);
+        $this->breadcrumb(currentPage: 'Solicitação de transferência', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_aluno_lst.php') => 'Alunos',
+            url(path: "intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url(path: "intranet/educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}") => 'Matrícula',
         ]);
 
         return $retorno;

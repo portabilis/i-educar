@@ -99,6 +99,21 @@ class EscolaController extends ApiCoreController
         return $this->validatesPresenceOf('ano') && $this->validatesPresenceOf('instituicao_id');
     }
 
+    protected function sqlsForNumericSearch()
+    {
+        $sqls = [];
+
+        $sqls[] = 'SELECT e.cod_escola as id, j.fantasia as name
+               FROM pmieducar.escola e, cadastro.juridica j
+              WHERE j.idpes = e.ref_idpes
+                AND e.ativo = 1
+                AND e.cod_escola::varchar LIKE $1||\'%\'
+           ORDER BY e.cod_escola
+                LIMIT 8';
+
+        return $sqls;
+    }
+
     protected function sqlsForStringSearch()
     {
         $sqls = [];

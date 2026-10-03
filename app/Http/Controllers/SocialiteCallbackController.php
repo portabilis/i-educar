@@ -4,15 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Events\UserSocialiteNotFound;
 use App\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Contracts\User as UserSocialite;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 
 class SocialiteCallbackController
 {
-    public function __invoke()
+    public function __invoke(Request $request)
     {
-        $socialite = Socialite::driver('passport')->user();
+        if ($request->has('error') || !$request->has('code')) {
+            return redirect('/login')->withErrors([
+                'login' => 'Autorização de acesso não concedida.',
+            ]);
+        }
+
+        try {
+            $socialite = Socialite::driver('passport')->user();
+        } catch (InvalidStateException) {
+            return redirect('/login')->withErrors([
+                'login' => 'Sessão de login expirada. Tente entrar novamente.',
+            ]);
+        }
 
         $user = $this->findUserByEmail($socialite);
 

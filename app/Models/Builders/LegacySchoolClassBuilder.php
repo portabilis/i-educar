@@ -114,7 +114,7 @@ class LegacySchoolClassBuilder extends LegacyBuilder
     }
 
     /**
-     * Filtra por Curso
+     * Filtra por Curso, da turma ou de uma das séries da multisseriada
      */
     public function whereCourse(int $course): self
     {
@@ -124,6 +124,14 @@ class LegacySchoolClassBuilder extends LegacyBuilder
                 $q->where('ref_cod_curso', $course);
             });
         });
+    }
+
+    /**
+     * Filtra por Curso principal, sem considerar as séries da turma multisseriada
+     */
+    public function whereMainCourse(int $course): self
+    {
+        return $this->where('turma.ref_cod_curso', $course);
     }
 
     /**

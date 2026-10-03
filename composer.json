@@ -17,7 +17,7 @@
     ],
     "homepage": "https://github.com/portabilis/i-educar",
     "require": {
-        "php": ">=8.3",
+        "php": "^8.5",
         "ext-gd": "*",
         "ext-json": "*",
         "ext-pdo": "*",
@@ -28,7 +28,7 @@
         "dex/composer-plug-and-play": "^0.26",
         "dex/frontier": "^0.18.0",
         "google/recaptcha": "^1.2",
-        "guzzlehttp/guzzle": "^7.3",
+        "guzzlehttp/guzzle": "^7.15.2",
         "honeybadger-io/honeybadger-laravel": "^5.0",
         "intervention/image": "^2.6",
         "laravel/framework": "^13.0",
@@ -56,10 +56,8 @@
         "laravel/sail": "^1.41",
         "laravel/telescope": "^5.18",
         "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.6",
-        "pestphp/pest": "^4.0",
-        "spatie/laravel-ignition": "^2.0",
-        "symfony/yaml": "^7.0"
+        "pestphp/pest": "^5.0",
+        "pestphp/pest-plugin-browser": "^5.0"
     },
     "autoload": {
         "classmap": [
@@ -105,6 +103,9 @@
     },
     "scripts": {
         "format": "vendor/bin/pint",
+        "test:browser": "ASSETS_SECURE=false vendor/bin/pest tests/Browser",
+        "test:browser:parallel": "ASSETS_SECURE=false LARAVEL_PARALLEL_TESTING_WITHOUT_DATABASES=1 vendor/bin/pest --parallel --processes=4 tests/Browser",
+        "test:browser:coverage": "ASSETS_SECURE=false XDEBUG_MODE=coverage vendor/bin/pest tests/Browser --coverage-html coverage",
         "openapi": "vendor/uderline/openapi-php-attributes/opag tests public/openapi.json",
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
         "new-install": [
@@ -123,9 +124,10 @@
             "@php artisan migrate --force --ansi"
         ],
         "testing-install": [
+            "@putenv DB_DATABASE=testing",
+            "@putenv LEGACY_SEED_DATA=false",
             "@composer install",
-            "@php artisan key:generate --ansi",
-            "@php artisan migrate --force --ansi --env=testing"
+            "@php artisan migrate --force --ansi"
         ],
         "post-install-cmd": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

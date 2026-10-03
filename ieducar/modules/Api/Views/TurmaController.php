@@ -4,9 +4,12 @@ use App\Models\LegacyEnrollment;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
+use iEducar\Reports\Contracts\ReportCardTypes;
 
 class TurmaController extends ApiCoreController
 {
+    protected $_processoAp = 586;
+
     // validators
     protected function validatesTurmaId()
     {
@@ -28,7 +31,9 @@ class TurmaController extends ApiCoreController
     {
         return
             $this->canAcceptRequest() &&
-            $this->validatesTurmaId();
+            $this->validatesTurmaId() &&
+            $this->validatesAuthorizationToView() &&
+            $this->validatesAccessToSchoolClassSchool($this->getRequest()->id);
     }
 
     protected function canGetAlunosExameTurma()
@@ -43,7 +48,7 @@ class TurmaController extends ApiCoreController
     protected function get()
     {
         if (!$this->canGet()) {
-            return void;
+            return null;
         }
 
         $id = $this->getRequest()->id;
@@ -194,15 +199,15 @@ class TurmaController extends ApiCoreController
             }
         }
 
-        $tipos = Portabilis_Model_Report_TipoBoletim::getInstance()->getReports();
+        $tipos = app(ReportCardTypes::class)->getReports();
 
         if ($tipoDiferenciado && $tipoDiferenciado != $tipo) {
-            $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado]);
+            $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado] ?? null);
         } else {
             $exists = LegacySchoolClass::query()->whereDifferentStudents($codTurma)->exists();
 
             if ($exists) {
-                $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado]);
+                $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado] ?? null);
             }
         }
 

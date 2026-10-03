@@ -6,6 +6,7 @@ use App\Models\Concerns\SoftDeletes\LegacySoftDeletes;
 use App\Models\LegacyModel;
 use Closure;
 use Exception;
+use Faker\UniqueGenerator;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,6 +29,13 @@ abstract class EloquentTestCase extends TestCase
 
     protected ?Closure $factoryModifier;
 
+    /**
+     * Armazena, por referência, os conjuntos de atributos já gerados por
+     * {@see buildAttributes()} neste teste, usados pelo Faker\UniqueGenerator
+     * para nunca repetir o mesmo conjunto de atributos duas vezes.
+     */
+    private array $uniqueAttributeSets = [];
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -49,16 +57,7 @@ abstract class EloquentTestCase extends TestCase
      */
     protected function getAttributesForCreate()
     {
-        $factory = Factory::factoryForModel(
-            $this->getEloquentModelName()
-        );
-
-        if (isset($this->factoryModifier)) {
-            $modifier = $this->factoryModifier;
-            $factory = $modifier($factory);
-        }
-
-        return $factory->make()->toArray();
+        return $this->buildAttributes();
     }
 
     /**
@@ -67,6 +66,14 @@ abstract class EloquentTestCase extends TestCase
      * @return array
      */
     protected function getAttributesForUpdate()
+    {
+        return $this->buildAttributes();
+    }
+
+    /**
+     * Avoid repeat attributes that generates false positive.
+     */
+    private function buildAttributes(): array
     {
         $factory = Factory::factoryForModel(
             $this->getEloquentModelName()
@@ -77,7 +84,19 @@ abstract class EloquentTestCase extends TestCase
             $factory = $modifier($factory);
         }
 
-        return $factory->make()->toArray();
+        $generator = new class($factory)
+        {
+            public function __construct(private Factory $factory) {}
+
+            public function attributes(): array
+            {
+                return $this->factory->make()->toArray();
+            }
+        };
+
+        $unique = new UniqueGenerator($generator, 50, $this->uniqueAttributeSets);
+
+        return $unique->attributes();
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyEnrollment;
+use App\Models\LegacyRegistration;
 use App\Services\EnrollmentService;
 use Illuminate\Support\Facades\DB;
 
@@ -33,8 +34,13 @@ return new class extends clsCadastro
 
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
 
-        $this->breadcrumb(currentPage: 'Registro do falecimento do aluno', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Matrícula > Falecimento
+        $registration = LegacyRegistration::find($this->ref_cod_matricula);
+        $this->breadcrumb(currentPage: 'Falecimento', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url("intranet/educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}") => 'Matrícula',
         ]);
 
         $this->nome_url_cancelar = 'Cancelar';

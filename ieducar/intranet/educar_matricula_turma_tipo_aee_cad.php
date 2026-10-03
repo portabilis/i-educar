@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyEnrollment;
+use App\Models\LegacyRegistration;
 use App\Services\EnrollmentService;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoAluno;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
@@ -45,9 +46,13 @@ return new class extends clsCadastro
         $this->nome_url_cancelar = 'Voltar';
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
-        $this->breadcrumb(currentPage: 'Tipo do AEE do aluno', breadcrumbs: [
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'Início',
-            'educar_index.php' => 'Escola',
+        // Início > Escola > Alunos > Nome > Matrícula > Tipo do AEE
+        $registration = LegacyRegistration::find($this->cod_matricula);
+        $this->breadcrumb(currentPage: 'Tipo do AEE', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_aluno_lst.php') => 'Alunos',
+            url(path: "intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url(path: "intranet/educar_matricula_det.php?cod_matricula={$this->cod_matricula}") => 'Matrícula',
         ]);
 
         $obj_aluno = new clsPmieducarAluno;
