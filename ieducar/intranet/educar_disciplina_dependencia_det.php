@@ -120,8 +120,14 @@ return new class extends clsDetalhe
         $this->url_cancelar = 'educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Disciplinas de dependência', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Matrícula > Disciplinas de dependência > Disciplina de dependência
+        $registration = LegacyRegistration::find($this->ref_cod_matricula);
+        $this->breadcrumb(currentPage: 'Disciplina de dependência', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url("intranet/educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}") => 'Matrícula',
+            url("intranet/educar_disciplina_dependencia_lst.php?ref_cod_matricula={$this->ref_cod_matricula}") => 'Disciplinas de dependência',
         ]);
     }
 

@@ -84,8 +84,11 @@ return new class extends clsCadastro
             ? $_GET['referrer'] . '?cod_escola=' . $this->ref_ref_cod_escola
             : 'educar_escola_lst.php';
 
+        // Início > Escola > Escolas > Nome > Etapas do ano letivo
         $this->breadcrumb(currentPage: 'Etapas do ano letivo', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_escola_lst.php') => 'Escolas',
+            url(path: "intranet/educar_escola_det.php?cod_escola={$this->ref_ref_cod_escola}") => LegacySchool::find($this->ref_ref_cod_escola)?->name,
         ]);
 
         $this->nome_url_cancelar = 'Cancelar';

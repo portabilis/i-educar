@@ -91,14 +91,14 @@ return new class extends clsListagem
                 switch ($nivel_usuario) {
                     case 1:
                         $this->addLinhas([
-                            "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}\">{$registro['nm_tipo']}</a>",
-                            "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}\">{$registro['ref_cod_instituicao']}</a>",
+                            "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}\">" . e($registro['nm_tipo']) . '</a>',
+                            "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}\">" . e($registro['ref_cod_instituicao']) . '</a>',
                         ]);
                         break;
 
                     default:
                         $this->addLinhas([
-                            "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}\">{$registro['nm_tipo']}</a>",
+                            "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}\">" . e($registro['nm_tipo']) . '</a>',
                         ]);
                         break;
                 }

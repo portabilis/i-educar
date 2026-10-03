@@ -253,60 +253,6 @@ class AcademicYearService
     }
 
     /**
-     * Cria anos letivos para múltiplas escolas simultaneamente.
-     * Usado na criação em lote de anos letivos.
-     */
-    public function createAcademicYearForMultipleSchools(
-        array $schoolIds,
-        int $year,
-        array $startDates,
-        array $endDates,
-        array $schoolDays,
-        int $moduleId,
-        bool $copySchoolClasses = true,
-        bool $copyTeacherData = true,
-        bool $copyEmployeeData = false,
-        ?int $userId = null
-    ): array {
-        $processedSchools = [];
-        $skippedSchools = [];
-
-        $existingActiveSchools = $this->getExistingAcademicYearSchools($schoolIds, $year);
-
-        foreach ($schoolIds as $schoolId) {
-            if (in_array($schoolId, $existingActiveSchools)) {
-                $skippedSchools[] = $schoolId;
-
-                continue;
-            }
-
-            try {
-                $this->createAcademicYearForSchool(
-                    schoolId: $schoolId,
-                    year: $year,
-                    startDates: $startDates,
-                    endDates: $endDates,
-                    schoolDays: $schoolDays,
-                    moduleId: $moduleId,
-                    copySchoolClasses: $copySchoolClasses,
-                    copyTeacherData: $copyTeacherData,
-                    copyEmployeeData: $copyEmployeeData,
-                    userId: $userId
-                );
-
-                $processedSchools[] = $schoolId;
-            } catch (Exception $e) {
-                throw new AcademicYearServiceException('Erro ao criar ano letivo para escola ' . $schoolId . ': ' . $e->getMessage());
-            }
-        }
-
-        return [
-            'processed' => $processedSchools,
-            'skipped' => $skippedSchools,
-        ];
-    }
-
-    /**
      * Atualiza as etapas de um ano letivo existente.
      * Usado na edição de anos letivos.
      */

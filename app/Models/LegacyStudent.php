@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
 
 /**
- * @property string $url_laudo_medico
  * @property LegacyPerson $person
  * @property LegacyIndividual $individual
  * @property StudentInep $inep
@@ -177,9 +176,21 @@ class LegacyStudent extends LegacyModel
         );
     }
 
+    /**
+     * @return BelongsToMany<File, $this>
+     */
+    public function medicalReports(): BelongsToMany
+    {
+        return $this->files()->wherePivot('type', FileRelation::TYPE_MEDICAL_REPORT);
+    }
+
     public function hasReport(): bool
     {
-        return $this->url_laudo_medico !== null && $this->url_laudo_medico !== '[]';
+        if ($this->relationLoaded('medicalReports')) {
+            return $this->medicalReports->isNotEmpty();
+        }
+
+        return $this->medicalReports()->exists();
     }
 
     /**

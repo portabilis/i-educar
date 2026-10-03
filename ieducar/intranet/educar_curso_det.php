@@ -83,28 +83,28 @@ return new class extends clsDetalhe
 
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe(['Instituição', $registro['ref_cod_instituicao']]);
+                $this->addDetalhe(['Instituição', e($registro['ref_cod_instituicao'])]);
             }
         }
 
         if ($registro['ref_cod_tipo_regime']) {
-            $this->addDetalhe(['Tipo Regime', $registro['ref_cod_tipo_regime']]);
+            $this->addDetalhe(['Tipo Regime', e($registro['ref_cod_tipo_regime'])]);
         }
 
         if ($registro['ref_cod_nivel_ensino']) {
-            $this->addDetalhe(['Nível Ensino', $registro['ref_cod_nivel_ensino']]);
+            $this->addDetalhe(['Nível Ensino', e($registro['ref_cod_nivel_ensino'])]);
         }
 
         if ($registro['ref_cod_tipo_ensino']) {
-            $this->addDetalhe(['Tipo Ensino', $registro['ref_cod_tipo_ensino']]);
+            $this->addDetalhe(['Tipo Ensino', e($registro['ref_cod_tipo_ensino'])]);
         }
 
         if ($registro['nm_curso']) {
-            $this->addDetalhe(['Curso', $registro['nm_curso']]);
+            $this->addDetalhe(['Curso', e($registro['nm_curso'])]);
         }
 
         if ($registro['sgl_curso']) {
-            $this->addDetalhe(['Sigla Curso', $registro['sgl_curso']]);
+            $this->addDetalhe(['Sigla Curso', e($registro['sgl_curso'])]);
         }
 
         if ($registro['qtd_etapas']) {
@@ -122,7 +122,7 @@ return new class extends clsDetalhe
         }
 
         if ($registro['ato_poder_publico']) {
-            $this->addDetalhe(['Ato Poder P&uacute;blico', $registro['ato_poder_publico']]);
+            $this->addDetalhe(['Ato Poder P&uacute;blico', e($registro['ato_poder_publico'])]);
         }
 
         $lst = $curso->qualifications?->toArray();
@@ -167,11 +167,11 @@ return new class extends clsDetalhe
         }
 
         if ($registro['objetivo_curso']) {
-            $this->addDetalhe(['Objetivo Curso', $registro['objetivo_curso']]);
+            $this->addDetalhe(['Objetivo Curso', e($registro['objetivo_curso'])]);
         }
 
         if ($registro['publico_alvo']) {
-            $this->addDetalhe(['P&uacute;blico Alvo', $registro['publico_alvo']]);
+            $this->addDetalhe(['P&uacute;blico Alvo', e($registro['publico_alvo'])]);
         }
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 566, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {

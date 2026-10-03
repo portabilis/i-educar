@@ -15,6 +15,7 @@ use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoItinerarioFormativo;
 use iEducar\Modules\SchoolClass\Period;
+use iEducar\Reports\Contracts\ReportCardTypes;
 use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro
@@ -379,7 +380,7 @@ return new class extends clsCadastro
 
         $this->inputsHelper()->dynamic(helperNames: ['curso', 'serie'], inputOptions: ['disabled' => $desabilitado, 'ano' => $this->ano]);
 
-        $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
+        $tiposBoletim = app(ReportCardTypes::class)->getEnums();
         asort(array: $tiposBoletim);
         $tiposBoletim = Portabilis_Array_Utils::insertIn(key: null, value: 'Selecione um modelo', array: $tiposBoletim);
 

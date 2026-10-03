@@ -376,73 +376,6 @@ class AcademicYearServiceTest extends TestCase
         expect($stages->first()->dias_letivos)->toBe(100);
     }
 
-    public function test_create_academic_year_for_multiple_schools(): void
-    {
-        $user = $this->createUser();
-        $school2 = $this->createAdditionalSchool();
-        $dates = $this->getDefaultDates();
-
-        $result = $this->service->createAcademicYearForMultipleSchools(
-            schoolIds: [$this->school->cod_escola, $school2->cod_escola],
-            year: $this->currentYear,
-            startDates: $dates['startDates'],
-            endDates: $dates['endDates'],
-            schoolDays: $dates['schoolDays'],
-            moduleId: $this->stageType->cod_modulo,
-            copySchoolClasses: false,
-            copyTeacherData: false,
-            copyEmployeeData: false,
-            userId: $user->getKey()
-        );
-
-        expect($result)->toHaveKey('processed');
-        expect($result)->toHaveKey('skipped');
-        expect($result['processed'])->toHaveCount(2);
-        expect($result['skipped'])->toHaveCount(0);
-
-        $academicYears = LegacySchoolAcademicYear::query()
-            ->whereIn('ref_cod_escola', [$this->school->cod_escola, $school2->cod_escola])
-            ->where('ano', $this->currentYear)
-            ->get();
-
-        expect($academicYears)->toHaveCount(2);
-    }
-
-    public function test_create_academic_year_for_multiple_schools_skips_existing(): void
-    {
-        $user = LegacyUserFactory::new()->create();
-        $school2 = LegacySchoolFactory::new()->create([
-            'ref_cod_instituicao' => $this->school->ref_cod_instituicao,
-        ]);
-
-        LegacySchoolAcademicYearFactory::new()->create([
-            'ref_cod_escola' => $this->school->cod_escola,
-            'ano' => $this->currentYear,
-            'ativo' => 1,
-        ]);
-
-        $startDates = ['01/02/' . $this->currentYear, '01/05/' . $this->currentYear];
-        $endDates = ['30/04/' . $this->currentYear, '31/08/' . $this->currentYear];
-        $schoolDays = [100, 100];
-
-        $result = $this->service->createAcademicYearForMultipleSchools(
-            schoolIds: [$this->school->cod_escola, $school2->cod_escola],
-            year: $this->currentYear,
-            startDates: $startDates,
-            endDates: $endDates,
-            schoolDays: $schoolDays,
-            moduleId: $this->stageType->cod_modulo,
-            copySchoolClasses: false,
-            copyTeacherData: false,
-            copyEmployeeData: false,
-            userId: $user->getKey()
-        );
-
-        expect($result['processed'])->toHaveCount(1);
-        expect($result['skipped'])->toHaveCount(1);
-        expect($result['skipped'])->toContain($this->school->cod_escola);
-    }
-
     public function test_update_academic_year_stages(): void
     {
         LegacySchoolAcademicYearFactory::new()->create([
@@ -1215,53 +1148,6 @@ class AcademicYearServiceTest extends TestCase
         expect($result->ativo)->toBe(1);
         expect($result->andamento)->toBe(0);
         expect($result->ref_usuario_cad)->toBe($user->getKey());
-    }
-
-    public function test_create_academic_year_for_multiple_schools_reactivates_deactivated(): void
-    {
-        $user = $this->createUser();
-        $school2 = $this->createAdditionalSchool();
-
-        LegacySchoolAcademicYearFactory::new()->create([
-            'ref_cod_escola' => $this->school->cod_escola,
-            'ano' => $this->currentYear,
-            'ativo' => 0,
-            'andamento' => 2,
-        ]);
-
-        LegacySchoolAcademicYearFactory::new()->create([
-            'ref_cod_escola' => $school2->cod_escola,
-            'ano' => $this->currentYear,
-            'ativo' => 1,
-        ]);
-
-        $dates = $this->getDefaultDates();
-
-        $result = $this->service->createAcademicYearForMultipleSchools(
-            schoolIds: [$this->school->cod_escola, $school2->cod_escola],
-            year: $this->currentYear,
-            startDates: $dates['startDates'],
-            endDates: $dates['endDates'],
-            schoolDays: $dates['schoolDays'],
-            moduleId: $this->stageType->cod_modulo,
-            copySchoolClasses: false,
-            copyTeacherData: false,
-            copyEmployeeData: false,
-            userId: $user->getKey()
-        );
-
-        expect($result['processed'])->toHaveCount(1);
-        expect($result['skipped'])->toHaveCount(1);
-        expect($result['processed'])->toContain($this->school->cod_escola);
-        expect($result['skipped'])->toContain($school2->cod_escola);
-
-        $reactivatedAcademicYear = LegacySchoolAcademicYear::query()
-            ->where('ref_cod_escola', $this->school->cod_escola)
-            ->where('ano', $this->currentYear)
-            ->first();
-
-        expect($reactivatedAcademicYear->ativo)->toBe(1);
-        expect($reactivatedAcademicYear->andamento)->toBe(0);
     }
 
     public function test_create_academic_year_with_empty_school_days(): void

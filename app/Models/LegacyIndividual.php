@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * @property LegacyPerson $mother
@@ -105,6 +106,8 @@ class LegacyIndividual extends Model
         'pai_restricao_judicial',
         'mae_restricao_judicial',
         'responsavel_restricao_judicial',
+        'document_absence_reason_id',
+        'document_absence_observation',
     ];
 
     /**
@@ -146,6 +149,22 @@ class LegacyIndividual extends Model
             'ref_idpes',
             'ref_cod_deficiencia'
         );
+    }
+
+    /**
+     * @return BelongsTo<DocumentAbsenceReason, $this>
+     */
+    public function documentAbsenceReason(): BelongsTo
+    {
+        return $this->belongsTo(DocumentAbsenceReason::class);
+    }
+
+    /**
+     * @return MorphMany<Timeline, $this>
+     */
+    public function timelines(): MorphMany
+    {
+        return $this->morphMany(Timeline::class, 'model');
     }
 
     /**
@@ -266,6 +285,13 @@ class LegacyIndividual extends Model
             $model->operacao = 'I';
             $model->pais_residencia = $model->pais_residencia ?? 76;
         });
+
+        static::saving(function ($model) {
+            if ($model->isDirty('cpf') && (int) ($model->getDirty()['cpf'] ?? 0) !== 0) {
+                $model->document_absence_reason_id = null;
+                $model->document_absence_observation = null;
+            }
+        });
     }
 
     public static function findByCpf(string|int $cpf): ?Model
@@ -286,6 +312,13 @@ class LegacyIndividual extends Model
         );
     }
 
+    protected function possuiCpf(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->cpf !== null,
+        );
+    }
+
     protected function genderName(): Attribute
     {
         return Attribute::make(
@@ -296,7 +329,14 @@ class LegacyIndividual extends Model
     protected function nationalityName(): Attribute
     {
         return Attribute::make(
-            get: fn () => (new Nationality)->getDescriptiveValues()[$this->nacionalidade]
+            get: fn () => (new Nationality)->getDescriptiveValues()[(int) $this->nacionalidade] ?? null
+        );
+    }
+
+    protected function countryOfOriginName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => in_array((int) $this->nacionalidade, [Nationality::NATURALIZED_BRAZILIAN, Nationality::FOREIGN], true) ? $this->foreignCountry?->name : null
         );
     }
 

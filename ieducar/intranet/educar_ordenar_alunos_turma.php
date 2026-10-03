@@ -26,10 +26,6 @@ return new class extends clsCadastro
 
         $this->url_cancelar = "educar_turma_det.php?cod_turma={$this->cod_turma}";
 
-        $this->breadcrumb(currentPage: 'Sequência manual dos alunos na turma', breadcrumbs: [
-            url(path: 'intranet/educar_index.php') => 'Escola',
-        ]);
-
         $this->nome_url_cancelar = 'Cancelar';
 
         return $retorno;
@@ -46,6 +42,13 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'cod_turma', valor: $this->cod_turma);
 
         $schoolclass = LegacySchoolClass::find($this->cod_turma);
+
+        // Início > Escola > Turmas > Turma (ano) > Sequência dos alunos
+        $this->breadcrumb(currentPage: 'Sequência dos alunos', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_turma_lst.php') => 'Turmas',
+            url(path: "intranet/educar_turma_det.php?cod_turma={$this->cod_turma}") => $schoolclass?->name,
+        ]);
 
         if ($schoolclass) {
             $this->addHtml(view(
