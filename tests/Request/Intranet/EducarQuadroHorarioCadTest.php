@@ -165,3 +165,9 @@ test('quem pode cadastrar mas não excluir não vê o botão nem consegue exclui
 
     expect(($this->timetables)()->value('ativo'))->toBe(1);
 });
+
+test('não cadastra o quadro sem a turma', function () {
+    $this->post($this->url, ['tipoacao' => 'Novo', 'ano' => '2030'])->assertOk()->assertSee('Cadastro não realizado.');
+
+    expect(($this->timetables)()->count())->toBe(0);
+});
