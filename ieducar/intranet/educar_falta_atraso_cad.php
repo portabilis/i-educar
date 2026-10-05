@@ -225,9 +225,12 @@ return new class extends clsCadastro
             ));
         }
 
+        // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Cadastro não realizado.<br />';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
@@ -301,9 +304,12 @@ return new class extends clsCadastro
             ));
         }
 
+        // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br />';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()
