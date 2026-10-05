@@ -538,3 +538,13 @@ test('cadastra como servidor uma pessoa que não é física, sem tocar em defici
     expect(($this->row)($company))->not->toBeNull()
         ->and(DB::table('cadastro.fisica_deficiencia')->where('ref_idpes', $company)->count())->toBe(0);
 });
+
+test('abre a edição de um professor que ainda não tem código do Inep', function () {
+    $ana = EmployeeScenario::named('Ana Alves', $this->institution);
+    $ana->role($this->teacher, '1001');
+
+    $fields = LegacyFields::from($this->get(($this->edit)($ana))->assertOk()->getContent());
+
+    expect($fields['tipoacao'])->toBe('Editar')
+        ->and($fields['cod_docente_inep'] ?? '')->toBe('');
+});
