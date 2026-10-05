@@ -514,3 +514,16 @@ test('quem não pode remover não vê o botão de excluir', function () {
 test('volta para a listagem quando o servidor da URL não existe', function () {
     $this->get("{$this->new}?cod_servidor=999999999&ref_cod_instituicao={$this->institution}")->assertRedirect(url('intranet/educar_servidor_lst.php'));
 });
+
+test('defeito: uma linha de função deixada em branco dá erro 500 depois de gravar o servidor e as funções anteriores', function () {
+    // A função vazia não é gravada e a tela tenta procurá-la passando texto a um método que exige inteiro.
+    $person = StudentScenario::individual('Ana Alves')->getKey();
+
+    $this->post($this->new, ($this->payload)($person, [
+        'ref_cod_funcao' => [$this->teacher->getKey() . '-1', ''],
+        'matricula' => ['1001', ''],
+    ]))->assertStatus(500);
+
+    expect(($this->row)($person))->not->toBeNull()
+        ->and(($this->roles)($person))->toBe([1001 => $this->teacher->getKey()]);
+});
