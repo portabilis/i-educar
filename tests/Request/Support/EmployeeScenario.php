@@ -5,10 +5,13 @@ namespace Tests\Request\Support;
 use App\Models\Employee;
 use App\Models\EmployeeAllocation;
 use App\Models\EmployeeWithdrawal;
+use App\Models\LegacyCourse;
+use App\Models\LegacyDiscipline;
 use App\Models\LegacyEmployeeRole;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyRole;
 use App\Models\LegacySchool;
+use App\Models\LegacySchoolClass;
 use App\Models\WithdrawalReason;
 use Database\Factories\EmployeeAllocationFactory;
 use Database\Factories\EmployeeFactory;
@@ -17,11 +20,13 @@ use Database\Factories\LegacyEmployeeRoleFactory;
 use Database\Factories\LegacyRoleFactory;
 use Database\Factories\LegacySchoolingDegreeFactory;
 use Database\Factories\WithdrawalReasonFactory;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Um servidor de nome conhecido numa instituição e, a pedido, o que as telas
- * de servidor mostram em volta dele: funções com matrícula, alocações em
- * escolas, afastamentos e o código do Inep.
+ * de servidor mostram em volta dele: funções com matrícula, componentes que
+ * leciona, alocações em escolas, aulas no quadro de horários, afastamentos e
+ * o código do Inep.
  *
  * As factories soltas criam servidor, função e alocação para pessoas e
  * instituições diferentes; aqui tudo aponta para o mesmo servidor, e os textos
@@ -124,6 +129,64 @@ final class EmployeeScenario
             'data_retorno' => null,
             'ativo' => 1,
         ]);
+    }
+
+    /**
+     * Um componente curricular que o servidor leciona num curso, pela função
+     * dada; marca também o curso como ministrado.
+     */
+    public function discipline(LegacyEmployeeRole $role, LegacyDiscipline $discipline, LegacyCourse $course): self
+    {
+        DB::table('pmieducar.servidor_disciplina')->insert([
+            'ref_cod_disciplina' => $discipline->getKey(),
+            'ref_ref_cod_instituicao' => $this->institution,
+            'ref_cod_servidor' => $this->employee->getKey(),
+            'ref_cod_curso' => $course->getKey(),
+            'ref_cod_funcao' => $role->getKey(),
+        ]);
+
+        DB::table('pmieducar.servidor_curso_ministra')->insertOrIgnore([
+            'ref_cod_curso' => $course->getKey(),
+            'ref_ref_cod_instituicao' => $this->institution,
+            'ref_cod_servidor' => $this->employee->getKey(),
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * Uma aula do servidor no quadro de horários da turma (o quadro é criado
+     * na primeira aula). O dia da semana vai de 1 (domingo) a 7 (sábado).
+     *
+     * @param array<string, mixed> $attributes Colunas de `pmieducar.quadro_horario_horarios`.
+     */
+    public function lesson(LegacySchoolClass $schoolClass, LegacyDiscipline $discipline, int $weekday, string $start, string $end, array $attributes = []): self
+    {
+        $timetable = DB::table('pmieducar.quadro_horario')->where('ref_cod_turma', $schoolClass->getKey())->where('ativo', 1)->value('cod_quadro_horario')
+            ?? DB::table('pmieducar.quadro_horario')->insertGetId([
+                'ref_usuario_cad' => $this->employee->getKey(),
+                'ref_cod_turma' => $schoolClass->getKey(),
+                'data_cadastro' => now(),
+                'ativo' => 1,
+                'ano' => $schoolClass->ano,
+            ], 'cod_quadro_horario');
+
+        DB::table('pmieducar.quadro_horario_horarios')->insert($attributes + [
+            'ref_cod_quadro_horario' => $timetable,
+            'sequencial' => (int) DB::table('pmieducar.quadro_horario_horarios')->where('ref_cod_quadro_horario', $timetable)->max('sequencial') + 1,
+            'ref_cod_disciplina' => $discipline->getKey(),
+            'ref_cod_escola' => $schoolClass->ref_ref_cod_escola,
+            'ref_cod_serie' => $schoolClass->ref_ref_cod_serie,
+            'ref_cod_instituicao_servidor' => $this->institution,
+            'ref_servidor' => $this->employee->getKey(),
+            'dia_semana' => $weekday,
+            'hora_inicial' => $start,
+            'hora_final' => $end,
+            'data_cadastro' => now(),
+            'ativo' => 1,
+        ]);
+
+        return $this;
     }
 
     public function inep(int $code, ?string $name = null): self
