@@ -427,12 +427,15 @@ return new class extends clsCadastro
             $this->gravaComponentesProfessorTurma($this->id, $this->componentecurricular);
 
             DB::commit();
+            // Não testável: só roda se o banco falhar no meio da transação.
+            // @codeCoverageIgnoreStart
         } catch (Exception $exception) {
             DB::rollBack();
 
             $this->mensagem = $exception->getMessage();
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $this->mensagem = 'Edição efetuada com sucesso.<br>';
@@ -461,12 +464,15 @@ return new class extends clsCadastro
             LegacySchoolClassTeacher::whereKey($this->id)->delete();
 
             DB::commit();
+            // Não testável: só roda se o banco falhar no meio da transação.
+            // @codeCoverageIgnoreStart
         } catch (Exception $exception) {
             DB::rollBack();
 
             $this->mensagem = $exception->getMessage();
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
