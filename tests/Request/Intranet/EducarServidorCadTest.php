@@ -11,6 +11,7 @@ use Database\Factories\LegacyAbsenceDelayFactory;
 use Database\Factories\LegacyDeficiencyFactory;
 use Database\Factories\LegacyGeneralConfigurationFactory;
 use Database\Factories\LegacyInstitutionFactory;
+use Database\Factories\LegacyPersonFactory;
 use Database\Factories\LegacyRoleFactory;
 use Database\Factories\LegacySchoolingDegreeFactory;
 use Database\Factories\LegacyUserFactory;
@@ -526,4 +527,14 @@ test('defeito: uma linha de função deixada em branco dá erro 500 depois de gr
 
     expect(($this->row)($person))->not->toBeNull()
         ->and(($this->roles)($person))->toBe([1001 => $this->teacher->getKey()]);
+});
+
+test('cadastra como servidor uma pessoa que não é física, sem tocar em deficiências', function () {
+    $company = LegacyPersonFactory::new()->create(['nome' => 'Cooperativa Aurora', 'tipo' => 'J'])->getKey();
+
+    $this->post($this->new, ($this->payload)($company, ['deficiencias' => [(string) LegacyDeficiencyFactory::new()->create()->getKey()]]))
+        ->assertRedirect(($this->detail)($company));
+
+    expect(($this->row)($company))->not->toBeNull()
+        ->and(DB::table('cadastro.fisica_deficiencia')->where('ref_idpes', $company)->count())->toBe(0);
 });
