@@ -379,7 +379,8 @@
                             .attr('value', 'sim')
                             .attr('id', 'matricula-' + value.matricula_id)
                             .attr('class', 'matricula disable-on-apply-changes')
-                            .data('matricula_id', value.matricula_id);
+                            .data('matricula_id', value.matricula_id)
+                            .data('serie_id', value.serie_id);
 
             var $linha = $('<tr />');
             $('<td />').html($checkbox).addClass('left').appendTo($linha);
@@ -460,12 +461,24 @@
 
     $formFilter.ajaxForm(matriculasSearchOptions);
 
+    function getSeriesSelecionadas(){
+      var series = [];
+      $.each($('input.matricula:checked'), function(index, matricula){
+        var serieId = $(matricula).data('serie_id');
+        if ($.inArray(serieId, series) < 0)
+          series.push(serieId);
+      });
+      return series;
+    }
+
     var onClickActionEvent = function(event){
 
       var $firstChecked = $('input.matricula:checked:first');
 
       if ($firstChecked.length < 1)
         handleMessages([{type : 'error', msg : 'Selecione alguma matrícula.'}], $actionButton, true);
+      else if (getSeriesSelecionadas().length > 1)
+        handleMessages([{type : 'error', msg : 'As matrículas selecionadas são de séries diferentes. Processe uma série por vez.'}], $actionButton, true);
       else {
         var additionalFields = [
           $('#percentual-frequencia-manual').get(0),
