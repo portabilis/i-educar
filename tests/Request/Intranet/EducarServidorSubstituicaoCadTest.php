@@ -132,3 +132,13 @@ test('quem só pode visualizar não abre nem substitui', function () {
 
     expect($allocation->refresh()->ref_cod_servidor)->toBe($this->id);
 });
+
+test('a alocação enviada sem escola vale para qualquer escola em que o servidor esteja alocado', function () {
+    $allocation = $this->ana->allocation($this->school->school);
+
+    ($this->submit)(['alocacao_array' => urlencode(serialize([['carga_horaria' => '20:00:00', 'periodo' => 1, 'ref_cod_escola' => null]]))])
+        ->assertOk()
+        ->assertSee('Substituicao não realizado.');
+
+    expect($allocation->refresh()->ref_cod_servidor)->toBe($this->id);
+});
