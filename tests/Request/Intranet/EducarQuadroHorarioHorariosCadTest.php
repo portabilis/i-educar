@@ -429,3 +429,26 @@ test('defeito: a ação de excluir é a da tela de calendário e apaga um dia do
 test('defeito: sem um dia de calendário no envio, a ação de excluir dá erro 500', function () {
     $this->post(($this->url)(), ['tipoacao' => 'Excluir'])->assertStatus(500);
 });
+
+test('uma aula que chega na lista sem servidor é mostrada sem nome', function () {
+    $nameless = [1 => [
+        'ref_cod_quadro_horario_' => $this->timetable,
+        'ref_ref_cod_serie_' => $this->school->grade->getKey(),
+        'ref_ref_cod_escola_' => $this->school->school->getKey(),
+        'ref_ref_cod_disciplina_' => $this->arts->getKey(),
+        'ref_cod_instituicao_servidor_' => $this->institution,
+        'ref_servidor_' => '',
+        'hora_inicial_' => '15:00',
+        'hora_final_' => '16:00',
+        'ativo_' => 1,
+        'dia_semana_' => 2,
+        'qtd_horario_' => 1,
+    ]];
+
+    $payload = LegacyFields::from($this->get(($this->url)())->getContent(), ['tipoacao' => '', 'quadro_horario' => urlencode(serialize($nameless))]);
+
+    $this->post(($this->url)(), $payload)
+        ->assertOk()
+        ->assertSeeInOrder(['Segunda-Feira', '15:00', '16:00', 'Artes'])
+        ->assertDontSee('Ana Alves');
+});
