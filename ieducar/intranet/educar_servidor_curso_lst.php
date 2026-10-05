@@ -115,6 +115,8 @@ return new class extends clsCadastro
 
     public function Novo()
     {
+        // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+        // @codeCoverageIgnoreStart
         $curso_servidor = [];
         if ($this->ref_cod_curso) {
             foreach ($this->ref_cod_curso as $curso) {
@@ -135,11 +137,15 @@ return new class extends clsCadastro
 
         echo "<script>parent.fechaExpansivel( '{$_GET['div']}');</script>";
         exit();
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
     {
+        // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+        // @codeCoverageIgnoreStart
         $this->Novo();
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()
