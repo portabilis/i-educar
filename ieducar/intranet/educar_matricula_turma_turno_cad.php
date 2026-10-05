@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyEnrollment;
+use App\Models\LegacyRegistration;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 
 return new class extends clsCadastro
@@ -49,9 +50,13 @@ return new class extends clsCadastro
         $this->array_botao[] = 'Voltar';
         $this->array_botao_url[] = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
-        $this->breadcrumb(currentPage: 'Turno do aluno', breadcrumbs: [
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'Início',
-            'educar_index.php' => 'Escola',
+        // Início > Escola > Alunos > Nome > Matrícula > Turno
+        $registration = LegacyRegistration::find($this->cod_matricula);
+        $this->breadcrumb(currentPage: 'Turno', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_aluno_lst.php') => 'Alunos',
+            url(path: "intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url(path: "intranet/educar_matricula_det.php?cod_matricula={$this->cod_matricula}") => 'Matrícula',
         ]);
 
         $obj_aluno = new clsPmieducarAluno;

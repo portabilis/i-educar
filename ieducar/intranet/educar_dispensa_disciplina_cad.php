@@ -106,7 +106,15 @@ return new class extends clsCadastro
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb(currentPage: 'Dispensa de componentes curriculares', breadcrumbs: ['educar_index.php' => 'Escola']);
+        // Início > Escola > Alunos > Nome > Matrícula > Dispensa de componentes curriculares > Nova (ou Editar)
+        $registration = LegacyRegistration::find($this->ref_cod_matricula);
+        $this->breadcrumb(currentPage: $retorno == 'Editar' ? 'Editar' : 'Nova', breadcrumbs: [
+            'educar_index.php' => 'Escola',
+            'educar_aluno_lst.php' => 'Alunos',
+            "educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}" => $registration?->student?->real_name,
+            "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" => 'Matrícula',
+            "educar_dispensa_disciplina_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" => 'Dispensa de componentes curriculares',
+        ]);
         $this->modoEdicao = $retorno == 'Editar';
         $this->loadAssets();
 

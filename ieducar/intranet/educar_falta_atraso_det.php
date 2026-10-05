@@ -2,6 +2,7 @@
 
 use App\Models\Enums\AbsenceDelayType;
 use App\Models\LegacyAbsenceDelay;
+use App\Models\LegacyPerson;
 use App\Models\LegacySchool;
 use App\Services\UrlPresigner;
 
@@ -39,7 +40,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Falta Atraso - Detalhe';
+        $this->titulo = 'Falta/atraso - Detalhe';
 
         $this->ref_cod_servidor = $_GET['ref_cod_servidor'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
@@ -162,14 +163,17 @@ return new class extends clsDetalhe
 
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Detalhe da falta/atraso do servidor', breadcrumbs: [
-            url('intranet/educar_servidores_index.php') => 'Servidores',
+        // Início > Servidores > Nome > Faltas e atrasos > Falta/atraso
+        $this->breadcrumb(currentPage: 'Falta/atraso', breadcrumbs: [
+            url('intranet/educar_servidor_lst.php') => 'Servidores',
+            url("intranet/educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}") => LegacyPerson::whereKey($this->ref_cod_servidor)->value('nome'),
+            url("intranet/{$this->url_cancelar}") => 'Faltas e atrasos',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'Servidores - Falta Atraso';
+        $this->title = 'Servidores - Falta/atraso';
         $this->processoAp = 635;
     }
 };

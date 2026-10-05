@@ -20,7 +20,7 @@ class PlaceFactory extends Factory
     public function definition(): array
     {
         return [
-            'city_id' => CityFactory::new()->create(),
+            'city_id' => fn () => CityFactory::new()->create(),
             'address' => $this->faker->streetName,
             'number' => (string) $this->faker->numberBetween(1, 9999),
             'complement' => $this->faker->boolean ? 'Apto' : null,

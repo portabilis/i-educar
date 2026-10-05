@@ -67,6 +67,10 @@ return new class extends clsDetalhe
             $this->simpleRedirect(url: 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno']);
         }
 
+        if (!Portabilis_Utils_User::canAccessEscola(id: $registro['ref_ref_cod_escola'])) {
+            $this->simpleRedirect(url: 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno']);
+        }
+
         $verificaMatriculaUltimoAno = $obj_matricula->verificaMatriculaUltimoAno(codAluno: $registro['ref_cod_aluno'], codMatricula: $registro['cod_matricula']);
 
         $existeSaidaEscola = $obj_matricula->existeSaidaEscola(codMatricula: $registro['cod_matricula']);
@@ -432,8 +436,11 @@ return new class extends clsDetalhe
         $this->url_cancelar = 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno'];
         $this->largura = '100%';
 
+        // Início > Escola > Alunos > Nome (social, se houver) > Matrícula
         $this->breadcrumb(currentPage: 'Matrícula', breadcrumbs: [
-            'educar_index.php' => 'Escola',
+            url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_aluno_lst.php') => 'Alunos',
+            url(path: "intranet/educar_aluno_det.php?cod_aluno={$registro['ref_cod_aluno']}") => ($det_aluno['nome_social'] ?? null) ?: ($det_aluno['nome_aluno'] ?? null),
         ]);
 
         // js

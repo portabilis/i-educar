@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyPerson;
 use App\Models\PerformanceEvaluation;
 
 return new class extends clsListagem
@@ -34,7 +35,7 @@ return new class extends clsListagem
 
     public function Gerar()
     {
-        $this->titulo = 'Avaliação Desempenho - Listagem';
+        $this->titulo = 'Avaliação de desempenho - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;
@@ -75,12 +76,12 @@ return new class extends clsListagem
 
         $avaliacoes->each(function (PerformanceEvaluation $avaliacao) use ($nivel_usuario) {
             $lista_busca = [
-                "<a href=\"educar_avaliacao_desempenho_det.php?id={$avaliacao->id}\">{$avaliacao->title}</a>",
-                "<a href=\"educar_avaliacao_desempenho_det.php?id={$avaliacao->id}\">{$avaliacao->employee->person->name}</a>",
+                "<a href=\"educar_avaliacao_desempenho_det.php?id={$avaliacao->id}\">" . e($avaliacao->title) . '</a>',
+                "<a href=\"educar_avaliacao_desempenho_det.php?id={$avaliacao->id}\">" . e($avaliacao->employee->person->name) . '</a>',
             ];
 
             if ($nivel_usuario == 1) {
-                $lista_busca[] = $avaliacao->institution->name;
+                $lista_busca[] = e($avaliacao->institution->name);
             }
 
             $this->addLinhas(linha: $lista_busca);
@@ -101,14 +102,17 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Registro da avaliação de desempenho do servidor', breadcrumbs: [
-            url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
+        // As avaliações são do servidor, então ele é um nível do caminho:
+        // Início > Servidores > Nome > Avaliação de desempenho
+        $this->breadcrumb(currentPage: 'Avaliação de desempenho', breadcrumbs: [
+            url(path: 'intranet/educar_servidor_lst.php') => 'Servidores',
+            url(path: "intranet/educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}") => LegacyPerson::whereKey($this->ref_cod_servidor)->value('nome'),
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'Servidores - Avaliação Desempenho';
+        $this->title = 'Avaliação de desempenho';
         $this->processoAp = '635';
     }
 };

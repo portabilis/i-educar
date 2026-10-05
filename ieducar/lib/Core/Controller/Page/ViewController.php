@@ -136,7 +136,7 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
         foreach ($headers as $label => $attr) {
             $value = $entry->$attr;
             if (!is_null($value)) {
-                $this->addDetalhe([$label, $value]);
+                $this->addDetalhe([$label, htmlspecialchars((string) $value, ENT_QUOTES)]);
             }
         }
 

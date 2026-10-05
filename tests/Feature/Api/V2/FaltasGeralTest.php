@@ -3,10 +3,10 @@
 use App\Models\LegacyDisciplineAbsence;
 use App\Models\LegacyGeneralAbsence;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Tests\Feature\Api\V2\CreatesGeneralAbsenceData;
+use Tests\Feature\Api\V2\CreatesAbsenceData;
 use Tests\TestCase;
 
-uses(DatabaseTransactions::class, TestCase::class, CreatesGeneralAbsenceData::class);
+uses(DatabaseTransactions::class, TestCase::class, CreatesAbsenceData::class);
 
 test('rejects request without token', function () {
     $this->institutionWithToken();
@@ -48,12 +48,12 @@ test('rejects negative absences', function () {
         ->assertJsonValidationErrors(['faltas']);
 });
 
-test('rejects stage out of range', function () {
+test('rejects stage lower than one', function () {
     $this->institutionWithToken();
 
     $this->withHeaders(['token' => 'valid-token'])
         ->postJson('/api/v2/falta-geral', [
-            'etapa' => 5,
+            'etapa' => 0,
             'faltas' => 2,
             'aluno_id' => 1,
             'turma_id' => 1,
@@ -63,11 +63,11 @@ test('rejects stage out of range', function () {
 });
 
 test('stores general absence when rule is general attendance', function () {
-    $data = $this->createGeneralAbsenceData();
+    $data = $this->createAbsenceData();
 
     $this->withHeaders(['token' => 'valid-token'])
         ->postJson('/api/v2/falta-geral', $this->generalAbsencePayload($data))
-        ->assertStatus(202)
+        ->assertStatus(201)
         ->assertJson(['message' => 'Faltas gerais salvas com sucesso.']);
 
     $absence = LegacyGeneralAbsence::query()->firstOrFail();
@@ -87,11 +87,11 @@ test('stores general absence when rule is general attendance', function () {
 });
 
 test('accepts zero absences', function () {
-    $data = $this->createGeneralAbsenceData();
+    $data = $this->createAbsenceData();
 
     $this->withHeaders(['token' => 'valid-token'])
         ->postJson('/api/v2/falta-geral', $this->generalAbsencePayload($data, ['faltas' => 0]))
-        ->assertStatus(202);
+        ->assertStatus(201);
 
     $absence = LegacyGeneralAbsence::query()->firstOrFail();
 
@@ -104,15 +104,15 @@ test('accepts zero absences', function () {
 });
 
 test('updates the amount when posting the same stage twice', function () {
-    $data = $this->createGeneralAbsenceData();
+    $data = $this->createAbsenceData();
 
     $this->withHeaders(['token' => 'valid-token'])
         ->postJson('/api/v2/falta-geral', $this->generalAbsencePayload($data, ['faltas' => 2]))
-        ->assertStatus(202);
+        ->assertStatus(201);
 
     $this->withHeaders(['token' => 'valid-token'])
         ->postJson('/api/v2/falta-geral', $this->generalAbsencePayload($data, ['faltas' => 5]))
-        ->assertStatus(202);
+        ->assertStatus(201);
 
     $absence = LegacyGeneralAbsence::query()->firstOrFail();
 
@@ -126,13 +126,14 @@ test('updates the amount when posting the same stage twice', function () {
 });
 
 test('does not allow general absence when rule is by component', function () {
-    $data = $this->createGeneralAbsenceData(RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE);
+    $data = $this->createAbsenceData(RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE);
 
     $this->withHeaders(['token' => 'valid-token'])
         ->postJson('/api/v2/falta-geral', $this->generalAbsencePayload($data))
         ->assertStatus(422)
         ->assertJson([
             'message' => "A regra da turma {$data['turma_id']} não permite lançamento de faltas geral.",
+            'code' => 1008,
         ]);
 
     $this->assertDatabaseCount(LegacyGeneralAbsence::class, 0);
@@ -148,8 +149,36 @@ test('does not store when registration is not found', function () {
             'aluno_id' => 99999999,
             'turma_id' => 99999999,
         ])
-        ->assertStatus(200)
-        ->assertJson(['message' => 'Matrícula não encontrada para o aluno e turma informados.']);
+        ->assertStatus(422)
+        ->assertJsonValidationErrors([
+            'aluno_id' => 'Matrícula não encontrada para o aluno e turma informados.',
+        ]);
 
     $this->assertDatabaseCount(LegacyGeneralAbsence::class, 0);
+});
+
+test('rejects stage outside the school calendar', function () {
+    $data = $this->createAbsenceData();
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 4);
+
+    $this->withHeaders(['token' => 'valid-token'])
+        ->postJson('/api/v2/falta-geral', $this->generalAbsencePayload($data, ['etapa' => 5]))
+        ->assertStatus(422)
+        ->assertJson(['message' => 'A etapa informada é inválida.']);
+
+    $this->assertDatabaseCount(LegacyGeneralAbsence::class, 0);
+});
+
+test('stores absence in stages above four when the school calendar has them', function () {
+    $data = $this->createAbsenceData();
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 6);
+
+    $this->withHeaders(['token' => 'valid-token'])
+        ->postJson('/api/v2/falta-geral', $this->generalAbsencePayload($data, ['etapa' => 6]))
+        ->assertStatus(201);
+
+    $this->assertDatabaseHas(LegacyGeneralAbsence::class, [
+        'quantidade' => 2,
+        'etapa' => 6,
+    ]);
 });
