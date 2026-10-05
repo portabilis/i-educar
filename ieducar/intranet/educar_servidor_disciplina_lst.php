@@ -107,7 +107,10 @@ return new class extends clsCadastro
                 if ($disciplinas) {
                     foreach ($disciplinas as $disciplina => $funcao) {
                         if ($funcao != $this->ref_cod_funcao) {
+                            // Inalcançável: a lista é montada acima só com a função que veio na URL.
+                            // @codeCoverageIgnoreStart
                             continue;
+                            // @codeCoverageIgnoreEnd
                         }
                         $arr_valores[] = [$curso, $disciplina];
                     }
@@ -170,6 +173,8 @@ return new class extends clsCadastro
 
     public function Novo()
     {
+        // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+        // @codeCoverageIgnoreStart
         $cod_servidor = $this->getQueryString(name: 'ref_cod_servidor');
         $cod_funcao = $this->getQueryString(name: 'cod_funcao');
 
@@ -198,11 +203,15 @@ return new class extends clsCadastro
 
         echo "<script>parent.fechaExpansivel('{$_GET['div']}');</script>";
         exit;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
     {
+        // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+        // @codeCoverageIgnoreStart
         $this->Novo();
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()
