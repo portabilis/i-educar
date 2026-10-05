@@ -62,7 +62,7 @@ return new class extends clsCadastro
             );
         }
 
-        $this->time_atual = request('time') ?? time();
+        $this->time_atual = request()->integer('time') ?: time();
 
         $this->time_amanha = $this->time_atual + 86400;
         $this->time_ontem = $this->time_atual - 86400;

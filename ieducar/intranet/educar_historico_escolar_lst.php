@@ -113,9 +113,10 @@ return new class extends clsListagem
         $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
         $db = new clsBanco;
+        $codAluno = (int) $this->ref_cod_aluno;
         $escolaAluno = $db->CampoUnico("SELECT ref_ref_cod_escola
                                           FROM pmieducar.matricula
-                                         WHERE ref_cod_aluno = {$this->ref_cod_aluno}
+                                         WHERE ref_cod_aluno = {$codAluno}
                                            AND ativo = 1
                                          ORDER BY data_cadastro DESC
                                          LIMIT 1;");

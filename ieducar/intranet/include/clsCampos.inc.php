@@ -1749,12 +1749,12 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $opcoes = '<datalist id="cores">';
                         foreach ($componente[3] as $cor) {
                             $cor = '#' . ltrim($cor, '#'); // garante que tenha #
-                            $opcoes .= "<option value=\"$cor\"></option>";
+                            $opcoes .= '<option value="' . e($cor) . '"></option>';
                         }
                         $opcoes .= '</datalist>';
 
                         $retorno .= $opcoes;
-                        $retorno .= "<input class=\"{$class}\" type='color' list='cores' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[4]}\" style='height: 40px; width: 40px; padding: 3px'>";
+                        $retorno .= "<input class=\"{$class}\" type='color' list='cores' name=\"{$nome}\" id=\"{$nome}\" value=\"" . e($componente[4]) . "\" style='height: 40px; width: 40px; padding: 3px'>";
                         break;
                 } // endswitch
 

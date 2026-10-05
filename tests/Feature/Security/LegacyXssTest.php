@@ -3,8 +3,15 @@
 namespace Tests\Feature\Security;
 
 use App\Models\State;
+use Database\Factories\LegacyAcademicYearStageFactory;
 use Database\Factories\LegacyBenefitFactory;
+use Database\Factories\LegacyCalendarDayFactory;
+use Database\Factories\LegacyCalendarDayReasonFactory;
+use Database\Factories\LegacyCalendarYearFactory;
+use Database\Factories\LegacyEmployeeRoleFactory;
 use Database\Factories\LegacyRaceFactory;
+use Database\Factories\LegacySchoolAcademicYearFactory;
+use Database\Factories\LegacySchoolingDegreeFactory;
 use Database\Factories\LegacyStudentFactory;
 use Database\Factories\LegacyUserTypeFactory;
 use Database\Factories\StateFactory;
@@ -140,5 +147,62 @@ class LegacyXssTest extends TestCase
         $state = StateFactory::new()->create(['name' => self::PAYLOAD]);
 
         $this->assertEscaped($this->get('/intranet/public_uf_det.php?id=' . $state->getKey()));
+    }
+
+    // CVE-2025-8370
+
+    public function test_listagem_de_escolaridade_escapa_a_descricao_gravada()
+    {
+        LegacySchoolingDegreeFactory::new()->create(['descricao' => self::PAYLOAD]);
+
+        $this->assertEscaped($this->get('/intranet/educar_escolaridade_lst.php?descricao=CVECANARY'));
+    }
+
+    public function test_detalhe_de_escolaridade_escapa_a_descricao_gravada()
+    {
+        $schoolingDegree = LegacySchoolingDegreeFactory::new()->create(['descricao' => self::PAYLOAD]);
+
+        $this->assertEscaped($this->get('/intranet/educar_escolaridade_det.php?idesco=' . $schoolingDegree->getKey()));
+    }
+
+    // CVE-2025-8366 e CVE-2025-8509
+
+    public function test_listagem_de_servidores_escapa_a_matricula_gravada()
+    {
+        LegacyEmployeeRoleFactory::new()->create(['matricula' => self::PAYLOAD]);
+
+        $this->assertEscaped($this->get('/intranet/educar_servidor_lst.php?matricula_servidor=CVECANARY'));
+    }
+
+    // CVE-2025-7868
+
+    public function test_calendario_escapa_motivo_e_descricao_do_dia()
+    {
+        $schoolAcademicYear = LegacySchoolAcademicYearFactory::new()->create(['ano' => now()->year]);
+        LegacyAcademicYearStageFactory::new()->create(['escola_ano_letivo_id' => $schoolAcademicYear->getKey()]);
+        $calendarYear = LegacyCalendarYearFactory::new()->create([
+            'ref_cod_escola' => $schoolAcademicYear->ref_cod_escola,
+            'ano' => now()->year,
+        ]);
+        LegacyCalendarDayFactory::new()->create([
+            'ref_cod_calendario_ano_letivo' => $calendarYear->getKey(),
+            'mes' => now()->month,
+            'dia' => now()->day,
+            'descricao' => self::PAYLOAD,
+            'ref_cod_calendario_dia_motivo' => LegacyCalendarDayReasonFactory::new()->create([
+                'ref_cod_escola' => $schoolAcademicYear->ref_cod_escola,
+                'nm_motivo' => self::PAYLOAD,
+            ]),
+        ]);
+
+        $response = $this->post('/intranet/educar_calendario_ano_letivo_lst.php', [
+            'ref_cod_instituicao' => $schoolAcademicYear->school->ref_cod_instituicao,
+            'ref_cod_escola' => $schoolAcademicYear->ref_cod_escola,
+            'ano' => now()->year,
+            'mes' => now()->month,
+        ]);
+
+        $this->assertEscaped($response);
+        $this->assertSame(2, substr_count($response->getContent(), e(self::MARKER)));
     }
 }
