@@ -37,7 +37,7 @@ class PostNotasRequest extends FormRequest
                 'integer',
             ],
             'componente_id' => [
-                'nullable',
+                'required',
                 'integer',
             ],
         ];

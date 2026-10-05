@@ -179,6 +179,7 @@ test('exam score is not limited by the general maximum', function () {
 
 test('does not store when previous stages have no scores', function () {
     $data = $this->createScoreData();
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 3);
 
     $response = $this->postScore($data, ['nota' => 6, 'recuperacao' => null, 'etapa' => 2])
         ->assertStatus(422);
@@ -245,6 +246,16 @@ test('does not store when discipline does not belong to school class', function 
     $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
 });
 
+test('rejects request without discipline', function () {
+    $data = $this->createScoreData();
+
+    $this->postScore($data, ['nota' => 6, 'recuperacao' => null, 'componente_id' => null])
+        ->assertStatus(422)
+        ->assertJsonValidationErrors(['componente_id']);
+
+    $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
+});
+
 test('rejects stage in an invalid format', function () {
     $data = $this->createScoreData();
 
@@ -270,3 +281,31 @@ test('stores scores in stages above four when the school calendar has them', fun
         'etapa' => '6',
     ]);
 });
+
+test('rejects stage greater than the school class stages', function (int $stage, int $postedStages) {
+    $data = $this->createScoreData();
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 3);
+
+    foreach (range(1, $postedStages) as $postedStage) {
+        $this->postScore($data, ['nota' => 6, 'recuperacao' => null, 'etapa' => $postedStage])->assertStatus(201);
+    }
+
+    // A etapa é validada antes da checagem de etapas anteriores, que recusaria com o código 1001.
+    $this->postScore($data, ['nota' => 6, 'recuperacao' => null, 'etapa' => $stage])
+        ->assertStatus(422)
+        ->assertJson([
+            'message' => "A etapa {$stage} não existe no calendário da turma {$data['school_class']->getKey()}, que possui 3 etapa(s).",
+            'code' => 1012,
+            'extra' => [
+                'school_class_id' => $data['school_class']->getKey(),
+                'stage' => $stage,
+                'stages' => 3,
+            ],
+        ]);
+
+    $this->assertDatabaseCount(LegacyDisciplineScore::class, $postedStages);
+})->with([
+    'etapa 4 com a 3ª etapa sem nota' => [4, 2],
+    'etapa 99 com a 3ª etapa sem nota' => [99, 2],
+    'etapa 4 com todas as etapas lançadas' => [4, 3],
+]);
