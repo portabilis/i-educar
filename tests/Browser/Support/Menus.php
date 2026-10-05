@@ -55,6 +55,17 @@ final class Menus
     public const GRADE_DISCIPLINES = 9998859;
 
     /**
+     * Endereçamento > Cadastros.
+     */
+    public const COUNTRIES = 753;
+
+    public const STATES = 754;
+
+    public const CITIES = 755;
+
+    public const DISTRICTS = 759;
+
+    /**
      * Pessoas > Cadastros > Tipos.
      */
     public const RELIGIONS = 579;
@@ -120,6 +131,14 @@ final class Menus
      * eles que fazem as telas de índice ficarem sempre visíveis.
      */
     private const TREE = [
+        'Endereçamento' => [68, '/intranet/educar_enderecamento_index.php', 'fa-map', [
+            'Cadastros' => [
+                ['Países', self::COUNTRIES, '/intranet/public_pais_lst.php'],
+                ['Estados', self::STATES, '/intranet/public_uf_lst.php'],
+                ['Municípios', self::CITIES, '/intranet/public_municipio_lst.php'],
+                ['Distritos', self::DISTRICTS, '/intranet/public_distrito_lst.php'],
+            ],
+        ]],
         'Pessoas' => [7, '/intranet/educar_pessoas_index.php', 'fa-user', [
             'Cadastros' => [
                 'Tipos' => [

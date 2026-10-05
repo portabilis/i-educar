@@ -1,19 +1,20 @@
 <?php
 
+use App\Models\City;
 use App\Models\DocumentAbsenceReason;
 use Tests\Browser\Support\Category;
 use Tests\Browser\Support\Form;
 use Tests\Browser\Support\Scenario;
 
 /**
- * As telas de catálogo dos três menus "Tipos": Pessoas > Cadastros > Tipos,
- * Escola > Cadastros > Tipos e Servidores > Cadastros > Tipos.
+ * As telas de catálogo: os três menus "Tipos" — Pessoas, Escola e Servidores —
+ * e os quatro cadastros de Endereçamento.
  *
  * São as telas mais simples do sistema, e todas do mesmo feitio: um clsListagem
  * com um campo de busca e um clsCadastro com um campo de texto obrigatório, mais
  * um ou outro campo acessório. É por serem iguais que aqui elas são dados, e não
- * vinte arquivos de teste — o que muda de uma para a outra está declarado em
- * Category, e o roteiro é escrito uma vez só.
+ * vinte e três arquivos de teste — o que muda de uma para a outra está declarado
+ * em Category, e o roteiro é escrito uma vez só.
  *
  * O que estas telas guardam contra o rebranding é o título que a listagem
  * escreve no topo, o rótulo dos botões (conferido pelo Form) e o caminho de ida
@@ -25,6 +26,16 @@ use Tests\Browser\Support\Scenario;
  */
 beforeEach(function () {
     $this->scenario = Scenario::install(adminLogin: 'adm-tipos');
+
+    // O que o cenário montou e só se sabe em tempo de execução. Cada descritor
+    // escolhe daqui os campos que o formulário dele tem; quem não tem nenhum
+    // ignora o mapa inteiro.
+    $this->context = [
+        'ref_cod_instituicao' => $this->scenario->institution->getKey(),
+        'idpais' => $this->scenario->state->country_id,
+        'iduf' => $this->scenario->state->getKey(),
+        'idmun' => City::query()->where('state_id', $this->scenario->state->getKey())->sole()->getKey(),
+    ];
 });
 
 it('lista', function (Category $category) {
@@ -36,7 +47,7 @@ it('lista', function (Category $category) {
 it('cadastra, edita e exclui', function (Category $category) {
     $page = $this->scenario->loginAsAdmin()->navigate($category->form());
 
-    $page = $category->fill($page, $category->name, $this->scenario->institution->getKey());
+    $page = $category->fill($page, $category->name, $this->context);
 
     $page = Form::save($page)
         ->assertPathIs($category->list())
@@ -74,7 +85,7 @@ it('recusa gravar sem o campo obrigatório', function (Category $category) {
 
     $page = $this->scenario->loginAsAdmin()->navigate($category->form());
 
-    $page = $category->fill($page, '', $this->scenario->institution->getKey());
+    $page = $category->fill($page, '', $this->context);
 
     // O valida() do clsCadastro barra o submit: a tela continua sendo a do
     // formulário e a tabela continua do mesmo tamanho.

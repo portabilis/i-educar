@@ -2,6 +2,9 @@
 
 namespace Tests\Browser\Support;
 
+use App\Models\City;
+use App\Models\Country;
+use App\Models\District;
 use App\Models\DocumentAbsenceReason;
 use App\Models\LegacyAbandonmentType;
 use App\Models\LegacyBenefit;
@@ -20,6 +23,7 @@ use App\Models\LegacySchoolingDegree;
 use App\Models\LegacyStageType;
 use App\Models\LegacyTransferType;
 use App\Models\Religion;
+use App\Models\State;
 use App\Models\WithdrawalReason;
 use Illuminate\Database\Eloquent\Model;
 use Pest\Browser\Api\AwaitableWebpage;
@@ -27,13 +31,13 @@ use Pest\Browser\Api\PendingAwaitablePage;
 use Pest\Browser\Api\Webpage;
 
 /**
- * Uma tela de catálogo do menu "Tipos".
+ * Uma tela de catálogo: as dos menus "Tipos" e as de Endereçamento.
  *
  * São as telas mais simples do sistema, e todas iguais: um clsListagem com um
  * campo de busca e um clsCadastro com um campo de texto obrigatório, mais um ou
  * outro campo acessório. É justamente por serem iguais que aqui elas são dados,
- * e não vinte arquivos de teste: o que cada teste faz é sempre o mesmo, o que
- * muda é o nome da tela, o do campo e o do modelo.
+ * e não vinte e três arquivos de teste: o que cada teste faz é sempre o mesmo, o
+ * que muda é o nome da tela, o do campo e o do modelo.
  *
  * Nada disso dá para deduzir do modelo, e é por isso que cada peça vem
  * declarada: em educar_religiao o parâmetro da edição é `cod_religiao`, o campo
@@ -52,10 +56,13 @@ final class Category
      * @param  class-string<Model>  $model  Modelo que lê a tabela.
      * @param  string  $column  Coluna onde o `field` é gravado.
      * @param  string  $key  Nome do parâmetro que a tela de cadastro lê do GET.
-     * @param  bool  $institution  A tela inclui o filtro de instituição.
+     * @param  array<int, string>  $context  `<select>` cujo valor só existe em
+     *                                       tempo de execução — a instituição do
+     *                                       cenário, o país, o estado —, na ordem
+     *                                       em que a tela os encadeia.
      * @param  array<string, string>  $fields  Demais campos de texto obrigatórios.
      * @param  array<string, string>  $selects  Demais `<select>`, pelo rótulo.
-     * @param  bool  $removable  A tela tem Excluir().
+     * @param  bool  $removable  A tela exclui de verdade pela interface.
      */
     public function __construct(
         public readonly string $screen,
@@ -66,7 +73,7 @@ final class Category
         public readonly string $model,
         public readonly string $column,
         public readonly string $key,
-        public readonly bool $institution = false,
+        public readonly array $context = [],
         public readonly array $fields = [],
         public readonly array $selects = [],
         public readonly bool $removable = true,
@@ -82,13 +89,94 @@ final class Category
     {
         $catalogue = [];
 
-        foreach (['Pessoas' => self::people(), 'Escola' => self::school(), 'Servidores' => self::employees()] as $menu => $categories) {
+        $menus = [
+            'Endereçamento' => self::addressing(),
+            'Pessoas' => self::people(),
+            'Escola' => self::school(),
+            'Servidores' => self::employees(),
+        ];
+
+        foreach ($menus as $menu => $categories) {
             foreach ($categories as $title => $category) {
                 $catalogue["{$menu} > {$title}"] = $category;
             }
         }
 
         return $catalogue;
+    }
+
+    /**
+     * Endereçamento > Cadastros.
+     *
+     * Não são telas de "Tipos", mas são do mesmo feitio — e são as únicas em
+     * cascata: o estado só aparece depois do país e o município só depois do
+     * estado, por AJAX (public_uf_xml.php e public_municipio_xml.php). Os quatro
+     * valores encadeados vêm do endereçamento que o cenário monta.
+     *
+     * Nenhuma delas exclui: as quatro usam o iEducar\Legacy\InteractWithDatabase,
+     * cujo delete() faz `$model->findOrFail($id)->delete` — acesso a propriedade,
+     * não chamada de método. O botão "Excluir" volta para a listagem como se
+     * tivesse funcionado e o registro continua lá. É defeito de hoje; quando for
+     * corrigido, basta tirar o `removable: false`.
+     *
+     * @return array<string, self>
+     */
+    public static function addressing(): array
+    {
+        return [
+            // O formulário de país desenha `cod_ibge` duas vezes, pelo
+            // inputsHelper()->integer() e pelo campoNumero() logo abaixo. Só o
+            // segundo é obrigatório, e é o que o Form preenche.
+            'Países' => new self(
+                screen: 'public_pais',
+                heading: 'Pais - Listagem',
+                field: 'nome',
+                name: 'Uruguai',
+                renamed: 'República Oriental do Uruguai',
+                model: Country::class,
+                column: 'name',
+                key: 'idpais',
+                fields: ['cod_ibge' => '858'],
+                removable: false,
+            ),
+            'Estados' => new self(
+                screen: 'public_uf',
+                heading: 'Uf - Listagem',
+                field: 'nome',
+                name: 'Paraná',
+                renamed: 'Estado do Paraná',
+                model: State::class,
+                column: 'name',
+                key: 'id',
+                context: ['idpais'],
+                fields: ['sigla_uf' => 'PR'],
+                removable: false,
+            ),
+            'Municípios' => new self(
+                screen: 'public_municipio',
+                heading: 'Município - Listagem',
+                field: 'nome',
+                name: 'Criciúma',
+                renamed: 'Criciúma do Sul',
+                model: City::class,
+                column: 'name',
+                key: 'idmun',
+                context: ['idpais', 'iduf'],
+                removable: false,
+            ),
+            'Distritos' => new self(
+                screen: 'public_distrito',
+                heading: 'Distrito - Listagem',
+                field: 'nome',
+                name: 'Rio Maina',
+                renamed: 'Distrito do Rio Maina',
+                model: District::class,
+                column: 'name',
+                key: 'iddis',
+                context: ['idpais', 'iduf', 'idmun'],
+                removable: false,
+            ),
+        ];
     }
 
     /**
@@ -203,7 +291,7 @@ final class Category
                 model: LegacyAbandonmentType::class,
                 column: 'nome',
                 key: 'cod_abandono_tipo',
-                institution: true,
+                context: ['ref_cod_instituicao'],
             ),
             'Tipos de ocorrência disciplinar' => new self(
                 screen: 'educar_tipo_ocorrencia_disciplinar',
@@ -214,7 +302,7 @@ final class Category
                 model: LegacyDisciplinaryOccurrenceType::class,
                 column: 'nm_tipo',
                 key: 'cod_tipo_ocorrencia_disciplinar',
-                institution: true,
+                context: ['ref_cod_instituicao'],
             ),
             'Tipos de transferência' => new self(
                 screen: 'educar_transferencia_tipo',
@@ -225,7 +313,7 @@ final class Category
                 model: LegacyTransferType::class,
                 column: 'nm_tipo',
                 key: 'cod_transferencia_tipo',
-                institution: true,
+                context: ['ref_cod_instituicao'],
             ),
             'Tipos de dispensa' => new self(
                 screen: 'educar_tipo_dispensa',
@@ -236,7 +324,7 @@ final class Category
                 model: LegacyExemptionType::class,
                 column: 'nm_tipo',
                 key: 'cod_tipo_dispensa',
-                institution: true,
+                context: ['ref_cod_instituicao'],
             ),
             'Tipos de ensino' => new self(
                 screen: 'educar_tipo_ensino',
@@ -247,7 +335,7 @@ final class Category
                 model: LegacyEducationType::class,
                 column: 'nm_tipo',
                 key: 'cod_tipo_ensino',
-                institution: true,
+                context: ['ref_cod_instituicao'],
             ),
             'Tipos de nível ensino' => new self(
                 screen: 'educar_nivel_ensino',
@@ -258,7 +346,7 @@ final class Category
                 model: LegacyEducationLevel::class,
                 column: 'nm_nivel',
                 key: 'cod_nivel_ensino',
-                institution: true,
+                context: ['ref_cod_instituicao'],
             ),
             'Tipos de regime' => new self(
                 screen: 'educar_tipo_regime',
@@ -269,7 +357,7 @@ final class Category
                 model: LegacyRegimeType::class,
                 column: 'nm_tipo',
                 key: 'cod_tipo_regime',
-                institution: true,
+                context: ['ref_cod_instituicao'],
             ),
             'Tipos de etapas' => new self(
                 screen: 'educar_modulo',
@@ -280,7 +368,7 @@ final class Category
                 model: LegacyStageType::class,
                 column: 'nm_tipo',
                 key: 'cod_modulo',
-                institution: true,
+                context: ['ref_cod_instituicao'],
                 fields: ['num_etapas' => '2', 'num_meses' => '5', 'num_semanas' => '20'],
             ),
             'Tipos de turma' => new self(
@@ -292,7 +380,7 @@ final class Category
                 model: LegacySchoolClassType::class,
                 column: 'nm_tipo',
                 key: 'cod_turma_tipo',
-                institution: true,
+                context: ['ref_cod_instituicao'],
                 fields: ['sgl_tipo' => 'MULTI'],
             ),
         ];
@@ -315,7 +403,7 @@ final class Category
                 model: LegacyRole::class,
                 column: 'nm_funcao',
                 key: 'cod_funcao',
-                institution: true,
+                context: ['ref_cod_instituicao'],
                 fields: ['abreviatura' => 'COORD'],
                 selects: ['professor' => 'Não'],
             ),
@@ -341,7 +429,7 @@ final class Category
                 model: WithdrawalReason::class,
                 column: 'nm_motivo',
                 key: 'cod_motivo_afastamento',
-                institution: true,
+                context: ['ref_cod_instituicao'],
             ),
             // A abreviatura é `character varying(4)`, daí o valor curto. O
             // parâmetro que abre a edição é `cod_funcionario_vinculo`, e não o
@@ -380,17 +468,25 @@ final class Category
     /**
      * Preenche o formulário de cadastro.
      *
+     * O `$context` é o mesmo mapa para todas as telas — o que o cenário montou e
+     * só se sabe em tempo de execução —, e cada tela escolhe dali os campos que
+     * o formulário dela tem, na ordem declarada: é isso que faz a cascata
+     * país → estado → município funcionar sem cada descritor repetir de onde o
+     * valor vem.
+     *
      * Os `<select>` passam pelo Form::cascade mesmo quando não dependem de
      * nenhum outro campo: a espera explícita é o que evita que o teste trave
      * quando a opção não existe.
+     *
+     * @param  array<string, int|string>  $context
      */
     public function fill(
         PendingAwaitablePage|AwaitableWebpage|Webpage $page,
         string $name,
-        ?int $institution = null,
+        array $context = [],
     ): AwaitableWebpage|Webpage {
-        if ($this->institution) {
-            $page = Form::cascade($page, ['ref_cod_instituicao' => $institution]);
+        foreach ($this->context as $field) {
+            $page = Form::cascade($page, [$field => $context[$field]]);
         }
 
         $page = Form::cascade($page, $this->selects);
