@@ -473,9 +473,12 @@ return new class extends clsCadastro
                 $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
             }
         } else {
+            // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Cadastro não realizado.<br>';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $fileService = new FileService(new UrlPresigner);
@@ -625,9 +628,12 @@ return new class extends clsCadastro
             $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
         }
 
+        // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -659,9 +665,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_servidor_afastamento_lst.php');
         }
 
+        // Inalcançável: `delete()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function makeExtra()
