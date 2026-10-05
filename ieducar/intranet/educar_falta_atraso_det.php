@@ -73,7 +73,10 @@ return new class extends clsDetalhe
             if (($cont % 2) == 0) {
                 $color = ' bgcolor="#f5f9fd" ';
             } else {
+                // Inalcançável: `$cont` é sempre zero.
+                // @codeCoverageIgnoreStart
                 $color = ' bgcolor="#FFFFFF" ';
+                // @codeCoverageIgnoreEnd
             }
 
             $school = LegacySchool::query()->with('person')->find($registro['ref_cod_escola']);
