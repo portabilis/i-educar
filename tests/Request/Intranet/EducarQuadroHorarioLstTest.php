@@ -167,3 +167,17 @@ test('o usuário de biblioteca não acessa a tela', function () {
         ->assertSee('Usuário sem permissão para acessar esta página')
         ->assertDontSee('Turma: Turma Alfa');
 });
+
+test('o quadro sem nenhuma aula mostra os sete dias vazios', function () {
+    DB::table('pmieducar.quadro_horario')->insert([
+        'ref_usuario_cad' => $this->user->getKey(),
+        'ref_cod_turma' => $this->class->getKey(),
+        'data_cadastro' => now(),
+        'ativo' => 1,
+        'ano' => 2030,
+    ]);
+
+    $html = ($this->show)()->assertSee('Turma: Turma Alfa')->getContent();
+
+    expect(substr_count($html, 'fa-plus-square'))->toBe(7);
+});
