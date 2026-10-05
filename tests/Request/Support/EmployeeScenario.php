@@ -12,12 +12,15 @@ use App\Models\LegacyIndividual;
 use App\Models\LegacyRole;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolClassTeacher;
 use App\Models\WithdrawalReason;
 use Database\Factories\EmployeeAllocationFactory;
 use Database\Factories\EmployeeFactory;
 use Database\Factories\EmployeeInepFactory;
 use Database\Factories\LegacyEmployeeRoleFactory;
 use Database\Factories\LegacyRoleFactory;
+use Database\Factories\LegacySchoolClassTeacherDisciplineFactory;
+use Database\Factories\LegacySchoolClassTeacherFactory;
 use Database\Factories\LegacySchoolingDegreeFactory;
 use Database\Factories\WithdrawalReasonFactory;
 use Illuminate\Support\Facades\DB;
@@ -25,8 +28,8 @@ use Illuminate\Support\Facades\DB;
 /**
  * Um servidor de nome conhecido numa instituição e, a pedido, o que as telas
  * de servidor mostram em volta dele: funções com matrícula, componentes que
- * leciona, alocações em escolas, aulas no quadro de horários, afastamentos e
- * o código do Inep.
+ * leciona, alocações em escolas, aulas no quadro de horários, vínculos com
+ * turmas, afastamentos e o código do Inep.
  *
  * As factories soltas criam servidor, função e alocação para pessoas e
  * instituições diferentes; aqui tudo aponta para o mesmo servidor, e os textos
@@ -187,6 +190,35 @@ final class EmployeeScenario
         ]);
 
         return $this;
+    }
+
+    /**
+     * O vínculo do servidor com a turma: docente, com contrato temporário, no
+     * ano da turma, lecionando os componentes dados.
+     *
+     * @param array<string, mixed>         $attributes  Colunas de `modules.professor_turma`.
+     * @param array<int, LegacyDiscipline> $disciplines
+     */
+    public function classLink(LegacySchoolClass $schoolClass, array $attributes = [], array $disciplines = []): LegacySchoolClassTeacher
+    {
+        $link = LegacySchoolClassTeacherFactory::new()->create($attributes + [
+            'ano' => $schoolClass->ano,
+            'instituicao_id' => $this->institution,
+            'turma_id' => $schoolClass->getKey(),
+            'servidor_id' => $this->employee->getKey(),
+            'funcao_exercida' => 1,
+            'tipo_vinculo' => 2,
+            'turno_id' => null,
+        ]);
+
+        foreach ($disciplines as $discipline) {
+            LegacySchoolClassTeacherDisciplineFactory::new()->create([
+                'professor_turma_id' => $link->getKey(),
+                'componente_curricular_id' => $discipline->getKey(),
+            ]);
+        }
+
+        return $link;
     }
 
     public function inep(int $code, ?string $name = null): self
