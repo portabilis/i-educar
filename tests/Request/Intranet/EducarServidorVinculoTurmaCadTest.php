@@ -368,3 +368,16 @@ test('quem não pode remover não vê o botão de excluir', function () {
 
     $this->get(($this->edit)($link))->assertOk()->assertDontSee("id='btn_excluir'", false);
 });
+
+test('com o censo obrigatório, uma turma que não existe não é vinculada', function () {
+    ($this->census)();
+
+    $this->post($this->new, ($this->payload)(['ref_cod_turma' => '999999999']))->assertOk();
+
+    expect(($this->links)()->count())->toBe(0);
+});
+
+test('defeito: um ano que não é número dá erro 500', function () {
+    // A verificação de vínculo repetido sai cedo e a gravação segue com o ano inválido.
+    $this->post($this->new, ($this->payload)(['ano' => 'abc']))->assertStatus(500);
+});
