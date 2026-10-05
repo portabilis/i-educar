@@ -138,7 +138,10 @@ return new class extends clsDetalhe
         }
 
         if ($registro['idpes']) {
+            // Inalcançável: o registro do servidor não tem a chave `idpes`.
+            // @codeCoverageIgnoreStart
             $this->addDetalhe(['Nome', $registro['Nome']]);
+            // @codeCoverageIgnoreEnd
         }
 
         if ($registro['ref_cod_instituicao']) {
@@ -150,7 +153,10 @@ return new class extends clsDetalhe
         }
 
         if ($registro['ref_cod_funcao']) {
+            // Inalcançável: o registro do servidor não tem a chave `ref_cod_funcao`.
+            // @codeCoverageIgnoreStart
             $this->addDetalhe(['Função', $registro['ref_cod_funcao']]);
+            // @codeCoverageIgnoreEnd
         }
 
         $this->addDetalhe(
