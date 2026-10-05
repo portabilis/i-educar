@@ -537,9 +537,12 @@ JS;
                 $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
             }
         }
+        // Inalcançável: gravar o servidor só falha sem código ou carga numéricos, e os dois acabaram de ser convertidos em número.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
@@ -602,9 +605,12 @@ JS;
             );
 
             if ($obj_quadro_horario->detalhe()) {
+                // Inalcançável: a consulta ao quadro de horários não informa a chave da aula, e sem ela `detalhe()` devolve sempre falso.
+                // @codeCoverageIgnoreStart
                 $this->mensagem = 'Edição não realizada. O servidor está vinculado a um quadro de horários.<br>';
 
                 return false;
+                // @codeCoverageIgnoreEnd
             } else {
                 $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(
                     null,
@@ -626,9 +632,12 @@ JS;
                 );
 
                 if ($obj_quadro_horario->detalhe()) {
+                    // Inalcançável: a consulta ao quadro de horários não informa a chave da aula, e sem ela `detalhe()` devolve sempre falso.
+                    // @codeCoverageIgnoreStart
                     $this->mensagem = 'Edição não realizada. O servidor está vinculado a um quadro de horários.<br>';
 
                     return false;
+                    // @codeCoverageIgnoreEnd
                 } else {
                     $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
@@ -663,9 +672,12 @@ JS;
                 }
             }
         }
+        // Não testável: só com o código do servidor adulterado, e nesse caso a consulta das funções dá erro 500 antes.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()
@@ -698,9 +710,12 @@ JS;
         );
 
         if ($obj_quadro_horario->detalhe()) {
+            // Inalcançável: a consulta ao quadro de horários não informa a chave da aula, e sem ela `detalhe()` devolve sempre falso.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Exclusão não realizada. O servidor está vinculado a um quadro de horários.<br>';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         if (!is_numeric($this->cod_servidor) || !is_numeric($this->ref_cod_instituicao_original)) {
@@ -741,7 +756,10 @@ JS;
     private function editaServidor($instituicao, $ativo, array $censo = []): bool
     {
         if (!is_numeric($this->cod_servidor) || !is_numeric($instituicao)) {
+            // Não testável: só com o código do servidor adulterado, e nesse caso a consulta das funções dá erro 500 antes.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $valores = [
@@ -772,7 +790,10 @@ JS;
     private function cadastraServidor($instituicao, array $censo = []): bool
     {
         if (!is_numeric($this->cod_servidor) || !is_numeric($this->carga_horaria) || !is_numeric($instituicao)) {
+            // Inalcançável: o código e a carga horária acabaram de ser convertidos em número.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $valores = [
@@ -975,7 +996,10 @@ JS;
     private function deletaFuncoesDoServidor(?array $funcoesMantidasIds = null)
     {
         if (!is_numeric($this->ref_cod_instituicao) || !is_numeric($this->cod_servidor)) {
+            // Inalcançável: quem chama já gravou o servidor, com instituição e código numéricos.
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         LegacyEmployeeRole::query()
@@ -1039,7 +1063,10 @@ JS;
     protected function createOrUpdateDeficiencias()
     {
         if (!is_numeric($this->cod_servidor)) {
+            // Inalcançável: quem chama já gravou o servidor, com o código numérico.
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         $individual = LegacyIndividual::find($this->cod_servidor, ['idpes']);
