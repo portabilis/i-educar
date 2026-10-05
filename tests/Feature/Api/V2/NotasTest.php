@@ -256,6 +256,27 @@ test('rejects request without discipline', function () {
     $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
 });
 
+test('rejects score in scientific notation', function (string $field) {
+    $data = $this->createScoreData();
+
+    $this->postScore($data, ['nota' => 6, 'recuperacao' => null, $field => '1e1'])
+        ->assertStatus(422)
+        ->assertJsonValidationErrors([$field]);
+
+    $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
+})->with(['nota', 'recuperacao']);
+
+test('stores score with more than four decimal places truncated', function () {
+    $data = $this->createScoreData();
+
+    $this->postScore($data, ['nota' => '6.123456', 'recuperacao' => null])->assertStatus(201);
+
+    $this->assertDatabaseHas(LegacyDisciplineScore::class, [
+        'componente_curricular_id' => $data['discipline']->getKey(),
+        'nota_original' => '6.1234',
+    ]);
+});
+
 test('rejects stage in an invalid format', function () {
     $data = $this->createScoreData();
 
