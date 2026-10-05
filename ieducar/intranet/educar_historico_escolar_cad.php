@@ -227,7 +227,13 @@ return new class extends clsCadastro
 
         $this->campoNumero(nome: 'carga_horaria', campo: 'Carga Horária', valor: $this->carga_horaria, tamanhovisivel: 8, tamanhomaximo: 8);
         $this->campoCheck(nome: 'cb_faltas_globalizadas', campo: 'Faltas Globalizadas', valor: is_numeric($this->faltas_globalizadas) ? 'on' : '');
-        $this->campoNumero(nome: 'faltas_globalizadas', campo: 'Faltas Globalizadas', valor: $this->faltas_globalizadas, tamanhovisivel: 4, tamanhomaximo: 4);
+        $this->inputsHelper()->integer(attrName: 'faltas_globalizadas', inputOptions: [
+            'required' => false,
+            'label' => 'Faltas Globalizadas',
+            'value' => $this->faltas_globalizadas,
+            'max_length' => 4,
+            'size' => 4,
+        ]);
         $this->campoNumero(nome: 'dias_letivos', campo: 'Dias Letivos', valor: $this->dias_letivos, tamanhovisivel: 3, tamanhomaximo: 3);
         $this->campoMonetario(nome: 'frequencia', campo: 'Frequência', valor: $this->frequencia, tamanhovisivel: 8, tamanhomaximo: 6);
         $this->campoCheck(nome: 'extra_curricular', campo: 'Extra-Curricular', valor: $this->extra_curricular);
@@ -438,7 +444,7 @@ return new class extends clsCadastro
                 'sequencial' => $key + 1,
                 'nm_disciplina' => $disciplina,
                 'nota' => $this->nota[$key] ?? '',
-                'faltas' => is_numeric($faltas) ? $faltas : null,
+                'faltas' => is_numeric($faltas) ? (int) $faltas : null,
                 'ordenamento' => is_numeric($ordenamento) ? $ordenamento : null,
                 'carga_horaria_disciplina' => is_numeric($cargaHoraria) ? (int) $cargaHoraria : null,
                 'dependencia' => ($this->disciplinaDependencia[$key] ?? '') == 'on',
