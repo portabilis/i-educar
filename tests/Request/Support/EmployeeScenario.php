@@ -5,6 +5,9 @@ namespace Tests\Request\Support;
 use App\Models\Employee;
 use App\Models\EmployeeAllocation;
 use App\Models\EmployeeWithdrawal;
+use App\Models\Enums\AbsenceDelayType;
+use App\Models\LegacyAbsenceDelay;
+use App\Models\LegacyAbsenceDelayCompensate;
 use App\Models\LegacyCourse;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyEmployeeRole;
@@ -17,6 +20,8 @@ use App\Models\WithdrawalReason;
 use Database\Factories\EmployeeAllocationFactory;
 use Database\Factories\EmployeeFactory;
 use Database\Factories\EmployeeInepFactory;
+use Database\Factories\LegacyAbsenceDelayCompensateFactory;
+use Database\Factories\LegacyAbsenceDelayFactory;
 use Database\Factories\LegacyEmployeeRoleFactory;
 use Database\Factories\LegacyRoleFactory;
 use Database\Factories\LegacySchoolClassTeacherDisciplineFactory;
@@ -29,7 +34,7 @@ use Illuminate\Support\Facades\DB;
  * Um servidor de nome conhecido numa instituição e, a pedido, o que as telas
  * de servidor mostram em volta dele: funções com matrícula, componentes que
  * leciona, alocações em escolas, aulas no quadro de horários, vínculos com
- * turmas, afastamentos e o código do Inep.
+ * turmas, faltas e atrasos, compensações, afastamentos e o código do Inep.
  *
  * As factories soltas criam servidor, função e alocação para pessoas e
  * instituições diferentes; aqui tudo aponta para o mesmo servidor, e os textos
@@ -219,6 +224,41 @@ final class EmployeeScenario
         }
 
         return $link;
+    }
+
+    /**
+     * Uma falta ou um atraso do servidor na escola: por padrão um atraso de
+     * 1 hora e 30 minutos em 10/03/2030, sem função.
+     *
+     * @param array<string, mixed> $attributes Colunas de `pmieducar.falta_atraso`.
+     */
+    public function absence(LegacySchool $school, array $attributes = []): LegacyAbsenceDelay
+    {
+        return LegacyAbsenceDelayFactory::new()->create($attributes + [
+            'ref_cod_servidor' => $this->employee->getKey(),
+            'ref_ref_cod_instituicao' => $this->institution,
+            'ref_cod_escola' => $school->getKey(),
+            'ref_cod_servidor_funcao' => null,
+            'tipo' => AbsenceDelayType::DELAY->value,
+            'data_falta_atraso' => '2030-03-10',
+            'qtd_horas' => 1,
+            'qtd_min' => 30,
+            'justificada' => 0,
+        ]);
+    }
+
+    /**
+     * Um período em que o servidor compensou horas na escola.
+     */
+    public function compensation(LegacySchool $school, string $start, string $end): LegacyAbsenceDelayCompensate
+    {
+        return LegacyAbsenceDelayCompensateFactory::new()->create([
+            'ref_cod_servidor' => $this->employee->getKey(),
+            'ref_ref_cod_instituicao' => $this->institution,
+            'ref_cod_escola' => $school->getKey(),
+            'data_inicio' => $start,
+            'data_fim' => $end,
+        ]);
     }
 
     public function inep(int $code, ?string $name = null): self
