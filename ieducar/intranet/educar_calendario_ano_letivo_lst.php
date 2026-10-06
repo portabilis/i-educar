@@ -73,10 +73,10 @@ return new class extends clsListagem
             $this->ref_cod_escola = $_POST['ref_cod_escola'] ? $_POST['ref_cod_escola'] : Session::get('calendario.ref_cod_escola');
             $this->ref_cod_instituicao = $_POST['ref_cod_instituicao'] ? $_POST['ref_cod_instituicao'] : Session::get('calendario.ref_cod_instituicao');
             if ($_POST['mes']) {
-                $this->mes = $_POST['mes'];
+                $this->mes = (int) $_POST['mes'];
             }
             if ($_POST['ano']) {
-                $this->ano = $_POST['ano'];
+                $this->ano = (int) $_POST['ano'];
             }
             if ($_POST['cod_calendario_ano_letivo']) {
                 $this->cod_calendario_ano_letivo = $_POST['cod_calendario_ano_letivo'];
@@ -209,10 +209,10 @@ return new class extends clsListagem
                         $url = sprintf(
                             'educar_calendario_anotacao_lst.php?ref_cod_calendario_ano_letivo=%s&ref_cod_escola=%s&dia=%s&mes=%s&ano=%s',
                             $registro['cod_calendario_ano_letivo'],
-                            $this->ref_cod_escola,
+                            rawurlencode(string: (string) $this->ref_cod_escola),
                             $dia['dia'],
                             $dia['mes'],
-                            $this->ano
+                            rawurlencode(string: (string) $this->ano)
                         );
 
                         $botao_editar = sprintf(
@@ -249,7 +249,7 @@ return new class extends clsListagem
 
                             $nomeTurmas = [];
                             foreach ($calendarioTurmas as $calendarioTurma) {
-                                $nomeTurmas[] = $turmas[$calendarioTurma->turma];
+                                $nomeTurmas[] = e($turmas[$calendarioTurma->turma] ?? '');
                             }
 
                             if (count(value: $nomeTurmas) == 0) {
@@ -267,8 +267,8 @@ return new class extends clsListagem
                                         Descrição: %s<br />%s
                                     </div>%s',
                                 $tipo,
-                                $det_motivo['nm_motivo'],
-                                $dia['descricao'],
+                                e($det_motivo['nm_motivo']),
+                                e($dia['descricao']),
                                 $calendarioTurmas,
                                 $botao_editar
                             );
@@ -290,7 +290,7 @@ return new class extends clsListagem
                                 '<div style="z-index: 0;">
                                         Descrição: %s
                                     </div>%s',
-                                $dia['descricao'],
+                                e($dia['descricao']),
                                 $botao_editar
                             );
                             $array_descricao[$dia['dia']] = $descricao;

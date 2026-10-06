@@ -41,8 +41,6 @@ class LegacySchoolGradeDiscipline extends Model
         'workload' => 'carga_horaria',
     ];
 
-    protected $primaryKey = 'ref_cod_disciplina';
-
     protected $fillable = [
         'ref_ref_cod_serie',
         'ref_ref_cod_escola',
@@ -56,13 +54,6 @@ class LegacySchoolGradeDiscipline extends Model
         'hora_falta',
         'aulas_por_semana',
     ];
-
-    protected function id(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->ref_cod_disciplina
-        );
-    }
 
     protected function name(): Attribute
     {

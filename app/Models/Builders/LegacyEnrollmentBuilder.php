@@ -36,17 +36,23 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
 
     /**
      * Filtra por validos
+     *
+     * A matricula em dependencia entra por padrao. As telas legadas que pedem apenas
+     * ativa ou com motivo de saida passam false.
      */
-    public function whereValid(): LegacyBuilder
+    public function whereValid(bool $includeDependency = true): LegacyBuilder
     {
-        return $this->where(function ($q) {
+        return $this->where(function ($q) use ($includeDependency) {
             $q->active();
             $q->orWhere('matricula_turma.transferido', true);
             $q->orWhere('matricula_turma.remanejado', true);
             $q->orWhere('matricula_turma.reclassificado', true);
             $q->orWhere('matricula_turma.abandono', true);
             $q->orWhere('matricula_turma.falecido', true);
-            $q->orWhereHas('registration', fn ($q) => $q->where('dependencia', true));
+
+            if ($includeDependency) {
+                $q->orWhereHas('registration', fn ($q) => $q->where('dependencia', true));
+            }
         });
     }
 
@@ -56,6 +62,22 @@ class LegacyEnrollmentBuilder extends LegacyBuilder
     public function whereSchoolClass(int $schoolClass): self
     {
         return $this->where('ref_cod_turma', $schoolClass);
+    }
+
+    /**
+     * Filtra por Matrícula
+     */
+    public function whereRegistration(int $registration): self
+    {
+        return $this->where('matricula_turma.ref_cod_matricula', $registration);
+    }
+
+    /**
+     * Filtra por sequencial da enturmação
+     */
+    public function whereSequential(int $sequential): self
+    {
+        return $this->where('matricula_turma.sequencial', $sequential);
     }
 
     public function addJoinViewSituacaoRelatorios(int $situation): self

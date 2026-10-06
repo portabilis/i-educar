@@ -41,16 +41,16 @@ return new class extends clsDetalhe
         $this->cod_ibge = $model->ibge_code;
 
         if ($this->sigla_uf) {
-            $this->addDetalhe(['Sigla Uf', $this->sigla_uf]);
+            $this->addDetalhe(['Sigla Uf', e($this->sigla_uf)]);
         }
         if ($this->nome) {
-            $this->addDetalhe(['Nome', $this->nome]);
+            $this->addDetalhe(['Nome', e($this->nome)]);
         }
         if ($this->idpais) {
-            $this->addDetalhe(['Pais', $model->country->name]);
+            $this->addDetalhe(['Pais', e($model->country->name)]);
         }
         if ($this->cod_ibge) {
-            $this->addDetalhe(['Código INEP', $this->cod_ibge]);
+            $this->addDetalhe(['Código INEP', e($this->cod_ibge)]);
         }
 
         $obj_permissao = new clsPermissoes;

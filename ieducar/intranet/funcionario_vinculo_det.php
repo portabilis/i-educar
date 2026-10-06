@@ -14,8 +14,8 @@ return new class extends clsDetalhe
 
         $legacyBondType = LegacyBondType::findOrFail(request('cod_func'));
 
-        $this->addDetalhe(detalhe: ['Nome', $legacyBondType->nm_vinculo]);
-        $this->addDetalhe(detalhe: ['Abreviatura', $legacyBondType->abreviatura]);
+        $this->addDetalhe(detalhe: ['Nome', e($legacyBondType->nm_vinculo)]);
+        $this->addDetalhe(detalhe: ['Abreviatura', e($legacyBondType->abreviatura)]);
 
         $this->url_novo = 'funcionario_vinculo_cad.php';
         $this->url_editar = 'funcionario_vinculo_cad.php?cod_funcionario_vinculo=' . request('cod_func');
