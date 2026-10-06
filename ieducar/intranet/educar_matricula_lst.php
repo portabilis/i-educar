@@ -2,6 +2,7 @@
 
 use App\Models\LegacyCourse;
 use App\Models\LegacyEnrollment;
+use App\Models\LegacyGrade;
 use App\Models\RegistrationStatus;
 
 return new class extends clsListagem
@@ -121,6 +122,10 @@ return new class extends clsListagem
 
         $total = $obj_matricula->_total;
 
+        $nomesSeries = LegacyGrade::query()
+            ->whereIn('cod_serie', array_filter(array_column(is_array(value: $lista) ? $lista : [], 'ref_ref_cod_serie'), 'is_numeric'))
+            ->pluck('nm_serie', 'cod_serie');
+
         $turmasPorMatricula = LegacyEnrollment::query()
             ->active()
             ->whereIn('ref_cod_matricula', array_filter(array_column(is_array($lista) ? $lista : [], 'cod_matricula'), 'is_numeric'))
@@ -143,9 +148,7 @@ return new class extends clsListagem
             foreach ($lista as $registro) {
                 $registro['ref_cod_curso'] = $nomesCursos[$registro['ref_cod_curso']] ?? null;
 
-                $obj_serie = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
-                $det_serie = $obj_serie->detalhe();
-                $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
+                $registro['ref_ref_cod_serie'] = $nomesSeries[$registro['ref_ref_cod_serie']] ?? null;
 
                 $obj_cod_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
                 $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();

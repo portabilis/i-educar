@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\LegacyCourse;
+use App\Models\LegacyGrade;
 
 return new class extends clsListagem
 {
@@ -9,8 +9,6 @@ return new class extends clsListagem
     public $titulo;
 
     public $limite;
-
-    public $offset;
 
     public $cod_serie;
 
@@ -69,58 +67,39 @@ return new class extends clsListagem
 
         // Paginador
         $this->limite = 20;
-        $this->offset = $_GET["pagina_{$this->nome}"] ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
+        $resultado = LegacyGrade::query()
+            ->active()
+            ->with([
+                'course:cod_curso,nm_curso,descricao,ref_cod_instituicao',
+                'course.institution:cod_instituicao,nm_instituicao',
+            ])
+            ->when(is_numeric($this->ref_cod_curso), fn ($q) => $q->whereCourse($this->ref_cod_curso))
+            ->when(is_string($this->nm_serie), fn ($q) => $q->whereNameLike($this->nm_serie))
+            ->when(is_numeric($this->ref_cod_instituicao), fn ($q) => $q->whereInstitution($this->ref_cod_instituicao))
+            ->orderBy('nm_serie')
+            ->paginate(perPage: $this->limite, pageName: 'pagina_' . $this->nome);
 
-        $obj_serie = new clsPmieducarSerie;
-        $obj_serie->setOrderby('nm_serie ASC');
-        $obj_serie->setLimite($this->limite, $this->offset);
-
-        $lista = $obj_serie->lista(
-            null,
-            null,
-            null,
-            $this->ref_cod_curso,
-            $this->nm_serie,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
-
-        $total = $obj_serie->_total;
+        $lista = $resultado->getCollection();
+        $total = $resultado->total();
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
-            $cursos = LegacyCourse::query()
-                ->whereIn('cod_curso', array_column($lista, 'ref_cod_curso'))
-                ->get(['cod_curso', 'nm_curso', 'descricao'])
-                ->keyBy('cod_curso');
+        foreach ($lista as $registro) {
+            $curso = $registro->course;
+            $nomeCurso = empty($curso->descricao) ? $curso->nm_curso : "{$curso->nm_curso} ({$curso->descricao})";
+            $registro['ref_cod_instituicao'] = $curso->institution->nm_instituicao;
+            $registro['ref_cod_curso'] = $nomeCurso;
+            $nomeSerie = empty($registro['descricao']) ? $registro['nm_serie'] : "{$registro['nm_serie']} ({$registro['descricao']})";
 
-            foreach ($lista as $registro) {
-                // Pega detalhes de foreign_keys
-                $registro['ref_cod_curso'] = $cursos->get($registro['ref_cod_curso'])->name;
+            $lista_busca = [
+                "<a href=\"educar_serie_det.php?cod_serie={$registro['cod_serie']}\">{$nomeSerie}</a>",
+                "<a href=\"educar_serie_det.php?cod_serie={$registro['cod_serie']}\">{$registro['ref_cod_curso']}</a>",
+            ];
 
-                $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
-                $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
-                $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
-                $nomeSerie = empty($registro['descricao']) ? $registro['nm_serie'] : "{$registro['nm_serie']} ({$registro['descricao']})";
-
-                $lista_busca = [
-                    "<a href=\"educar_serie_det.php?cod_serie={$registro['cod_serie']}\">{$nomeSerie}</a>",
-                    "<a href=\"educar_serie_det.php?cod_serie={$registro['cod_serie']}\">{$registro['ref_cod_curso']}</a>",
-                ];
-
-                if ($nivel_usuario == 1) {
-                    $lista_busca[] = "<a href=\"educar_serie_det.php?cod_serie={$registro['cod_serie']}\">{$registro['ref_cod_instituicao']}</a>";
-                }
-
-                $this->addLinhas($lista_busca);
+            if ($nivel_usuario == 1) {
+                $lista_busca[] = "<a href=\"educar_serie_det.php?cod_serie={$registro['cod_serie']}\">{$registro['ref_cod_instituicao']}</a>";
             }
+
+            $this->addLinhas($lista_busca);
         }
 
         $this->addPaginador2('educar_serie_lst.php', $total, $_GET, $this->nome, $this->limite);

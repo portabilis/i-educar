@@ -212,7 +212,6 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
         // Cria os mocks das classes legadas
         $this->_setUpMatriculaMock()
-            ->_setUpSerieMock()
             ->_setUpEscolaAnoLetivo()
             ->_setUpAnoLetivoModulo();
 
@@ -660,29 +659,6 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
                 return $return[$total++];
             });
-    }
-
-    /**
-     * @return $this
-     *
-     * @throws Exception
-     */
-    protected function _setUpSerieMock()
-    {
-        $mock = $this->getCleanMock('clsPmieducarSerie');
-
-        $mock
-            ->method('detalhe')
-            ->willReturn($this->_getConfigOptions('serie'));
-
-        CoreExt_Entity::addClassToStorage(
-            'clsPmieducarSerie',
-            $mock,
-            null,
-            true
-        );
-
-        return $this;
     }
 
     /**

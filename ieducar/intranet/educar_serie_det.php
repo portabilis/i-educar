@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyCourse;
+use App\Models\LegacyGrade;
 
 return new class extends clsDetalhe
 {
@@ -38,12 +39,23 @@ return new class extends clsDetalhe
 
         $this->cod_serie = $_GET['cod_serie'];
 
-        $tmp_obj = new clsPmieducarSerie($this->cod_serie);
-        $registro = $tmp_obj->detalhe();
+        $serie = is_numeric($this->cod_serie) ? LegacyGrade::query()->find($this->cod_serie, [
+            'cod_serie',
+            'nm_serie',
+            'ref_cod_curso',
+            'etapa_curso',
+            'concluinte',
+            'carga_horaria',
+            'dias_letivos',
+            'idade_ideal',
+            'observacao_historico',
+        ]) : null;
 
-        if (!$registro) {
+        if (!$serie) {
             $this->simpleRedirect('educar_serie_lst.php');
         }
+
+        $registro = $serie->getAttributes();
 
         $curso = LegacyCourse::query()->find($registro['ref_cod_curso'], ['nm_curso', 'ref_cod_instituicao']);
         $registro['ref_cod_curso'] = $curso->nm_curso;

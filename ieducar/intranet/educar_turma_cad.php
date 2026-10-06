@@ -4,6 +4,7 @@ use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyCourse;
 use App\Models\LegacyDisciplineSchoolClass;
 use App\Models\LegacyEnrollment;
+use App\Models\LegacyGrade;
 use App\Models\LegacyPerson;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
@@ -207,11 +208,14 @@ return new class extends clsCadastro
             $registro = $obj_turma->detalhe();
             $obj_esc = new clsPmieducarEscola(cod_escola: $registro['ref_ref_cod_escola']);
             $det_esc = $obj_esc->detalhe();
-            $obj_ser = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
-            $det_ser = $obj_ser->detalhe();
-
             $this->visivel = (int) $registro['visivel'];
             $this->turma_turno_id = $registro['turma_turno_id'];
+
+            $det_ser = LegacyGrade::query()->find($registro['ref_ref_cod_serie'], [
+                'cod_serie',
+                'ref_cod_curso',
+                'regra_avaliacao_id',
+            ]);
 
             $regra_avaliacao_id = $det_ser['regra_avaliacao_id'];
             if ($regra_avaliacao_id) {
@@ -314,8 +318,10 @@ return new class extends clsCadastro
             $registro = $obj_turma->detalhe();
             $obj_esc = new clsPmieducarEscola(cod_escola: $registro['ref_ref_cod_escola']);
             $det_esc = $obj_esc->detalhe();
-            $obj_ser = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
-            $det_ser = $obj_ser->detalhe();
+            $det_ser = LegacyGrade::query()->find($registro['ref_ref_cod_serie'], [
+                'cod_serie',
+                'ref_cod_curso',
+            ]);
 
             $this->ref_cod_escola = $det_esc['cod_escola'];
             $this->ref_cod_instituicao = $det_esc['ref_cod_instituicao'];

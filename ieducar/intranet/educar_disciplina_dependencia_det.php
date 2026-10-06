@@ -3,6 +3,7 @@
 use App\Models\LegacyCourse;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyDisciplineDependence;
+use App\Models\LegacyGrade;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyStudent;
 
@@ -49,9 +50,7 @@ return new class extends clsDetalhe
             $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
-        $obj_serie = new clsPmieducarSerie($this->ref_cod_serie);
-        $det_serie = $obj_serie->detalhe();
-        $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
+        $registro['ref_ref_cod_serie'] = LegacyGrade::query()->whereKey($this->ref_cod_serie)->value('nm_serie');
 
         // Dados da matrícula
         $obj_ref_cod_matricula = new clsPmieducarMatricula;

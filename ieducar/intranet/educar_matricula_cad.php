@@ -6,6 +6,7 @@ use App\Exceptions\Transfer\TransferException;
 use App\Jobs\UpdateBlockedSituationRegistration;
 use App\Models\LegacyCourse;
 use App\Models\LegacyEnrollment;
+use App\Models\LegacyGrade;
 use App\Models\LegacyGradeSequence;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
@@ -16,6 +17,7 @@ use App\Models\LegacySchoolGrade;
 use App\Models\LegacyStudent;
 use App\Models\RegistrationStatus;
 use App\Services\EnrollmentService;
+use App\Services\GradeService;
 use App\Services\PromotionService;
 use App\Services\RegistrationService;
 use App\Services\SchoolClass\AvailableTimeService;
@@ -455,14 +457,10 @@ return new class extends clsCadastro
                     $cursoDeAtividadeComplementar = $this->cursoDeAtividadeComplementar(id: $this->ref_cod_curso);
 
                     if (($mesmoCursoAno || config(key: 'legacy.app.matricula.multiplas_matriculas') == 0) && !$cursoDeAtividadeComplementar) {
-                        $serie = new clsPmieducarSerie(cod_serie: $m['ref_ref_cod_serie'], ref_usuario_exc: null, ref_usuario_cad: null, ref_cod_curso: $m['ref_cod_curso']);
-                        $serie = $serie->detalhe();
-
-                        if (is_array(value: $serie) && count(value: $serie)) {
-                            $serie = $serie['nm_serie'];
-                        } else {
-                            $serie = '';
-                        }
+                        $serie = LegacyGrade::query()
+                            ->whereKey($m['ref_ref_cod_serie'])
+                            ->when(is_numeric($m['ref_cod_curso']), fn ($q) => $q->whereCourse($m['ref_cod_curso']))
+                            ->value('nm_serie') ?? '';
 
                         $escola = new clsPmieducarEscola(cod_escola: $m['ref_ref_cod_escola']);
                         $escola = $escola->detalhe();
@@ -482,8 +480,11 @@ return new class extends clsCadastro
                 }
             }
 
-            $serie = new clsPmieducarSerie(cod_serie: $this->ref_cod_serie);
-            $detSerie = $serie->detalhe();
+            $detSerie = is_numeric($this->ref_cod_serie) ? LegacyGrade::query()->find($this->ref_cod_serie, [
+                'cod_serie',
+                'alerta_faixa_etaria',
+                'bloquear_matricula_faixa_etaria',
+            ]) : null;
 
             $alertaFaixaEtaria = $detSerie['alerta_faixa_etaria'];
             $bloquearMatriculaFaixaEtaria = $detSerie['bloquear_matricula_faixa_etaria'];
@@ -504,7 +505,11 @@ return new class extends clsCadastro
                         ->value('data_nasc');
                 }
 
-                $dentroPeriodoCorte = $serie->verificaPeriodoCorteEtarioDataNascimento(dataNascimento: $dataNasc, ano: $this->ano);
+                $dentroPeriodoCorte = app(GradeService::class)->isAgeWithinRange(
+                    gradeId: $this->ref_cod_serie,
+                    birthDate: $dataNasc,
+                    year: $this->ano
+                );
 
                 if ($bloquearMatriculaFaixaEtaria && !$dentroPeriodoCorte) {
                     $this->mensagem = 'Não foi possível realizar a matrícula, pois a idade do aluno está fora da faixa etária da série';
@@ -537,9 +542,9 @@ return new class extends clsCadastro
                     ->whereHas('inep')
                     ->exists();
 
-            $objSerie = new clsPmieducarSerie(cod_serie: $this->ref_cod_serie);
-            $serieDet = $objSerie->detalhe();
-            $exigeInep = $serieDet['exigir_inep'];
+            $exigeInep = is_numeric($this->ref_cod_serie)
+                ? LegacyGrade::query()->whereKey($this->ref_cod_serie)->value('exigir_inep')
+                : null;
 
             if (!$alunoInep && $exigeInep) {
                 $this->mensagem = 'Não foi possível realizar matrícula, necessário inserir o INEP no cadastro do aluno.';
@@ -728,10 +733,11 @@ return new class extends clsCadastro
     {
         $instituicao = new clsPmieducarInstituicao(cod_instituicao: $this->ref_cod_instituicao);
         $instituicao = $instituicao->detalhe();
-        $serie = new clsPmieducarSerie(cod_serie: $this->ref_cod_serie);
-        $serie = $serie->detalhe();
         $reprovaDependenciaAnoConcluinte = $instituicao['reprova_dependencia_ano_concluinte'];
-        $anoConcluinte = $serie['concluinte'] == 2;
+        $concluinte = is_numeric($this->ref_cod_serie)
+            ? LegacyGrade::query()->whereKey($this->ref_cod_serie)->value('concluinte')
+            : null;
+        $anoConcluinte = $concluinte == 2;
 
         return !(dbBool(val: $reprovaDependenciaAnoConcluinte) && $anoConcluinte);
     }
