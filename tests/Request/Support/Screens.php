@@ -43,9 +43,9 @@ final class Screens
      * Telas que hoje devolvem 5xx ao abrir, com o erro que dão.
      *
      * São defeitos, não configuração: nenhuma delas precisa de parâmetro para
-     * renderizar um formulário em branco ou uma listagem vazia. Duas já estavam
-     * na `excludeRoutersList()` do `legacy:create:tests` — alguém esbarrou nelas
-     * e excluiu da geração em vez de corrigir.
+     * renderizar um formulário em branco ou uma listagem vazia. A cópia de
+     * vínculos já estava na `excludeRoutersList()` do `legacy:create:tests` —
+     * alguém esbarrou nela e excluiu da geração em vez de corrigir.
      *
      * A lista não apodrece: o teste `segue quebrada` confere que cada uma
      * continua falhando, e passa a falhar quando alguém consertar — que é a
@@ -54,7 +54,6 @@ final class Screens
      * @var array<string, string>
      */
     public const BROKEN = [
-        'educar_comunicados_escolares_lst.php' => 'Call to a member function permissao_cadastra() on null',
         'copia_vinculos_servidores_cad.php' => 'Call to a member function getKey() on null',
         'educar_matricula_historico_cad.php' => 'Missing required parameter for [Route: enrollments.enrollment-history]',
     ];
