@@ -45,8 +45,12 @@ return new class extends clsDetalhe
         }
 
         if (!$registro) {
-            session()->flash(key: 'error', value: 'Disciplina de dependência não encontrada.');
-            $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
+            $this->redirectNotFound(
+                url: 'educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula,
+                registro: 'disciplina de dependência',
+                feminino: true,
+                dica: 'Confira os registros listados abaixo.',
+            );
         }
 
         $obj_serie = new clsPmieducarSerie($this->ref_cod_serie);

@@ -36,8 +36,13 @@ return new class extends clsDetalhe
             : null;
 
         if (!$registro) {
-            session()->flash(key: 'error', value: 'Alocação não encontrada.');
-            $this->simpleRedirect('educar_servidor_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_servidor_lst.php',
+                registro: 'alocação',
+                feminino: true,
+                codigo: $this->cod_servidor_alocacao,
+                dica: 'Acesse a alocação pelo cadastro do servidor.',
+            );
         }
 
         $this->ref_cod_servidor = $registro['ref_cod_servidor'];

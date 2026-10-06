@@ -19,8 +19,13 @@ return new class extends clsDetalhe
         $uniformDistribution = UniformDistribution::find($this->cod_distribuicao_uniforme);
 
         if (!$uniformDistribution) {
-            session()->flash(key: 'error', value: 'Distribuição de uniforme não encontrada.');
-            $this->simpleRedirect(url: "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->redirectNotFound(
+                url: "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}",
+                registro: 'distribuição de uniforme',
+                feminino: true,
+                codigo: $this->cod_distribuicao_uniforme,
+                dica: 'Confira os registros listados abaixo.',
+            );
         }
 
         $nm_aluno = $uniformDistribution->student->name;

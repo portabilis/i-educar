@@ -1,8 +1,6 @@
 <?php
 
 use App\Models\LegacyCalendarNote;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\RedirectResponse;
 
 return new class extends clsDetalhe
 {
@@ -45,9 +43,12 @@ return new class extends clsDetalhe
         $registro = LegacyCalendarNote::find($this->cod_calendario_anotacao)?->getAttributes();
 
         if (!$registro) {
-            session()->flash(key: 'error', value: 'Anotação do calendário não encontrada.');
-            throw new HttpResponseException(
-                response: new RedirectResponse(url: 'educar_calendario_ano_letivo_lst.php')
+            $this->redirectNotFound(
+                url: 'educar_calendario_ano_letivo_lst.php',
+                registro: 'anotação do calendário',
+                feminino: true,
+                codigo: $this->cod_calendario_anotacao,
+                dica: 'Acesse a anotação pelo calendário do ano letivo.',
             );
         }
 

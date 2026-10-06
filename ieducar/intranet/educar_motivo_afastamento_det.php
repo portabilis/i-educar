@@ -1,8 +1,6 @@
 <?php
 
 use App\Models\WithdrawalReason;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\RedirectResponse;
 
 return new class extends clsDetalhe
 {
@@ -41,9 +39,10 @@ return new class extends clsDetalhe
         $registro = WithdrawalReason::find($this->cod_motivo_afastamento)?->getAttributes();
 
         if (!$registro) {
-            session()->flash(key: 'error', value: 'Motivo de afastamento não encontrado.');
-            throw new HttpResponseException(
-                response: new RedirectResponse(url: 'educar_motivo_afastamento_lst.php')
+            $this->redirectNotFound(
+                url: 'educar_motivo_afastamento_lst.php',
+                registro: 'motivo de afastamento',
+                codigo: $this->cod_motivo_afastamento,
             );
         }
 

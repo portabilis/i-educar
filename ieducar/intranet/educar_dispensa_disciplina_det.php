@@ -47,8 +47,12 @@ return new class extends clsDetalhe
 
         if (!is_numeric($this->ref_cod_matricula) || !is_numeric($this->ref_cod_serie)
             || !is_numeric($this->ref_cod_escola) || !is_numeric($this->ref_cod_disciplina)) {
-            session()->flash(key: 'error', value: 'Dispensa de componente curricular não encontrada.');
-            $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
+            $this->redirectNotFound(
+                url: 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula,
+                registro: 'dispensa de componente curricular',
+                feminino: true,
+                dica: 'Confira os registros listados abaixo.',
+            );
         }
 
         $dispensa = LegacyDisciplineExemption::query()
@@ -62,8 +66,12 @@ return new class extends clsDetalhe
             ->first();
 
         if (!$dispensa) {
-            session()->flash(key: 'error', value: 'Dispensa de componente curricular não encontrada.');
-            $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
+            $this->redirectNotFound(
+                url: 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula,
+                registro: 'dispensa de componente curricular',
+                feminino: true,
+                dica: 'Confira os registros listados abaixo.',
+            );
         }
 
         $registro = $dispensa->getAttributes();

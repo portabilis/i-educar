@@ -1,8 +1,6 @@
 <?php
 
 use App\Models\LegacyTransferType;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\RedirectResponse;
 
 return new class extends clsDetalhe
 {
@@ -35,9 +33,10 @@ return new class extends clsDetalhe
         $registro = LegacyTransferType::find(id: $this->cod_transferencia_tipo)?->getAttributes();
 
         if (!$registro) {
-            session()->flash(key: 'error', value: 'Tipo de transferência não encontrado.');
-            throw new HttpResponseException(
-                response: new RedirectResponse(url: 'educar_transferencia_tipo_lst.php')
+            $this->redirectNotFound(
+                url: 'educar_transferencia_tipo_lst.php',
+                registro: 'tipo de transferência',
+                codigo: $this->cod_transferencia_tipo,
             );
         }
 

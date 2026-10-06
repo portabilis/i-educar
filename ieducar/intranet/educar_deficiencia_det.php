@@ -22,8 +22,11 @@ return new class extends clsDetalhe
         $registro = LegacyDeficiency::find($this->cod_deficiencia);
 
         if (!$registro) {
-            session()->flash(key: 'error', value: 'Deficiência ou transtorno não encontrado.');
-            $this->simpleRedirect('educar_deficiencia_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_deficiencia_lst.php',
+                registro: 'deficiência ou transtorno',
+                codigo: $this->cod_deficiencia,
+            );
         }
 
         $deficiencies = Deficiencias::getDescriptiveValues();

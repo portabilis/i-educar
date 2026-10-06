@@ -64,8 +64,11 @@ return new class extends clsDetalhe
         $registro = $servidor ? $servidor->getAttributes() : [];
 
         if (empty($registro)) {
-            session()->flash(key: 'error', value: 'Servidor não encontrado.');
-            $this->simpleRedirect('educar_servidor_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_servidor_lst.php',
+                registro: 'servidor',
+                codigo: $this->cod_servidor,
+            );
         }
 
         // Escolaridade

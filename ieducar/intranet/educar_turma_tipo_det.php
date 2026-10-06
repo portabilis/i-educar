@@ -35,8 +35,11 @@ return new class extends clsDetalhe
         $registro = LegacySchoolClassType::find(id: $this->cod_turma_tipo)?->getAttributes();
 
         if (!$registro) {
-            session()->flash(key: 'error', value: 'Tipo de turma não encontrado.');
-            $this->simpleRedirect(url: 'educar_turma_tipo_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_turma_tipo_lst.php',
+                registro: 'tipo de turma',
+                codigo: $this->cod_turma_tipo,
+            );
         }
 
         $obj_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);

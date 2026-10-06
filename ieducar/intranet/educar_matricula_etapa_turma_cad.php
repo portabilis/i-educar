@@ -125,8 +125,13 @@ return new class extends clsCadastro
         $det_matricula = $obj_matricula->detalhe();
 
         if (!$det_matricula) {
-            session()->flash(key: 'error', value: 'Matrícula não encontrada.');
-            $this->simpleRedirect(url: 'educar_matricula_lst.php?ref_cod_aluno=' . $this->ref_cod_aluno);
+            $this->redirectNotFound(
+                url: 'educar_matricula_lst.php?ref_cod_aluno=' . $this->ref_cod_aluno,
+                registro: 'matrícula',
+                feminino: true,
+                codigo: $this->cod_matricula,
+                dica: 'Acesse a matrícula pela ficha do aluno.',
+            );
         }
     }
 

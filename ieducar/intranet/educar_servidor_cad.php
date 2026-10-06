@@ -111,8 +111,11 @@ return new class extends clsCadastro
             $registro = $servidor ? $servidor->getAttributes() : [];
 
             if (empty($registro)) {
-                session()->flash(key: 'error', value: 'Servidor não encontrado.');
-                $this->simpleRedirect(url('intranet/educar_servidor_lst.php'));
+                $this->redirectNotFound(
+                    url: url('intranet/educar_servidor_lst.php'),
+                    registro: 'servidor',
+                    codigo: $this->cod_servidor,
+                );
             }
 
             if ($registro) {

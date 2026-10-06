@@ -31,8 +31,10 @@ return new class extends clsDetalhe
         }
 
         if (!$registro) {
-            session()->flash(key: 'error', value: 'Bloqueio do ano letivo não encontrado.');
-            $this->simpleRedirect(url: 'educar_bloqueio_ano_letivo_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_bloqueio_ano_letivo_lst.php',
+                registro: 'bloqueio do ano letivo',
+            );
         }
 
         if ($registro['instituicao']) {

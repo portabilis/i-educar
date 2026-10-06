@@ -63,8 +63,11 @@ return new class extends clsCadastro
 
             // Nenhum servidor com o código de servidor e instituição
             if ($cargaHoraria === null) {
-                session()->flash(key: 'error', value: 'Servidor não encontrado.');
-                $this->simpleRedirect(url: 'educar_servidor_lst.php');
+                $this->redirectNotFound(
+                    url: 'educar_servidor_lst.php',
+                    registro: 'servidor',
+                    codigo: $this->ref_cod_servidor,
+                );
             }
 
             $this->professor = (new EmployeeService)->isTeacher($this->ref_cod_servidor, $this->ref_ref_cod_instituicao) ? 'true' : 'false';
@@ -92,8 +95,10 @@ return new class extends clsCadastro
 
             $this->carga_horaria = $cargaHoraria;
         } else {
-            session()->flash(key: 'error', value: 'Servidor não encontrado.');
-            $this->simpleRedirect(url: 'educar_servidor_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_servidor_lst.php',
+                registro: 'servidor',
+            );
         }
 
         $this->url_cancelar = sprintf(

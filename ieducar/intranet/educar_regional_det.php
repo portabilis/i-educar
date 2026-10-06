@@ -19,8 +19,12 @@ return new class extends clsDetalhe
         $registro = RegionalType::find(request()->integer('id'))?->getAttributes();
 
         if (!$registro) {
-            session()->flash(key: 'error', value: 'Regional não encontrada.');
-            $this->simpleRedirect(url: 'educar_regional_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_regional_lst.php',
+                registro: 'regional',
+                feminino: true,
+                codigo: request()->integer('id'),
+            );
         }
 
         if ($registro['id']) {

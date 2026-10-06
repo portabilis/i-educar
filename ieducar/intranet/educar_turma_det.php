@@ -64,8 +64,11 @@ return new class extends clsDetalhe
         $this->cod_turma = request()->integer('cod_turma');
 
         if (is_null($this->cod_turma) || $this->cod_turma === 0) {
-            session()->flash(key: 'error', value: 'Turma não encontrada.');
-            $this->simpleRedirect(url: 'educar_turma_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_turma_lst.php',
+                registro: 'turma',
+                feminino: true,
+            );
         }
 
         $dias_da_semana = [
@@ -93,8 +96,12 @@ return new class extends clsDetalhe
         );
 
         if (empty($lst_obj) || $not_access) {
-            session()->flash(key: 'error', value: 'Turma não encontrada.');
-            $this->simpleRedirect(url: 'educar_turma_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_turma_lst.php',
+                registro: 'turma',
+                feminino: true,
+                motivo: 'A turma não existe, foi excluída ou pertence a uma escola à qual você não tem acesso.',
+            );
         }
 
         $registro = array_shift(array: $lst_obj);

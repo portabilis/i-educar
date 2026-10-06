@@ -51,8 +51,11 @@ return new class extends clsDetalhe
         $registro = $tmp_obj->detalhe();
 
         if (!$registro) {
-            session()->flash(key: 'error', value: 'Curso não encontrado.');
-            $this->simpleRedirect('educar_curso_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_curso_lst.php',
+                registro: 'curso',
+                codigo: request()->integer('cod_curso'),
+            );
         }
 
         $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);

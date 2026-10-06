@@ -36,8 +36,11 @@ return new class extends clsDetalhe
         $registro = LegacyRegimeType::find($this->cod_tipo_regime)?->getAttributes();
 
         if (!$registro) {
-            session()->flash(key: 'error', value: 'Tipo de regime não encontrado.');
-            $this->simpleRedirect('educar_tipo_regime_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_tipo_regime_lst.php',
+                registro: 'tipo de regime',
+                codigo: $this->cod_tipo_regime,
+            );
         }
 
         if ($registro['cod_tipo_regime']) {

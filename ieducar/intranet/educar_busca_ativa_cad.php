@@ -63,15 +63,24 @@ return new class extends clsCadastro
         $this->id = $this->getQueryString(name: 'id');
 
         if (empty($this->ref_cod_matricula)) {
-            session()->flash(key: 'error', value: 'Matrícula não encontrada.');
-            $this->simpleRedirect(url: 'educar_matricula_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_matricula_lst.php',
+                registro: 'matrícula',
+                feminino: true,
+                dica: 'Acesse a matrícula pela ficha do aluno.',
+            );
         }
 
         $legacyRegistration = LegacyRegistration::find($this->ref_cod_matricula);
 
         if (!$legacyRegistration) {
-            session()->flash(key: 'error', value: 'Matrícula não encontrada.');
-            $this->simpleRedirect(url: 'educar_matricula_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_matricula_lst.php',
+                registro: 'matrícula',
+                feminino: true,
+                codigo: $this->ref_cod_matricula,
+                dica: 'Acesse a matrícula pela ficha do aluno.',
+            );
         }
 
         $this->ref_cod_aluno = $legacyRegistration->ref_cod_aluno;

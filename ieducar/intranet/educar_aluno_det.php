@@ -24,8 +24,6 @@ use App\Models\UniformDistribution;
 use App\Services\FileService;
 use App\Services\IndividualCpfStateService;
 use App\Services\UrlPresigner;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
@@ -128,11 +126,10 @@ return new class extends clsDetalhe
         $registro = $aluno?->getAttributes() ?? [];
 
         if (empty($registro)) {
-            session()->flash(key: 'error', value: 'Aluno não encontrado.');
-            throw new HttpResponseException(
-                response: new RedirectResponse(
-                    url: URL::to(path: 'intranet/educar_aluno_lst.php')
-                )
+            $this->redirectNotFound(
+                url: URL::to(path: 'intranet/educar_aluno_lst.php'),
+                registro: 'aluno',
+                codigo: $this->cod_aluno,
             );
         }
 

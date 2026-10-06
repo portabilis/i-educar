@@ -18,8 +18,12 @@ return new class extends clsDetalhe
         $avaliacao = PerformanceEvaluation::find(request()->integer('id'));
 
         if (!$avaliacao) {
-            session()->flash(key: 'error', value: 'Avaliação de desempenho não encontrada.');
-            $this->simpleRedirect(url: 'educar_avaliacao_desempenho_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_avaliacao_desempenho_lst.php',
+                registro: 'avaliação de desempenho',
+                feminino: true,
+                codigo: request()->integer('id'),
+            );
         }
 
         $obj_permissoes = new clsPermissoes;

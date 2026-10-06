@@ -31,8 +31,12 @@ return new class extends clsDetalhe
         $registro = LegacySchoolingDegree::find($this->idesco)?->getAttributes();
 
         if (!$registro) {
-            session()->flash(key: 'error', value: 'Escolaridade não encontrada.');
-            $this->simpleRedirect('educar_escolaridade_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_escolaridade_lst.php',
+                registro: 'escolaridade',
+                feminino: true,
+                codigo: $this->idesco,
+            );
         }
 
         if ($registro['descricao']) {

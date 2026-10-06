@@ -33,8 +33,12 @@ return new class extends clsDetalhe
         $registro = LegacyStageType::find($this->cod_modulo);
 
         if (!$registro) {
-            session()->flash(key: 'error', value: 'Etapa não encontrada.');
-            $this->simpleRedirect(url: 'educar_modulo_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_modulo_lst.php',
+                registro: 'etapa',
+                feminino: true,
+                codigo: $this->cod_modulo,
+            );
         }
         $registro['ref_cod_instituicao'] = $registro->institution->nm_instituicao;
         $registro = $registro->getAttributes();

@@ -50,12 +50,17 @@ return new class extends clsDetalhe
         $registro = LegacyAbsenceDelay::find($this->cod_falta_atraso)?->getAttributes();
 
         if (!$registro) {
-            session()->flash(key: 'error', value: 'Falta/atraso não encontrado.');
-            $this->simpleRedirect(sprintf(
-                'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
-                $this->ref_cod_servidor,
-                $this->ref_ref_cod_instituicao
-            ));
+            $this->redirectNotFound(
+                url: sprintf(
+                    'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
+                    $this->ref_cod_servidor,
+                    $this->ref_ref_cod_instituicao
+                ),
+                registro: 'falta/atraso',
+                feminino: true,
+                codigo: $this->cod_falta_atraso,
+                dica: 'Confira os registros listados abaixo.',
+            );
         } else {
             $tabela = '<table>
                  <tr align=center>
