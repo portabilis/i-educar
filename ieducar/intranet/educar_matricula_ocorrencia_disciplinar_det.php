@@ -4,6 +4,7 @@ use App\Models\LegacyDisciplinaryOccurrenceType;
 use App\Models\LegacyGrade;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
+use App\Models\LegacyStudent;
 
 return new class extends clsDetalhe
 {
@@ -79,13 +80,13 @@ return new class extends clsDetalhe
 
         $detalhe_aluno = $obj_ref_cod_matricula;
 
-        $obj_aluno = (new clsPmieducarAluno)->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
-        if (is_array($obj_aluno)) {
-            $obj_aluno = array_shift($obj_aluno);
-        }
+        $nm_aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($detalhe_aluno['ref_cod_aluno'])
+            ->joinPerson()
+            ->value('pessoa.nome');
 
-        $det_aluno = $obj_aluno;
-        $this->addDetalhe(['Nome do Aluno', $det_aluno['nome_aluno']]);
+        $this->addDetalhe(['Nome do Aluno', $nm_aluno]);
 
         if ($registro['ref_ref_cod_serie']) {
             $this->addDetalhe(['Série', "{$registro['ref_ref_cod_serie']}"]);

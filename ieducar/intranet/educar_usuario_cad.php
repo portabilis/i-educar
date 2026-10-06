@@ -231,6 +231,10 @@ return new class extends clsCadastro
             return false;
         }
 
+        if (!$this->canAssignUserType()) {
+            return false;
+        }
+
         if ($this->email && !filter_var(value: $this->email, filter: FILTER_VALIDATE_EMAIL)) {
             $this->mensagem = 'Formato do e-mail inválido.';
 
@@ -314,6 +318,10 @@ return new class extends clsCadastro
         /** @var User $user */
         $user = Auth::user();
         if (!$this->canChange(currentUser: $user, changedUserId: $this->ref_pessoa)) {
+            return false;
+        }
+
+        if (!$this->canAssignUserType()) {
             return false;
         }
 
@@ -418,6 +426,36 @@ return new class extends clsCadastro
                 'escola_atual' => 0,
             ]);
         }
+    }
+
+    /**
+     * Quem não é administrador só pode atribuir tipos de usuário do próprio
+     * nível ou de nível inferior, os mesmos oferecidos no formulário.
+     */
+    private function canAssignUserType(): bool
+    {
+        if (!is_numeric($this->ref_cod_tipo_usuario)) {
+            return true;
+        }
+
+        /** @var User $user */
+        $user = Auth::user();
+
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        $allowed = LegacyUserType::query()
+            ->active()
+            ->whereKey((int) $this->ref_cod_tipo_usuario)
+            ->whereLevelAtLeast((new clsPermissoes)->nivel_acesso($this->pessoa_logada))
+            ->exists();
+
+        if (!$allowed) {
+            $this->mensagem = 'Você não tem permissão para atribuir este tipo de usuário.';
+        }
+
+        return $allowed;
     }
 
     /**

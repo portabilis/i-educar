@@ -3,6 +3,7 @@
 use App\Models\LegacyDisciplinaryOccurrenceType;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
+use App\Models\LegacyStudent;
 
 return new class extends clsListagem
 {
@@ -99,11 +100,13 @@ return new class extends clsListagem
         $detalhe_aluno = array_shift($matricula);
 
         (new clsPmieducarEscola($detalhe_aluno['ref_ref_cod_escola']))->detalhe();
-        $det_aluno = (new clsPmieducarAluno)->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
+        $nm_aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($detalhe_aluno['ref_cod_aluno'])
+            ->joinPerson()
+            ->value('pessoa.nome');
 
-        $det_aluno = array_shift($det_aluno);
-
-        $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $det_aluno['nome_aluno']);
+        $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $nm_aluno);
 
         $opcoes = LegacyDisciplinaryOccurrenceType::query()
             ->where('ativo', 1)

@@ -35,7 +35,7 @@ return new class extends clsDetalhe
         }
 
         if ($registro['descricao']) {
-            $this->addDetalhe(['Descrição', $registro['descricao']]);
+            $this->addDetalhe(['Descrição', e($registro['descricao'])]);
         }
 
         $obj_permissoes = new clsPermissoes;

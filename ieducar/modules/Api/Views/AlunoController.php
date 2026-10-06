@@ -24,6 +24,7 @@ use App\Models\TransportationProvider;
 use App\Services\FileService;
 use App\Services\IndividualCpfStateService;
 use App\Services\IndividualCpfTimelineService;
+use App\Services\StudentService;
 use App\Services\UrlPresigner;
 use App\User;
 use iEducar\Modules\Educacenso\Model\Deficiencias;
@@ -664,8 +665,7 @@ class AlunoController extends ApiCoreController
     {
         $tiposResponsavel = ['pai' => 'p', 'mae' => 'm', 'outra_pessoa' => 'r', 'pai_mae' => 'a'];
 
-        $aluno = new clsPmieducarAluno;
-        $aluno->cod_aluno = $id;
+        $aluno = [];
 
         $alunoEstadoId = mb_strtoupper($this->getRequest()->aluno_estado_id);
         $alunoEstadoId = str_replace(['-', '.'], '', $alunoEstadoId);
@@ -678,31 +678,31 @@ class AlunoController extends ApiCoreController
             $mask['replacement'] = '\\1.\\2.\\3-\\4';
         }
 
-        $aluno->aluno_estado_id = preg_replace($mask['pattern'], $mask['replacement'], $alunoEstadoId);
-        $aluno->codigo_sistema = $this->getRequest()->codigo_sistema;
-        $aluno->autorizado_um = $this->getRequest()->autorizado_um;
-        $aluno->parentesco_um = $this->getRequest()->parentesco_um;
-        $aluno->autorizado_dois = $this->getRequest()->autorizado_dois;
-        $aluno->parentesco_dois = $this->getRequest()->parentesco_dois;
-        $aluno->autorizado_tres = $this->getRequest()->autorizado_tres;
-        $aluno->parentesco_tres = $this->getRequest()->parentesco_tres;
-        $aluno->autorizado_quatro = $this->getRequest()->autorizado_quatro;
-        $aluno->parentesco_quatro = $this->getRequest()->parentesco_quatro;
-        $aluno->autorizado_cinco = $this->getRequest()->autorizado_cinco;
-        $aluno->parentesco_cinco = $this->getRequest()->parentesco_cinco;
+        $aluno['aluno_estado_id'] = preg_replace($mask['pattern'], $mask['replacement'], $alunoEstadoId);
+        $aluno['codigo_sistema'] = $this->getRequest()->codigo_sistema;
+        $aluno['autorizado_um'] = $this->getRequest()->autorizado_um;
+        $aluno['parentesco_um'] = $this->getRequest()->parentesco_um;
+        $aluno['autorizado_dois'] = $this->getRequest()->autorizado_dois;
+        $aluno['parentesco_dois'] = $this->getRequest()->parentesco_dois;
+        $aluno['autorizado_tres'] = $this->getRequest()->autorizado_tres;
+        $aluno['parentesco_tres'] = $this->getRequest()->parentesco_tres;
+        $aluno['autorizado_quatro'] = $this->getRequest()->autorizado_quatro;
+        $aluno['parentesco_quatro'] = $this->getRequest()->parentesco_quatro;
+        $aluno['autorizado_cinco'] = $this->getRequest()->autorizado_cinco;
+        $aluno['parentesco_cinco'] = $this->getRequest()->parentesco_cinco;
 
         // após cadastro não muda mais id pessoa
         if (is_null($id)) {
-            $aluno->ref_idpes = $this->getRequest()->pessoa_id;
+            $aluno['ref_idpes'] = $this->getRequest()->pessoa_id;
         }
 
         if (!config('legacy.app.alunos.nao_apresentar_campo_alfabetizado')) {
-            $aluno->analfabeto = $this->getRequest()->alfabetizado ? 0 : 1;
+            $aluno['analfabeto'] = $this->getRequest()->alfabetizado ? 0 : 1;
         }
 
-        $aluno->emancipado = (bool) $this->getRequest()->emancipado;
-        $aluno->tipo_responsavel = $tiposResponsavel[$this->getRequest()->tipo_responsavel];
-        $aluno->ref_usuario_exc = Auth::id();
+        $aluno['emancipado'] = (bool) $this->getRequest()->emancipado;
+        $aluno['tipo_responsavel'] = $tiposResponsavel[$this->getRequest()->tipo_responsavel];
+        $aluno['ref_usuario_exc'] = Auth::id();
 
         // INFORAMÇÕES PROVA INEP
         $recursosProvaInepRequest = $this->getRequest()->recursos_prova_inep__;
@@ -711,9 +711,9 @@ class AlunoController extends ApiCoreController
             $recursosProvaInep = array_filter($recursosProvaInepRequest);
             $recursosProvaInep = '{' . implode(',', $recursosProvaInep) . '}';
         }
-        $aluno->recursos_prova_inep = $recursosProvaInep;
-        $aluno->recebe_escolarizacao_em_outro_espaco = $this->getRequest()->recebe_escolarizacao_em_outro_espaco;
-        $aluno->justificativa_falta_documentacao = $this->getRequest()->justificativa_falta_documentacao;
+        $aluno['recursos_prova_inep'] = $recursosProvaInep;
+        $aluno['recebe_escolarizacao_em_outro_espaco'] = $this->getRequest()->recebe_escolarizacao_em_outro_espaco;
+        $aluno['justificativa_falta_documentacao'] = $this->getRequest()->justificativa_falta_documentacao;
 
         $veiculoTransportEscolarFromRequest = $this->getRequest()->veiculo_transporte_escolar;
         $veiculoTransporteEscolar = null;
@@ -721,7 +721,7 @@ class AlunoController extends ApiCoreController
             $veiculoTransporteEscolar = implode(',', array_filter($this->getRequest()->veiculo_transporte_escolar));
         }
 
-        $aluno->veiculo_transporte_escolar = $veiculoTransporteEscolar;
+        $aluno['veiculo_transporte_escolar'] = $veiculoTransporteEscolar;
 
         $this->file_foto = $_FILES['foto'];
         $this->del_foto = $_POST['file_delete'];
@@ -736,24 +736,22 @@ class AlunoController extends ApiCoreController
         $this->savePhoto($pessoaId);
 
         // documentos
-        $aluno->url_documento = $this->getRequest()->url_documento;
+        $aluno['url_documento'] = $this->getRequest()->url_documento;
 
         // laudo medico
-        $aluno->url_laudo_medico = $this->getRequest()->url_laudo_medico;
+        $aluno['url_laudo_medico'] = $this->getRequest()->url_laudo_medico;
 
-        $aluno->tipo_transporte = (new TransportationProvider)->from($this->getRequest()->tipo_transporte);
-        $aluno->rota_transporte = $this->getRequest()->rota_transporte;
-        $aluno->utiliza_transporte_rural = (bool) $this->getRequest()->utiliza_transporte_rural;
+        $aluno['tipo_transporte'] = (new TransportationProvider)->from($this->getRequest()->tipo_transporte);
+        $aluno['rota_transporte'] = $this->getRequest()->rota_transporte;
+        $aluno['utiliza_transporte_rural'] = (bool) $this->getRequest()->utiliza_transporte_rural;
+
+        $studentService = app(StudentService::class);
 
         if (is_null($id)) {
-            $id = $aluno->cadastra();
-            $aluno->cod_aluno = $id;
-        } else {
-            $detalheAntigo = $aluno->detalhe();
-            $id = $aluno->edita();
+            return $studentService->create(data: $aluno);
         }
 
-        return $id;
+        return $studentService->update(student: $id, data: $aluno);
     }
 
     protected function loadTurmaByMatriculaId($matriculaId)
@@ -1239,7 +1237,9 @@ class AlunoController extends ApiCoreController
         if ($this->canGet()) {
             $id = $this->getRequest()->id;
 
-            $alunoDetalhe = (new clsPmieducarAluno($id))->detalhe();
+            $alunoModel = LegacyStudent::query()->find($id);
+
+            $alunoDetalhe = $alunoModel ? $alunoModel->getAttributes() : [];
 
             $attrs = [
                 'cod_aluno' => 'id',
@@ -1872,12 +1872,7 @@ class AlunoController extends ApiCoreController
         $id = $this->getRequest()->id;
 
         if ($this->canEnable()) {
-            $aluno = new clsPmieducarAluno;
-            $aluno->cod_aluno = $id;
-            $aluno->ref_usuario_exc = Auth::id();
-            $aluno->ativo = 1;
-
-            if ($aluno->edita()) {
+            if (app(StudentService::class)->enable(student: $id, user: Auth::id())) {
                 $this->messenger->append('Cadastro ativado com sucesso', 'success', false, 'error');
             } else {
                 $this->messenger->append('Aparentemente o cadastro não pode ser ativado, por favor, verifique.', 'error', false, 'error');
@@ -1894,13 +1889,7 @@ class AlunoController extends ApiCoreController
 
         if (!$matriculaAtiva) {
             if ($this->canDelete()) {
-                $aluno = new clsPmieducarAluno;
-                $aluno->cod_aluno = $id;
-                $aluno->ref_usuario_exc = Auth::id();
-
-                $detalheAluno = $aluno->detalhe();
-
-                if ($aluno->excluir()) {
+                if (app(StudentService::class)->delete(student: $id, user: Auth::id())) {
                     $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
                 } else {
                     $this->messenger->append('Aparentemente o cadastro não pode ser removido, por favor, verifique.', 'error', false, 'error');
