@@ -56,9 +56,13 @@ class LegacyGradeBuilder extends LegacyBuilder
      */
     public function whereSchool(int $school, ?int $year = null): self
     {
-        return $this->whereHas('schools', function ($q) use ($school, $year) {
-            $q->where('cod_escola', $school);
-            $q->when($year !== null, fn ($q) => $q->whereRaw('? = ANY(escola_serie.anos_letivos)', $year));
+        return $this->whereExists(function ($q) use ($school, $year) {
+            $q->selectRaw('1')
+                ->from('pmieducar.escola_serie')
+                ->whereColumn('pmieducar.escola_serie.ref_cod_serie', 'pmieducar.serie.cod_serie')
+                ->where('pmieducar.escola_serie.ativo', 1)
+                ->where('pmieducar.escola_serie.ref_cod_escola', $school)
+                ->when($year !== null, fn ($q) => $q->whereRaw('? = ANY(pmieducar.escola_serie.anos_letivos)', $year));
         });
     }
 
@@ -83,7 +87,12 @@ class LegacyGradeBuilder extends LegacyBuilder
      */
     public function whereInstitution(int $institution): self
     {
-        return $this->whereHas('course', fn ($q) => $q->whereInstitution($institution));
+        return $this->whereExists(function ($q) use ($institution) {
+            $q->selectRaw('1')
+                ->from('pmieducar.curso')
+                ->whereColumn('pmieducar.curso.cod_curso', 'pmieducar.serie.ref_cod_curso')
+                ->where('pmieducar.curso.ref_cod_instituicao', $institution);
+        });
     }
 
     /**
@@ -91,7 +100,13 @@ class LegacyGradeBuilder extends LegacyBuilder
      */
     public function whereAcademicYear(int $year): self
     {
-        return $this->whereHas('schools', fn ($q) => $q->whereRaw('? = ANY(escola_serie.anos_letivos)', $year));
+        return $this->whereExists(function ($q) use ($year) {
+            $q->selectRaw('1')
+                ->from('pmieducar.escola_serie')
+                ->whereColumn('pmieducar.escola_serie.ref_cod_serie', 'pmieducar.serie.cod_serie')
+                ->where('pmieducar.escola_serie.ativo', 1)
+                ->whereRaw('? = ANY(pmieducar.escola_serie.anos_letivos)', $year);
+        });
     }
 
     /**
