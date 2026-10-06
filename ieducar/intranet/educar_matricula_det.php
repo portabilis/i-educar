@@ -2,6 +2,7 @@
 
 use App\Models\LegacyAbandonmentType;
 use App\Models\LegacyCourse;
+use App\Models\LegacyStudent;
 use App\Models\LegacyTransferRequest;
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
@@ -98,16 +99,11 @@ return new class extends clsDetalhe
         $registro['ref_ref_cod_escola'] = $det_ref_cod_escola['nome'];
 
         // Nome do aluno
-        $obj_aluno = new clsPmieducarAluno;
-        $lst_aluno = $obj_aluno->lista(
-            int_cod_aluno: $registro['ref_cod_aluno'],
-            int_ativo: 1
-        );
-
-        if (is_array(value: $lst_aluno)) {
-            $det_aluno = array_shift(array: $lst_aluno);
-            $nm_aluno = $det_aluno['nome_aluno'];
-        }
+        $nm_aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($registro['ref_cod_aluno'])
+            ->joinPerson()
+            ->value('pessoa.nome');
 
         if ($registro['cod_matricula']) {
             $this->addDetalhe(detalhe: ['Número Matrícula', $registro['cod_matricula']]);

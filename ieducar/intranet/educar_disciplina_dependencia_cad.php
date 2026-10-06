@@ -4,6 +4,7 @@ use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyDisciplineDependence;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacyStudent;
 
 return new class extends clsCadastro
 {
@@ -118,13 +119,11 @@ return new class extends clsCadastro
         $obj_ref_cod_matricula = (new clsPmieducarMatricula)->lista($this->ref_cod_matricula);
         $detalhe_aluno = array_shift($obj_ref_cod_matricula);
 
-        $obj_aluno = new clsPmieducarAluno;
-        $det_aluno = $obj_aluno->lista(
-            int_cod_aluno: $detalhe_aluno['ref_cod_aluno'],
-            int_ativo: 1
-        );
-
-        $det_aluno = array_shift($det_aluno);
+        $nm_aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($detalhe_aluno['ref_cod_aluno'])
+            ->joinPerson()
+            ->value('pessoa.nome');
 
         $obj_escola = new clsPmieducarEscola(
             cod_escola: $this->ref_cod_escola,
@@ -148,7 +147,7 @@ return new class extends clsCadastro
             $this->ref_sequencial = $det['sequencial'];
         }
 
-        $this->campoRotulo(nome: 'nm_aluno', campo: 'Nome do Aluno', valor: $det_aluno['nome_aluno']);
+        $this->campoRotulo(nome: 'nm_aluno', campo: 'Nome do Aluno', valor: $nm_aluno);
 
         if (!isset($this->ref_cod_turma)) {
             $this->mensagem = 'Para cadastrar uma disciplina de dependência de um aluno, é necessário que este esteja enturmado.';

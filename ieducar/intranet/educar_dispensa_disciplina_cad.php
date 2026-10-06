@@ -8,6 +8,7 @@ use App\Models\LegacyExemptionType;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClassStage;
 use App\Models\LegacyStageType;
+use App\Models\LegacyStudent;
 use App\Services\Exemption\ExemptionService;
 use Illuminate\Support\Facades\DB;
 
@@ -139,9 +140,11 @@ return new class extends clsCadastro
 
             $this->ano = $detalhe_matricula['ano'];
 
-            $obj_aluno = new clsPmieducarAluno;
-            $det_aluno = $obj_aluno->lista(int_cod_aluno: $detalhe_matricula['ref_cod_aluno'], int_ativo: 1);
-            $det_aluno = array_shift($det_aluno);
+            $nm_aluno = LegacyStudent::query()
+                ->active()
+                ->whereStudent($detalhe_matricula['ref_cod_aluno'])
+                ->joinPerson()
+                ->value('pessoa.nome');
         }
 
         $obj_escola = new clsPmieducarEscola(cod_escola: $this->ref_cod_escola, bloquear_lancamento_diario_anos_letivos_encerrados: 1);
@@ -158,7 +161,7 @@ return new class extends clsCadastro
             $this->ref_sequencial = $det['sequencial'];
         }
 
-        $this->campoRotulo(nome: 'nm_aluno', campo: 'Nome do Aluno', valor: $det_aluno['nome_aluno']);
+        $this->campoRotulo(nome: 'nm_aluno', campo: 'Nome do Aluno', valor: $nm_aluno);
 
         if (!isset($this->ref_cod_turma)) {
             $this->mensagem = 'Para dispensar um aluno de um componente curricular, é necessário que este esteja enturmado.';

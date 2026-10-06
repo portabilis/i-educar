@@ -1411,34 +1411,6 @@ class App_Model_IedFinder extends CoreExt_Entity
     }
 
     /**
-     * Retorna um aluno cadastrado para uma escola na tabela pmieducar.aluno, selecionando
-     * obrigatóriamente pelo código da escola e opcionalmente pelo código do aluno.
-     *
-     * @param int $id
-     * @return array
-     *
-     * @throws App_Model_Exception
-     */
-    public static function getAluno($escolaId, $id)
-    {
-        $aluno = self::addClassToStorage(
-            'clsPmieducarAluno',
-            null,
-            'include/pmieducar/clsPmieducarAluno.inc.php'
-        );
-
-        $aluno = $aluno->lista($id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $escolaId);
-
-        if ($aluno === false) {
-            throw new App_Model_Exception(
-                sprintf('Aluno com o código "%d" não existe.', $id)
-            );
-        }
-
-        return $aluno[0];
-    }
-
-    /**
      * Retorna todos os tipos de cliente cadastrados para determinada biblioteca na tabela
      * pmieducar.cliente_tipo, selecionando obrigatoriamente pelo código da biblioteca.
      *

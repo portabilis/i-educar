@@ -4,6 +4,7 @@ use App\Models\LegacyCourse;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyExemptionType;
 use App\Models\LegacyRegistration;
+use App\Models\LegacyStudent;
 
 return new class extends clsDetalhe
 {
@@ -75,20 +76,17 @@ return new class extends clsDetalhe
         $matricula = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
         $detalhe_aluno = array_shift($matricula);
 
-        $obj_aluno = new clsPmieducarAluno;
-        $aluno = $obj_aluno->lista(
-            int_cod_aluno: $detalhe_aluno['ref_cod_aluno'],
-            int_ativo: 1
-        );
-        $det_aluno = array_shift($aluno);
-
         $obj_escola = new clsPmieducarEscola(
             cod_escola: $this->ref_cod_escola,
             bloquear_lancamento_diario_anos_letivos_encerrados: 1
         );
         $obj_escola->detalhe();
 
-        $nm_aluno = $det_aluno['nome_aluno'];
+        $nm_aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($detalhe_aluno['ref_cod_aluno'])
+            ->joinPerson()
+            ->value('pessoa.nome');
 
         // Dados do curso
         $registro['ref_cod_curso'] = LegacyCourse::query()
