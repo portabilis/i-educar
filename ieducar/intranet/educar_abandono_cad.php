@@ -2,10 +2,13 @@
 
 use App\Models\LegacyAbandonmentType;
 use App\Models\LegacyActiveLooking;
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyStudent;
+use App\Services\EnrollmentService;
 use Carbon\Carbon;
 use iEducar\Modules\School\Model\ActiveLooking;
+use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro
 {
@@ -180,22 +183,38 @@ return new class extends clsCadastro
 
         if ($obj_matricula->edita()) {
             if ($obj_matricula->cadastraObs(obs: $this->observacao, tipoAbandono: $this->abandono_tipo, deixouDeFrequentarIdadeObrigatoria: $this->deixou_de_frequentar_idade_obrigatoria)) {
-                $enturmacoes = new clsPmieducarMatriculaTurma;
-                $enturmacoes = $enturmacoes->lista(int_ref_cod_matricula: $this->ref_cod_matricula, int_ativo: 1);
+                $enturmacoes = LegacyEnrollment::query()
+                    ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+                    ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+                    ->active()
+                    ->where('aluno.ativo', 1)
+                    ->when(is_numeric($this->ref_cod_matricula), fn ($q) => $q->whereRegistration($this->ref_cod_matricula))
+                    ->get([
+                        'matricula_turma.ref_cod_turma',
+                        'matricula_turma.sequencial',
+                    ]);
+
+                $enturmacaoService = app(EnrollmentService::class);
+
+                DB::beginTransaction();
 
                 foreach ($enturmacoes as $enturmacao) {
-                    $enturmacao = new clsPmieducarMatriculaTurma(ref_cod_matricula: $this->ref_cod_matricula, ref_cod_turma: $enturmacao['ref_cod_turma'], ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, data_cadastro: null, data_exclusao: null, ativo: 0, ref_cod_turma_transf: null, sequencial: $enturmacao['sequencial']);
-                    $detEnturmacao = $enturmacao->detalhe();
-                    $enturmacao->data_enturmacao = $detEnturmacao['data_enturmacao'];
+                    $atualizou = $enturmacaoService->updateFromScreen($this->ref_cod_matricula, $enturmacao->ref_cod_turma, $enturmacao->sequencial, [
+                        'ref_usuario_exc' => $this->pessoa_logada,
+                        'ativo' => 0,
+                    ]);
 
-                    if (!$enturmacao->edita()) {
+                    if (!$atualizou) {
+                        DB::rollBack();
                         $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
 
                         return false;
-                    } else {
-                        $enturmacao->marcaAlunoAbandono(data: $this->data_cancel);
                     }
+
+                    $enturmacaoService->registerAbandonment($this->ref_cod_matricula, $enturmacao->sequencial, $this->data_cancel);
                 }
+
+                DB::commit();
 
                 $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper)
                     ->findAll(columns: ['id'], where: ['matricula_id' => $obj_matricula->cod_matricula])[0];

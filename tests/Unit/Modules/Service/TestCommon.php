@@ -165,7 +165,6 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
         // instâncias de objetos legados e novos
         $this->_setConfigOptions('usuario', ['cod_usuario' => 1])
             ->_setConfigOptions('matricula', $this->_getMatricula())
-            ->_setConfigOptions('matriculaTurma', $this->_getMatriculaTurma())
             ->_setConfigOptions('serie', $this->_getSerie())
             ->_setConfigOptions('curso', $this->_getCurso())
             ->_setConfigOptions('escolaAnoLetivo', $this->_getEscolaAnoLetivo())
@@ -213,9 +212,6 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
         // Cria os mocks das classes legadas
         $this->_setUpMatriculaMock()
-            ->_setUpMatriculaTurmaMock()
-            ->_setUpCursoMock()
-            ->_setUpSerieMock()
             ->_setUpEscolaAnoLetivo()
             ->_setUpAnoLetivoModulo();
 
@@ -387,17 +383,6 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             'ref_ref_cod_serie' => $this->escolaSerie->ref_cod_serie,
             'ref_ref_cod_escola' => $this->escolaSerie->ref_cod_escola,
             'aprovado' => 1,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function _getMatriculaTurma()
-    {
-        return [
-            'ref_cod_matricula' => $this->matricula->getKey(),
-            'ref_cod_turma' => 1,
         ];
     }
 
@@ -674,76 +659,6 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
                 return $return[$total++];
             });
-    }
-
-    /**
-     * @return $this
-     *
-     * @throws Exception
-     */
-    protected function _setUpMatriculaTurmaMock()
-    {
-        $mock = $this->getCleanMock('clsPmieducarMatriculaTurma');
-
-        $mock
-            ->method('lista')
-            ->with(1)
-            ->willReturn($this->_getConfigOptions('matriculaTurma'));
-
-        CoreExt_Entity::addClassToStorage(
-            'clsPmieducarMatriculaTurma',
-            $mock,
-            null,
-            true
-        );
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     *
-     * @throws Exception
-     */
-    protected function _setUpSerieMock()
-    {
-        $mock = $this->getCleanMock('clsPmieducarSerie');
-
-        $mock
-            ->method('detalhe')
-            ->willReturn($this->_getConfigOptions('serie'));
-
-        CoreExt_Entity::addClassToStorage(
-            'clsPmieducarSerie',
-            $mock,
-            null,
-            true
-        );
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     *
-     * @throws Exception
-     */
-    protected function _setUpCursoMock()
-    {
-        $mock = $this->getCleanMock('clsPmieducarCurso');
-
-        $mock
-            ->method('detalhe')
-            ->willReturn($this->_getConfigOptions('curso'));
-
-        CoreExt_Entity::addClassToStorage(
-            'clsPmieducarCurso',
-            $mock,
-            null,
-            true
-        );
-
-        return $this;
     }
 
     /**

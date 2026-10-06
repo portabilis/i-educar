@@ -1,10 +1,12 @@
 <?php
 
 use App\Models\LegacyAcademicYearStage;
+use App\Models\LegacyCourse;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyDisciplineDependence;
 use App\Models\LegacyDisciplineExemption;
+use App\Models\LegacyGrade;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
@@ -154,20 +156,11 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna um nome de curso, procurando pelo seu código.
      *
      * @param int $id
-     * @return string|false
+     * @return string|null
      */
     public static function getCurso($id)
     {
-        $curso = self::addClassToStorage(
-            'clsPmieducarCurso',
-            null,
-            'include/pmieducar/clsPmieducarCurso.inc.php'
-        );
-
-        $curso->cod_curso = $id;
-        $curso = $curso->detalhe();
-
-        return empty($curso['descricao']) ? $curso['nm_curso'] : "{$curso['nm_curso']} ({$curso['descricao']})";
+        return LegacyCourse::query()->find($id)?->name;
     }
 
     /**
@@ -220,27 +213,18 @@ class App_Model_IedFinder extends CoreExt_Entity
     }
 
     /**
-     * Retorna um array com as informações da série a partir de seu código.
+     * Retorna a série a partir de seu código.
      *
      * @param int $codSerie
-     * @return array
+     * @return LegacyGrade
      *
      * @throws App_Model_Exception
      */
     public static function getSerie($codSerie)
     {
-        // Recupera clsPmieducarSerie do storage de classe estático
-        $serie = self::addClassToStorage(
-            'clsPmieducarSerie',
-            null,
-            'include/pmieducar/clsPmieducarSerie.inc.php'
-        );
+        $serie = is_numeric($codSerie) ? LegacyGrade::query()->find($codSerie) : null;
 
-        // Usa o atributo público para depois chamar o método detalhe()
-        $serie->cod_serie = $codSerie;
-        $serie = $serie->detalhe();
-
-        if ($serie === false) {
+        if ($serie === null) {
             throw new App_Model_Exception(
                 sprintf('Série com o código "%d" não existe.', $codSerie)
             );
@@ -261,37 +245,25 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getSeries($instituicaoId = null, $escolaId = null, $cursoId = null, $ano = null)
     {
-        $orderBy = ' nm_serie ASC, ref_cod_curso ASC, cod_serie ASC, etapa_curso ASC';
-        $series = app(clsPmieducarSerie::class);
-        $series->setOrderby($orderBy);
-
-        $series = $series->lista(
-            null,
-            null,
-            null,
-            $cursoId,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $instituicaoId,
-            null,
-            null,
-            $escolaId,
-            null,
-            null,
-            $ano
-        );
+        $series = LegacyGrade::query()
+            ->active()
+            ->when(is_numeric($cursoId), fn ($q) => $q->whereCourse($cursoId))
+            ->when(is_numeric($instituicaoId), fn ($q) => $q->whereInstitution($instituicaoId))
+            ->when(isset($escolaId), fn ($q) => $q->whereSchool($escolaId, $ano))
+            ->when(!isset($escolaId) && isset($ano), fn ($q) => $q->whereAcademicYear($ano))
+            ->orderBy('nm_serie')
+            ->orderBy('ref_cod_curso')
+            ->orderBy('cod_serie')
+            ->orderBy('etapa_curso')
+            ->get([
+                'cod_serie',
+                'nm_serie',
+                'descricao',
+            ]);
 
         $result = [];
         foreach ($series as $serie) {
-            $nomeSerie = empty($serie['descricao']) ? $serie['nm_serie'] : "{$serie['nm_serie']} ({$serie['descricao']})";
-            $result[$serie['cod_serie']] = mb_strtoupper($nomeSerie, 'UTF-8');
+            $result[$serie->cod_serie] = mb_strtoupper($serie->name, 'UTF-8');
         }
 
         return $result;

@@ -15,7 +15,6 @@ use Database\Factories\LegacyUserTypeFactory;
 use Database\Factories\MenuFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Portabilis_Utils_User;
 use Tests\TestCase;
 
 class LegacyRegistrationDetTest extends TestCase
@@ -23,15 +22,6 @@ class LegacyRegistrationDetTest extends TestCase
     use DatabaseTransactions, WithoutMiddleware;
 
     public const ROUTE = '/intranet/educar_matricula_det.php';
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Portabilis_Utils_User::$_currentUserId = null;
-        Portabilis_Utils_User::$_nivelAcesso = null;
-        Portabilis_Utils_User::$_permissoes = null;
-    }
 
     public function test_school_user_is_redirected_from_registration_of_another_school(): void
     {
