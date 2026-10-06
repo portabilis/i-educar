@@ -127,7 +127,7 @@ return new class extends clsCadastro
         Session::save();
         Session::start();
 
-        echo "<script>parent.fechaExpansivel( '{$_GET['div']}');</script>";
+        echo '<script>parent.fechaExpansivel(' . json_encode((string) request('div'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ');</script>';
         exit();
     }
 

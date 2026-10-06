@@ -23,18 +23,12 @@ class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
             ->expects(self::exactly(2))
             ->method('findAll')
             ->willReturnOnConsecutiveCalls([], [$faltaAluno]);
-        $this->assertEquals(1, $this->_getConfigOption('matricula', 'cod_matricula'));
+        $this->assertEquals($this->matricula->getKey(), $this->_getConfigOption('matricula', 'cod_matricula'));
 
         $this->_setFaltaAlunoDataMapperMock($mock);
 
         $_GET['etapa'] = 'Rc';
 
         $this->_getServiceInstance();
-    }
-
-    protected function tearDown(): void
-    {
-        $_GET = [];
-        Portabilis_Utils_Database::$_db = null;
     }
 }
