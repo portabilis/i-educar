@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyCourse;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyDisciplineDependence;
 use App\Models\LegacyRegistration;
@@ -75,9 +76,9 @@ return new class extends clsDetalhe
             ->value('pessoa.nome');
 
         // Dados do curso
-        $obj_ref_cod_curso = new clsPmieducarCurso($detalhe_aluno['ref_cod_curso']);
-        $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-        $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
+        $registro['ref_cod_curso'] = LegacyCourse::query()
+            ->whereKey($detalhe_aluno['ref_cod_curso'])
+            ->value('nm_curso');
 
         if ($registro['ref_cod_matricula']) {
             $this->addDetalhe(['Matricula', $registro['ref_cod_matricula']]);

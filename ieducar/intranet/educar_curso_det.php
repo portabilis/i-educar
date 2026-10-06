@@ -47,16 +47,18 @@ return new class extends clsDetalhe
 
         $this->cod_curso = $_GET['cod_curso'];
 
-        $tmp_obj = new clsPmieducarCurso(request()->integer('cod_curso'));
-        $registro = $tmp_obj->detalhe();
+        $cod_curso = request()->integer('cod_curso');
+        $curso = LegacyCourse::query()->find($cod_curso);
 
-        if (!$registro) {
+        if (!$curso) {
             $this->redirectNotFound(
                 url: 'educar_curso_lst.php',
                 registro: 'curso',
-                codigo: request()->integer('cod_curso'),
+                codigo: $cod_curso,
             );
         }
+
+        $registro = $curso->getAttributes();
 
         $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
         $obj_instituicao_det = $obj_instituicao->detalhe();
@@ -127,7 +129,6 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Ato Poder P&uacute;blico', e($registro['ato_poder_publico'])]);
         }
 
-        $curso = LegacyCourse::find(request()->integer('cod_curso'));
         $lst = $curso->qualifications?->toArray();
 
         if (!empty($lst)) {

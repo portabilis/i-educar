@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\LegacyAcademicYearStage;
+use App\Models\LegacyCourse;
 use App\Models\LegacyDisciplineExemption;
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyExemptionStage;
 use App\Models\LegacyExemptionType;
 use App\Models\LegacyRegistration;
@@ -165,13 +167,19 @@ return new class extends clsCadastro
         $det_escola = $obj_escola->detalhe();
         $this->ref_cod_instituicao = $det_escola['ref_cod_instituicao'];
 
-        $obj_matricula_turma = new clsPmieducarMatriculaTurma;
-        $lst_matricula_turma = $obj_matricula_turma->lista(int_ref_cod_matricula: $this->ref_cod_matricula, int_ativo: 1, int_ref_cod_serie: $this->ref_cod_serie, int_ref_cod_escola: $this->ref_cod_escola);
+        $enturmacao = LegacyEnrollment::query()
+            ->active()
+            ->when(is_numeric($this->ref_cod_matricula), fn ($q) => $q->whereRegistration($this->ref_cod_matricula))
+            ->whereHas('registration', function ($q) {
+                $q->whereHas('student', fn ($q) => $q->active());
+                $q->when(is_numeric($this->ref_cod_serie), fn ($q) => $q->whereGrade($this->ref_cod_serie));
+                $q->when(is_numeric($this->ref_cod_escola), fn ($q) => $q->whereSchool($this->ref_cod_escola));
+            })
+            ->first(['ref_cod_turma', 'sequencial']);
 
-        if (is_array($lst_matricula_turma)) {
-            $det = array_shift($lst_matricula_turma);
-            $this->ref_cod_turma = $det['ref_cod_turma'];
-            $this->ref_sequencial = $det['sequencial'];
+        if ($enturmacao) {
+            $this->ref_cod_turma = $enturmacao->ref_cod_turma;
+            $this->ref_sequencial = $enturmacao->sequencial;
         }
 
         $this->campoRotulo(nome: 'nm_aluno', campo: 'Nome do Aluno', valor: $nm_aluno);
@@ -435,21 +443,35 @@ return new class extends clsCadastro
         $objMatricula = new clsPmieducarMatricula;
         $dadosMatricula = $objMatricula->lista($this->ref_cod_matricula);
         // Pega curso para pegar padrao ano escolar
-        $objCurso = new clsPmieducarCurso;
-        $dadosCurso = $objCurso->lista($dadosMatricula[0]['ref_cod_curso']);
-        $padraoAnoEscolar = $dadosCurso[0]['padrao_ano_escolar'];
+        $padraoAnoEscolar = LegacyCourse::query()
+            ->active()
+            ->whereKey($dadosMatricula[0]['ref_cod_curso'])
+            ->value('padrao_ano_escolar');
         // Pega escola e ano para pegar as etapas em ano letivo modulo
         $escolaId = $dadosMatricula[0]['ref_ref_cod_escola'];
         $ano = $dadosMatricula[0]['ano'];
         // Pega dados da enturmação atual
-        $objMatriculaTurma = new clsPmieducarMatriculaTurma;
-        $seqMatriculaTurma = $objMatriculaTurma->getUltimaEnturmacao($this->ref_cod_matricula);
-        $dadosMatriculaTurma = $objMatriculaTurma->lista(int_ref_cod_matricula: $this->ref_cod_matricula, int_sequencial: $seqMatriculaTurma);
+        $seqMatriculaTurma = LegacyEnrollment::query()
+            ->join('relatorio.view_situacao', function ($j) {
+                $j->on('view_situacao.cod_matricula', 'matricula_turma.ref_cod_matricula');
+                $j->on('view_situacao.cod_turma', 'matricula_turma.ref_cod_turma');
+                $j->on('view_situacao.sequencial', 'matricula_turma.sequencial');
+            })
+            ->when(is_numeric($this->ref_cod_matricula), fn ($q) => $q->whereRegistration($this->ref_cod_matricula))
+            ->max('matricula_turma.sequencial');
+
+        $enturmacaoAtual = LegacyEnrollment::query()
+            ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+            ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+            ->where('aluno.ativo', 1)
+            ->when(is_numeric($this->ref_cod_matricula), fn ($q) => $q->whereRegistration($this->ref_cod_matricula))
+            ->when(is_numeric($seqMatriculaTurma), fn ($q) => $q->whereSequential($seqMatriculaTurma))
+            ->first(['matricula_turma.ref_cod_turma']);
         // Pega etapas definidas na escola
         $dadosAnoLetivoMod = LegacyAcademicYearStage::query()->whereSchool($escolaId)->whereYearEq($ano)->get();
         // Pega etapas definida na turma
         $dadosTurmaModulo = LegacySchoolClassStage::query()
-            ->whereSchoolClass($dadosMatriculaTurma[0]['ref_cod_turma'])
+            ->whereSchoolClass($enturmacaoAtual->ref_cod_turma)
             ->get(['ref_cod_modulo', 'sequencial']);
         // Define de onde as etapas serão pegas
         if ($padraoAnoEscolar == 1) {

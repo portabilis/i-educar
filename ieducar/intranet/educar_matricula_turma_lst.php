@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyStudent;
 use App\Process;
@@ -203,20 +204,22 @@ return new class extends clsListagem
         }
         $total = $obj_matricula_turma->_total;
 
-        $enturmacoesMatricula = (new clsPmieducarMatriculaTurma)->lista3(
-            int_ref_cod_matricula: $this->ref_cod_matricula,
-            int_ativo: 1,
-        );
+        $turmasEnturmadas = LegacyEnrollment::query()
+            ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+            ->join('pmieducar.curso', 'curso.cod_curso', 'matricula.ref_cod_curso')
+            ->join('pmieducar.serie', 'serie.cod_serie', 'matricula.ref_ref_cod_serie')
+            ->join('pmieducar.turma', 'turma.cod_turma', 'matricula_turma.ref_cod_turma')
+            ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+            ->join('cadastro.pessoa', 'pessoa.idpes', 'aluno.ref_idpes')
+            ->join('cadastro.fisica', 'fisica.idpes', 'pessoa.idpes')
+            ->active()
+            ->when(is_numeric($this->ref_cod_matricula), fn ($q) => $q->whereRegistration($this->ref_cod_matricula))
+            ->pluck('matricula_turma.ref_cod_turma');
 
         $turmasThisSerie = $lista;
         // lista turmas disponiveis para enturmacao, somente lista as turmas sem enturmacao
         foreach ($turmasThisSerie as $turma) {
-            $turmaHasEnturmacao = false;
-            foreach ($enturmacoesMatricula as $enturmacao) {
-                if (!$turmaHasEnturmacao && $turma['cod_turma'] == $enturmacao['ref_cod_turma']) {
-                    $turmaHasEnturmacao = true;
-                }
-            }
+            $turmaHasEnturmacao = $turmasEnturmadas->contains($turma['cod_turma']);
 
             if ($turmaHasEnturmacao) {
                 $enturmado = 'Sim';
@@ -282,11 +285,6 @@ return new class extends clsListagem
                 url(path: "intranet/educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}") => 'Matrícula',
             ]);
         }
-    }
-
-    public function makeExtra()
-    {
-        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-matricula-turma-lst.js');
     }
 
     public function Formular()

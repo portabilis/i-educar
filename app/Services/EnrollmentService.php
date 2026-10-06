@@ -246,6 +246,269 @@ class EnrollmentService
     }
 
     /**
+     * Cria a enturmação pelo fluxo das telas legadas, sem as validações de vaga e de data
+     * exigidas pelo enroll().
+     */
+    public function createFromScreen(
+        $registrationId,
+        $schoolClassId,
+        $createdBy,
+        ?string $enrollmentDate = null,
+        $censusStage = null,
+        $unifiedSchoolClass = null,
+        $periodId = null
+    ): ?LegacyEnrollment {
+        if (!is_numeric($registrationId) || !is_numeric($schoolClassId) || !is_numeric($createdBy)) {
+            return null;
+        }
+
+        DB::beginTransaction();
+
+        $sequential = LegacyEnrollment::query()
+            ->whereRegistration($registrationId)
+            ->max('sequencial') + 1;
+
+        $closingSequence = (new SequencialEnturmacao($registrationId, $schoolClassId, $enrollmentDate))
+            ->ordenaSequencialNovaMatricula();
+
+        $data = [
+            'ref_cod_matricula' => $registrationId,
+            'ref_cod_turma' => $schoolClassId,
+            'ref_usuario_cad' => $createdBy,
+            'sequencial' => $sequential,
+            'data_cadastro' => now(),
+            'ativo' => 1,
+        ];
+
+        if (is_numeric($censusStage)) {
+            $data['etapa_educacenso'] = $censusStage;
+        }
+
+        if (is_numeric($unifiedSchoolClass)) {
+            $data['turma_unificada'] = $unifiedSchoolClass;
+        }
+
+        if (is_string($enrollmentDate)) {
+            $data['data_enturmacao'] = $enrollmentDate;
+        }
+
+        if (is_numeric($closingSequence)) {
+            $data['sequencial_fechamento'] = $closingSequence;
+        }
+
+        if (is_numeric($periodId)) {
+            $data['turno_id'] = $periodId;
+        }
+
+        $enrollment = LegacyEnrollment::query()->create($data);
+
+        DB::commit();
+
+        return $enrollment;
+    }
+
+    /**
+     * Atualiza a enturmação pelo fluxo das telas legadas.
+     *
+     * Chave ausente em $data omite a coluna do UPDATE; chave com null grava NULL. As cinco marcas
+     * de saída são gravadas SEMPRE, então quem não as informa as zera.
+     */
+    public function updateFromScreen($registrationId, $schoolClassId, $sequential, array $data): bool
+    {
+        $updatedBy = $data['ref_usuario_exc'] ?? null;
+
+        if (!is_numeric($registrationId) || !is_numeric($schoolClassId) || !is_numeric($sequential) || !is_numeric($updatedBy)) {
+            return false;
+        }
+
+        $enrollment = LegacyEnrollment::query()
+            ->whereRegistration($registrationId)
+            ->whereSchoolClass($schoolClassId)
+            ->whereSequential($sequential)
+            ->first();
+
+        if ($enrollment === null) {
+            return true;
+        }
+
+        $active = $data['ativo'] ?? null;
+
+        $update = [
+            'ref_usuario_exc' => $updatedBy,
+            'transferido' => (int) $active === 1 ? false : (bool) ($data['transferido'] ?? false),
+            'remanejado' => (int) $active === 1 ? false : (bool) ($data['remanejado'] ?? false),
+            'reclassificado' => (bool) ($data['reclassificado'] ?? false),
+            'falecido' => (bool) ($data['falecido'] ?? false),
+            'abandono' => (bool) ($data['abandono'] ?? false),
+        ];
+
+        $exitDate = $data['data_exclusao'] ?? null;
+
+        if (is_string($exitDate)) {
+            $update['data_exclusao'] = $exitDate;
+        } elseif (is_null($exitDate) || empty($exitDate)) {
+            $update['data_exclusao'] = null;
+        }
+
+        if (is_numeric($data['ref_usuario_cad'] ?? null)) {
+            $update['ref_usuario_cad'] = $data['ref_usuario_cad'];
+        }
+
+        if (is_string($data['data_cadastro'] ?? null)) {
+            $update['data_cadastro'] = $data['data_cadastro'];
+        }
+
+        if (array_key_exists('etapa_educacenso', $data)) {
+            if ($data['etapa_educacenso'] === 0) {
+                $update['etapa_educacenso'] = null;
+            } elseif (is_numeric($data['etapa_educacenso'])) {
+                $update['etapa_educacenso'] = $data['etapa_educacenso'];
+            }
+        }
+
+        if (is_numeric($data['turma_unificada'] ?? null)) {
+            $update['turma_unificada'] = $data['turma_unificada'];
+        }
+
+        if (is_numeric($active)) {
+            $update['ativo'] = $active;
+        }
+
+        if (is_numeric($data['ref_cod_turma_transf'] ?? null)) {
+            $update['ref_cod_turma'] = $data['ref_cod_turma_transf'];
+        }
+
+        if (is_string($data['data_enturmacao'] ?? null)) {
+            $update['data_enturmacao'] = $data['data_enturmacao'];
+        }
+
+        if (array_key_exists('turno_id', $data)) {
+            $periodId = $data['turno_id'];
+
+            if (is_string($periodId) && $periodId == 0) {
+                $update['turno_id'] = null;
+            } elseif (is_string($periodId) && !empty($periodId)) {
+                $update['turno_id'] = $periodId;
+            }
+        }
+
+        if (array_key_exists('tipo_atendimento', $data)) {
+            $serviceType = $data['tipo_atendimento'];
+
+            if (is_string($serviceType)) {
+                $update['tipo_atendimento'] = '{' . $serviceType . '}';
+            } elseif ($serviceType !== false) {
+                $update['tipo_atendimento'] = null;
+            }
+        }
+
+        $enrollment->update($update);
+
+        return true;
+    }
+
+    /**
+     * Registra a saída por transferência, zerando as demais marcas.
+     */
+    public function registerTransfer($registrationId, $sequential, ?string $date = null): void
+    {
+        if (!is_numeric($registrationId) || !is_numeric($sequential)) {
+            return;
+        }
+
+        $this->registerDeparture($registrationId, $sequential, 'transferido', $date ?: date('Y-m-d'));
+    }
+
+    /**
+     * Registra a saída por abandono, zerando as demais marcas.
+     */
+    public function registerAbandonment($registrationId, $sequential, ?string $date = null): void
+    {
+        if (!is_numeric($registrationId) || !is_numeric($sequential)) {
+            return;
+        }
+
+        $this->registerDeparture($registrationId, $sequential, 'abandono', $this->brazilianDateToIso($date));
+    }
+
+    /**
+     * Registra a saída por falecimento, zerando as demais marcas.
+     */
+    public function registerDeath($registrationId, $sequential, ?string $date = null): void
+    {
+        if (!is_numeric($registrationId) || !is_numeric($sequential)) {
+            return;
+        }
+
+        $this->registerDeparture($registrationId, $sequential, 'falecido', $this->brazilianDateToIso($date));
+    }
+
+    /**
+     * Marca as enturmações ativas como reclassificadas e desativa todas as da matrícula.
+     */
+    public function registerReclassification($registrationId, ?string $date = null): bool
+    {
+        if (!is_numeric($registrationId)) {
+            return false;
+        }
+
+        $date = $date ?: date('Y-m-d');
+
+        DB::beginTransaction();
+
+        LegacyEnrollment::query()
+            ->whereRegistration($registrationId)
+            ->active()
+            ->update([
+                'transferido' => false,
+                'remanejado' => false,
+                'abandono' => false,
+                'reclassificado' => true,
+                'falecido' => false,
+                'data_exclusao' => $date,
+            ]);
+
+        LegacyEnrollment::query()
+            ->whereRegistration($registrationId)
+            ->update(['ativo' => 0]);
+
+        DB::commit();
+
+        return true;
+    }
+
+    private function registerDeparture($registrationId, $sequential, string $reason, string $date): void
+    {
+        $marks = [
+            'transferido' => false,
+            'remanejado' => false,
+            'abandono' => false,
+            'reclassificado' => false,
+            'falecido' => false,
+        ];
+
+        $marks[$reason] = true;
+        $marks['data_exclusao'] = $date;
+
+        LegacyEnrollment::query()
+            ->whereRegistration($registrationId)
+            ->whereSequential($sequential)
+            ->update($marks);
+    }
+
+    private function brazilianDateToIso(?string $date): string
+    {
+        return $date ? implode('-', array_reverse(explode('/', $date))) : date('Y-m-d');
+    }
+
+    /*
+     * Os metodos markAs* abaixo marcam APENAS a propria flag, sem mexer nas demais e sem gravar
+     * data de saida. Sao os usados pelas telas novas de enturmacao e pelo package pre-matricula.
+     * Para o comportamento das telas legadas, que zera as outras marcas e grava a data de saida,
+     * use os register* acima.
+     */
+
+    /**
      * Atualiza o campo transferido na enturmação para TRUE
      *
      *

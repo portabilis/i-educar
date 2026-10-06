@@ -3,6 +3,7 @@
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyStudent;
+use App\Services\EnrollmentService;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 
 return new class extends clsCadastro
@@ -125,10 +126,10 @@ return new class extends clsCadastro
             if ($turnoEnturmacao != (int) $turno) {
                 $is_change = true;
 
-                $obj = new clsPmieducarMatriculaTurma(ref_cod_matricula: $this->cod_matricula, ref_cod_turma: $codTurma, ref_usuario_exc: $this->pessoa_logada);
-                $obj->sequencial = $sequencial;
-                $obj->turno_id = $turno;
-                $obj->edita();
+                app(EnrollmentService::class)->updateFromScreen($this->cod_matricula, $codTurma, $sequencial, [
+                    'ref_usuario_exc' => $this->pessoa_logada,
+                    'turno_id' => $turno,
+                ]);
             }
         }
 

@@ -3,6 +3,7 @@
 use App\Models\DeficiencyType;
 use App\Models\FileRelation;
 use App\Models\Individual;
+use App\Models\LegacyCourse;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyDocument;
 use App\Models\LegacyGeneralConfiguration;
@@ -786,15 +787,6 @@ class AlunoController extends ApiCoreController
             ->value('cod_escola_inep');
 
         return $this->toUtf8($escola['nome'] . ' - INEP: ' . $schoolInep, ['transform' => true]);
-    }
-
-    protected function loadCursoNome($id)
-    {
-        $curso = new clsPmieducarCurso;
-        $curso->cod_curso = $id;
-        $curso = $curso->detalhe();
-
-        return $this->toUtf8($curso['nm_curso'], ['transform' => true]);
     }
 
     protected function loadSerieNome($id)
@@ -1585,6 +1577,10 @@ class AlunoController extends ApiCoreController
 
             $matriculas = Portabilis_Array_Utils::filterSet($matriculas, $attrs);
 
+            $nomesCursos = LegacyCourse::query()
+                ->whereIn('cod_curso', array_filter(array_column($matriculas, 'curso_id')))
+                ->pluck('nm_curso', 'cod_curso');
+
             foreach ($matriculas as $index => $matricula) {
                 $turma = $this->loadTurmaByMatriculaId($matricula['id']);
 
@@ -1598,7 +1594,7 @@ class AlunoController extends ApiCoreController
                 $matriculas[$index]['turma_id'] = $turma['id'];
                 $matriculas[$index]['turma_nome'] = $turma['nome'];
                 $matriculas[$index]['escola_nome'] = $this->loadEscolaNome($matricula['escola_id']);
-                $matriculas[$index]['curso_nome'] = $this->loadCursoNome($matricula['curso_id']);
+                $matriculas[$index]['curso_nome'] = $this->toUtf8($nomesCursos[$matricula['curso_id']] ?? null, ['transform' => true]);
                 $matriculas[$index]['serie_nome'] = $this->loadSerieNome($matricula['serie_id']);
                 $matriculas[$index]['ultima_enturmacao'] = $this->loadNomeTurmaOrigem($matricula['id']);
                 $matriculas[$index]['ultima_enturmacao_turma_id'] = $this->loadIdTurmaOrigem($matricula['id']);

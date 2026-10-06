@@ -64,11 +64,20 @@ return new class extends clsCadastro
         if ($this->nm_aluno) {
             $this->campoRotulo(nome: 'nm_aluno', campo: 'Aluno', valor: $this->nm_aluno);
         }
-        $enturmacoes = new clsPmieducarMatriculaTurma;
-        $enturmacoes = $enturmacoes->lista(
-            int_ref_cod_matricula: $this->cod_matricula,
-            apenasTurmasMultiSeriadas: true
-        );
+        $enturmacoes = LegacyEnrollment::query()
+            ->join('pmieducar.turma', 'turma.cod_turma', 'matricula_turma.ref_cod_turma')
+            ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+            ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+            ->when(is_numeric($this->cod_matricula), fn ($q) => $q->whereRegistration($this->cod_matricula))
+            ->whereIn('turma.etapa_educacenso', App_Model_Educacenso::etapas_multisseriadas())
+            ->where('aluno.ativo', 1)
+            ->get([
+                'matricula_turma.ref_cod_turma',
+                'matricula_turma.sequencial',
+                'matricula_turma.etapa_educacenso',
+                'turma.nm_turma',
+                'turma.etapa_educacenso as etapa_ensino',
+            ]);
 
         $todasEtapasEducacenso = loadJson(file: 'educacenso_json/etapas_ensino.json');
 
@@ -76,12 +85,12 @@ return new class extends clsCadastro
             $etapasEducacenso = $this->array_filter_key(
                 array: $todasEtapasEducacenso,
                 callback: function ($value) use ($enturmacao) {
-                    return in_array(needle: $value, haystack: App_Model_Educacenso::etapasDaTurma(etapaEnsino: $enturmacao['etapa_ensino']));
+                    return in_array(needle: $value, haystack: App_Model_Educacenso::etapasDaTurma(etapaEnsino: $enturmacao->etapa_ensino));
                 }
             );
             $etapasEducacenso = [0 => 'Nenhuma'] + $etapasEducacenso;
 
-            $this->campoLista(nome: "etapas_educacenso[{$enturmacao['ref_cod_turma']}-{$enturmacao['sequencial']}]", campo: "Etapa do aluno na turma {$enturmacao['nm_turma']}:", valor: $etapasEducacenso, default: $enturmacao['etapa_educacenso'], obrigatorio: false);
+            $this->campoLista(nome: "etapas_educacenso[{$enturmacao->ref_cod_turma}-{$enturmacao->sequencial}]", campo: "Etapa do aluno na turma {$enturmacao->nm_turma}:", valor: $etapasEducacenso, default: $enturmacao->etapa_educacenso, obrigatorio: false);
         }
     }
 
