@@ -60,10 +60,18 @@ class SocialiteCallbackController
         return $this->findUser($socialite->getEmail());
     }
 
+    /**
+     * Mais de um usuário pode ter o mesmo e-mail (um cadastro antigo
+     * desativado e o atual, por exemplo). O usuário ativo tem prioridade:
+     * pegar o primeiro qualquer barrava o login com "conta desativada"
+     * mesmo existindo um usuário ativo com o e-mail.
+     */
     private function findUser($email): ?User
     {
-        return User::query()->whereHas('employee', function ($query) use ($email) {
+        $users = User::query()->whereHas('employee', function ($query) use ($email) {
             $query->where('email', $email);
-        })->first();
+        })->orderBy('cod_usuario')->get();
+
+        return $users->first(fn (User $user) => $user->isActive()) ?? $users->first();
     }
 }

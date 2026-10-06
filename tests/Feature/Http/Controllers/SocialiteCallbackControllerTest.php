@@ -1,5 +1,9 @@
 <?php
 
+use App\User;
+use Database\Factories\LegacyEmployeeFactory;
+use Database\Factories\LegacyUserFactory;
+use Laravel\Socialite\Facades\Socialite;
 use Tests\TestCase;
 
 uses(TestCase::class);
@@ -19,4 +23,50 @@ test('callback without state in session redirects to login', function () {
 
     $response->assertRedirect('/login')
         ->assertSessionHasErrors('login');
+});
+
+function socialiteRetornaEmail(string $email): void
+{
+    $socialite = Mockery::mock(Laravel\Socialite\Contracts\User::class);
+    $socialite->shouldReceive('getEmail')->andReturn($email);
+
+    Socialite::shouldReceive('driver->user')->andReturn($socialite);
+}
+
+test('callback logs in the active user when an inactive user shares the e-mail', function () {
+    $email = 'mesmo.email.' . uniqid() . '@example.com';
+
+    $inativo = LegacyUserFactory::new()->create([
+        'cod_usuario' => LegacyEmployeeFactory::new()->create(['email' => $email, 'ativo' => 0])->ref_cod_pessoa_fj,
+        'ativo' => 0,
+    ]);
+    $ativo = LegacyUserFactory::new()->create([
+        'cod_usuario' => LegacyEmployeeFactory::new()->create(['email' => $email, 'ativo' => 1])->ref_cod_pessoa_fj,
+        'ativo' => 1,
+    ]);
+
+    socialiteRetornaEmail($email);
+
+    $this->get('/auth/callback?code=code&state=state')
+        ->assertSessionDoesntHaveErrors('login');
+
+    $this->assertAuthenticatedAs(User::find($ativo->cod_usuario));
+    expect(User::find($inativo->cod_usuario)->isInactive())->toBeTrue();
+});
+
+test('callback keeps refusing when the only user with the e-mail is inactive', function () {
+    $email = 'so.inativo.' . uniqid() . '@example.com';
+
+    LegacyUserFactory::new()->create([
+        'cod_usuario' => LegacyEmployeeFactory::new()->create(['email' => $email, 'ativo' => 0])->ref_cod_pessoa_fj,
+        'ativo' => 0,
+    ]);
+
+    socialiteRetornaEmail($email);
+
+    $this->get('/auth/callback?code=code&state=state')
+        ->assertRedirect('/login')
+        ->assertSessionHasErrors('login');
+
+    $this->assertGuest();
 });
