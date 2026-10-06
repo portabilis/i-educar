@@ -23,12 +23,6 @@ beforeEach(function () {
 });
 
 it('abre sem erro de servidor', function (string $rota) {
-    $pacote = Screens::NEEDS_PACKAGE[basename($rota)] ?? null;
-
-    if ($pacote !== null && !class_exists($pacote)) {
-        $this->markTestSkipped("A tela depende de [{$pacote}], de um pacote que não está instalado.");
-    }
-
     $resposta = $this->get($rota);
 
     // A mensagem carrega o começo do corpo da resposta: numa varredura de
