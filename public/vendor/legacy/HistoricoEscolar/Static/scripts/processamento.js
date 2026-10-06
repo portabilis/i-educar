@@ -463,8 +463,9 @@
 
     function getPosicaoAtiva(){
       var posicao = document.getElementById('posicao');
+      var linha = $(posicao).closest('tr').get(0);
       return posicao != null && !posicao.disabled && posicao.style.display != 'none' &&
-        $(posicao).closest('tr').get(0).style.display != 'none';
+        (linha == null || linha.style.display != 'none');
     }
 
     function getSeriesSelecionadas(){
@@ -474,7 +475,7 @@
         var serieId = $(matricula).data('serie_id');
         if ($.inArray(serieId, ids) < 0){
           ids.push(serieId);
-          series.push($.trim($(matricula).closest('tr').children().eq(2).text()));
+          series.push($('<div />').text($.trim($(matricula).closest('tr').children().eq(2).text())).html());
         }
       });
       return series;
