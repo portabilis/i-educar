@@ -26,5 +26,6 @@ test('mostra o detalhe da escola com cursos e anos letivos', function () {
 
 test('sai do detalhe quando a escola não existe', function () {
     $this->get('/intranet/educar_escola_det.php?cod_escola=0')
-        ->assertRedirect('educar_aluno_lst.php');
+        ->assertRedirect('educar_escola_lst.php')
+        ->assertSessionHas('error', 'Escola não encontrada. O registro não existe ou foi excluído. Use a busca abaixo para localizá-la.');
 });
