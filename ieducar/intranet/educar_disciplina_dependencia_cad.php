@@ -49,12 +49,14 @@ return new class extends clsCadastro
             $det_matricula = $obj_matricula->detalhe();
 
             if (!$det_matricula) {
+                session()->flash(key: 'error', value: 'Matrícula não encontrada.');
                 $this->simpleRedirect('educar_matricula_lst.php');
             }
 
             $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
             $this->ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
         } else {
+            session()->flash(key: 'error', value: 'Matrícula não encontrada.');
             $this->simpleRedirect('educar_matricula_lst.php');
         }
 

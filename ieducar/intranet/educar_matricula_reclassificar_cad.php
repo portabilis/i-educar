@@ -80,6 +80,7 @@ return new class extends clsCadastro
         $det_matricula = $obj_matricula->detalhe();
 
         if (!$det_matricula || $det_matricula['aprovado'] != 3) {
+            session()->flash(key: 'error', value: 'Matrícula não encontrada ou não está em andamento.');
             $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
@@ -241,6 +242,7 @@ return new class extends clsCadastro
         }
 
         if (!$det_matricula || $det_matricula['aprovado'] != 3) {
+            session()->flash(key: 'error', value: 'Matrícula não encontrada ou não está em andamento.');
             $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
         DB::beginTransaction();

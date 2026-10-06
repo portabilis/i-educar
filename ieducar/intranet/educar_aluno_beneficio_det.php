@@ -29,6 +29,7 @@ return new class extends clsDetalhe
         $registro = LegacyBenefit::find(request()->integer('cod_aluno_beneficio'))?->getAttributes();
 
         if (!$registro) {
+            session()->flash(key: 'error', value: 'Benefício não encontrado.');
             $this->simpleRedirect(url: 'educar_aluno_beneficio_lst.php');
         }
 

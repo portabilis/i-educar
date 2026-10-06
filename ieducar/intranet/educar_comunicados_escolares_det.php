@@ -22,6 +22,7 @@ return new class extends clsDetalhe
             ->find(request()->integer('id'));
 
         if (!$registro) {
+            session()->flash(key: 'error', value: 'Comunicado escolar não encontrado.');
             $this->simpleRedirect(url: 'educar_comunicados_escolares_lst.php');
         }
 

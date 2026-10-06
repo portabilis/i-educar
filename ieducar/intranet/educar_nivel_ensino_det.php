@@ -38,6 +38,7 @@ return new class extends clsDetalhe
         $registro = LegacyEducationLevel::find(id: $this->cod_nivel_ensino)?->getAttributes();
 
         if (!$registro) {
+            session()->flash(key: 'error', value: 'Nível de ensino não encontrado.');
             $this->simpleRedirect(url: 'educar_nivel_ensino_lst.php');
         }
 

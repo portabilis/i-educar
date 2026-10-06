@@ -413,6 +413,7 @@ return new class extends clsCadastro
             $registro = $obj->detalhe();
 
             if ($registro === false) {
+                session()->flash(key: 'error', value: 'Escola não encontrada.');
                 throw new HttpResponseException(
                     new RedirectResponse('educar_escola_lst.php')
                 );

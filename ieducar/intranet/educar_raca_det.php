@@ -36,6 +36,7 @@ return new class extends clsDetalhe
         $race = LegacyRace::query()->find(id: $this->cod_raca);
 
         if (!$race) {
+            session()->flash(key: 'error', value: 'Raça não encontrada.');
             $this->simpleRedirect(url: 'educar_raca_lst.php');
         }
 

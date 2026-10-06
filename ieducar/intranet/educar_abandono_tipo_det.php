@@ -36,6 +36,7 @@ return new class extends clsDetalhe
         $registro = LegacyAbandonmentType::find($this->cod_abandono_tipo)?->getAttributes();
 
         if (!$registro) {
+            session()->flash(key: 'error', value: 'Motivo de deixou de frequentar não encontrado.');
             $this->simpleRedirect(url: 'educar_abandono_tipo_lst.php');
         }
 

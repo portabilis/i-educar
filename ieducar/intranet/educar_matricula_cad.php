@@ -101,6 +101,7 @@ return new class extends clsCadastro
         $obj_aluno = new clsPmieducarAluno(cod_aluno: $this->ref_cod_aluno);
 
         if (!$obj_aluno->existe() and !$this->ref_cod_turma_copiar_enturmacoes) {
+            session()->flash(key: 'error', value: 'Aluno não encontrado.');
             throw new HttpResponseException(
                 response: new RedirectResponse(url: 'educar_aluno_lst.php')
             );

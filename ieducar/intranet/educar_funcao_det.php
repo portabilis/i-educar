@@ -37,6 +37,7 @@ return new class extends clsDetalhe
 
         $registro = LegacyRole::find(request()->integer('cod_funcao'))?->getAttributes();
         if (!$registro) {
+            session()->flash(key: 'error', value: 'Função não encontrada.');
             $this->simpleRedirect('educar_funcao_lst.php');
         }
 

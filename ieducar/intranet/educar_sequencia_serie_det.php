@@ -39,6 +39,7 @@ return new class extends clsDetalhe
             ->find($this->id);
 
         if (!$registro) {
+            session()->flash(key: 'error', value: 'Sequência de enturmação não encontrada.');
             $this->simpleRedirect('educar_sequencia_serie_lst.php');
         }
         $obj_permissoes = new clsPermissoes;

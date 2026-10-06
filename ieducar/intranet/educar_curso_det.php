@@ -51,6 +51,7 @@ return new class extends clsDetalhe
         $registro = $tmp_obj->detalhe();
 
         if (!$registro) {
+            session()->flash(key: 'error', value: 'Curso não encontrado.');
             $this->simpleRedirect('educar_curso_lst.php');
         }
 

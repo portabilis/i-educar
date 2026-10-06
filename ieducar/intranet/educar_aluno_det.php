@@ -88,6 +88,7 @@ return new class extends clsDetalhe
         $registro = $tmp_obj->detalhe();
 
         if (empty($registro)) {
+            session()->flash(key: 'error', value: 'Aluno não encontrado.');
             throw new HttpResponseException(
                 response: new RedirectResponse(
                     url: URL::to(path: 'intranet/educar_aluno_lst.php')

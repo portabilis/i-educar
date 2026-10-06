@@ -41,6 +41,7 @@ return new class extends clsDetalhe
         $registro = WithdrawalReason::find($this->cod_motivo_afastamento)?->getAttributes();
 
         if (!$registro) {
+            session()->flash(key: 'error', value: 'Motivo de afastamento não encontrado.');
             throw new HttpResponseException(
                 response: new RedirectResponse(url: 'educar_motivo_afastamento_lst.php')
             );

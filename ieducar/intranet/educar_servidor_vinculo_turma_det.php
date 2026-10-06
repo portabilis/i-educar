@@ -37,6 +37,7 @@ return new class extends clsDetalhe
         $registro = $professorTurma?->getAttributes();
 
         if (!$registro) {
+            session()->flash(key: 'error', value: 'Vínculo com turma não encontrado.');
             $this->simpleRedirect(url: 'educar_servidor_professor_vinculo_lst.php');
         }
 

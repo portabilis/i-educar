@@ -40,6 +40,7 @@ return new class extends clsDetalhe
         $registro = $tmp_obj->detalhe();
 
         if (!$registro) {
+            session()->flash(key: 'error', value: 'Série não encontrada.');
             $this->simpleRedirect('educar_serie_lst.php');
         }
 

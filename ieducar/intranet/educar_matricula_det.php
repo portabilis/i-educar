@@ -64,7 +64,8 @@ return new class extends clsDetalhe
         }
 
         if (!$registro) {
-            $this->simpleRedirect(url: 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno']);
+            session()->flash(key: 'error', value: 'Matrícula não encontrada.');
+            $this->simpleRedirect(url: 'educar_aluno_lst.php');
         }
 
         if (!Portabilis_Utils_User::canAccessEscola(id: $registro['ref_ref_cod_escola'])) {

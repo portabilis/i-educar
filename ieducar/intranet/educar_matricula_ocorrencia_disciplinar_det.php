@@ -49,6 +49,7 @@ return new class extends clsDetalhe
             ?->getAttributes();
 
         if (!$registro) {
+            session()->flash(key: 'error', value: 'Ocorrência disciplinar não encontrada.');
             $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
         }
 

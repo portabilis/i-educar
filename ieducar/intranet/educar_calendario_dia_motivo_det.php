@@ -37,6 +37,7 @@ return new class extends clsDetalhe
         $registro = LegacyCalendarDayReason::find($this->cod_calendario_dia_motivo);
 
         if (!$registro) {
+            session()->flash(key: 'error', value: 'Motivo de dia do calendário não encontrado.');
             $this->simpleRedirect('educar_calendario_dia_motivo_lst.php');
         }
 

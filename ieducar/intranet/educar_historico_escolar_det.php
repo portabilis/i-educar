@@ -61,6 +61,7 @@ return new class extends clsDetalhe
         $historicoModel = LegacySchoolHistory::forStudentSequential($this->ref_cod_aluno, $this->sequencial)->first();
 
         if (!$historicoModel) {
+            session()->flash(key: 'error', value: 'Histórico escolar não encontrado.');
             $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 

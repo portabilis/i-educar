@@ -53,6 +53,7 @@ return new class extends clsDetalhe
         $registro = $tmp_obj->detalhe();
 
         if (!$registro) {
+            session()->flash(key: 'error', value: 'Dispensa de componente curricular não encontrada.');
             $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 

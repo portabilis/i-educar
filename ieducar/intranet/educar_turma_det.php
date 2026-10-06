@@ -64,6 +64,7 @@ return new class extends clsDetalhe
         $this->cod_turma = request()->integer('cod_turma');
 
         if (is_null($this->cod_turma) || $this->cod_turma === 0) {
+            session()->flash(key: 'error', value: 'Turma não encontrada.');
             $this->simpleRedirect(url: 'educar_turma_lst.php');
         }
 
@@ -92,6 +93,7 @@ return new class extends clsDetalhe
         );
 
         if (empty($lst_obj) || $not_access) {
+            session()->flash(key: 'error', value: 'Turma não encontrada.');
             $this->simpleRedirect(url: 'educar_turma_lst.php');
         }
 

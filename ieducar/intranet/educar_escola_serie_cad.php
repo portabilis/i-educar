@@ -85,7 +85,7 @@ return new class extends clsCadastro
                 ->first();
 
             if (!$registro) {
-                $this->mensagem .= 'Registro não localizado.<br>';
+                session()->flash(key: 'error', value: 'Série da escola não encontrada.');
                 $this->simpleRedirect('educar_escola_serie_lst.php');
             }
 

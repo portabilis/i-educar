@@ -29,11 +29,8 @@ return new class extends clsDetalhe
         $this->cod_tipo_ensino = $_GET['cod_tipo_ensino'];
 
         $registro = LegacyEducationType::find($this->cod_tipo_ensino)?->getAttributes();
-        if (!$registro) {
-            $this->simpleRedirect('educar_tipo_ensino_lst.php');
-        }
-
-        if (!$registro['ativo']) {
+        if (!$registro || !$registro['ativo']) {
+            session()->flash(key: 'error', value: 'Tipo de ensino não encontrado.');
             $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
 

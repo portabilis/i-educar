@@ -42,9 +42,10 @@ return new class extends clsDetalhe
 
         $this->cod_calendario_anotacao = $_GET['cod_calendario_anotacao'];
 
-        $registro = LegacyCalendarNote::find($this->cod_calendario_anotacao)->getAttributes();
+        $registro = LegacyCalendarNote::find($this->cod_calendario_anotacao)?->getAttributes();
 
         if (!$registro) {
+            session()->flash(key: 'error', value: 'Anotação do calendário não encontrada.');
             throw new HttpResponseException(
                 response: new RedirectResponse(url: 'educar_calendario_ano_letivo_lst.php')
             );

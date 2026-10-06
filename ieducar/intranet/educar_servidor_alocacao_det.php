@@ -36,6 +36,7 @@ return new class extends clsDetalhe
             : null;
 
         if (!$registro) {
+            session()->flash(key: 'error', value: 'Alocação não encontrada.');
             $this->simpleRedirect('educar_servidor_lst.php');
         }
 

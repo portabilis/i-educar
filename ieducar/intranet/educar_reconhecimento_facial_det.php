@@ -21,6 +21,7 @@ return new class extends clsDetalhe
         $student = LegacyStudent::find($this->cod_aluno);
 
         if (!$student) {
+            session()->flash(key: 'error', value: 'Aluno não encontrado.');
             $this->simpleRedirect('educar_aluno_lst.php');
         }
 
