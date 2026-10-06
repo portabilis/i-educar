@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyAcademicYearStage;
+use App\Models\LegacyCourse;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyExemptionStage;
 use App\Models\LegacyExemptionType;
@@ -421,9 +422,10 @@ return new class extends clsCadastro
         $objMatricula = new clsPmieducarMatricula;
         $dadosMatricula = $objMatricula->lista($this->ref_cod_matricula);
         // Pega curso para pegar padrao ano escolar
-        $objCurso = new clsPmieducarCurso;
-        $dadosCurso = $objCurso->lista($dadosMatricula[0]['ref_cod_curso']);
-        $padraoAnoEscolar = $dadosCurso[0]['padrao_ano_escolar'];
+        $padraoAnoEscolar = LegacyCourse::query()
+            ->active()
+            ->whereKey($dadosMatricula[0]['ref_cod_curso'])
+            ->value('padrao_ano_escolar');
         // Pega escola e ano para pegar as etapas em ano letivo modulo
         $escolaId = $dadosMatricula[0]['ref_ref_cod_escola'];
         $ano = $dadosMatricula[0]['ano'];

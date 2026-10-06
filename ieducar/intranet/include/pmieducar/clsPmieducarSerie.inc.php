@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyCourse;
 use iEducar\Legacy\Model;
 
 class clsPmieducarSerie extends Model
@@ -778,7 +779,7 @@ class clsPmieducarSerie extends Model
         $idadeInicial = $detSerie['idade_inicial'];
         $idadeFinal = $detSerie['idade_final'];
 
-        $instituicaoId = $this->getInstituicaoByCurso($detSerie['ref_cod_curso']);
+        $instituicaoId = LegacyCourse::query()->whereKey($detSerie['ref_cod_curso'])->value('ref_cod_instituicao');
         $objInstituicao = new clsPmieducarInstituicao($instituicaoId);
         $detInstituicao = $objInstituicao->detalhe();
         $dataBaseMatricula = $detInstituicao['data_base_matricula'];
@@ -813,14 +814,6 @@ class clsPmieducarSerie extends Model
         }
 
         return $idadeCompativel;
-    }
-
-    public function getInstituicaoByCurso($codCurso)
-    {
-        $objCurso = new clsPmieducarCurso($codCurso);
-        $detCurso = $objCurso->detalhe();
-
-        return $detCurso['ref_cod_instituicao'];
     }
 
     public function possuiTurmasVinculadas()
