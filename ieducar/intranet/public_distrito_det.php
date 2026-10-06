@@ -34,23 +34,23 @@ return new class extends clsDetalhe
         $district = $this->find($this->iddis);
 
         if ($district->name) {
-            $this->addDetalhe(['Nome', $district->name]);
+            $this->addDetalhe(['Nome', e($district->name)]);
         }
 
         if ($district->city->name) {
-            $this->addDetalhe(['Município', $district->city->name]);
+            $this->addDetalhe(['Município', e($district->city->name)]);
         }
 
         if ($district->city->state->name) {
-            $this->addDetalhe(['Estado', $district->city->state->name]);
+            $this->addDetalhe(['Estado', e($district->city->state->name)]);
         }
 
         if ($district->city->state->country->name) {
-            $this->addDetalhe(['Pais', $district->city->state->country->name]);
+            $this->addDetalhe(['Pais', e($district->city->state->country->name)]);
         }
 
         if ($district->ibge_code) {
-            $this->addDetalhe(['Código INEP', $district->ibge_code]);
+            $this->addDetalhe(['Código INEP', e($district->ibge_code)]);
         }
 
         $obj_permissao = new clsPermissoes;

@@ -115,7 +115,7 @@ return new class extends clsDetalhe
             $link = sprintf(
                 '<a href="/intranet/atendidos_det.php?cod_pessoa=%s" target="_blank">%s</a>',
                 $registro['cod_servidor'],
-                $registro['nome']
+                e($registro['nome'])
             );
             $this->addDetalhe(['Nome', $link]);
         }
@@ -133,14 +133,14 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Código Educacenso/Inep', $docenteInep->docenteInep]);
 
             if (isset($docenteInep->nomeInep)) {
-                $this->addDetalhe(['Nome Educacenso/Inep', $docenteInep->nomeInep]);
+                $this->addDetalhe(['Nome Educacenso/Inep', e($docenteInep->nomeInep)]);
             }
         }
 
         if ($registro['idpes']) {
             // Inalcançável: o registro do servidor não tem a chave `idpes`.
             // @codeCoverageIgnoreStart
-            $this->addDetalhe(['Nome', $registro['Nome']]);
+            $this->addDetalhe(['Nome', e($registro['Nome'])]);
             // @codeCoverageIgnoreEnd
         }
 
@@ -357,7 +357,7 @@ return new class extends clsDetalhe
             }
 
             if ($this->isTeacher($this->cod_servidor)) {
-                $this->array_botao[] = 'Vincular professor a turmas';
+                $this->array_botao[] = 'Vincular servidor a turma';
                 $this->array_botao_url_script[] = "go(\"educar_servidor_vinculo_turma_lst.php?{$get_padrao}\");";
             }
         }
@@ -382,8 +382,9 @@ return new class extends clsDetalhe
         $this->url_cancelar = 'educar_servidor_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Funções do servidor', [
-            url('intranet/educar_servidores_index.php') => 'Servidores',
+        // O servidor é um nível do caminho: Início > Servidores > Nome
+        $this->breadcrumb($registro['nome'], [
+            url('intranet/educar_servidor_lst.php') => 'Servidores',
         ]);
     }
 

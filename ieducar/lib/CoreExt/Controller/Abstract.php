@@ -212,9 +212,11 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
             $code = 302;
         }
 
-        ob_end_flush();
-        ob_get_clean();
-
+        // Buffer de saída não se mexe aqui: quem abre é o LegacyController, e é
+        // ele quem fecha, ao desempilhar esta exceção. Fechar daqui derrubaria um
+        // buffer que este método não abriu, e com ele o de quem chamou. O
+        // conteúdo já produzido é descartado junto, que é o certo num
+        // redirecionamento.
         throw new HttpResponseException(
             new RedirectResponse($url, $code)
         );

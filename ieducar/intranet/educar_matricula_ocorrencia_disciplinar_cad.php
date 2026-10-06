@@ -2,7 +2,9 @@
 
 use App\Models\LegacyDisciplinaryOccurrenceType;
 use App\Models\LegacyGeneralConfiguration;
+use App\Models\LegacyRegistration;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
+use App\Models\LegacyStudent;
 use Illuminate\Validation\ValidationException;
 
 return new class extends clsCadastro
@@ -106,9 +108,23 @@ return new class extends clsCadastro
             $this->url_cancelar = ($retorno == 'Editar') ? "educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_tipo_ocorrencia_disciplinar={$registro['ref_cod_tipo_ocorrencia_disciplinar']}&sequencial={$registro['sequencial']}" : "educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}";
         }
 
-        $this->breadcrumb('Ocorrências disciplinares da matrícula', [
-            url('intranet/educar_index.php') => 'Escola',
-        ]);
+        // Aberta pelo menu, sem matrícula, a tela é avulsa: a matrícula é
+        // escolhida no formulário e o caminho não tem aluno nem matrícula
+        if (!is_numeric($this->ref_cod_matricula)) {
+            $this->breadcrumb('Ocorrências disciplinares', [
+                url('intranet/educar_index.php') => 'Escola',
+            ]);
+        } else {
+            // Início > Escola > Alunos > Nome > Matrícula > Ocorrências disciplinares > Nova (ou Editar)
+            $registration = LegacyRegistration::find($this->ref_cod_matricula);
+            $this->breadcrumb($retorno == 'Editar' ? 'Editar' : 'Nova', [
+                url('intranet/educar_index.php') => 'Escola',
+                url('intranet/educar_aluno_lst.php') => 'Alunos',
+                url("intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+                url("intranet/educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}") => 'Matrícula',
+                url("intranet/educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}") => 'Ocorrências disciplinares',
+            ]);
+        }
 
         $this->nome_url_cancelar = 'Cancelar';
 
@@ -123,11 +139,13 @@ return new class extends clsCadastro
             if ($detalhe_aluno) {
                 $detalhe_aluno = array_shift($detalhe_aluno);
             }
-            $obj_aluno = new clsPmieducarAluno;
-            $det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
-            $det_aluno = current($det_aluno);
+            $nm_aluno = LegacyStudent::query()
+                ->active()
+                ->whereStudent($detalhe_aluno['ref_cod_aluno'])
+                ->joinPerson()
+                ->value('pessoa.nome');
 
-            $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $det_aluno['nome_aluno']);
+            $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $nm_aluno);
         } else {
             $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola']);
             // FIXME #parameters

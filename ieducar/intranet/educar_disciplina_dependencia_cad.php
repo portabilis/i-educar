@@ -2,8 +2,10 @@
 
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyDisciplineDependence;
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacyStudent;
 
 return new class extends clsCadastro
 {
@@ -97,8 +99,14 @@ return new class extends clsCadastro
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb(currentPage: 'Disciplinas de dependência', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Matrícula > Disciplinas de dependência > Nova (ou Editar)
+        $registration = LegacyRegistration::find($this->ref_cod_matricula);
+        $this->breadcrumb(currentPage: $retorno == 'Editar' ? 'Editar' : 'Nova', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url("intranet/educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}") => 'Matrícula',
+            url("intranet/educar_disciplina_dependencia_lst.php?ref_cod_matricula={$this->ref_cod_matricula}") => 'Disciplinas de dependência',
         ]);
 
         return $retorno;
@@ -112,13 +120,11 @@ return new class extends clsCadastro
         $obj_ref_cod_matricula = (new clsPmieducarMatricula)->lista($this->ref_cod_matricula);
         $detalhe_aluno = array_shift($obj_ref_cod_matricula);
 
-        $obj_aluno = new clsPmieducarAluno;
-        $det_aluno = $obj_aluno->lista(
-            int_cod_aluno: $detalhe_aluno['ref_cod_aluno'],
-            int_ativo: 1
-        );
-
-        $det_aluno = array_shift($det_aluno);
+        $nm_aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($detalhe_aluno['ref_cod_aluno'])
+            ->joinPerson()
+            ->value('pessoa.nome');
 
         $obj_escola = new clsPmieducarEscola(
             cod_escola: $this->ref_cod_escola,
@@ -128,21 +134,22 @@ return new class extends clsCadastro
         $det_escola = $obj_escola->detalhe();
         $this->ref_cod_instituicao = $det_escola['ref_cod_instituicao'];
 
-        $obj_matricula_turma = new clsPmieducarMatriculaTurma;
-        $lst_matricula_turma = $obj_matricula_turma->lista(
-            int_ref_cod_matricula: $this->ref_cod_matricula,
-            int_ativo: 1,
-            int_ref_cod_serie: $this->ref_cod_serie,
-            int_ref_cod_escola: $this->ref_cod_escola
-        );
+        $enturmacao = LegacyEnrollment::query()
+            ->active()
+            ->when(is_numeric($this->ref_cod_matricula), fn ($q) => $q->whereRegistration($this->ref_cod_matricula))
+            ->whereHas('registration', function ($q) {
+                $q->whereHas('student', fn ($q) => $q->active());
+                $q->when(is_numeric($this->ref_cod_serie), fn ($q) => $q->whereGrade($this->ref_cod_serie));
+                $q->when(is_numeric($this->ref_cod_escola), fn ($q) => $q->whereSchool($this->ref_cod_escola));
+            })
+            ->first(['ref_cod_turma', 'sequencial']);
 
-        if (is_array($lst_matricula_turma)) {
-            $det = array_shift($lst_matricula_turma);
-            $this->ref_cod_turma = $det['ref_cod_turma'];
-            $this->ref_sequencial = $det['sequencial'];
+        if ($enturmacao) {
+            $this->ref_cod_turma = $enturmacao->ref_cod_turma;
+            $this->ref_sequencial = $enturmacao->sequencial;
         }
 
-        $this->campoRotulo(nome: 'nm_aluno', campo: 'Nome do Aluno', valor: $det_aluno['nome_aluno']);
+        $this->campoRotulo(nome: 'nm_aluno', campo: 'Nome do Aluno', valor: $nm_aluno);
 
         if (!isset($this->ref_cod_turma)) {
             $this->mensagem = 'Para cadastrar uma disciplina de dependência de um aluno, é necessário que este esteja enturmado.';
