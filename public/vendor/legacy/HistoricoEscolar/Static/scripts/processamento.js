@@ -461,24 +461,43 @@
 
     $formFilter.ajaxForm(matriculasSearchOptions);
 
+    function getPosicaoAtiva(){
+      var $posicao = $('#posicao');
+      return $posicao.length > 0 && !$posicao.is(':disabled') && $posicao.css('display') != 'none' &&
+        $posicao.closest('tr').css('display') != 'none';
+    }
+
     function getSeriesSelecionadas(){
+      var ids = [];
       var series = [];
       $.each($('input.matricula:checked'), function(index, matricula){
         var serieId = $(matricula).data('serie_id');
-        if ($.inArray(serieId, series) < 0)
-          series.push(serieId);
+        if ($.inArray(serieId, ids) < 0){
+          ids.push(serieId);
+          series.push($.trim($(matricula).closest('tr').children().eq(2).text()));
+        }
       });
       return series;
+    }
+
+    function getMensagemSeriesDiferentes(){
+      var series = getPosicaoAtiva() ? getSeriesSelecionadas() : [];
+      if (series.length < 2)
+        return '';
+
+      var citadas = series.length > 3 ? series.slice(0, 3).join(', ') + ' e mais ' + (series.length - 3) : series.join(', ');
+      return 'Os alunos marcados são de ' + series.length + ' séries (' + citadas + '). Não é possível processar séries diferentes juntas: processe uma série por vez.';
     }
 
     var onClickActionEvent = function(event){
 
       var $firstChecked = $('input.matricula:checked:first');
+      var mensagemSeriesDiferentes = getMensagemSeriesDiferentes();
 
       if ($firstChecked.length < 1)
         handleMessages([{type : 'error', msg : 'Selecione alguma matrícula.'}], $actionButton, true);
-      else if (getSeriesSelecionadas().length > 1)
-        handleMessages([{type : 'error', msg : 'As matrículas selecionadas são de séries diferentes. Processe uma série por vez.'}], $actionButton, true);
+      else if (mensagemSeriesDiferentes)
+        handleMessages([{type : 'error', msg : mensagemSeriesDiferentes}], $actionButton, true);
       else {
         var additionalFields = [
           $('#percentual-frequencia-manual').get(0),
