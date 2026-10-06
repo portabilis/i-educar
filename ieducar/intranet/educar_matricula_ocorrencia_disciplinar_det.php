@@ -1,8 +1,10 @@
 <?php
 
 use App\Models\LegacyDisciplinaryOccurrenceType;
+use App\Models\LegacyGrade;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
+use App\Models\LegacyStudent;
 
 return new class extends clsDetalhe
 {
@@ -54,20 +56,10 @@ return new class extends clsDetalhe
 
         $obj_ref_cod_matricula = new clsPmieducarMatricula($registro['ref_cod_matricula']);
         $det_ref_cod_matricula = $obj_ref_cod_matricula->detalhe();
-        $obj_serie = new clsPmieducarSerie($det_ref_cod_matricula['ref_ref_cod_serie']);
-        $det_serie = $obj_serie->detalhe();
-        $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
+        $registro['ref_ref_cod_serie'] = LegacyGrade::query()->whereKey($det_ref_cod_matricula['ref_ref_cod_serie'])->value('nm_serie');
 
         $det_ref_cod_tipo_ocorrencia_disciplinar = LegacyDisciplinaryOccurrenceType::find($registro['ref_cod_tipo_ocorrencia_disciplinar'])?->getAttributes();
         $registro['nm_tipo'] = $det_ref_cod_tipo_ocorrencia_disciplinar['nm_tipo'];
-
-        $obj_mat_turma = new clsPmieducarMatriculaTurma;
-
-        $det_mat_turma = $obj_mat_turma->lista($registro['ref_cod_matricula'], null, null, null, null, null, null, null, 1);
-
-        if ($det_mat_turma) {
-            $det_mat_turma = array_shift($det_mat_turma);
-        }
 
         if ($registro['ref_cod_matricula']) {
             $this->addDetalhe(['Matrícula', "{$registro['ref_cod_matricula']}"]);
@@ -80,20 +72,16 @@ return new class extends clsDetalhe
 
         $detalhe_aluno = $obj_ref_cod_matricula;
 
-        $obj_aluno = (new clsPmieducarAluno)->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
-        if (is_array($obj_aluno)) {
-            $obj_aluno = array_shift($obj_aluno);
-        }
+        $nm_aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($detalhe_aluno['ref_cod_aluno'])
+            ->joinPerson()
+            ->value('pessoa.nome');
 
-        $det_aluno = $obj_aluno;
-        $this->addDetalhe(['Nome do Aluno', $det_aluno['nome_aluno']]);
+        $this->addDetalhe(['Nome do Aluno', $nm_aluno]);
 
         if ($registro['ref_ref_cod_serie']) {
             $this->addDetalhe(['Série', "{$registro['ref_ref_cod_serie']}"]);
-        }
-
-        if ($det_mat_turma['det_turma']) {
-            $this->addDetalhe(['Turma', "{$det_mat_turma['det_turma']}"]);
         }
 
         if ($registro['sequencial']) {

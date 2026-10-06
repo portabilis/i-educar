@@ -1,6 +1,6 @@
 <?php
 
-class EditController extends Core_Controller_Page_EditController
+class TabelaArredondamento_Views_EditController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper = 'TabelaArredondamento_Model_TabelaDataMapper';
 

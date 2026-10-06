@@ -3,7 +3,7 @@
 use App\Models\LegacyEvaluationRule;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class EditController extends Core_Controller_Page_EditController
+class FormulaMedia_Views_EditController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper = 'FormulaMedia_Model_FormulaDataMapper';
 

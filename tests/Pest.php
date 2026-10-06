@@ -24,6 +24,14 @@ uses(
     DatabaseTransactions::class,
 )->in('Browser');
 
+// A camada de requisição exercita as mesmas telas sem navegador: GET para abrir
+// o formulário, POST para gravar. Nunca com WithoutMiddleware — é o
+// ConvertEmptyStringsToNull que faz um campo vazio chegar ao legado como null.
+uses(
+    TestCase::class,
+    DatabaseTransactions::class,
+)->in('Request');
+
 /*
 |--------------------------------------------------------------------------
 | Expectations

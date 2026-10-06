@@ -6,6 +6,7 @@ use clsCampos;
 use Core_Controller_Page_ListController;
 use Core_Controller_Page_ViewController;
 use CoreExt_Entity;
+use CoreExt_View_Helper_UrlHelper;
 use TabelaArredondamento_Model_Tabela;
 use Tests\TestCase;
 
@@ -100,5 +101,25 @@ class CoreExtPageEscapingTest extends TestCase
         $this->assertStringNotContainsString(self::MARKER, $html);
         $this->assertStringContainsString(e(self::MARKER), $html);
         $this->assertStringContainsString('Educa&ccedil;&atilde;o', $html);
+    }
+
+    public function test_link_do_url_helper_escapa_o_texto()
+    {
+        $html = CoreExt_View_Helper_UrlHelper::l('x"\'>' . self::MARKER, 'educar_servidor_det.php', ['query' => ['cod_servidor' => 1]]);
+
+        $this->assertStringNotContainsString(self::MARKER, $html);
+        $this->assertStringContainsString(e(self::MARKER), $html);
+        $this->assertStringStartsWith('<a href="', $html);
+    }
+
+    public function test_campo_de_cor_escapa_o_valor()
+    {
+        $campos = new clsCampos;
+        $campos->campoCor('color', 'Cor', '"><b>CVECANARY</b>', ['#FFFFFF']);
+
+        $html = $campos->MakeCampos();
+
+        $this->assertStringNotContainsString(self::MARKER, $html);
+        $this->assertStringContainsString(e(self::MARKER), $html);
     }
 }

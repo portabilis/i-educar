@@ -71,7 +71,7 @@ return new class extends clsListagem
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
                 $this->addLinhas([
-                    "<a href=\"educar_escolaridade_det.php?idesco={$registro['idesco']}\">{$registro['descricao']}</a>",
+                    "<a href=\"educar_escolaridade_det.php?idesco={$registro['idesco']}\">" . e($registro['descricao']) . '</a>',
                 ]);
             }
         }
