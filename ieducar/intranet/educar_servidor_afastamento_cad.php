@@ -114,8 +114,10 @@ return new class extends clsCadastro
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb('Registro de afastamento do servidor', [
-            url('intranet/educar_servidores_index.php') => 'Servidores',
+        // Início > Servidores > Nome > Afastamento (ou Retorno)
+        $this->breadcrumb($this->retornar_servidor == EmployeeReturn::SIM ? 'Retorno' : 'Afastamento', [
+            url('intranet/educar_servidor_lst.php') => 'Servidores',
+            url("intranet/educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}") => LegacyPerson::whereKey($this->ref_cod_servidor)->value('nome'),
         ]);
 
         return $retorno;

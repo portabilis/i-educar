@@ -2,6 +2,7 @@
 
 use App\Models\LegacyAbandonmentType;
 use App\Models\LegacyActiveLooking;
+use App\Models\LegacyRegistration;
 use Carbon\Carbon;
 use iEducar\Modules\School\Model\ActiveLooking;
 
@@ -78,8 +79,13 @@ return new class extends clsCadastro
 
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
 
-        $this->breadcrumb(currentPage: 'Registro de aluno que deixou de frequentar', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Matrícula > Deixou de frequentar
+        $registration = LegacyRegistration::find($this->ref_cod_matricula);
+        $this->breadcrumb(currentPage: 'Deixou de frequentar', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_aluno_lst.php') => 'Alunos',
+            url(path: "intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url(path: "intranet/educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}") => 'Matrícula',
         ]);
 
         $this->nome_url_cancelar = 'Cancelar';
@@ -224,7 +230,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Transferência Solicitação';
+        $this->title = 'Deixou de frequentar';
         $this->processoAp = '578';
     }
 };

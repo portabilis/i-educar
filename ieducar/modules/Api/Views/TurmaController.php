@@ -3,6 +3,7 @@
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
+use iEducar\Reports\Contracts\ReportCardTypes;
 
 class TurmaController extends ApiCoreController
 {
@@ -186,15 +187,15 @@ class TurmaController extends ApiCoreController
             }
         }
 
-        $tipos = Portabilis_Model_Report_TipoBoletim::getInstance()->getReports();
+        $tipos = app(ReportCardTypes::class)->getReports();
 
         if ($tipoDiferenciado && $tipoDiferenciado != $tipo) {
-            $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado]);
+            $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado] ?? null);
         } else {
             $exists = LegacySchoolClass::query()->whereDifferentStudents($codTurma)->exists();
 
             if ($exists) {
-                $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado]);
+                $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado] ?? null);
             }
         }
 
