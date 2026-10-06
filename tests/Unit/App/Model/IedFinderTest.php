@@ -109,28 +109,31 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
     public function test_get_curso()
     {
-        $returnValue = [
+        $curso = LegacyCourseFactory::new()->create([
             'nm_curso' => 'Ensino Fundamental',
-        ];
+            'descricao' => null,
+        ]);
 
-        $mock = $this->getCleanMock('clsPmieducarCurso');
-        $mock->expects($this->once())
-            ->method('detalhe')
-            ->willReturn($returnValue);
-
-        // Registra a instância no repositório de classes de CoreExt_Entity
-        $instance = App_Model_IedFinder::addClassToStorage(
-            'clsPmieducarCurso',
-            $mock,
-            null,
-            true
+        $this->assertEquals(
+            'Ensino Fundamental',
+            App_Model_IedFinder::getCurso($curso->getKey()),
+            '::getCurso() retorna o nome do curso através de uma busca pelo código.'
         );
 
-        $curso = App_Model_IedFinder::getCurso(1);
+        $cursoComDescricao = LegacyCourseFactory::new()->create([
+            'nm_curso' => 'Ensino Médio',
+            'descricao' => 'Integrado',
+        ]);
+
         $this->assertEquals(
-            $returnValue['nm_curso'],
-            $curso,
-            '::getCurso() retorna o nome do curso através de uma busca pelo código.'
+            'Ensino Médio (Integrado)',
+            App_Model_IedFinder::getCurso($cursoComDescricao->getKey()),
+            '::getCurso() concatena a descrição ao nome do curso.'
+        );
+
+        $this->assertNull(
+            App_Model_IedFinder::getCurso(0),
+            '::getCurso() retorna nulo quando o curso não existe.'
         );
     }
 

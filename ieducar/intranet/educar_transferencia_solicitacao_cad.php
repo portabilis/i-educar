@@ -2,11 +2,13 @@
 
 use App\Events\TransferEvent;
 use App\Models\LegacyActiveLooking;
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyStudent;
 use App\Models\LegacyTransferRequest;
 use App\Models\LegacyTransferType;
 use App\Models\LegacyUser;
+use App\Services\EnrollmentService;
 use App\Services\PromotionService;
 use App\Services\SchoolHistoryService;
 use iEducar\Modules\School\Model\ActiveLooking;
@@ -144,10 +146,10 @@ return new class extends clsCadastro
             return;
         }
 
-        $enturmacao = new clsPmieducarMatriculaTurma(ref_cod_matricula: $matriculaId, ref_cod_turma: $ultimaEnturmacao['ref_cod_turma'], ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, data_cadastro: null, data_exclusao: null, ativo: 1, ref_cod_turma_transf: null, sequencial: $ultimaEnturmacao['sequencial']);
-        $detEnturmacao = $enturmacao->detalhe();
-        $enturmacao->data_enturmacao = $detEnturmacao['data_enturmacao'];
-        $enturmacao->edita();
+        app(EnrollmentService::class)->updateFromScreen($matriculaId, $ultimaEnturmacao['ref_cod_turma'], $ultimaEnturmacao['sequencial'], [
+            'ref_usuario_exc' => $this->pessoa_logada,
+            'ativo' => 1,
+        ]);
     }
 
     public function Gerar()
@@ -249,25 +251,38 @@ return new class extends clsCadastro
                 return false;
             }
 
-            $enturmacoes = new clsPmieducarMatriculaTurma;
-            $enturmacoes = $enturmacoes->lista(int_ref_cod_matricula: $this->ref_cod_matricula, int_ativo: 1);
+            $enturmacoes = LegacyEnrollment::query()
+                ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+                ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+                ->active()
+                ->where('aluno.ativo', 1)
+                ->when(is_numeric($this->ref_cod_matricula), fn ($q) => $q->whereRegistration($this->ref_cod_matricula))
+                ->get([
+                    'matricula_turma.ref_cod_turma',
+                    'matricula_turma.sequencial',
+                ]);
 
-            if ($enturmacoes) {
-                // foreach necessário pois metodo edita e exclui da classe clsPmieducarMatriculaTurma, necessitam do
-                // código da turma e do sequencial
-                foreach ($enturmacoes as $enturmacao) {
-                    $enturmacao = new clsPmieducarMatriculaTurma(ref_cod_matricula: $this->ref_cod_matricula, ref_cod_turma: $enturmacao['ref_cod_turma'], ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, data_cadastro: null, data_exclusao: null, ativo: 0, ref_cod_turma_transf: null, sequencial: $enturmacao['sequencial'], data_enturmacao: $this->data_enturmacao);
-                    $detEnturmacao = $enturmacao->detalhe();
-                    $enturmacao->data_enturmacao = $detEnturmacao['data_enturmacao'];
-                    if (!$enturmacao->edita()) {
-                        $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
+            $enturmacaoService = app(EnrollmentService::class);
 
-                        return false;
-                    } else {
-                        $enturmacao->marcaAlunoTransferido(data: $this->data_cancel);
-                    }
+            DB::beginTransaction();
+
+            foreach ($enturmacoes as $enturmacao) {
+                $atualizou = $enturmacaoService->updateFromScreen($this->ref_cod_matricula, $enturmacao->ref_cod_turma, $enturmacao->sequencial, [
+                    'ref_usuario_exc' => $this->pessoa_logada,
+                    'ativo' => 0,
+                ]);
+
+                if (!$atualizou) {
+                    DB::rollBack();
+                    $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
+
+                    return false;
                 }
+
+                $enturmacaoService->registerTransfer($this->ref_cod_matricula, $enturmacao->sequencial, $this->data_cancel);
             }
+
+            DB::commit();
         }
         app(SchoolHistoryService::class)->gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada);
 

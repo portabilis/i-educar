@@ -8,6 +8,7 @@ use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacyStudent;
 use App\Process;
+use App\Services\EnrollmentService;
 
 return new class extends clsCadastro
 {
@@ -318,8 +319,7 @@ return new class extends clsCadastro
         /**
          * desativa todas as enturmacoes da matricula anterior
          */
-        $obj_matricula_turma = new clsPmieducarMatriculaTurma($this->cod_matricula);
-        if (!$obj_matricula_turma->reclassificacao($this->data_cancel)) {
+        if (!app(EnrollmentService::class)->registerReclassification($this->cod_matricula, $this->data_cancel)) {
             echo "<script>alert('Erro ao desativar enturmações da matrícula: {$this->cod_matricula}\nContate o administrador do sistema informando a matrícula!');</script>";
         }
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyCourse;
 use App\Models\LegacyGrade;
 use App\Models\LegacySchoolGrade;
 use App\Services\SchoolGradeDisciplineService;
@@ -57,9 +58,7 @@ return new class extends clsDetalhe
 
         $nm_serie = LegacyGrade::query()->whereKey($registro['ref_cod_serie'])->value('nm_serie');
 
-        $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
-        $det_curso = $obj_curso->detalhe();
-        $registro['ref_cod_curso'] = $det_curso['nm_curso'];
+        $registro['ref_cod_curso'] = LegacyCourse::query()->whereKey($registro['ref_cod_curso'])->value('nm_curso');
 
         $obj_permissao = new clsPermissoes;
         $obj_permissao->nivel_acesso($this->pessoa_logada);

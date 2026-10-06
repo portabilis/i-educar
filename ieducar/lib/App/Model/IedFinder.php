@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyAcademicYearStage;
+use App\Models\LegacyCourse;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyDisciplineDependence;
@@ -155,20 +156,11 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna um nome de curso, procurando pelo seu código.
      *
      * @param int $id
-     * @return string|false
+     * @return string|null
      */
     public static function getCurso($id)
     {
-        $curso = self::addClassToStorage(
-            'clsPmieducarCurso',
-            null,
-            'include/pmieducar/clsPmieducarCurso.inc.php'
-        );
-
-        $curso->cod_curso = $id;
-        $curso = $curso->detalhe();
-
-        return empty($curso['descricao']) ? $curso['nm_curso'] : "{$curso['nm_curso']} ({$curso['descricao']})";
+        return LegacyCourse::query()->find($id)?->name;
     }
 
     /**

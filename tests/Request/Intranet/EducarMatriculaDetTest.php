@@ -5,6 +5,10 @@ use Database\Factories\LegacySchoolClassFactory;
 use Database\Factories\LegacyUserFactory;
 
 beforeEach(function () {
+    Portabilis_Utils_User::$_currentUserId = null;
+    Portabilis_Utils_User::$_nivelAcesso = null;
+    Portabilis_Utils_User::$_permissoes = null;
+
     $this->actingAs(LegacyUserFactory::new()->admin()->create());
 });
 

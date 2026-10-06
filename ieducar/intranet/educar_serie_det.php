@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyCourse;
 use App\Models\LegacyGrade;
 
 return new class extends clsDetalhe
@@ -56,11 +57,10 @@ return new class extends clsDetalhe
 
         $registro = $serie->getAttributes();
 
-        $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
-        $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-        $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
+        $curso = LegacyCourse::query()->find($registro['ref_cod_curso'], ['nm_curso', 'ref_cod_instituicao']);
+        $registro['ref_cod_curso'] = $curso->nm_curso;
 
-        $registro['ref_cod_instituicao'] = $det_ref_cod_curso['ref_cod_instituicao'];
+        $registro['ref_cod_instituicao'] = $curso->ref_cod_instituicao;
         $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
         $obj_instituicao_det = $obj_instituicao->detalhe();
         $registro['ref_cod_instituicao'] = $obj_instituicao_det['nm_instituicao'];
