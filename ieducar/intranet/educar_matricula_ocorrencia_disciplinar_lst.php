@@ -1,7 +1,10 @@
 <?php
 
 use App\Models\LegacyDisciplinaryOccurrenceType;
+use App\Models\LegacyEnrollment;
+use App\Models\LegacyRegistration;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
+use App\Models\LegacyStudent;
 
 return new class extends clsListagem
 {
@@ -76,7 +79,7 @@ return new class extends clsListagem
 
     public function Gerar()
     {
-        $this->titulo = 'Matricula Ocorrência Disciplinar - Listagem';
+        $this->titulo = 'Ocorrências disciplinares - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;
@@ -98,11 +101,13 @@ return new class extends clsListagem
         $detalhe_aluno = array_shift($matricula);
 
         (new clsPmieducarEscola($detalhe_aluno['ref_ref_cod_escola']))->detalhe();
-        $det_aluno = (new clsPmieducarAluno)->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
+        $nm_aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($detalhe_aluno['ref_cod_aluno'])
+            ->joinPerson()
+            ->value('pessoa.nome');
 
-        $det_aluno = array_shift($det_aluno);
-
-        $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $det_aluno['nome_aluno']);
+        $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $nm_aluno);
 
         $opcoes = LegacyDisciplinaryOccurrenceType::query()
             ->where('ativo', 1)
@@ -147,6 +152,19 @@ return new class extends clsListagem
         $lista = $result->items();
         $total = $result->total();
 
+        $turmasPorMatricula = LegacyEnrollment::query()
+            ->active()
+            ->whereIn('ref_cod_matricula', array_filter(array_column($lista, 'ref_cod_matricula'), 'is_numeric'))
+            ->whereHas('registration', function ($q) {
+                $q->whereHas('student', fn ($q) => $q->active());
+            })
+            ->with('schoolClass:cod_turma,nm_turma')
+            ->get([
+                'ref_cod_matricula',
+                'ref_cod_turma',
+            ])
+            ->groupBy('ref_cod_matricula');
+
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
@@ -160,20 +178,12 @@ return new class extends clsListagem
                 $det_ref_cod_tipo_ocorrencia_disciplinar = LegacyDisciplinaryOccurrenceType::find($registro['ref_cod_tipo_ocorrencia_disciplinar'])?->getAttributes();
                 $registro['nm_tipo'] = $det_ref_cod_tipo_ocorrencia_disciplinar['nm_tipo'];
 
-                $obj_mat_turma = new clsPmieducarMatriculaTurma;
-
-                $det_mat_turma = $obj_mat_turma->lista($registro['ref_cod_matricula'], null, null, null, null, null, null, null, 1);
-
-                if ($det_mat_turma) {
-                    $det_mat_turma = array_shift($det_mat_turma);
-                    $obj_turma = new clsPmieducarTurma($det_mat_turma['ref_cod_turma']);
-                    $det_turma = $obj_turma->detalhe();
-                }
+                $nomeTurma = $turmasPorMatricula->get($registro['ref_cod_matricula'])?->first()?->schoolClass->nm_turma;
 
                 $this->addLinhas([
                     "<a href=\"educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_tipo_ocorrencia_disciplinar={$registro['ref_cod_tipo_ocorrencia_disciplinar']}&sequencial={$registro['sequencial']}\">{$registro['nm_tipo']}</a>",
                     "<a href=\"educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_tipo_ocorrencia_disciplinar={$registro['ref_cod_tipo_ocorrencia_disciplinar']}&sequencial={$registro['sequencial']}\">{$registro['ref_ref_cod_serie']}</a>",
-                    "<a href=\"educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_tipo_ocorrencia_disciplinar={$registro['ref_cod_tipo_ocorrencia_disciplinar']}&sequencial={$registro['sequencial']}\">{$det_turma['nm_turma']}</a>",
+                    "<a href=\"educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_tipo_ocorrencia_disciplinar={$registro['ref_cod_tipo_ocorrencia_disciplinar']}&sequencial={$registro['sequencial']}\">{$nomeTurma}</a>",
                 ]);
             }
         }
@@ -195,14 +205,19 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Ocorrências disciplinares da matrícula', [
+        // Início > Escola > Alunos > Nome > Matrícula > Ocorrências disciplinares
+        $registration = LegacyRegistration::find($this->ref_cod_matricula);
+        $this->breadcrumb('Ocorrências disciplinares', [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url("intranet/educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}") => 'Matrícula',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'Ocorrência Disciplinar';
+        $this->title = 'Ocorrências disciplinares';
         $this->processoAp = '578';
     }
 };

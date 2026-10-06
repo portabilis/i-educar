@@ -30,7 +30,7 @@ class Avaliacao_Service_ParecerDescritivoAlunoTest extends Avaliacao_Service_Tes
             ->expects(self::exactly(2))
             ->method('findAll')
             ->willReturnOnConsecutiveCalls([], [$parecerAluno]);
-        $this->assertEquals(1, $this->_getConfigOption('matricula', 'cod_matricula'));
+        $this->assertEquals($this->matricula->getKey(), $this->_getConfigOption('matricula', 'cod_matricula'));
 
         $this->_setParecerDescritivoAlunoDataMapperMock($mock);
 

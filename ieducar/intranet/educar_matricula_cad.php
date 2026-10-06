@@ -5,6 +5,7 @@ use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
 use App\Jobs\UpdateBlockedSituationRegistration;
 use App\Models\LegacyCourse;
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyGradeSequence;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
@@ -14,6 +15,7 @@ use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolGrade;
 use App\Models\LegacyStudent;
 use App\Models\RegistrationStatus;
+use App\Services\EnrollmentService;
 use App\Services\PromotionService;
 use App\Services\RegistrationService;
 use App\Services\SchoolClass\AvailableTimeService;
@@ -98,9 +100,10 @@ return new class extends clsCadastro
         $this->ano = $this->getQueryString(name: 'ano');
 
         $retorno = $this->ref_cod_turma_copiar_enturmacoes ? 'Enturmar' : 'Novo';
-        $obj_aluno = new clsPmieducarAluno(cod_aluno: $this->ref_cod_aluno);
+        $alunoExiste = is_numeric($this->ref_cod_aluno)
+            && LegacyStudent::query()->whereStudent($this->ref_cod_aluno)->exists();
 
-        if (!$obj_aluno->existe() and !$this->ref_cod_turma_copiar_enturmacoes) {
+        if (!$alunoExiste and !$this->ref_cod_turma_copiar_enturmacoes) {
             throw new HttpResponseException(
                 response: new RedirectResponse(url: 'educar_aluno_lst.php')
             );
@@ -141,17 +144,14 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'cod_matricula', valor: $this->cod_matricula);
         $this->campoOculto(nome: 'ref_cod_aluno', valor: $this->ref_cod_aluno);
 
-        if ($this->ref_cod_aluno) {
-            $obj_aluno = new clsPmieducarAluno;
+        if (is_numeric($this->ref_cod_aluno)) {
+            $this->nm_aluno = LegacyStudent::query()
+                ->active()
+                ->whereStudent($this->ref_cod_aluno)
+                ->joinPerson()
+                ->value('pessoa.nome');
 
-            $lst_aluno = $obj_aluno->lista(
-                int_cod_aluno: $this->ref_cod_aluno,
-                int_ativo: 1
-            );
-
-            if (is_array(value: $lst_aluno)) {
-                $det_aluno = array_shift(array: $lst_aluno);
-                $this->nm_aluno = $det_aluno['nome_aluno'];
+            if ($this->nm_aluno) {
                 $this->campoRotulo(nome: 'nm_aluno', campo: 'Aluno', valor: $this->nm_aluno);
             }
         }
@@ -178,11 +178,16 @@ return new class extends clsCadastro
         $this->acao_enviar = 'formUtils.submit()';
     }
 
-    protected function getCurso($id)
+    private function cursoDeAtividadeComplementar($id)
     {
-        $curso = new clsPmieducarCurso(cod_curso: $id);
+        if (!is_numeric(value: $id)) {
+            return false;
+        }
 
-        return $curso->detalhe();
+        return LegacyCourse::query()
+            ->whereKey($id)
+            ->whereHas(relation: 'educationType', callback: fn ($query) => $query->where('atividade_complementar', true))
+            ->exists();
     }
 
     private function getEnturmacoesNaTurma($turma)
@@ -425,16 +430,14 @@ return new class extends clsCadastro
                 ->get(['ref_ref_cod_serie', 'ref_cod_curso']);
 
             if ($matriculas->isNotEmpty() && !$dependencia) {
-                $curso = $this->getCurso(id: $this->ref_cod_curso);
-
-                $cursoADeferir = new clsPmieducarCurso(cod_curso: $this->ref_cod_curso);
-                $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
+                $multiSeriado = LegacyCourse::query()->whereKey($this->ref_cod_curso)->value('multi_seriado');
+                $cursoDeAtividadeComplementar = $this->cursoDeAtividadeComplementar(id: $this->ref_cod_curso);
 
                 if ($matriculas->firstWhere('ref_ref_cod_serie', $this->ref_cod_serie) && !$cursoDeAtividadeComplementar) {
                     $this->mensagem = 'Este aluno já está matriculado nesta série e curso, não é possivel matricular um aluno mais de uma vez na mesma série.<br />';
 
                     return false;
-                } elseif ($curso['multi_seriado'] != 1) {
+                } elseif ($multiSeriado != 1) {
                     $nomeSerie = $matriculas->pluck('grade.nm_serie')->unique()->implode(', ');
 
                     $this->mensagem = "Este aluno já está matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso não é multisseriado, não é possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
@@ -449,8 +452,7 @@ return new class extends clsCadastro
 
                 if (is_array(value: $m) && count(value: $m) && !$dependencia) {
                     $mesmoCursoAno = ($m['ref_cod_curso'] == $this->ref_cod_curso && $m['ano'] == $this->ano);
-                    $cursoADeferir = new clsPmieducarCurso(cod_curso: $this->ref_cod_curso);
-                    $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
+                    $cursoDeAtividadeComplementar = $this->cursoDeAtividadeComplementar(id: $this->ref_cod_curso);
 
                     if (($mesmoCursoAno || config(key: 'legacy.app.matricula.multiplas_matriculas') == 0) && !$cursoDeAtividadeComplementar) {
                         $serie = new clsPmieducarSerie(cod_serie: $m['ref_ref_cod_serie'], ref_usuario_exc: null, ref_usuario_cad: null, ref_cod_curso: $m['ref_cod_curso']);
@@ -471,14 +473,7 @@ return new class extends clsCadastro
                             $escola = '';
                         }
 
-                        $curso = new clsPmieducarCurso(cod_curso: $m['ref_cod_curso']);
-                        $curso = $curso->detalhe();
-
-                        if (is_array(value: $curso) && count(value: $curso)) {
-                            $curso = $curso['nm_curso'];
-                        } else {
-                            $curso = '';
-                        }
+                        $curso = LegacyCourse::query()->whereKey($m['ref_cod_curso'])->value('nm_curso');
 
                         $this->mensagem = "Este aluno já está matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transferência ao secretário(a) da escola citada.<br />";
 
@@ -501,10 +496,13 @@ return new class extends clsCadastro
                 $instituicao = new clsPmieducarInstituicao(cod_instituicao: $this->ref_cod_instituicao);
                 $instituicao = $instituicao->detalhe();
 
-                $objAluno = new clsPmieducarAluno(cod_aluno: $this->ref_cod_aluno);
-                $detAluno = $objAluno->detalhe();
+                $dataNasc = null;
 
-                $dataNasc = LegacyIndividual::whereKey($detAluno['ref_idpes'])->value('data_nasc');
+                if (is_numeric($this->ref_cod_aluno)) {
+                    $dataNasc = LegacyIndividual::query()
+                        ->whereHas('student', fn ($q) => $q->whereStudent($this->ref_cod_aluno))
+                        ->value('data_nasc');
+                }
 
                 $dentroPeriodoCorte = $serie->verificaPeriodoCorteEtarioDataNascimento(dataNascimento: $dataNasc, ano: $this->ano);
 
@@ -533,8 +531,12 @@ return new class extends clsCadastro
                 }
             }
 
-            $objAluno = new clsPmieducarAluno;
-            $alunoInep = $objAluno->verificaInep(cod_aluno: $this->ref_cod_aluno);
+            $alunoInep = is_numeric($this->ref_cod_aluno)
+                && LegacyStudent::query()
+                    ->whereStudent($this->ref_cod_aluno)
+                    ->whereHas('inep')
+                    ->exists();
+
             $objSerie = new clsPmieducarSerie(cod_serie: $this->ref_cod_serie);
             $serieDet = $objSerie->detalhe();
             $exigeInep = $serieDet['exigir_inep'];
@@ -765,10 +767,13 @@ return new class extends clsCadastro
 
     public function verificaAlunoFalecido()
     {
-        $aluno = new clsPmieducarAluno(cod_aluno: $this->ref_cod_aluno);
-        $aluno = $aluno->detalhe();
+        if (!is_numeric($this->ref_cod_aluno)) {
+            return false;
+        }
 
-        $falecido = LegacyIndividual::whereKey($aluno['ref_idpes'])->value('falecido');
+        $falecido = LegacyIndividual::query()
+            ->whereHas('student', fn ($q) => $q->whereStudent($this->ref_cod_aluno))
+            ->value('falecido');
 
         return dbBool(val: $falecido);
     }
@@ -912,28 +917,24 @@ return new class extends clsCadastro
 
     public function enturmacaoMatricula($matriculaId, $turmaDestinoId)
     {
-        $enturmacaoExists = new clsPmieducarMatriculaTurma;
-
-        $enturmacaoExists = $enturmacaoExists->lista(
-            int_ref_cod_matricula: $matriculaId,
-            int_ref_cod_turma: $turmaDestinoId,
-            int_ativo: 1
-        );
-
-        $enturmacaoExists = is_array(value: $enturmacaoExists) && count(value: $enturmacaoExists) > 0;
+        $enturmacaoExists = LegacyEnrollment::query()
+            ->active()
+            ->when(is_numeric($matriculaId), fn ($q) => $q->whereRegistration($matriculaId))
+            ->when(is_numeric($turmaDestinoId), fn ($q) => $q->whereSchoolClass($turmaDestinoId))
+            ->whereHas('registration', function ($q) {
+                $q->whereHas('student', fn ($q) => $q->active());
+            })
+            ->exists();
 
         if (!$enturmacaoExists) {
-            $enturmacao = new clsPmieducarMatriculaTurma(
-                ref_cod_matricula: $matriculaId,
-                ref_cod_turma: $turmaDestinoId,
-                ref_usuario_exc: $this->pessoa_logada,
-                ref_usuario_cad: $this->pessoa_logada,
-                ativo: 1
+            $enturmacao = app(EnrollmentService::class)->createFromScreen(
+                registrationId: $matriculaId,
+                schoolClassId: $turmaDestinoId,
+                createdBy: $this->pessoa_logada,
+                enrollmentDate: $this->data_matricula
             );
 
-            $enturmacao->data_enturmacao = $this->data_matricula;
-
-            return $enturmacao->cadastra();
+            return $enturmacao !== null;
         }
 
         return false;
@@ -963,10 +964,11 @@ return new class extends clsCadastro
 
     public function _getQtdMatriculaTurma()
     {
-        $obj_mt = new clsPmieducarMatriculaTurma;
-        $lst_mt = $obj_mt->enturmacoesSemDependencia(turmaId: $this->ref_cod_turma);
-
-        return $lst_mt[0];
+        return LegacyEnrollment::query()
+            ->active()
+            ->whereSchoolClass($this->ref_cod_turma)
+            ->whereHas('registration', fn ($q) => $q->where('dependencia', false))
+            ->count();
     }
 
     public function _getMaxAlunoTurma()
@@ -1019,19 +1021,21 @@ return new class extends clsCadastro
     {
         $obj_t = new clsPmieducarTurma(cod_turma: $this->ref_cod_turma);
         $det_t = $obj_t->detalhe();
-        $obj_mt = new clsPmieducarMatriculaTurma;
 
-        $obj_mt->lista(
-            int_ativo: 1,
-            int_ref_cod_serie: $this->ref_cod_serie,
-            int_ref_cod_curso: $this->ref_cod_curso,
-            int_ref_cod_escola: $this->ref_cod_escola,
-            int_turma_turno_id: $det_t['turma_turno_id'],
-            int_ano_turma: $det_t['ano'],
-            dependencia: 'f'
-        );
-
-        return $obj_mt->_total;
+        return LegacyEnrollment::query()
+            ->active()
+            ->whereHas('registration', function ($q) {
+                $q->when(is_numeric($this->ref_cod_serie), fn ($q) => $q->whereGrade($this->ref_cod_serie));
+                $q->when(is_numeric($this->ref_cod_curso), fn ($q) => $q->whereCourse($this->ref_cod_curso));
+                $q->when(is_numeric($this->ref_cod_escola), fn ($q) => $q->whereSchool($this->ref_cod_escola));
+                $q->where('dependencia', false);
+                $q->whereHas('student', fn ($q) => $q->active());
+            })
+            ->whereHas('schoolClass', function ($q) use ($det_t) {
+                $q->when(is_numeric($det_t['turma_turno_id']), fn ($q) => $q->whereShift($det_t['turma_turno_id']));
+                $q->when(is_numeric($det_t['ano']), fn ($q) => $q->whereYearEq($det_t['ano']));
+            })
+            ->count();
     }
 
     private function availableTimeService()

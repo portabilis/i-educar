@@ -20,7 +20,7 @@ class CityFactory extends Factory
     public function definition(): array
     {
         return [
-            'state_id' => StateFactory::new()->create(),
+            'state_id' => fn () => StateFactory::new()->create(),
             'name' => $this->faker->city(),
             'ibge_code' => $this->faker->numerify('########'),
         ];

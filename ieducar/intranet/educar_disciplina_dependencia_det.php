@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\LegacyCourse;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyDisciplineDependence;
 use App\Models\LegacyRegistration;
+use App\Models\LegacyStudent;
 
 return new class extends clsDetalhe
 {
@@ -56,25 +58,22 @@ return new class extends clsDetalhe
         $matricula = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
         $detalhe_aluno = array_shift($matricula);
 
-        $obj_aluno = new clsPmieducarAluno;
-        $lista = $obj_aluno->lista(
-            int_cod_aluno: $detalhe_aluno['ref_cod_aluno'],
-            int_ativo: 1
-        );
-        $det_aluno = array_shift($lista);
-
         $obj_escola = new clsPmieducarEscola(
             cod_escola: $this->ref_cod_escola,
             bloquear_lancamento_diario_anos_letivos_encerrados: 1
         );
         $obj_escola->detalhe();
 
-        $nm_aluno = $det_aluno['nome_aluno'];
+        $nm_aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($detalhe_aluno['ref_cod_aluno'])
+            ->joinPerson()
+            ->value('pessoa.nome');
 
         // Dados do curso
-        $obj_ref_cod_curso = new clsPmieducarCurso($detalhe_aluno['ref_cod_curso']);
-        $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-        $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
+        $registro['ref_cod_curso'] = LegacyCourse::query()
+            ->whereKey($detalhe_aluno['ref_cod_curso'])
+            ->value('nm_curso');
 
         if ($registro['ref_cod_matricula']) {
             $this->addDetalhe(['Matricula', $registro['ref_cod_matricula']]);
@@ -119,8 +118,14 @@ return new class extends clsDetalhe
         $this->url_cancelar = 'educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Disciplinas de dependência', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Matrícula > Disciplinas de dependência > Disciplina de dependência
+        $registration = LegacyRegistration::find($this->ref_cod_matricula);
+        $this->breadcrumb(currentPage: 'Disciplina de dependência', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url("intranet/educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}") => 'Matrícula',
+            url("intranet/educar_disciplina_dependencia_lst.php?ref_cod_matricula={$this->ref_cod_matricula}") => 'Disciplinas de dependência',
         ]);
     }
 

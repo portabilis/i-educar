@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\LegacyDisciplinaryOccurrenceType;
+use App\Models\LegacyRegistration;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
+use App\Models\LegacyStudent;
 
 return new class extends clsDetalhe
 {
@@ -32,7 +34,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Matricula Ocorrencia Disciplinar - Detalhe';
+        $this->titulo = 'Ocorrência disciplinar - Detalhe';
 
         $this->sequencial = $_GET['sequencial'];
         $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
@@ -60,14 +62,6 @@ return new class extends clsDetalhe
         $det_ref_cod_tipo_ocorrencia_disciplinar = LegacyDisciplinaryOccurrenceType::find($registro['ref_cod_tipo_ocorrencia_disciplinar'])?->getAttributes();
         $registro['nm_tipo'] = $det_ref_cod_tipo_ocorrencia_disciplinar['nm_tipo'];
 
-        $obj_mat_turma = new clsPmieducarMatriculaTurma;
-
-        $det_mat_turma = $obj_mat_turma->lista($registro['ref_cod_matricula'], null, null, null, null, null, null, null, 1);
-
-        if ($det_mat_turma) {
-            $det_mat_turma = array_shift($det_mat_turma);
-        }
-
         if ($registro['ref_cod_matricula']) {
             $this->addDetalhe(['Matrícula', "{$registro['ref_cod_matricula']}"]);
         }
@@ -79,20 +73,16 @@ return new class extends clsDetalhe
 
         $detalhe_aluno = $obj_ref_cod_matricula;
 
-        $obj_aluno = (new clsPmieducarAluno)->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
-        if (is_array($obj_aluno)) {
-            $obj_aluno = array_shift($obj_aluno);
-        }
+        $nm_aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($detalhe_aluno['ref_cod_aluno'])
+            ->joinPerson()
+            ->value('pessoa.nome');
 
-        $det_aluno = $obj_aluno;
-        $this->addDetalhe(['Nome do Aluno', $det_aluno['nome_aluno']]);
+        $this->addDetalhe(['Nome do Aluno', $nm_aluno]);
 
         if ($registro['ref_ref_cod_serie']) {
             $this->addDetalhe(['Série', "{$registro['ref_ref_cod_serie']}"]);
-        }
-
-        if ($det_mat_turma['det_turma']) {
-            $this->addDetalhe(['Turma', "{$det_mat_turma['det_turma']}"]);
         }
 
         if ($registro['sequencial']) {
@@ -120,8 +110,14 @@ return new class extends clsDetalhe
         $this->url_cancelar = "educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$registro['ref_cod_matricula']}";
         $this->largura = '100%';
 
-        $this->breadcrumb('Ocorrências disciplinares da matrícula', [
+        // Início > Escola > Alunos > Nome > Matrícula > Ocorrências disciplinares > Ocorrência disciplinar
+        $registration = LegacyRegistration::find($registro['ref_cod_matricula']);
+        $this->breadcrumb('Ocorrência disciplinar', [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url("intranet/educar_matricula_det.php?cod_matricula={$registro['ref_cod_matricula']}") => 'Matrícula',
+            url("intranet/educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$registro['ref_cod_matricula']}") => 'Ocorrências disciplinares',
         ]);
     }
 

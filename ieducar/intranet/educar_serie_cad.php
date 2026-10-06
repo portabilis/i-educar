@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyCourse;
+
 return new class extends clsCadastro
 {
     public $pessoa_logada;
@@ -98,9 +100,7 @@ return new class extends clsCadastro
 
                 $this->carga_horaria = formatDecimalBr($this->carga_horaria) ?? $this->carga_horaria;
 
-                $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
-                $obj_curso_det = $obj_curso->detalhe();
-                $this->ref_cod_instituicao = $obj_curso_det['ref_cod_instituicao'];
+                $this->ref_cod_instituicao = LegacyCourse::query()->whereKey($registro['ref_cod_curso'])->value('ref_cod_instituicao');
 
                 if ($obj->possuiTurmasVinculadas()) {
                     $this->script_excluir = 'excluirSerieComTurmas();';
@@ -197,20 +197,13 @@ return new class extends clsCadastro
         $this->campoNumero('idade_final', '&nbsp;até', $this->idade_final, 2, 2, false);
         $opcoes = ['' => 'Selecione'];
 
-        if ($this->ref_cod_curso) {
-            $objTemp = new clsPmieducarCurso;
-            $lista = $objTemp->lista(
-                int_cod_curso: $this->ref_cod_curso,
-                int_ativo: 1
-            );
+        if (is_numeric($this->ref_cod_curso)) {
+            $etapas = LegacyCourse::query()
+                ->active()
+                ->whereKey($this->ref_cod_curso)
+                ->value('qtd_etapas');
 
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes_["{$registro['cod_curso']}"] = "{$registro['qtd_etapas']}";
-                }
-            }
-
-            for ($i = 1; $i <= $opcoes_["{$registro['cod_curso']}"]; $i++) {
+            for ($i = 1; $i <= $etapas; $i++) {
                 $opcoes[$i] = "Etapa {$i}";
             }
         }
