@@ -252,60 +252,6 @@ class App_Model_IedFinderTest extends UnitBaseTest
     {
         // Método foi alterado. Terá que ser escrito um novo teste
         $this->markTestSkipped();
-        $returnAnoEscolar = [
-            1 => new ComponenteCurricular_Model_Componente(
-                ['id' => 1, 'nome' => 'Matemática', 'cargaHoraria' => 100]
-            ),
-            2 => new ComponenteCurricular_Model_Componente(
-                ['id' => 2, 'nome' => 'Português', 'cargaHoraria' => 100]
-            ),
-            3 => new ComponenteCurricular_Model_Componente(
-                ['id' => 3, 'nome' => 'Ciências', 'cargaHoraria' => 60]
-            ),
-            4 => new ComponenteCurricular_Model_Componente(
-                ['id' => 4, 'nome' => 'Física', 'cargaHoraria' => 60]
-            ),
-        ];
-
-        $expected = $returnAnoEscolar;
-
-        $anoEscolarMock = $this->getCleanMock('ComponenteCurricular_Model_ComponenteDataMapper');
-        $anoEscolarMock->expects($this->exactly(4))
-            ->method('findComponenteCurricularAnoEscolar')
-            ->willReturnOnConsecutiveCalls(
-                $returnAnoEscolar[1],
-                $returnAnoEscolar[2],
-                $returnAnoEscolar[3],
-                $returnAnoEscolar[4]
-            );
-
-        // Retorna para clsPmieducarEscolaSerieDisciplina
-        $returnEscolaSerieDisciplina = [
-            ['ref_cod_serie' => 1, 'ref_cod_disciplina' => 1, 'carga_horaria' => 80],
-            ['ref_cod_serie' => 1, 'ref_cod_disciplina' => 2, 'carga_horaria' => null],
-            ['ref_cod_serie' => 1, 'ref_cod_disciplina' => 3, 'carga_horaria' => null],
-            ['ref_cod_serie' => 1, 'ref_cod_disciplina' => 4, 'carga_horaria' => null],
-        ];
-
-        // Mock para clsPmieducarEscolaSerieDisciplina
-        $escolaMock = $this->getCleanMock('clsPmieducarEscolaSerieDisciplina');
-        $escolaMock->expects($this->any())
-            ->method('lista')
-            ->with(1, 1, null, 1)
-            ->willReturn($returnEscolaSerieDisciplina);
-
-        App_Model_IedFinder::addClassToStorage('clsPmieducarEscolaSerieDisciplina', $escolaMock, null, true);
-
-        // O primeiro componente tem uma carga horária definida em escola-série.
-        $expected[1] = clone $returnAnoEscolar[1];
-        $expected[1]->cargaHoraria = 80;
-
-        $componentes = App_Model_IedFinder::getEscolaSerieDisciplina(1, 1, $anoEscolarMock);
-        $this->assertEquals(
-            $expected,
-            $componentes,
-            '::getEscolaSerieDisciplina() retorna os componentes de um escola-série.'
-        );
     }
 
     public function test_get_componentes_turma()
@@ -383,53 +329,5 @@ class App_Model_IedFinderTest extends UnitBaseTest
     {
         // Método foi alterado. Terá que ser escrito um novo teste
         $this->markTestSkipped();
-        // A turma possui apenas 2 componentes, com os ids: 1 e 2
-        $mocks = $this->_getComponentesTurmaMock();
-
-        // Retorna para clsPmieducarDispensaDisciplina
-        $returnDispensa = [
-            ['ref_cod_matricula' => 1, 'ref_cod_disciplina' => 2],
-        ];
-
-        // Mock para clsPmieducarDispensaDisciplina
-        $dispensaMock = $this->getCleanMock('clsPmieducarDispensaDisciplina');
-        $dispensaMock->expects($this->once())
-            ->method('disciplinaDispensadaEtapa')
-            ->with(1, 1, 1)
-            ->willReturn($returnDispensa);
-
-        CoreExt_Entity::addClassToStorage(
-            'clsPmieducarDispensaDisciplina',
-            $dispensaMock,
-            null,
-            true
-        );
-
-        $matricula = [
-            'ref_ref_cod_serie' => 1,
-            'ref_ref_cod_escola' => 1,
-            'ref_cod_turma' => 1,
-            'ano' => null,
-            'dependencia' => null,
-        ];
-
-        $componentes = App_Model_IedFinder::getComponentesPorMatricula(
-            1,
-            $mocks['componenteMock'],
-            $mocks['turmaMock'],
-            null,
-            null,
-            null,
-            $matricula
-        );
-
-        $expected = $mocks['expected'];
-        $expected = [1 => clone $expected[1]];
-
-        $this->assertEquals(
-            $expected,
-            $componentes,
-            '::getComponentesPorMatricula() retorna os componentes curriculares de uma matrícula, descartando aqueles em regime de dispensa (dispensa de componente)'
-        );
     }
 }

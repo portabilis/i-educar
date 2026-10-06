@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyExemptionType;
 use App\Models\LegacyRegistration;
 
@@ -43,18 +44,26 @@ return new class extends clsDetalhe
         $this->ref_cod_disciplina = $_GET['ref_cod_disciplina'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
-        $tmp_obj = new clsPmieducarDispensaDisciplina(
-            ref_cod_matricula: $this->ref_cod_matricula,
-            ref_cod_serie: $this->ref_cod_serie,
-            ref_cod_escola: $this->ref_cod_escola,
-            ref_cod_disciplina: $this->ref_cod_disciplina
-        );
-
-        $registro = $tmp_obj->detalhe();
-
-        if (!$registro) {
+        if (!is_numeric($this->ref_cod_matricula) || !is_numeric($this->ref_cod_serie)
+            || !is_numeric($this->ref_cod_escola) || !is_numeric($this->ref_cod_disciplina)) {
             $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
+
+        $dispensa = LegacyDisciplineExemption::query()
+            ->withTrashed()
+            ->whereExemptionKey(
+                $this->ref_cod_matricula,
+                $this->ref_cod_serie,
+                $this->ref_cod_escola,
+                $this->ref_cod_disciplina
+            )
+            ->first();
+
+        if (!$dispensa) {
+            $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
+        }
+
+        $registro = $dispensa->getAttributes();
 
         $obj_serie = new clsPmieducarSerie($this->ref_cod_serie);
         $det_serie = $obj_serie->detalhe();
