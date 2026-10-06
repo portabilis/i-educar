@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolGrade;
@@ -200,9 +201,23 @@ return new class extends clsCadastro
     protected function getAlunosSemInep($escolaId, $cursoId, $serieId, $turmaId, $ano)
     {
         // Pega todas as matriculas
-        $objMatricula = new clsPmieducarMatriculaTurma;
-        $objMatricula->setOrderby(strNomeCampo: 'nome');
-        $lstMatricula = $objMatricula->lista4(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, turmaId: $turmaId, ano: $ano);
+        $lstMatricula = LegacyEnrollment::query()
+            ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+            ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+            ->join('cadastro.pessoa', 'pessoa.idpes', 'aluno.ref_idpes')
+            ->active()
+            ->when(is_numeric($turmaId), fn ($q) => $q->whereSchoolClass($turmaId))
+            ->where('matricula.ativo', 1)
+            ->when(is_numeric($escolaId), fn ($q) => $q->where('matricula.ref_ref_cod_escola', $escolaId))
+            ->when(is_numeric($cursoId), fn ($q) => $q->where('matricula.ref_cod_curso', $cursoId))
+            ->when(is_numeric($serieId), fn ($q) => $q->where('matricula.ref_ref_cod_serie', $serieId))
+            ->when(is_numeric($ano), fn ($q) => $q->where('matricula.ano', $ano))
+            ->orderBy('pessoa.nome')
+            ->get([
+                'matricula.ref_cod_aluno',
+                'matricula.aprovado',
+                'pessoa.nome',
+            ]);
         // Verifica o parametro na série pra exigir inep
         $objSerie = new clsPmieducarSerie(cod_serie: $serieId);
         $serieDet = $objSerie->detalhe();
@@ -226,9 +241,24 @@ return new class extends clsCadastro
 
     protected function getAlunosComSaidaDaEscola($escolaId, $cursoId, $serieId, $turmaId, $ano)
     {
-        $objMatricula = new clsPmieducarMatriculaTurma;
-        $objMatricula->setOrderby(strNomeCampo: 'nome');
-        $alunosComSaidaDaEscola = $objMatricula->lista4(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, turmaId: $turmaId, ano: $ano, saida_escola: true);
+        $alunosComSaidaDaEscola = LegacyEnrollment::query()
+            ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+            ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+            ->join('cadastro.pessoa', 'pessoa.idpes', 'aluno.ref_idpes')
+            ->active()
+            ->when(is_numeric($turmaId), fn ($q) => $q->whereSchoolClass($turmaId))
+            ->where('matricula.ativo', 1)
+            ->when(is_numeric($escolaId), fn ($q) => $q->where('matricula.ref_ref_cod_escola', $escolaId))
+            ->when(is_numeric($cursoId), fn ($q) => $q->where('matricula.ref_cod_curso', $cursoId))
+            ->when(is_numeric($serieId), fn ($q) => $q->where('matricula.ref_ref_cod_serie', $serieId))
+            ->when(is_numeric($ano), fn ($q) => $q->where('matricula.ano', $ano))
+            ->where('matricula.saida_escola', true)
+            ->orderBy('pessoa.nome')
+            ->get([
+                'matricula.ref_cod_aluno',
+                'matricula.aprovado',
+                'pessoa.nome',
+            ]);
         $alunos = [];
 
         foreach ($alunosComSaidaDaEscola as $a) {
@@ -310,10 +340,25 @@ return new class extends clsCadastro
 
     protected function existeMatriculasAprovadasReprovadas($escolaId, $cursoId, $serieId, $turmaId, $ano)
     {
-        $objMatricula = new clsPmieducarMatriculaTurma;
-        $objMatricula->setOrderby(strNomeCampo: 'nome');
         $anoAnterior = $this->ano_letivo - 1;
-        $matriculas = $objMatricula->lista4(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, turmaId: $turmaId, ano: $anoAnterior);
+
+        $matriculas = LegacyEnrollment::query()
+            ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+            ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+            ->join('cadastro.pessoa', 'pessoa.idpes', 'aluno.ref_idpes')
+            ->active()
+            ->when(is_numeric($turmaId), fn ($q) => $q->whereSchoolClass($turmaId))
+            ->where('matricula.ativo', 1)
+            ->when(is_numeric($escolaId), fn ($q) => $q->where('matricula.ref_ref_cod_escola', $escolaId))
+            ->when(is_numeric($cursoId), fn ($q) => $q->where('matricula.ref_cod_curso', $cursoId))
+            ->when(is_numeric($serieId), fn ($q) => $q->where('matricula.ref_ref_cod_serie', $serieId))
+            ->when(is_numeric($anoAnterior), fn ($q) => $q->where('matricula.ano', $anoAnterior))
+            ->orderBy('pessoa.nome')
+            ->get([
+                'matricula.ref_cod_aluno',
+                'matricula.aprovado',
+                'pessoa.nome',
+            ]);
         $qtdMatriculasAprovadasReprovadas = 0;
 
         $situacoesArray = $this->permitir_cursando

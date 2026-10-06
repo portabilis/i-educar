@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEnrollment;
 use App\Models\LegacySchoolClass;
 
 return new class extends clsCadastro
@@ -17,9 +18,9 @@ return new class extends clsCadastro
         $this->cod_turma = $_GET['cod_turma'];
 
         if (is_numeric(value: $this->cod_turma)) {
-            $matriculasTurma = (new clsPmieducarMatriculaTurma)->listaPorSequencial(codTurma: $this->cod_turma);
+            $matriculasTurma = $this->matriculasDaTurma();
 
-            if ($matriculasTurma) {
+            if ($matriculasTurma->isNotEmpty()) {
                 $retorno = 'Editar';
             }
         }
@@ -58,9 +59,9 @@ return new class extends clsCadastro
             $this->campoQuebra();
         }
 
-        $matriculasTurma = (new clsPmieducarMatriculaTurma)->listaPorSequencial(codTurma: $this->cod_turma);
+        $matriculasTurma = $this->matriculasDaTurma();
 
-        if ($matriculasTurma) {
+        if ($matriculasTurma->isNotEmpty()) {
             foreach ($matriculasTurma as $val) {
                 $sequencia = $this->sequencia[$val['id']] ?? $val['sequencial_fechamento'];
 
@@ -110,4 +111,37 @@ return new class extends clsCadastro
         $this->title = 'Sequência de alunos na turma';
         $this->processoAp = '586';
     }
+
+    private function matriculasDaTurma()
+    {
+        return LegacyEnrollment::query()
+                ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+                ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+                ->join('cadastro.pessoa', 'pessoa.idpes', 'aluno.ref_idpes')
+                ->join('pmieducar.escola', 'escola.cod_escola', 'matricula.ref_ref_cod_escola')
+                ->join('pmieducar.instituicao', 'instituicao.cod_instituicao', 'escola.ref_cod_instituicao')
+                ->join('relatorio.view_situacao_relatorios', function ($j) {
+                    $j->on('view_situacao_relatorios.cod_matricula', 'matricula.cod_matricula');
+                    $j->on('view_situacao_relatorios.cod_turma', 'matricula_turma.ref_cod_turma');
+                    $j->on('view_situacao_relatorios.sequencial', 'matricula_turma.sequencial');
+                })
+                ->whereSchoolClass($this->cod_turma)
+                ->groupBy(
+                    'matricula_turma.ref_cod_matricula',
+                    'matricula_turma.sequencial_fechamento',
+                    'pessoa.nome',
+                    'view_situacao_relatorios.texto_situacao',
+                    'matricula_turma.id',
+                )
+                ->orderBy('matricula_turma.sequencial_fechamento')
+                ->orderBy('pessoa.nome')
+                ->get([
+                    'matricula_turma.id',
+                    'matricula_turma.ref_cod_matricula',
+                    'matricula_turma.sequencial_fechamento',
+                    'pessoa.nome',
+                    'view_situacao_relatorios.texto_situacao as situacao',
+                ]);
+    }
+
 };

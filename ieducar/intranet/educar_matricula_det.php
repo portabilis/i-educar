@@ -2,6 +2,7 @@
 
 use App\Models\LegacyAbandonmentType;
 use App\Models\LegacyCourse;
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyStudent;
 use App\Models\LegacyTransferRequest;
 use App\Process;
@@ -134,12 +135,19 @@ return new class extends clsDetalhe
         }
 
         // Nome da turma
-        $enturmacoes = new clsPmieducarMatriculaTurma;
-
-        $enturmacoes = $enturmacoes->lista(
-            int_ref_cod_matricula: $this->ref_cod_matricula,
-            int_ativo: 3
-        );
+        $enturmacoes = LegacyEnrollment::query()
+            ->when(is_numeric($this->ref_cod_matricula), fn ($q) => $q->whereRegistration($this->ref_cod_matricula))
+            ->whereValid(includeDependency: false)
+            ->whereHas('registration', function ($q) {
+                $q->whereHas('student', fn ($q) => $q->active());
+            })
+            ->with('schoolClass:cod_turma,nm_turma,etapa_educacenso,tipo_atendimento,turma_turno_id')
+            ->get([
+                'ref_cod_turma',
+                'ativo',
+                'data_enturmacao',
+                'turno_id',
+            ]);
 
         $existeTurma = false;
         $existeTurmaMulti = false;
@@ -154,8 +162,7 @@ return new class extends clsDetalhe
                 continue;
             }
 
-            $turma = new clsPmieducarTurma(cod_turma: $enturmacao['ref_cod_turma']);
-            $turma = $turma->detalhe() ?? [];
+            $turma = $enturmacao->schoolClass;
             $turma_id = $enturmacao['ref_cod_turma'];
 
             if (in_array(needle: $turma['etapa_educacenso'], haystack: App_Model_Educacenso::etapas_multisseriadas())) {
@@ -166,7 +173,7 @@ return new class extends clsDetalhe
             $etapasItinerario = [25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 67, 71, 74];
 
             $nomesTurmas[] = $turma['nm_turma'];
-            $datasEnturmacoes[] = Portabilis_Date_Utils::pgSQLToBr(timestamp: $enturmacao['data_enturmacao']);
+            $datasEnturmacoes[] = $enturmacao->data_enturmacao->format('d/m/Y');
 
             if ($turma['turma_turno_id'] == clsPmieducarTurma::TURNO_INTEGRAL) {
                 $existeTurmaTurnoIntegral = true;

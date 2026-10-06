@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyCourse;
+use App\Models\LegacyEnrollment;
 use App\Models\RegistrationStatus;
 
 return new class extends clsListagem
@@ -120,6 +121,19 @@ return new class extends clsListagem
 
         $total = $obj_matricula->_total;
 
+        $turmasPorMatricula = LegacyEnrollment::query()
+            ->active()
+            ->whereIn('ref_cod_matricula', array_filter(array_column(is_array($lista) ? $lista : [], 'cod_matricula'), 'is_numeric'))
+            ->whereHas('registration', function ($q) {
+                $q->whereHas('student', fn ($q) => $q->active());
+            })
+            ->with('schoolClass:cod_turma,nm_turma')
+            ->get([
+                'ref_cod_matricula',
+                'ref_cod_turma',
+            ])
+            ->groupBy('ref_cod_matricula');
+
         // monta a lista
         if (is_array(value: $lista) && count(value: $lista)) {
             $nomesCursos = LegacyCourse::query()
@@ -141,21 +155,9 @@ return new class extends clsListagem
                 $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
                 $registro['ref_ref_cod_escola'] = $det_ref_cod_escola['nome'];
 
-                $enturmacoes = new clsPmieducarMatriculaTurma;
-                $enturmacoes = $enturmacoes->lista(
-                    int_ref_cod_matricula: $registro['cod_matricula'],
-                    int_ativo: 1
-                );
-
-                $nomesTurmas = [];
-
-                foreach ($enturmacoes as $enturmacao) {
-                    $turma = new clsPmieducarTurma(cod_turma: $enturmacao['ref_cod_turma']);
-                    $turma = $turma->detalhe();
-                    $nomesTurmas[] = $turma['nm_turma'];
-                }
-
-                $nomesTurmas = implode(separator: '<br />', array: $nomesTurmas);
+                $nomesTurmas = $turmasPorMatricula->get($registro['cod_matricula'], collect())
+                    ->map(fn ($enturmacao) => $enturmacao->schoolClass->nm_turma)
+                    ->implode('<br />');
 
                 $situacao = RegistrationStatus::getRegistrationStatus()[$registro['aprovado']];
 
