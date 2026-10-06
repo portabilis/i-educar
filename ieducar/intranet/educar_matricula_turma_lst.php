@@ -2,6 +2,7 @@
 
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
+use App\Models\LegacyStudent;
 use App\Process;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -100,12 +101,12 @@ return new class extends clsListagem
         $matricula = $obj_ref_cod_matricula->lista(int_cod_matricula: $this->ref_cod_matricula);
         $detalhe_aluno = array_shift(array: $matricula);
 
-        $obj_aluno = (new clsPmieducarAluno)->lista(
-            int_cod_aluno: $detalhe_aluno['ref_cod_aluno'],
-            int_ativo: 1
-        );
+        $nm_aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($detalhe_aluno['ref_cod_aluno'])
+            ->joinPerson()
+            ->value('pessoa.nome');
 
-        $det_aluno = array_shift(array: $obj_aluno);
         $obj_escola = new clsPmieducarEscola(
             cod_escola: $this->ref_cod_escola,
             bloquear_lancamento_diario_anos_letivos_encerrados: 1
@@ -117,7 +118,7 @@ return new class extends clsListagem
             $this->campoRotulo(nome: 'nm_escola', campo: 'Escola', valor: $det_escola['nome']);
         }
 
-        $this->campoRotulo(nome: 'nm_pessoa', campo: 'Nome do Aluno', valor: $det_aluno['nome_aluno']);
+        $this->campoRotulo(nome: 'nm_pessoa', campo: 'Nome do Aluno', valor: $nm_aluno);
 
         // Filtros de foreign keys
         $opcoes = ['' => 'Selecione'];

@@ -2,12 +2,14 @@
 
 namespace Tests\Feature\Security;
 
+use App\Models\LegacyInstitutionDocument;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacyUserType;
 use App\Process;
 use App\User;
 use Database\Factories\LegacyIndividualFactory;
+use Database\Factories\LegacyInstitutionFactory;
 use Database\Factories\LegacyMenuUserTypeFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacySchoolClassFactory;
@@ -33,6 +35,8 @@ class ApiLegacyAuthorizationTest extends TestCase
     private const PROCESSO_DIARIO = 642;
 
     private const PROCESSO_HISTORICO = 999613;
+
+    private const PROCESSO_DOCUMENTACAO = 578;
 
     /**
      * O menu do processo é criado como filho de outro menu, como em produção.
@@ -420,5 +424,78 @@ class ApiLegacyAuthorizationTest extends TestCase
 
         $response->assertSuccessful();
         $response->assertJsonFragment(['msg' => "Usuário sem permissão para alterar 'falta'."]);
+    }
+
+    // Documentação padrão da instituição
+
+    private function document(): LegacyInstitutionDocument
+    {
+        return LegacyInstitutionDocument::query()->create([
+            'instituicao_id' => LegacyInstitutionFactory::new()->current()->getKey(),
+            'titulo_documento' => 'Documento',
+            'url_documento' => 'https://example.com/documento.pdf',
+        ]);
+    }
+
+    private function callDocuments(string $resource, array $params, User $user)
+    {
+        return $this->callApi('GET', '/module/Api/InstituicaoDocumentacao', array_merge([
+            'oper' => 'get',
+            'resource' => $resource,
+        ], $params), $user);
+    }
+
+    public function test_documentacao_bloqueia_inclusao_sem_permissao()
+    {
+        $institutionId = LegacyInstitutionFactory::new()->current()->getKey();
+
+        $response = $this->callDocuments('insertDocuments', [
+            'instituicao_id' => $institutionId,
+            'titulo_documento' => 'Intruso',
+            'url_documento' => 'https://example.com/intruso.pdf',
+        ], $this->schoolUser(self::PROCESSO_DOCUMENTACAO, modify: false));
+
+        $response->assertSuccessful();
+        $response->assertJsonFragment(['msg' => "Usuário sem permissão para acessar 'insertDocuments'."]);
+        $this->assertDatabaseMissing('pmieducar.instituicao_documentacao', ['titulo_documento' => 'Intruso']);
+    }
+
+    public function test_documentacao_bloqueia_exclusao_sem_permissao()
+    {
+        $document = $this->document();
+
+        $response = $this->callDocuments('deleteDocuments', ['id' => $document->getKey()], $this->schoolUser());
+
+        $response->assertSuccessful();
+        $response->assertJsonFragment(['msg' => "Usuário sem permissão para acessar 'deleteDocuments'."]);
+        $this->assertModelExists($document);
+    }
+
+    public function test_documentacao_permite_inclusao_com_permissao_e_grava_o_usuario_logado()
+    {
+        $user = $this->schoolUser(self::PROCESSO_DOCUMENTACAO);
+        $institutionId = LegacyInstitutionFactory::new()->current()->getKey();
+
+        $this->callDocuments('insertDocuments', [
+            'instituicao_id' => $institutionId,
+            'titulo_documento' => 'Permitido',
+            'url_documento' => 'https://example.com/permitido.pdf',
+            'ref_usuario_cad' => 1,
+        ], $user)->assertSuccessful();
+
+        $this->assertDatabaseHas('pmieducar.instituicao_documentacao', [
+            'titulo_documento' => 'Permitido',
+            'ref_usuario_cad' => $user->getKey(),
+        ]);
+    }
+
+    public function test_documentacao_permite_exclusao_com_permissao()
+    {
+        $document = $this->document();
+
+        $this->callDocuments('deleteDocuments', ['id' => $document->getKey()], $this->schoolUser(self::PROCESSO_DOCUMENTACAO))
+            ->assertSuccessful();
+
+        $this->assertModelMissing($document);
     }
 }

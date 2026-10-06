@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyCourse;
 use App\Models\LegacyPerson;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
@@ -115,10 +116,9 @@ return new class extends clsDetalhe
         $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
         $registro['ref_ref_cod_escola'] = $det_ref_cod_escola['nome'];
 
-        $obj_ref_cod_curso = new clsPmieducarCurso(cod_curso: $registro['ref_cod_curso']);
-        $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-        $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
-        $padrao_ano_escolar = $det_ref_cod_curso['padrao_ano_escolar'];
+        $curso = LegacyCourse::query()->find($registro['ref_cod_curso'], ['nm_curso', 'padrao_ano_escolar']);
+        $registro['ref_cod_curso'] = $curso?->nm_curso;
+        $padrao_ano_escolar = (int) $curso?->padrao_ano_escolar;
 
         $this->ref_ref_cod_serie = $registro['ref_ref_cod_serie'];
         $obj_ser = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);

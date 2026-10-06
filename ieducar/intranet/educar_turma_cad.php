@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyAcademicYearStage;
+use App\Models\LegacyCourse;
 use App\Models\LegacyDisciplineSchoolClass;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyPerson;
@@ -226,10 +227,9 @@ return new class extends clsCadastro
             $this->ref_cod_curso = $det_ser['ref_cod_curso'];
             $this->ref_cod_serie = $det_ser['cod_serie'];
 
-            $obj_curso = new clsPmieducarCurso(cod_curso: ($this->ref_cod_curso));
-            $det_curso = $obj_curso->detalhe();
-            $this->padrao_ano_escolar = $det_curso['padrao_ano_escolar'];
-            $this->modalidade_curso = $det_curso['modalidade_curso'];
+            $curso = LegacyCourse::query()->find($this->ref_cod_curso, ['padrao_ano_escolar', 'modalidade_curso']);
+            $this->padrao_ano_escolar = (int) $curso->padrao_ano_escolar;
+            $this->modalidade_curso = $curso->modalidade_curso;
 
             $inep = $obj_turma->getInep();
 

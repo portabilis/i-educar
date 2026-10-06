@@ -4,6 +4,7 @@ use App\Models\LegacyEnrollment;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolGrade;
+use App\Models\LegacyStudent;
 use App\Models\RegistrationStatus;
 use Illuminate\Support\Facades\Session;
 
@@ -223,11 +224,14 @@ return new class extends clsCadastro
         $exigeInep = $serieDet['exigir_inep'];
         // Retorna alunos sem inep
         $alunosSemInep = [];
-        $objAluno = new clsPmieducarAluno;
+
+        $alunosComInep = LegacyStudent::query()
+            ->whereIn('cod_aluno', collect($lstMatricula)->pluck('ref_cod_aluno')->all())
+            ->whereHas('inep')
+            ->pluck('cod_aluno');
 
         foreach ($lstMatricula as $matricula) {
-            $alunoInep = $objAluno->verificaInep(cod_aluno: $matricula['ref_cod_aluno']);
-            if (!$alunoInep && $exigeInep) {
+            if (!$alunosComInep->contains($matricula['ref_cod_aluno']) && $exigeInep) {
                 $alunosSemInep[] = mb_strtoupper(string: $matricula['nome']);
             }
         }
