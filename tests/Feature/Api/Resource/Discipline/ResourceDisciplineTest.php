@@ -129,6 +129,9 @@ class ResourceDisciplineTest extends TestCase
             'grade' => $this->grade->id,
         ]);
 
+        // o nome vem do relacionamento, então precisa ser conferido fora da comparação com o próprio recurso
+        $disciplines->each(fn ($discipline) => $this->assertNotNull($discipline['name']));
+
         $response->assertJson(function (AssertableJson $json) use ($disciplines) {
             $json->has('data', 2);
 

@@ -6,7 +6,9 @@ use App\Models\LegacyGrade;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
+use App\Models\LegacyStudent;
 use App\Process;
+use App\Services\EnrollmentService;
 
 return new class extends clsCadastro
 {
@@ -114,11 +116,15 @@ return new class extends clsCadastro
         $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
         $this->campoOculto('ref_cod_escola', $this->ref_ref_cod_escola);
 
-        $obj_aluno = new clsPmieducarAluno;
-        $lst_aluno = $obj_aluno->lista($this->ref_cod_aluno, null, null, null, null, null, null, null, null, null, 1);
-        if (is_array($lst_aluno)) {
-            $det_aluno = array_shift($lst_aluno);
-            $this->nm_aluno = $det_aluno['nome_aluno'];
+        if (is_numeric($this->ref_cod_aluno)) {
+            $this->nm_aluno = LegacyStudent::query()
+                ->active()
+                ->whereStudent($this->ref_cod_aluno)
+                ->joinPerson()
+                ->value('pessoa.nome');
+        }
+
+        if ($this->nm_aluno) {
             $this->campoRotulo('nm_aluno', 'Aluno', $this->nm_aluno);
         }
 
@@ -270,8 +276,9 @@ return new class extends clsCadastro
             echo "<script>alert('Erro ao reclassificar matrícula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
             exit('Erro ao reclassificar matrícula');
         }
-        $obj_serie = new clsPmieducarSerie($this->ref_ref_cod_serie);
-        $det_serie = $obj_serie->detalhe();
+        $cursoDaSerie = is_numeric($this->ref_ref_cod_serie)
+            ? LegacyGrade::query()->whereKey($this->ref_ref_cod_serie)->value('ref_cod_curso')
+            : null;
 
         $obj_matricula = new clsPmieducarMatricula(
             null,
@@ -291,7 +298,7 @@ return new class extends clsCadastro
             null,
             null,
             1,
-            $det_serie['ref_cod_curso'],
+            $cursoDaSerie,
             null,
             null,
             null,
@@ -312,8 +319,7 @@ return new class extends clsCadastro
         /**
          * desativa todas as enturmacoes da matricula anterior
          */
-        $obj_matricula_turma = new clsPmieducarMatriculaTurma($this->cod_matricula);
-        if (!$obj_matricula_turma->reclassificacao($this->data_cancel)) {
+        if (!app(EnrollmentService::class)->registerReclassification($this->cod_matricula, $this->data_cancel)) {
             echo "<script>alert('Erro ao desativar enturmações da matrícula: {$this->cod_matricula}\nContate o administrador do sistema informando a matrícula!');</script>";
         }
 
