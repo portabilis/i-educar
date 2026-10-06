@@ -65,13 +65,29 @@ class SocialiteCallbackController
      * desativado e o atual, por exemplo). O usuário ativo tem prioridade:
      * pegar o primeiro qualquer barrava o login com "conta desativada"
      * mesmo existindo um usuário ativo com o e-mail.
+     *
+     * Sem ativo, devolve o inativo em vez de nada: o login segue barrado
+     * com a mensagem de conta desativada, e o usuário não é tratado como
+     * inexistente (o que dispararia UserSocialiteNotFound, e quem escuta
+     * esse evento pode criar um usuário novo para o e-mail).
      */
     private function findUser($email): ?User
     {
-        $users = User::query()->whereHas('employee', function ($query) use ($email) {
-            $query->where('email', $email);
-        })->orderBy('cod_usuario')->get();
+        $active = User::query()
+            ->where('ativo', 1)
+            ->whereHas('employee', function ($query) use ($email) {
+                $query
+                    ->where('email', $email)
+                    ->where('ativo', 1);
+            })
+            ->orderBy('cod_usuario')
+            ->first();
 
-        return $users->first(fn (User $user) => $user->isActive()) ?? $users->first();
+        return $active ?? User::query()
+            ->whereHas('employee', function ($query) use ($email) {
+                $query->where('email', $email);
+            })
+            ->orderBy('cod_usuario')
+            ->first();
     }
 }

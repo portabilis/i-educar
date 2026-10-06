@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEmployee;
 use App\User;
 use Database\Factories\LegacyEmployeeFactory;
 use Database\Factories\LegacyUserFactory;
@@ -29,6 +30,8 @@ function socialiteRetornaEmail(string $email): void
 {
     $socialite = Mockery::mock(Laravel\Socialite\Contracts\User::class);
     $socialite->shouldReceive('getEmail')->andReturn($email);
+    $socialite->shouldReceive('getName')->andReturn('Pessoa de Teste');
+    $socialite->shouldReceive('getNickname')->andReturn('pessoa.teste');
 
     Socialite::shouldReceive('driver->user')->andReturn($socialite);
 }
@@ -69,4 +72,22 @@ test('callback keeps refusing when the only user with the e-mail is inactive', f
         ->assertSessionHasErrors('login');
 
     $this->assertGuest();
+});
+
+test('callback does not create a new user for a deactivated Portabilis account', function () {
+    $email = 'desativado.' . uniqid() . '@portabilis.com.br';
+
+    LegacyUserFactory::new()->create([
+        'cod_usuario' => LegacyEmployeeFactory::new()->create(['email' => $email, 'ativo' => 0])->ref_cod_pessoa_fj,
+        'ativo' => 0,
+    ]);
+
+    socialiteRetornaEmail($email);
+
+    $this->get('/auth/callback?code=code&state=state')
+        ->assertRedirect('/login')
+        ->assertSessionHasErrors('login');
+
+    $this->assertGuest();
+    expect(LegacyEmployee::query()->where('email', $email)->count())->toBe(1);
 });
