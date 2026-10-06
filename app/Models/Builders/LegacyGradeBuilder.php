@@ -54,7 +54,7 @@ class LegacyGradeBuilder extends LegacyBuilder
     /**
      * Filtra por séries presentes na escola, no ano letivo quando informado
      */
-    public function whereSchool(int $school, ?int $year = null): self
+    public function whereSchool(int $school, $year = null): self
     {
         return $this->whereExists(function ($q) use ($school, $year) {
             $q->selectRaw('1')
@@ -62,7 +62,7 @@ class LegacyGradeBuilder extends LegacyBuilder
                 ->whereColumn('pmieducar.escola_serie.ref_cod_serie', 'pmieducar.serie.cod_serie')
                 ->where('pmieducar.escola_serie.ativo', 1)
                 ->where('pmieducar.escola_serie.ref_cod_escola', $school)
-                ->when($year !== null, fn ($q) => $q->whereRaw('? = ANY(pmieducar.escola_serie.anos_letivos)', $year));
+                ->when($year, fn ($q) => $q->whereRaw('? = ANY(pmieducar.escola_serie.anos_letivos)', $year));
         });
     }
 
