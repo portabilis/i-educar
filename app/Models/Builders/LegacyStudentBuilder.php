@@ -70,6 +70,14 @@ class LegacyStudentBuilder extends LegacyBuilder
         );
     }
 
+    public function whereStudentNameLike($name)
+    {
+        return $this->whereHas(
+            'person',
+            fn ($q) => $q->whereRaw("slug ILIKE unaccent('%' || ? || '%')", $name)
+        );
+    }
+
     public function whereStudentNameSimilarity($name)
     {
         return $this->whereHas(
@@ -243,5 +251,27 @@ class LegacyStudentBuilder extends LegacyBuilder
     public function joinIndividual()
     {
         return $this->join('cadastro.fisica', 'aluno.ref_idpes', '=', 'fisica.idpes');
+    }
+
+    public function joinPerson(): self
+    {
+        return $this->join('cadastro.pessoa', 'aluno.ref_idpes', 'pessoa.idpes');
+    }
+
+    public function wherePerson($person): self
+    {
+        return $this->where('ref_idpes', $person);
+    }
+
+    /**
+     * Filtra pela escola da ÚLTIMA matrícula. Não trocar por whereSchool, que aceita qualquer
+     * matrícula na escola.
+     */
+    public function whereLastRegistrationSchool($school): self
+    {
+        return $this->whereHas(
+            'registrations',
+            fn ($q) => $q->where('ref_ref_cod_escola', $school)->where('ultima_matricula', 1)
+        );
     }
 }

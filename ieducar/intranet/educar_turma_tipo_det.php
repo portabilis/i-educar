@@ -49,15 +49,15 @@ return new class extends clsDetalhe
         $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe(detalhe: ['Instituição', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe(detalhe: ['Instituição', e($registro['ref_cod_instituicao'])]);
             }
         }
 
         if ($registro['nm_tipo']) {
-            $this->addDetalhe(detalhe: ['Turma Tipo', "{$registro['nm_tipo']}"]);
+            $this->addDetalhe(detalhe: ['Turma Tipo', e($registro['nm_tipo'])]);
         }
         if ($registro['sgl_tipo']) {
-            $this->addDetalhe(detalhe: ['Sigla', "{$registro['sgl_tipo']}"]);
+            $this->addDetalhe(detalhe: ['Sigla', e($registro['sgl_tipo'])]);
         }
 
         $obj_permissao = new clsPermissoes;

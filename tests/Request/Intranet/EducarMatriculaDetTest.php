@@ -8,6 +8,10 @@ use Database\Factories\LegacyUserTypeFactory;
 use Tests\Request\Support\EnrollmentScenario;
 
 beforeEach(function () {
+    Portabilis_Utils_User::$_currentUserId = null;
+    Portabilis_Utils_User::$_nivelAcesso = null;
+    Portabilis_Utils_User::$_permissoes = null;
+
     $this->user = LegacyUserFactory::new()->admin()->create();
     $this->actingAs($this->user);
 

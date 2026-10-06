@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacySchoolHistory;
+use App\Models\LegacyStudent;
 use App\Models\LegacyUserSchool;
 
 return new class extends clsListagem
@@ -48,7 +49,8 @@ return new class extends clsListagem
 
         include 'include/pmieducar/educar_campo_lista.php';
 
-        // outros Filtros
+        // outros Filtros. Ano é filtro, não busca: fica só na gaveta
+        $this->buscaRapida = false;
         $this->campoNumero(nome: 'ano', campo: 'Ano', valor: $this->ano, tamanhovisivel: 4, tamanhomaximo: 4);
 
         $opcoes = ['' => 'Selecione', 2 => 'Não', 1 => 'Sim'];
@@ -111,9 +113,10 @@ return new class extends clsListagem
         $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
         $db = new clsBanco;
+        $codAluno = (int) $this->ref_cod_aluno;
         $escolaAluno = $db->CampoUnico("SELECT ref_ref_cod_escola
                                           FROM pmieducar.matricula
-                                         WHERE ref_cod_aluno = {$this->ref_cod_aluno}
+                                         WHERE ref_cod_aluno = {$codAluno}
                                            AND ativo = 1
                                          ORDER BY data_cadastro DESC
                                          LIMIT 1;");
@@ -143,8 +146,11 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Atualização de históricos escolares', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Históricos escolares
+        $this->breadcrumb(currentPage: 'Históricos escolares', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}") => LegacyStudent::find($this->ref_cod_aluno)?->real_name,
         ]);
     }
 
