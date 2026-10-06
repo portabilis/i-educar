@@ -462,9 +462,9 @@
     $formFilter.ajaxForm(matriculasSearchOptions);
 
     function getPosicaoAtiva(){
-      var $posicao = $('#posicao');
-      return $posicao.length > 0 && !$posicao.is(':disabled') && $posicao.css('display') != 'none' &&
-        $posicao.closest('tr').css('display') != 'none';
+      var posicao = document.getElementById('posicao');
+      return posicao != null && !posicao.disabled && posicao.style.display != 'none' &&
+        $(posicao).closest('tr').get(0).style.display != 'none';
     }
 
     function getSeriesSelecionadas(){
