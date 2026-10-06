@@ -1,11 +1,16 @@
 <?php
 
+use Database\Factories\LegacyCourseFactory;
+use Database\Factories\LegacyGradeFactory;
+use Database\Factories\LegacyInstitutionFactory;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
-use Mockery\MockInterface;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use PHPUnit\Framework\Attributes\Depends;
 
 class App_Model_IedFinderTest extends UnitBaseTest
 {
+    use DatabaseTransactions;
+
     /**
      * @todo Refatorar método para uma classe stub, no diretório do módulo
      *   TabelaArredondamento
@@ -104,28 +109,31 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
     public function test_get_curso()
     {
-        $returnValue = [
+        $curso = LegacyCourseFactory::new()->create([
             'nm_curso' => 'Ensino Fundamental',
-        ];
+            'descricao' => null,
+        ]);
 
-        $mock = $this->getCleanMock('clsPmieducarCurso');
-        $mock->expects($this->once())
-            ->method('detalhe')
-            ->willReturn($returnValue);
-
-        // Registra a instância no repositório de classes de CoreExt_Entity
-        $instance = App_Model_IedFinder::addClassToStorage(
-            'clsPmieducarCurso',
-            $mock,
-            null,
-            true
+        $this->assertEquals(
+            'Ensino Fundamental',
+            App_Model_IedFinder::getCurso($curso->getKey()),
+            '::getCurso() retorna o nome do curso através de uma busca pelo código.'
         );
 
-        $curso = App_Model_IedFinder::getCurso(1);
+        $cursoComDescricao = LegacyCourseFactory::new()->create([
+            'nm_curso' => 'Ensino Médio',
+            'descricao' => 'Integrado',
+        ]);
+
         $this->assertEquals(
-            $returnValue['nm_curso'],
-            $curso,
-            '::getCurso() retorna o nome do curso através de uma busca pelo código.'
+            'Ensino Médio (Integrado)',
+            App_Model_IedFinder::getCurso($cursoComDescricao->getKey()),
+            '::getCurso() concatena a descrição ao nome do curso.'
+        );
+
+        $this->assertNull(
+            App_Model_IedFinder::getCurso(0),
+            '::getCurso() retorna nulo quando o curso não existe.'
         );
     }
 
@@ -155,70 +163,49 @@ class App_Model_IedFinderTest extends UnitBaseTest
 
     public function test_get_series()
     {
-        $this->instance(
-            clsPmieducarSerie::class,
-            Mockery::mock(clsPmieducarSerie::class, function (MockInterface $mock) {
-                $returnValue = [
-                    1 => ['cod_serie' => 1, 'ref_ref_cod_instituicao' => 1, 'nm_serie' => 'pré'],
-                    2 => ['cod_serie' => 2, 'ref_ref_cod_instituicao' => 2, 'nm_serie' => 'ser'],
-                ];
-                $mock
-                    ->shouldReceive('setOrderby')
-                    ->twice();
-                $mock
-                    ->shouldReceive('lista')
-                    ->once()
-                    ->andReturn($returnValue);
-                $mock
-                    ->shouldReceive('lista')
-                    ->with(
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        1,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                    )
-                    ->once()
-                    ->andReturn([$returnValue[1]]);
-            })
-        );
+        $instituicao = LegacyInstitutionFactory::new()->create();
+        $outraInstituicao = LegacyInstitutionFactory::new()->create();
+
+        $serie = LegacyGradeFactory::new()->create([
+            'nm_serie' => 'pré',
+            'descricao' => '',
+            'ref_cod_curso' => LegacyCourseFactory::new()->create([
+                'ref_cod_instituicao' => $instituicao,
+            ]),
+        ]);
+
+        $serieDeOutraInstituicao = LegacyGradeFactory::new()->create([
+            'nm_serie' => 'ser',
+            'descricao' => '',
+            'ref_cod_curso' => LegacyCourseFactory::new()->create([
+                'ref_cod_instituicao' => $outraInstituicao,
+            ]),
+        ]);
 
         $series = App_Model_IedFinder::getSeries();
-        $test = [
-            1 => 'PRÉ',
-            2 => 'SER',
-        ];
 
-        $this->assertEquals(
-            $test,
+        $this->assertSame(
+            'PRÉ',
+            $series[$serie->getKey()],
+            '::getSeries() retorna o nome da série em caixa alta.'
+        );
+        $this->assertArrayHasKey(
+            $serieDeOutraInstituicao->getKey(),
             $series,
-            '::getSeries() retorna todas as séries cadastradas.'
+            '::getSeries() sem filtro retorna as séries de todas as instituições.'
         );
 
-        $series = App_Model_IedFinder::getSeries(1);
-        $testFilter = [
-            1 => 'PRÉ',
-        ];
+        $seriesDaInstituicao = App_Model_IedFinder::getSeries($instituicao->getKey());
 
-        $this->assertEquals(
-            $testFilter,
-            $series,
-            '::getSeries() retorna todas as séries cadastradas por instituição'
+        $this->assertArrayHasKey(
+            $serie->getKey(),
+            $seriesDaInstituicao,
+            '::getSeries() filtra pela instituição informada.'
+        );
+        $this->assertArrayNotHasKey(
+            $serieDeOutraInstituicao->getKey(),
+            $seriesDaInstituicao,
+            '::getSeries() não retorna série de outra instituição.'
         );
     }
 

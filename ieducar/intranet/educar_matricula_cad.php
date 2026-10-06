@@ -5,6 +5,8 @@ use App\Exceptions\Registration\RegistrationException;
 use App\Exceptions\Transfer\TransferException;
 use App\Jobs\UpdateBlockedSituationRegistration;
 use App\Models\LegacyCourse;
+use App\Models\LegacyEnrollment;
+use App\Models\LegacyGrade;
 use App\Models\LegacyGradeSequence;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
@@ -14,6 +16,8 @@ use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolGrade;
 use App\Models\LegacyStudent;
 use App\Models\RegistrationStatus;
+use App\Services\EnrollmentService;
+use App\Services\GradeService;
 use App\Services\PromotionService;
 use App\Services\RegistrationService;
 use App\Services\SchoolClass\AvailableTimeService;
@@ -176,11 +180,16 @@ return new class extends clsCadastro
         $this->acao_enviar = 'formUtils.submit()';
     }
 
-    protected function getCurso($id)
+    private function cursoDeAtividadeComplementar($id)
     {
-        $curso = new clsPmieducarCurso(cod_curso: $id);
+        if (!is_numeric(value: $id)) {
+            return false;
+        }
 
-        return $curso->detalhe();
+        return LegacyCourse::query()
+            ->whereKey($id)
+            ->whereHas(relation: 'educationType', callback: fn ($query) => $query->where('atividade_complementar', true))
+            ->exists();
     }
 
     private function getEnturmacoesNaTurma($turma)
@@ -423,16 +432,14 @@ return new class extends clsCadastro
                 ->get(['ref_ref_cod_serie', 'ref_cod_curso']);
 
             if ($matriculas->isNotEmpty() && !$dependencia) {
-                $curso = $this->getCurso(id: $this->ref_cod_curso);
-
-                $cursoADeferir = new clsPmieducarCurso(cod_curso: $this->ref_cod_curso);
-                $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
+                $multiSeriado = LegacyCourse::query()->whereKey($this->ref_cod_curso)->value('multi_seriado');
+                $cursoDeAtividadeComplementar = $this->cursoDeAtividadeComplementar(id: $this->ref_cod_curso);
 
                 if ($matriculas->firstWhere('ref_ref_cod_serie', $this->ref_cod_serie) && !$cursoDeAtividadeComplementar) {
                     $this->mensagem = 'Este aluno já está matriculado nesta série e curso, não é possivel matricular um aluno mais de uma vez na mesma série.<br />';
 
                     return false;
-                } elseif ($curso['multi_seriado'] != 1) {
+                } elseif ($multiSeriado != 1) {
                     $nomeSerie = $matriculas->pluck('grade.nm_serie')->unique()->implode(', ');
 
                     $this->mensagem = "Este aluno já está matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso não é multisseriado, não é possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
@@ -447,18 +454,13 @@ return new class extends clsCadastro
 
                 if (is_array(value: $m) && count(value: $m) && !$dependencia) {
                     $mesmoCursoAno = ($m['ref_cod_curso'] == $this->ref_cod_curso && $m['ano'] == $this->ano);
-                    $cursoADeferir = new clsPmieducarCurso(cod_curso: $this->ref_cod_curso);
-                    $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
+                    $cursoDeAtividadeComplementar = $this->cursoDeAtividadeComplementar(id: $this->ref_cod_curso);
 
                     if (($mesmoCursoAno || config(key: 'legacy.app.matricula.multiplas_matriculas') == 0) && !$cursoDeAtividadeComplementar) {
-                        $serie = new clsPmieducarSerie(cod_serie: $m['ref_ref_cod_serie'], ref_usuario_exc: null, ref_usuario_cad: null, ref_cod_curso: $m['ref_cod_curso']);
-                        $serie = $serie->detalhe();
-
-                        if (is_array(value: $serie) && count(value: $serie)) {
-                            $serie = $serie['nm_serie'];
-                        } else {
-                            $serie = '';
-                        }
+                        $serie = LegacyGrade::query()
+                            ->whereKey($m['ref_ref_cod_serie'])
+                            ->when(is_numeric($m['ref_cod_curso']), fn ($q) => $q->whereCourse($m['ref_cod_curso']))
+                            ->value('nm_serie') ?? '';
 
                         $escola = new clsPmieducarEscola(cod_escola: $m['ref_ref_cod_escola']);
                         $escola = $escola->detalhe();
@@ -469,14 +471,7 @@ return new class extends clsCadastro
                             $escola = '';
                         }
 
-                        $curso = new clsPmieducarCurso(cod_curso: $m['ref_cod_curso']);
-                        $curso = $curso->detalhe();
-
-                        if (is_array(value: $curso) && count(value: $curso)) {
-                            $curso = $curso['nm_curso'];
-                        } else {
-                            $curso = '';
-                        }
+                        $curso = LegacyCourse::query()->whereKey($m['ref_cod_curso'])->value('nm_curso');
 
                         $this->mensagem = "Este aluno já está matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transferência ao secretário(a) da escola citada.<br />";
 
@@ -485,8 +480,11 @@ return new class extends clsCadastro
                 }
             }
 
-            $serie = new clsPmieducarSerie(cod_serie: $this->ref_cod_serie);
-            $detSerie = $serie->detalhe();
+            $detSerie = is_numeric($this->ref_cod_serie) ? LegacyGrade::query()->find($this->ref_cod_serie, [
+                'cod_serie',
+                'alerta_faixa_etaria',
+                'bloquear_matricula_faixa_etaria',
+            ]) : null;
 
             $alertaFaixaEtaria = $detSerie['alerta_faixa_etaria'];
             $bloquearMatriculaFaixaEtaria = $detSerie['bloquear_matricula_faixa_etaria'];
@@ -507,7 +505,11 @@ return new class extends clsCadastro
                         ->value('data_nasc');
                 }
 
-                $dentroPeriodoCorte = $serie->verificaPeriodoCorteEtarioDataNascimento(dataNascimento: $dataNasc, ano: $this->ano);
+                $dentroPeriodoCorte = app(GradeService::class)->isAgeWithinRange(
+                    gradeId: $this->ref_cod_serie,
+                    birthDate: $dataNasc,
+                    year: $this->ano
+                );
 
                 if ($bloquearMatriculaFaixaEtaria && !$dentroPeriodoCorte) {
                     $this->mensagem = 'Não foi possível realizar a matrícula, pois a idade do aluno está fora da faixa etária da série';
@@ -540,9 +542,9 @@ return new class extends clsCadastro
                     ->whereHas('inep')
                     ->exists();
 
-            $objSerie = new clsPmieducarSerie(cod_serie: $this->ref_cod_serie);
-            $serieDet = $objSerie->detalhe();
-            $exigeInep = $serieDet['exigir_inep'];
+            $exigeInep = is_numeric($this->ref_cod_serie)
+                ? LegacyGrade::query()->whereKey($this->ref_cod_serie)->value('exigir_inep')
+                : null;
 
             if (!$alunoInep && $exigeInep) {
                 $this->mensagem = 'Não foi possível realizar matrícula, necessário inserir o INEP no cadastro do aluno.';
@@ -731,10 +733,11 @@ return new class extends clsCadastro
     {
         $instituicao = new clsPmieducarInstituicao(cod_instituicao: $this->ref_cod_instituicao);
         $instituicao = $instituicao->detalhe();
-        $serie = new clsPmieducarSerie(cod_serie: $this->ref_cod_serie);
-        $serie = $serie->detalhe();
         $reprovaDependenciaAnoConcluinte = $instituicao['reprova_dependencia_ano_concluinte'];
-        $anoConcluinte = $serie['concluinte'] == 2;
+        $concluinte = is_numeric($this->ref_cod_serie)
+            ? LegacyGrade::query()->whereKey($this->ref_cod_serie)->value('concluinte')
+            : null;
+        $anoConcluinte = $concluinte == 2;
 
         return !(dbBool(val: $reprovaDependenciaAnoConcluinte) && $anoConcluinte);
     }
@@ -920,28 +923,24 @@ return new class extends clsCadastro
 
     public function enturmacaoMatricula($matriculaId, $turmaDestinoId)
     {
-        $enturmacaoExists = new clsPmieducarMatriculaTurma;
-
-        $enturmacaoExists = $enturmacaoExists->lista(
-            int_ref_cod_matricula: $matriculaId,
-            int_ref_cod_turma: $turmaDestinoId,
-            int_ativo: 1
-        );
-
-        $enturmacaoExists = is_array(value: $enturmacaoExists) && count(value: $enturmacaoExists) > 0;
+        $enturmacaoExists = LegacyEnrollment::query()
+            ->active()
+            ->when(is_numeric($matriculaId), fn ($q) => $q->whereRegistration($matriculaId))
+            ->when(is_numeric($turmaDestinoId), fn ($q) => $q->whereSchoolClass($turmaDestinoId))
+            ->whereHas('registration', function ($q) {
+                $q->whereHas('student', fn ($q) => $q->active());
+            })
+            ->exists();
 
         if (!$enturmacaoExists) {
-            $enturmacao = new clsPmieducarMatriculaTurma(
-                ref_cod_matricula: $matriculaId,
-                ref_cod_turma: $turmaDestinoId,
-                ref_usuario_exc: $this->pessoa_logada,
-                ref_usuario_cad: $this->pessoa_logada,
-                ativo: 1
+            $enturmacao = app(EnrollmentService::class)->createFromScreen(
+                registrationId: $matriculaId,
+                schoolClassId: $turmaDestinoId,
+                createdBy: $this->pessoa_logada,
+                enrollmentDate: $this->data_matricula
             );
 
-            $enturmacao->data_enturmacao = $this->data_matricula;
-
-            return $enturmacao->cadastra();
+            return $enturmacao !== null;
         }
 
         return false;
@@ -971,10 +970,11 @@ return new class extends clsCadastro
 
     public function _getQtdMatriculaTurma()
     {
-        $obj_mt = new clsPmieducarMatriculaTurma;
-        $lst_mt = $obj_mt->enturmacoesSemDependencia(turmaId: $this->ref_cod_turma);
-
-        return $lst_mt[0];
+        return LegacyEnrollment::query()
+            ->active()
+            ->whereSchoolClass($this->ref_cod_turma)
+            ->whereHas('registration', fn ($q) => $q->where('dependencia', false))
+            ->count();
     }
 
     public function _getMaxAlunoTurma()
@@ -1027,19 +1027,21 @@ return new class extends clsCadastro
     {
         $obj_t = new clsPmieducarTurma(cod_turma: $this->ref_cod_turma);
         $det_t = $obj_t->detalhe();
-        $obj_mt = new clsPmieducarMatriculaTurma;
 
-        $obj_mt->lista(
-            int_ativo: 1,
-            int_ref_cod_serie: $this->ref_cod_serie,
-            int_ref_cod_curso: $this->ref_cod_curso,
-            int_ref_cod_escola: $this->ref_cod_escola,
-            int_turma_turno_id: $det_t['turma_turno_id'],
-            int_ano_turma: $det_t['ano'],
-            dependencia: 'f'
-        );
-
-        return $obj_mt->_total;
+        return LegacyEnrollment::query()
+            ->active()
+            ->whereHas('registration', function ($q) {
+                $q->when(is_numeric($this->ref_cod_serie), fn ($q) => $q->whereGrade($this->ref_cod_serie));
+                $q->when(is_numeric($this->ref_cod_curso), fn ($q) => $q->whereCourse($this->ref_cod_curso));
+                $q->when(is_numeric($this->ref_cod_escola), fn ($q) => $q->whereSchool($this->ref_cod_escola));
+                $q->where('dependencia', false);
+                $q->whereHas('student', fn ($q) => $q->active());
+            })
+            ->whereHas('schoolClass', function ($q) use ($det_t) {
+                $q->when(is_numeric($det_t['turma_turno_id']), fn ($q) => $q->whereShift($det_t['turma_turno_id']));
+                $q->when(is_numeric($det_t['ano']), fn ($q) => $q->whereYearEq($det_t['ano']));
+            })
+            ->count();
     }
 
     private function availableTimeService()
