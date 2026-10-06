@@ -327,15 +327,15 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             $this->inputsHelper()->hidden('justificativa_falta_documentacao_obrigatorio');
         }
 
-        $cod_aluno = $_GET['id'];
+        $cod_aluno = request()->integer('id');
+        $person = request()->integer('person');
 
-        if ($cod_aluno or $_GET['person']) {
-            if ($_GET['person']) {
-                $this->cod_pessoa_fj = $_GET['person'];
+        if ($cod_aluno or $person) {
+            if ($person) {
+                $this->cod_pessoa_fj = $person;
                 $this->inputsHelper()->hidden('person', ['value' => $this->cod_pessoa_fj]);
             } else {
-                $db = new clsBanco;
-                $this->cod_pessoa_fj = $db->CampoUnico("select ref_idpes from pmieducar.aluno where cod_aluno = '$cod_aluno'");
+                $this->cod_pessoa_fj = LegacyStudent::query()->whereKey($cod_aluno)->value('ref_idpes');
             }
 
             $documentos = is_numeric($this->cod_pessoa_fj)

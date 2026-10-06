@@ -24,6 +24,12 @@ class ConsultaMovimentoGeralController extends ConsultaBaseController
 
     protected function getData()
     {
+        if (!Portabilis_Utils_User::canAccessEscola($this->getRequest()->escola)) {
+            $this->messenger->append('Usuário sem acesso à escola informada.');
+
+            return ['alunos' => []];
+        }
+
         $type = $this->getRequest()->tipo;
         $params = [];
 

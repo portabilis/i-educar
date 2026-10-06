@@ -37,6 +37,8 @@ return new class extends clsListagem
     public function Gerar()
     {
         $this->titulo = 'Servidor - Listagem';
+        $this->buscaRapida = 'nome';
+        $this->buscaRapidaRotulo = 'Buscar por nome, matrícula ou CPF';
 
         foreach ($_GET as $var => $val) {
             $this->$var = ($val === '') ? null : $val;
@@ -119,9 +121,7 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Funções do servidor', breadcrumbs: [
-            url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
-        ]);
+        $this->breadcrumb(currentPage: 'Servidores');
     }
 
     public function Formular()
