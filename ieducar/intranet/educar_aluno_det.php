@@ -84,8 +84,48 @@ return new class extends clsDetalhe
         $this->nivel_usuario = $this->obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         $this->titulo = 'Aluno - Detalhe';
         $this->cod_aluno = $this->getQueryString(name: 'cod_aluno');
-        $tmp_obj = new clsPmieducarAluno(cod_aluno: $this->cod_aluno);
-        $registro = $tmp_obj->detalhe();
+        $aluno = null;
+
+        if (is_numeric($this->cod_aluno)) {
+            $aluno = LegacyStudent::query()
+                ->whereStudent($this->cod_aluno)
+                ->first([
+                    'cod_aluno',
+                    'ref_cod_religiao',
+                    'ref_usuario_exc',
+                    'ref_usuario_cad',
+                    'ref_idpes',
+                    'data_cadastro',
+                    'data_exclusao',
+                    'ativo',
+                    'analfabeto',
+                    'tipo_responsavel',
+                    'aluno_estado_id',
+                    'recursos_prova_inep',
+                    'recebe_escolarizacao_em_outro_espaco',
+                    'justificativa_falta_documentacao',
+                    'url_laudo_medico',
+                    'codigo_sistema',
+                    'veiculo_transporte_escolar',
+                    'parentesco_um',
+                    'autorizado_um',
+                    'parentesco_dois',
+                    'autorizado_dois',
+                    'parentesco_tres',
+                    'autorizado_tres',
+                    'parentesco_quatro',
+                    'autorizado_quatro',
+                    'parentesco_cinco',
+                    'autorizado_cinco',
+                    'url_documento',
+                    'emancipado',
+                    'tipo_transporte',
+                    'rota_transporte',
+                    'utiliza_transporte_rural',
+                ]);
+        }
+
+        $registro = $aluno?->getAttributes() ?? [];
 
         if (empty($registro)) {
             session()->flash(key: 'error', value: 'Aluno não encontrado.');
@@ -422,10 +462,55 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['País de Origem', $registro['pais_origem']]);
         }
 
-        $responsavel = $tmp_obj->getResponsavelAluno(exibirUrl: true);
+        $fisicaAluno = LegacyIndividual::query()
+            ->with([
+                'father:idpes,nome',
+                'mother:idpes,nome',
+                'responsible:idpes,nome',
+            ])
+            ->find($registro['ref_idpes'], [
+                'idpes',
+                'idpes_pai',
+                'idpes_mae',
+                'idpes_responsavel',
+            ]);
 
-        if ($responsavel && is_null(value: $registro['ref_idpes_responsavel'])) {
-            $this->addDetalhe(detalhe: ['Nome do Responsável', $responsavel['nome_responsavel']]);
+        $tipoResponsavel = $registro['tipo_responsavel'];
+        $nomeResponsavelAluno = null;
+
+        $linkPessoa = fn ($idpes, $nome) => sprintf(
+            '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">%s</a>',
+            $idpes,
+            $nome
+        );
+
+        if ($tipoResponsavel == 'p' || $tipoResponsavel == null) {
+            if ($fisicaAluno?->idpes_pai && $fisicaAluno->father) {
+                $nomeResponsavelAluno = $linkPessoa($fisicaAluno->father->idpes, $fisicaAluno->father->nome);
+            }
+        }
+
+        if ($tipoResponsavel == 'm' || ($nomeResponsavelAluno == null && $tipoResponsavel == null)) {
+            if ($fisicaAluno?->idpes_mae && $fisicaAluno->mother) {
+                $nomeResponsavelAluno = $linkPessoa($fisicaAluno->mother->idpes, $fisicaAluno->mother->nome);
+            }
+        }
+
+        if ($tipoResponsavel == 'r' || ($nomeResponsavelAluno == null && $tipoResponsavel == null)) {
+            if ($fisicaAluno?->idpes_responsavel && $fisicaAluno->responsible) {
+                $nomeResponsavelAluno = $linkPessoa($fisicaAluno->responsible->idpes, $fisicaAluno->responsible->nome);
+            }
+        }
+
+        if ($tipoResponsavel == 'a') {
+            if ($fisicaAluno?->idpes_mae && $fisicaAluno?->idpes_pai && $fisicaAluno->mother && $fisicaAluno->father) {
+                $nomeResponsavelAluno = $linkPessoa($fisicaAluno->father->idpes, $fisicaAluno->father->nome)
+                    . ', ' . $linkPessoa($fisicaAluno->mother->idpes, $fisicaAluno->mother->nome);
+            }
+        }
+
+        if (is_null(value: $registro['ref_idpes_responsavel'])) {
+            $this->addDetalhe(detalhe: ['Nome do Responsável', $nomeResponsavelAluno]);
         }
 
         if ($registro['ref_idpes_responsavel']) {

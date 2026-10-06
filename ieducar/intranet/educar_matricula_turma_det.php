@@ -2,6 +2,7 @@
 
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolGrade;
+use App\Models\LegacyStudent;
 
 return new class extends clsDetalhe
 {
@@ -110,14 +111,11 @@ return new class extends clsDetalhe
         $objMatricula = $obj_ref_cod_matricula->lista(int_cod_matricula: $this->ref_cod_matricula);
         $detalhe_aluno = array_shift(array: $objMatricula);
 
-        $obj_aluno = new clsPmieducarAluno;
-
-        $det_aluno = $obj_aluno->lista(
-            int_cod_aluno: $detalhe_aluno['ref_cod_aluno'],
-            int_ativo: 1
-        );
-
-        $det_aluno = array_shift(array: $det_aluno);
+        $nm_aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($detalhe_aluno['ref_cod_aluno'])
+            ->joinPerson()
+            ->value('pessoa.nome');
 
         $obj_escola = new clsPmieducarEscola(
             cod_escola: $this->ref_cod_escola,
@@ -125,7 +123,7 @@ return new class extends clsDetalhe
         );
         $obj_escola->detalhe();
 
-        $this->addDetalhe(detalhe: ['Nome do Aluno', $det_aluno['nome_aluno']]);
+        $this->addDetalhe(detalhe: ['Nome do Aluno', $nm_aluno]);
 
         $objTemp = new clsPmieducarTurma(cod_turma: $this->ref_cod_turma);
         $objTemp->detalhe();
