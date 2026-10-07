@@ -15,6 +15,7 @@ use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use App\Models\LegacyRace;
 use App\Models\LegacySchoolingDegree;
+use App\Models\LegacyStudent;
 use App\Models\LegacyUser;
 use App\Services\FileService;
 use App\Services\IndividualCpfStateService;
@@ -813,6 +814,19 @@ return new class extends clsCadastro
 
         Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: $styles);
 
+        $motivosExigemObservacao = (new IndividualCpfStateService)->reasonsRequiringObservation();
+        $motivosInativos = (new IndividualCpfStateService)->inactiveReasons();
+        $motivosSistema = (new IndividualCpfStateService)->systemReasons();
+        $opcoesJson = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP;
+
+        Portabilis_View_Helper_Application::embedJavascript(
+            viewInstance: $this,
+            script: 'var motivosExigemObservacao = ' . json_encode($motivosExigemObservacao, $opcoesJson)
+                . '; var motivosInativos = ' . json_encode($motivosInativos, $opcoesJson)
+                . '; var motivosSistema = ' . json_encode($motivosSistema, $opcoesJson) . ';',
+            afterReady: false
+        );
+
         $script = [
             '/vendor/legacy/Cadastro/Assets/Javascripts/PessoaFisica.js',
             '/vendor/legacy/Cadastro/Assets/Javascripts/Addresses.js',
@@ -821,15 +835,6 @@ return new class extends clsCadastro
         ];
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: $script);
-
-        $motivosExigemObservacao = (new IndividualCpfStateService)->reasonsRequiringObservation();
-        $motivosInativos = (new IndividualCpfStateService)->inactiveReasons();
-
-        Portabilis_View_Helper_Application::embedJavascript(
-            viewInstance: $this,
-            script: 'var motivosExigemObservacao = ' . json_encode($motivosExigemObservacao) . '; var motivosInativos = ' . json_encode($motivosInativos) . ';',
-            afterReady: false
-        );
     }
 
     public function Novo()
@@ -851,8 +856,7 @@ return new class extends clsCadastro
     {
         $idPes = $this->cod_pessoa_fj;
 
-        $aluno = new clsPmieducarAluno;
-        $aluno = $aluno->lista(int_cod_aluno: null, int_ref_cod_aluno_beneficio: null, int_ref_cod_religiao: null, int_ref_usuario_exc: null, int_ref_usuario_cad: null, int_ref_idpes: $idPes, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: 1);
+        $aluno = is_numeric($idPes) && LegacyStudent::query()->active()->wherePerson($idPes)->exists();
 
         if ($aluno) {
             $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com aluno.';
@@ -937,10 +941,16 @@ return new class extends clsCadastro
 
     protected function loadAlunoByPessoaId($id)
     {
-        $aluno = new clsPmieducarAluno;
-        $aluno->ref_idpes = $id;
+        if (!is_numeric($id)) {
+            return null;
+        }
 
-        return $aluno->detalhe();
+        return LegacyStudent::query()
+            ->wherePerson($id)
+            ->first([
+                'cod_aluno',
+                'ref_idpes',
+            ]);
     }
 
     protected function inputCpf()
@@ -1020,7 +1030,7 @@ return new class extends clsCadastro
         }
 
         if (!isset($this->_aluno)) {
-            $this->_aluno = $this->loadAlunoByPessoaId(id: $this->cod_pessoa_fj);
+            $this->_aluno = $this->loadAlunoByPessoaId(id: $this->cod_pessoa_fj) ?? false;
         }
 
         $parentId = $this->{$parentType . '_id'};

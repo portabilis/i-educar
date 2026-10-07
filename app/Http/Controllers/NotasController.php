@@ -8,6 +8,7 @@ use iEducar\Modules\EvaluationRules\Exceptions\ExamScoreGreaterThanMaxAllowed;
 use iEducar\Modules\EvaluationRules\Exceptions\ScoreGreaterThanMaxAllowed;
 use iEducar\Modules\EvaluationRules\Exceptions\ScoreLesserThanMinAllowed;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
+use iEducar\Modules\Stages\Exceptions\StageNotExistsForSchoolClass;
 use Illuminate\Http\Response;
 
 class NotasController extends DiarioController
@@ -29,6 +30,8 @@ class NotasController extends DiarioController
             $boletim = $this->service->getServiceBoletim($turmaId, $alunoId, $matricula);
 
             $etapa = $request->input('etapa');
+            $this->validateStageBySchoolCalendar($etapa, $turmaId, (int) $boletim->getOption('etapas'));
+
             $nota = $request->input('nota');
             $notaRecuperacao = $request->input('recuperacao');
 
@@ -76,7 +79,7 @@ class NotasController extends DiarioController
             }
 
             $this->service->atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId, $matricula);
-        } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException|DisciplineNotExistsForSchoolClass|MissingStagesException|ScoreGreaterThanMaxAllowed|ScoreLesserThanMinAllowed|ExamScoreGreaterThanMaxAllowed $exception) {
+        } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException|DisciplineNotExistsForSchoolClass|MissingStagesException|StageNotExistsForSchoolClass|ScoreGreaterThanMaxAllowed|ScoreLesserThanMinAllowed|ExamScoreGreaterThanMaxAllowed $exception) {
             return $this->unprocessableResponse($exception);
         } catch (\Exception $exception) {
             return response()->json([
@@ -87,6 +90,16 @@ class NotasController extends DiarioController
         return response()->json([
             'message' => 'Nota salva com sucesso.',
         ], Response::HTTP_CREATED);
+    }
+
+    /**
+     * Valida a etapa antes da checagem de etapas anteriores, que listaria etapas fora do calendário.
+     */
+    private function validateStageBySchoolCalendar(string $etapa, int $turmaId, int $quantidadeEtapas): void
+    {
+        if ($etapa !== 'Rc' && (int) $etapa > $quantidadeEtapas) {
+            throw new StageNotExistsForSchoolClass((int) $etapa, $turmaId, $quantidadeEtapas);
+        }
     }
 
     private function validateScoreByEvaluationRule($notaValidacao, $valorNota, $etapa, $regra, bool $isSumScoreCalculation)

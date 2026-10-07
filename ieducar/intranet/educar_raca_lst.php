@@ -91,7 +91,7 @@ return new class extends clsListagem
                 $registro['data_exclusao_br'] = date(format: 'd/m/Y H:i', timestamp: $registro['data_exclusao_time']);
 
                 $this->addLinhas(linha: [
-                    "<a href=\"educar_raca_det.php?cod_raca={$registro['cod_raca']}\">{$registro['nm_raca']}</a>",
+                    "<a href=\"educar_raca_det.php?cod_raca={$registro['cod_raca']}\">" . e($registro['nm_raca']) . '</a>',
                 ]);
             }
         }

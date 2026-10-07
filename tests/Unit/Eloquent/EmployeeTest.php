@@ -20,7 +20,6 @@ use Database\Factories\EmployeeInepFactory;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyDisciplineFactory;
 use Database\Factories\LegacyEmployeeRoleFactory;
-use Database\Factories\LegacyIndividualFactory;
 use Database\Factories\LegacySchoolFactory;
 use Tests\EloquentTestCase;
 
@@ -55,9 +54,6 @@ class EmployeeTest extends EloquentTestCase
     public function test_relationship_individual()
     {
         $employee = EmployeeFactory::new()->create();
-        $employee->individual = LegacyIndividualFactory::new()->create([
-            'idpes' => $employee->id,
-        ]);
         $this->assertInstanceOf(LegacyIndividual::class, $employee->individual);
     }
 

@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyCourse;
+use App\Models\LegacyGrade;
+
 return new class extends clsCadastro
 {
     public $pessoa_logada;
@@ -32,19 +35,18 @@ return new class extends clsCadastro
 
         if (is_numeric($this->serie_id)) {
             $retorno = 'Editar';
-            $obj = new clsPmieducarSerie($this->serie_id);
-            $registro = $obj->detalhe();
+            $serie = LegacyGrade::query()->find($this->serie_id);
 
-            if ($registro) {
+            if ($serie) {
+                $registro = $serie->getAttributes();
+
                 foreach ($registro as $campo => $val) {
                     $this->$campo = $val;
                 }
 
                 $this->curso_id = $registro['ref_cod_curso'];
 
-                $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
-                $obj_curso_det = $obj_curso->detalhe();
-                $this->instituicao_id = $obj_curso_det['ref_cod_instituicao'];
+                $this->instituicao_id = LegacyCourse::query()->whereKey($registro['ref_cod_curso'])->value('ref_cod_instituicao');
                 $this->fexcluir = $obj_permissoes->permissao_excluir(
                     int_processo_ap: 9998859,
                     int_idpes_usuario: $this->pessoa_logada,
