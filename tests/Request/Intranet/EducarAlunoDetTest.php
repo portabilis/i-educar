@@ -261,12 +261,11 @@ test('mostra o RG e a certidão civil conforme o formato', function (array $docu
             'data_emissao_cert_civil' => '2015-05-02', 'sigla_uf_cert_civil' => 'SC', 'cartorio_cert_civil' => 'Cartório Central',
         ],
         [
-            'RG', '7654321', 'Data de Expedição RG', '10/03/2020', 'Estado Expedidor', 'SC',
+            'RG', '7654321', 'Data de Expedição RG', '10/03/2020', 'Órgão Expedição RG', 'SSP', 'Estado Expedidor', 'SC',
             'Tipo Certidão Civil', 'Nascimento (novo formato)', 'Número Certidão Civil', '12345678901234567890123456789012',
             'Emissão Certidão Civil', '02/05/2015', 'Sigla Certidão Civil', 'SC', 'Cartório', 'Cartório Central',
         ],
-        // Defeito: a tela lê `ref_idorg_rg`, e a coluna é `idorg_exp_rg`.
-        ['Termo', 'Órgão Expedição RG'],
+        ['Termo'],
     ],
     'certidão de casamento no formato novo' => [
         ['rg' => '7654321', 'certidao_casamento' => '99999999901234567890123456789012'],
