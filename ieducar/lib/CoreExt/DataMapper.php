@@ -271,7 +271,7 @@ abstract class CoreExt_DataMapper
                 elseif (strpos($value, '$') > -1) {
                     $where[] = sprintf('%s = %s', $whereName, $value);
                 } else {
-                    $where[] = sprintf('%s = \'%s\'', $whereName, $value);
+                    $where[] = sprintf('%s = \'%s\'', $whereName, pg_escape_string((string) $value));
                 }
             }
         } else {
@@ -323,7 +323,7 @@ abstract class CoreExt_DataMapper
 
         foreach ($pkey as $key => $pk) {
             $whereName = $this->_getTableColumn($key);
-            $where[] = sprintf('%s = \'%s\'', $whereName, $pk);
+            $where[] = sprintf('%s = \'%s\'', $whereName, pg_escape_string((string) $pk));
         }
 
         return sprintf(
@@ -422,7 +422,7 @@ abstract class CoreExt_DataMapper
 
         foreach ($keyToUpdate as $key => $value) {
             $whereName = $this->_getTableColumn($key);
-            $where[] = sprintf('%s = \'%s\'', $whereName, $value);
+            $where[] = sprintf('%s = \'%s\'', $whereName, pg_escape_string((string) $value));
         }
 
         return sprintf(
@@ -454,7 +454,7 @@ abstract class CoreExt_DataMapper
 
         foreach ($pkToDelete as $key => $value) {
             $whereName = $this->_getTableColumn($key);
-            $where[] = sprintf('%s = \'%s\'', $whereName, $value);
+            $where[] = sprintf('%s = \'%s\'', $whereName, pg_escape_string((string) $value));
         }
 
         return sprintf($sql, $this->_getTableName(), implode(' AND ', $where));

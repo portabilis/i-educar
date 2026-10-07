@@ -37,27 +37,27 @@ return new class extends clsDetalhe
             }
         }
 
-        $this->addDetalhe(detalhe: ['Razão Social', $razao_social]);
-        $this->addDetalhe(detalhe: ['Nome Fantasia', $nm_pessoa]);
+        $this->addDetalhe(detalhe: ['Razão Social', e($razao_social)]);
+        $this->addDetalhe(detalhe: ['Nome Fantasia', e($nm_pessoa)]);
         $this->addDetalhe(detalhe: ['CNPJ', empty($id_federal) ? '' : int2CNPJ(int: $id_federal)]);
-        $this->addDetalhe(detalhe: ['Endereço', $endereco]);
-        $this->addDetalhe(detalhe: ['CEP', $cep]);
-        $this->addDetalhe(detalhe: ['Bairro', $nm_bairro]);
-        $this->addDetalhe(detalhe: ['Cidade', $cidade]);
+        $this->addDetalhe(detalhe: ['Endereço', e($endereco)]);
+        $this->addDetalhe(detalhe: ['CEP', e($cep)]);
+        $this->addDetalhe(detalhe: ['Bairro', e($nm_bairro)]);
+        $this->addDetalhe(detalhe: ['Cidade', e($cidade)]);
 
         $this->addDetalhe(detalhe: ['Telefone 1', $this->preparaTelefone(ddd: $ddd_telefone_1, telefone: $telefone_1)]);
         $this->addDetalhe(detalhe: ['Telefone 2', $this->preparaTelefone(ddd: $ddd_telefone_2, telefone: $telefone_2)]);
         $this->addDetalhe(detalhe: ['Celular', $this->preparaTelefone(ddd: $ddd_telefone_mov, telefone: $telefone_mov)]);
         $this->addDetalhe(detalhe: ['Fax', $this->preparaTelefone(ddd: $ddd_telefone_fax, telefone: $telefone_fax)]);
 
-        $this->addDetalhe(detalhe: ['Site', $http]);
-        $this->addDetalhe(detalhe: ['E-mail', $email]);
+        $this->addDetalhe(detalhe: ['Site', e($http)]);
+        $this->addDetalhe(detalhe: ['E-mail', e($email)]);
 
         if (!$ins_est) {
             $ins_est = 'isento';
         }
-        $this->addDetalhe(detalhe: ['Inscrição Estadual', $ins_est]);
-        $this->addDetalhe(detalhe: ['Capital Social', $capital_social]);
+        $this->addDetalhe(detalhe: ['Inscrição Estadual', e($ins_est)]);
+        $this->addDetalhe(detalhe: ['Capital Social', e($capital_social)]);
 
         $obj_permissao = new clsPermissoes;
 

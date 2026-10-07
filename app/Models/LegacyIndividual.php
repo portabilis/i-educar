@@ -329,7 +329,7 @@ class LegacyIndividual extends Model
     protected function nationalityName(): Attribute
     {
         return Attribute::make(
-            get: fn () => (new Nationality)->getDescriptiveValues()[$this->nacionalidade]
+            get: fn () => (new Nationality)->getDescriptiveValues()[(int) $this->nacionalidade] ?? null
         );
     }
 

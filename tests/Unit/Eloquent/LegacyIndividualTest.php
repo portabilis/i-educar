@@ -9,6 +9,7 @@ use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyPerson;
 use App\Models\LegacyRace;
 use App\Models\LegacyStudent;
+use App\Models\Nationality;
 use Database\Factories\DocumentAbsenceReasonFactory;
 use Database\Factories\LegacyIndividualFactory;
 use Tests\EloquentTestCase;
@@ -81,5 +82,19 @@ class LegacyIndividualTest extends EloquentTestCase
         $individual->refresh();
 
         $this->assertSame($reason->getKey(), $individual->document_absence_reason_id);
+    }
+
+    public function test_nationality_name_is_null_without_nationality(): void
+    {
+        $individual = LegacyIndividualFactory::new()->create(['nacionalidade' => null]);
+
+        $this->assertNull($individual->refresh()->nationality_name);
+    }
+
+    public function test_nationality_name_describes_the_nationality(): void
+    {
+        $individual = LegacyIndividualFactory::new()->create(['nacionalidade' => Nationality::FOREIGN]);
+
+        $this->assertSame('Estrangeira', $individual->refresh()->nationality_name);
     }
 }
