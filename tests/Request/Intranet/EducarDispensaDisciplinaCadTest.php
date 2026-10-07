@@ -158,9 +158,7 @@ test('dispensar de novo um componente já dispensado regrava a dispensa em vez d
         ->and(($this->stages)($exemption))->toBe([2]);
 });
 
-// Defeito conhecido: a tela monta a mensagem com uma lista local que nunca é
-// preenchida, em vez da lista do serviço; o aviso sai sem o nome do componente.
-test('defeito: recusa o componente fora da série da escola sem dizer qual é', function () {
+test('recusa o componente fora da série da escola dizendo qual é', function () {
     $loose = LegacyDisciplineFactory::new()->create(['nome' => 'Componente Avulso']);
 
     $payload = LegacyFields::from($this->get($this->new)->assertOk()->getContent(), [
@@ -171,7 +169,7 @@ test('defeito: recusa o componente fora da série da escola sem dizer qual é', 
 
     $this->post($this->new, $payload)
         ->assertOk()
-        ->assertSee('O(s) componente(s):<b></b>. não está(ão) habilitado(s) na série da escola.', false);
+        ->assertSee('O(s) componente(s):<b>Componente Avulso</b>. não está(ão) habilitado(s) na série da escola.', false);
 
     expect(($this->exemptions)())->toBeEmpty();
 });
