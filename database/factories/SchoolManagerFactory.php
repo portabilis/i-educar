@@ -13,7 +13,7 @@ class SchoolManagerFactory extends Factory
     {
         return [
             'access_criteria_description' => $this->faker->text(25),
-            'chief' => $this->faker->boolean(),
+            'chief' => true,
             'employee_id' => static function () {
                 $individual = LegacyIndividualFactory::new()->create();
                 EmployeeFactory::new()->create([
