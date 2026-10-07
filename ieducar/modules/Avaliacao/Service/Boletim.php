@@ -2471,7 +2471,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $countEtapasRecuperacao = 0;
 
                 foreach ($_regraRecuperacao->getEtapas() as $__etapa) {
-                    $somaEtapasRecuperacao += $data['E' . $__etapa];
+                    // Etapa da regra ainda sem nota lançada entra como zero na soma
+                    $somaEtapasRecuperacao += $data['E' . $__etapa] ?? 0;
                     $countEtapasRecuperacao++;
                 }
 
@@ -2504,7 +2505,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $countEtapasRecuperacao = 0;
 
                 foreach ($_regraRecuperacao->getEtapas() as $__etapa) {
-                    $somaEtapasRecuperacao += $data['E' . $__etapa];
+                    // Etapa da regra ainda sem nota lançada entra como zero na soma
+                    $somaEtapasRecuperacao += $data['E' . $__etapa] ?? 0;
                     $countEtapasRecuperacao++;
                 }
 
