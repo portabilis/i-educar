@@ -2497,16 +2497,14 @@ return new class extends clsCadastro
 
         $opcoes = ['' => 'Selecione'];
         if ($this->cod_escola || $this->ref_cod_instituicao) {
-            $objTemp = new clsPmieducarCurso;
-            $objTemp->setOrderby('nm_curso');
-            $lista = $objTemp->lista(int_ativo: 1, int_ref_cod_instituicao: $this->ref_cod_instituicao);
-            if (is_array($lista)) {
-                foreach ($lista as $registro) {
-                    $nm = empty($registro['descricao'])
-                        ? $registro['nm_curso']
-                        : "{$registro['nm_curso']} ({$registro['descricao']})";
-                    $opcoes[$registro['cod_curso']] = $nm;
-                }
+            $cursos = LegacyCourse::query()
+                ->active()
+                ->when(is_numeric($this->ref_cod_instituicao), fn ($query) => $query->whereInstitution((int) $this->ref_cod_instituicao))
+                ->orderByName()
+                ->get(['cod_curso', 'nm_curso', 'descricao']);
+
+            foreach ($cursos as $registro) {
+                $opcoes[$registro->cod_curso] = $registro->name;
             }
 
             $cursosInativos = [];

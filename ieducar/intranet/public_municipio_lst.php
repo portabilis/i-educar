@@ -85,8 +85,8 @@ return new class extends clsListagem
 
         foreach ($data as $item) {
             $this->addLinhas([
-                "<a href=\"public_municipio_det.php?idmun={$item->id}\">{$item->name}</a>",
-                "<a href=\"public_municipio_det.php?idmun={$item->id}\">{$item->state->abbreviation}</a>",
+                "<a href=\"public_municipio_det.php?idmun={$item->id}\">" . e($item->name) . '</a>',
+                "<a href=\"public_municipio_det.php?idmun={$item->id}\">" . e($item->state->abbreviation) . '</a>',
             ]);
         }
 
