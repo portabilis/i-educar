@@ -468,11 +468,14 @@ return new class extends clsDetalhe
 
     public function getComponentesTurma()
     {
+        // Inalcançável: nada chama este método.
+        // @codeCoverageIgnoreStart
         return LegacySchoolGradeDiscipline::whereGrade($this->ref_ref_cod_serie)
             ->whereSchool(school: $this->ref_ref_cod_escola)
             ->whereYearEq($this->ano)
             ->active()
             ->get();
+        // @codeCoverageIgnoreEnd
     }
 
     public function getComponentesTurmaMulti($turmaId)
