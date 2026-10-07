@@ -23,9 +23,9 @@ class SchoolManagerFactory extends Factory
                 return $individual;
             },
             'school_id' => fn () => LegacySchoolFactory::new()->create(),
-            'role_id' => fn () => ManagerRoleFactory::new()->current(),
+            'role_id' => fn () => ManagerRoleFactory::new()->director(),
             'access_criteria_id' => fn () => ManagerAccessCriteriaFactory::new()->indication(),
-            'link_type_id' => fn () => ManagerLinkTypeFactory::new()->current(),
+            'link_type_id' => fn () => ManagerLinkTypeFactory::new()->permanent(),
         ];
     }
 }

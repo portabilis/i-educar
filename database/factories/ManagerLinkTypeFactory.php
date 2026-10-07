@@ -16,8 +16,15 @@ class ManagerLinkTypeFactory extends Factory
         ];
     }
 
-    public function current(): ManagerLinkType
+    /**
+     * O vínculo "Concursado/efetivo/estável", com o id fixo da instalação
+     * padrão, para o gestor criado ser o mesmo em qualquer banco.
+     */
+    public function permanent(): ManagerLinkType
     {
-        return ManagerLinkType::query()->first() ?? $this->create();
+        return ManagerLinkType::query()->find(1) ?? ManagerLinkType::query()->forceCreate([
+            'id' => 1,
+            'name' => 'Concursado/efetivo/estável',
+        ]);
     }
 }
