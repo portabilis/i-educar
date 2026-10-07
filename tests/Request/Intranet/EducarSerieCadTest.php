@@ -238,16 +238,14 @@ test('não exclui a série que tem turmas vinculadas', function () {
     expect($schoolClass->grade->refresh()->ativo)->toBe(1);
 });
 
-// Defeito conhecido: a exclusão é uma edição com ativo = 0, e a edição grava
-// NULL nas idades e na etapa do Educacenso que não recebeu.
-test('defeito: excluir a série desativa e apaga as idades dela', function () {
+test('excluir a série só desativa e mantém as idades dela', function () {
     $this->post($this->url, ['tipoacao' => 'Excluir'] + ($this->edicao)())->assertRedirect('educar_serie_lst.php');
 
     expect($this->grade->refresh()->getAttributes())
         ->ativo->toBe(0)
         ->ref_usuario_exc->toBe($this->user->getKey())
-        ->idade_inicial->toBeNull()
-        ->idade_final->toBeNull();
+        ->idade_inicial->toEqual(6)
+        ->idade_final->toEqual(7);
 });
 
 test('avisa quando a edição ou a exclusão não é gravada', function (string $action, string $message) {

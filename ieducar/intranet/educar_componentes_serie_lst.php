@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyGrade;
+
 return new class extends clsListagem
 {
     public $pessoa_logada;
@@ -7,8 +9,6 @@ return new class extends clsListagem
     public $titulo;
 
     public $limite;
-
-    public $offset;
 
     public $cod_serie;
 
@@ -45,46 +45,39 @@ return new class extends clsListagem
 
         // Paginador
         $this->limite = 10;
-        $this->offset = $_GET["pagina_{$this->nome}"] ?
-      $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
+        $resultado = LegacyGrade::query()
+            ->active()
+            ->with([
+                'course:cod_curso,nm_curso,descricao,ref_cod_instituicao',
+                'course.institution:cod_instituicao,nm_instituicao',
+            ])
+            ->whereHas('academicYearDisciplines')
+            ->when(is_numeric($this->ref_cod_serie), fn ($q) => $q->whereKey($this->ref_cod_serie))
+            ->when(is_numeric($this->ref_cod_curso), fn ($q) => $q->whereCourse($this->ref_cod_curso))
+            ->when(is_numeric($this->ref_cod_instituicao), fn ($q) => $q->whereInstitution($this->ref_cod_instituicao))
+            ->orderBy('nm_serie')
+            ->paginate(perPage: $this->limite, pageName: 'pagina_' . $this->nome);
 
-        $obj_serie = new clsPmieducarSerie;
-        $obj_serie->setOrderby('nm_serie ASC');
-        $obj_serie->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
-
-        $lista = $obj_serie->listaSeriesComComponentesVinculados(
-            int_cod_serie: $this->ref_cod_serie,
-            int_ref_cod_curso: $this->ref_cod_curso,
-            int_ref_cod_instituicao: $this->ref_cod_instituicao,
-            int_ativo: 1
-        );
-
-        $total = $obj_serie->_total;
+        $lista = $resultado->getCollection();
+        $total = $resultado->total();
 
         // monta a lista
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
+        foreach ($lista as $registro) {
+            $curso = $registro->course;
+            $registro['nm_serie'] = empty($registro['descricao']) ? $registro['nm_serie'] : "{$registro['nm_serie']} ({$registro['descricao']})";
+            $registro['ref_cod_instituicao'] = $curso->institution->nm_instituicao;
+            $registro['ref_cod_curso'] = empty($curso->descricao) ? $curso->nm_curso : "{$curso->nm_curso} ({$curso->descricao})";
 
-                // Pega detalhes de foreign_keys
-                $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
-                $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-                $registro['ref_cod_curso'] = empty($det_ref_cod_curso['descricao']) ? $det_ref_cod_curso['nm_curso'] : "{$det_ref_cod_curso['nm_curso']} ({$det_ref_cod_curso['descricao']})";
-                $registro['nm_serie'] = empty($registro['descricao']) ? $registro['nm_serie'] : "{$registro['nm_serie']} ({$registro['descricao']})";
-                $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
-                $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
-                $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
+            $lista_busca = [
+                "<a href=\"educar_componentes_serie_cad.php?serie_id={$registro['cod_serie']}\">{$registro['nm_serie']}</a>",
+                "<a href=\"educar_componentes_serie_cad.php?serie_id={$registro['cod_serie']}\">{$registro['ref_cod_curso']}</a>",
+            ];
 
-                $lista_busca = [
-                    "<a href=\"educar_componentes_serie_cad.php?serie_id={$registro['cod_serie']}\">{$registro['nm_serie']}</a>",
-                    "<a href=\"educar_componentes_serie_cad.php?serie_id={$registro['cod_serie']}\">{$registro['ref_cod_curso']}</a>",
-                ];
-
-                if ($nivel_usuario == 1) {
-                    $lista_busca[] = "<a href=\"educar_componentes_serie_cad.php?serie_id={$registro['cod_serie']}\">{$registro['ref_cod_instituicao']}</a>";
-                }
-
-                $this->addLinhas($lista_busca);
+            if ($nivel_usuario == 1) {
+                $lista_busca[] = "<a href=\"educar_componentes_serie_cad.php?serie_id={$registro['cod_serie']}\">{$registro['ref_cod_instituicao']}</a>";
             }
+
+            $this->addLinhas($lista_busca);
         }
 
         $this->addPaginador2(strUrl: 'educar_componentes_serie_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);

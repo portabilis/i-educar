@@ -173,17 +173,40 @@ class LegacyController extends Controller
      *
      * @return array
      */
-    private function getHttpHeaders()
+    private function getHttpHeaders(string $content = '')
     {
         $headers = [];
 
         foreach (headers_list() as $header) {
-            $header = explode(':', $header);
+            // O limite 2 mantém inteiro um valor que contenha ":", como uma URL.
+            [$name, $value] = array_pad(explode(':', $header, 2), 2, '');
 
-            $name = trim($header[0]);
-            $value = trim($header[1]);
+            $headers[trim($name)] = trim($value);
+        }
 
-            $headers[$name] = $value;
+        $hasContentType = array_any(
+            array_keys($headers),
+            static fn (string $name) => strcasecmp($name, 'Content-Type') === 0,
+        );
+
+        // No SAPI de linha de comando — que é como roda o servidor in-process dos
+        // testes de browser — header() não tem efeito e headers_list() volta
+        // vazia. Sem o `Content-Type: text/xml` das telas *_xml.php e sem o
+        // `application/json` do ApiCoreController, o navegador trata as duas
+        // coisas como HTML: o responseXML fica nulo, as cascatas de select do
+        // legado não têm o que ler e o $.get do jQuery entrega a resposta da API
+        // como texto, deixando o autocomplete sem sugestões — tudo em silêncio.
+        // A dedução só vale nesse SAPI: sob php-fpm headers_list() traz o que as
+        // telas declararam, e farejar o corpo mudaria o Content-Type de páginas
+        // que hoje respondem sem declarar nenhum.
+        if (PHP_SAPI === 'cli' && !$hasContentType) {
+            $body = ltrim($content);
+
+            if (str_starts_with($body, '<?xml')) {
+                $headers['Content-Type'] = 'text/xml; charset=utf-8';
+            } elseif (str_starts_with($body, '{') || str_starts_with($body, '[')) {
+                $headers['Content-Type'] = 'application/json; charset=utf-8';
+            }
         }
 
         return $headers;
@@ -221,22 +244,75 @@ class LegacyController extends Controller
      */
     private function requireFileFromLegacy($filename)
     {
+        // O nível de buffer é guardado e restaurado porque o código legado pode
+        // deixar a pilha desequilibrada: um redirecionamento por permissão sai
+        // daqui por exceção, com o ob_start() abaixo ainda aberto. Sob php-fpm o
+        // processo morre no fim da requisição e isso se resolve sozinho; no
+        // servidor in-process dos testes de browser o processo é reaproveitado, e
+        // o que sobra vaza para a requisição seguinte.
+        $level = ob_get_level();
+
         ob_start();
 
-        $this->overrideGlobals();
-        $this->configureErrorsAndExceptions();
-        $this->changeDirectory();
-        $this->loadLegacyFile($filename);
+        try {
+            $this->overrideGlobals();
+            $this->forgetLegacyAssets();
+            $this->forgetLegacyStatusCode();
+            $this->configureErrorsAndExceptions();
+            $this->changeDirectory();
+            $this->loadLegacyFile($filename);
 
-        $content = ob_get_contents();
-
-        ob_end_clean();
+            // Só lê o próprio buffer: se o legado já fechou o nosso, ob_get_contents()
+            // devolveria o conteúdo de quem chamou.
+            $content = ob_get_level() > $level ? (string) ob_get_contents() : '';
+        } finally {
+            // A condição inclui o retorno do ob_end_clean() para o laço terminar
+            // se o buffer não puder ser removido, em vez de girar para sempre.
+            while (ob_get_level() > $level && ob_end_clean()) {
+                continue;
+            }
+        }
 
         return new Response(
             $content,
             $this->getHttpStatusCode(),
-            $this->getHttpHeaders()
+            $this->getHttpHeaders($content)
         );
+    }
+
+    /**
+     * Zera o registro de assets do código legado.
+     *
+     * Portabilis_View_Helper_Application guarda em propriedade estática o que já
+     * emitiu, para não repetir <script> e <link> na mesma página. Isso só
+     * funciona porque, sob php-fpm, o processo atende uma requisição e morre;
+     * num processo reaproveitado a lista atravessa requisições e as páginas
+     * seguintes ficam sem os assets.
+     *
+     * @return void
+     */
+    private function forgetLegacyAssets()
+    {
+        // Com autoload: a classe vem do classmap do código legado e pode ainda
+        // não ter sido carregada neste ponto da requisição.
+        if (class_exists(\Portabilis_View_Helper_Application::class)) {
+            \Portabilis_View_Helper_Application::forgetLoadedAssets();
+        }
+    }
+
+    /**
+     * Devolve o código de resposta ao padrão antes de entrar no legado.
+     *
+     * getHttpStatusCode() lê http_response_code(), que é global de processo. Sob
+     * php-fpm ele nasce em 200 a cada requisição; num processo reaproveitado o
+     * código que a tela anterior definiu continua valendo, e uma página que
+     * renderizou bem sairia com o status de erro da anterior.
+     *
+     * @return void
+     */
+    private function forgetLegacyStatusCode()
+    {
+        http_response_code(Response::HTTP_OK);
     }
 
     /**

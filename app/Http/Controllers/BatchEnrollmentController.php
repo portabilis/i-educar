@@ -87,6 +87,8 @@ class BatchEnrollmentController extends Controller
     public function indexCancelEnrollments(
         LegacySchoolClass $schoolClass
     ) {
+        $this->authorizeSchoolClassAccess($schoolClass);
+
         return $this->viewCancelEnrollments($schoolClass, $schoolClass->getActiveEnrollments());
     }
 
@@ -101,6 +103,8 @@ class BatchEnrollmentController extends Controller
         LegacySchoolClass $schoolClass,
         EnrollmentService $enrollmentService
     ) {
+        $this->authorizeSchoolClassAccess($schoolClass);
+
         $date = Carbon::createFromFormat('d/m/Y', $request->input('date'));
         $enrollmentsIds = $request->input('enrollments', []);
 
@@ -128,6 +132,8 @@ class BatchEnrollmentController extends Controller
         LegacySchoolClass $schoolClass,
         RegistrationService $registrationService
     ) {
+        $this->authorizeSchoolClassAccess($schoolClass);
+
         $registrations = $registrationService->getRegistrationsNotEnrolled($schoolClass);
 
         $registrations = $registrations->sortBy(function ($registration) {
@@ -146,6 +152,8 @@ class BatchEnrollmentController extends Controller
         EnrollmentService $enrollmentService,
         RegistrationService $registrationService
     ) {
+        $this->authorizeSchoolClassAccess($schoolClass);
+
         $date = Carbon::createFromFormat('d/m/Y', $request->input('date'));
         $registrationsIds = $request->input('registrations', []);
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyGrade;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolCourse;
 use App\Models\LegacyUserSchool;
@@ -234,13 +235,17 @@ if ($get_serie) {
     $opcoes_serie = ['' => 'Selecione'];
     // EDITAR
     if ($this->ref_cod_curso && $this->ref_cod_escola) {
-        $obj_serie = new clsPmieducarSerie;
-        $obj_serie->setOrderby('nm_serie ASC');
-        $lst_serie = $obj_serie->lista(int_ref_cod_curso: $this->ref_cod_curso, int_ativo: 1);
-        if (is_array($lst_serie) && count($lst_serie)) {
-            foreach ($lst_serie as $serie) {
-                $opcoes_serie["{$serie['cod_serie']}"] = $serie['nm_serie'];
-            }
+        $lst_serie = LegacyGrade::query()
+            ->active()
+            ->when(is_numeric($this->ref_cod_curso), fn ($q) => $q->whereCourse($this->ref_cod_curso))
+            ->orderBy('nm_serie')
+            ->get([
+                'cod_serie',
+                'nm_serie',
+            ]);
+
+        foreach ($lst_serie as $serie) {
+            $opcoes_serie["{$serie['cod_serie']}"] = $serie['nm_serie'];
         }
     }
     $retorno .= '<tr id="tr_curso" class="input_quadro_horario">

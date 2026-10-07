@@ -63,9 +63,9 @@ return new class extends clsListagem
 
         foreach ($data as $item) {
             $this->addLinhas([
-                "<a href=\"public_uf_det.php?id={$item->id}\">{$item->name}</a>",
-                "<a href=\"public_uf_det.php?id={$item->id}\">{$item->abbreviation}</a>",
-                "<a href=\"public_uf_det.php?id={$item->id}\">{$item->country->name}</a>",
+                "<a href=\"public_uf_det.php?id={$item->id}\">" . e($item->name) . '</a>',
+                "<a href=\"public_uf_det.php?id={$item->id}\">" . e($item->abbreviation) . '</a>',
+                "<a href=\"public_uf_det.php?id={$item->id}\">" . e($item->country->name) . '</a>',
             ]);
         }
 

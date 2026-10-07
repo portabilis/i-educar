@@ -1566,7 +1566,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             if ($this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia()) {
                 $situacaoFalta = App_Model_MatriculaSituacao::APROVADO;
             } elseif ($tipoFaltaPorComponente) {
-                $situacaoFalta = $situacaoFaltas->componentesCurriculares[$ccId]->situacao;
+                $situacaoFalta = ($situacaoFaltas->componentesCurriculares[$ccId] ?? null)?->situacao;
             } else {
                 $situacaoFalta = $situacaoFaltas->situacao;
             }
@@ -3214,7 +3214,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         $secretarioDeveLancarNota = false;
-
         for ($etapa = 1; $etapa <= $etapaId; $etapa++) {
 
             // Etapas com dispensa não terão notas, então não devem ser
@@ -3329,7 +3328,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     public function getNotaAtual($etapa, $componenteCurricularId)
     {
         // FIXME não entendi o motivo deste urldecode
-        $nota = urldecode($this->getNotaComponente($componenteCurricularId, $etapa)->nota);
+        $nota = urldecode($this->getNotaComponente($componenteCurricularId, $etapa)?->nota ?? '');
 
         return str_replace(',', '.', $nota);
     }

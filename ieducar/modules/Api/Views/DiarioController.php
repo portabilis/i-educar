@@ -3,8 +3,6 @@
 use App\Models\ComponentBatchOperation;
 use App\Models\Enums\ComponentBatchStatus;
 use App\Models\LegacyRegistration;
-use App\Models\LegacySchoolClass;
-use App\Models\View\Discipline;
 use App\Services\ComponentBatchManagerService;
 use App\Services\DiarioControllerService;
 use App\Services\RemoveHtmlTagsStringService;
@@ -13,7 +11,6 @@ use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Support\Exceptions\Error;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class DiarioController extends ApiCoreController
 {
@@ -24,16 +21,9 @@ class DiarioController extends ApiCoreController
         return App_Model_IedFinder::getRegraAvaliacaoPorMatricula($matriculaId);
     }
 
-    protected function getComponentesPorMatricula($matriculaId)
-    {
-        return App_Model_IedFinder::getComponentesPorMatricula($matriculaId);
-    }
-
     protected function validateComponenteCurricular($matriculaId, $componenteCurricularId)
     {
-        $componentes = $this->getComponentesPorMatricula($matriculaId);
-        $componentes = CoreExt_Entity::entityFilterAttr($componentes, 'id', 'id');
-        $valid = in_array($componenteCurricularId, $componentes);
+        $valid = (new DiarioControllerService)->validateComponenteMatricula($componenteCurricularId, $matriculaId);
 
         if (!$valid) {
             throw new CoreExt_Exception("Componente curricular de código {$componenteCurricularId} não existe para essa turma/matrícula.");
@@ -359,24 +349,7 @@ class DiarioController extends ApiCoreController
 
     protected function getComponentesTurma(int $turmaId): Collection
     {
-        return Cache::remember('componentes_turma_id_' . $turmaId, now()->addMinutes(5), function () use ($turmaId) {
-            $disciplinaDispensada = LegacySchoolClass::query()
-                ->whereKey($turmaId)->value('ref_cod_disciplina_dispensada');
-
-            return Discipline::query()
-                ->where('cod_turma', $turmaId)
-                ->when($disciplinaDispensada, function ($q, $disciplinaDispensada) {
-                    $q->where('id', '<>', $disciplinaDispensada);
-                })
-                ->with('knowledgeArea:id,agrupar_descritores')
-                ->orderBy('nome')
-                ->get([
-                    'id',
-                    'cod_turma',
-                    'cod_serie',
-                    'area_conhecimento_id',
-                ]);
-        });
+        return (new DiarioControllerService)->getComponentesTurma($turmaId);
     }
 
     protected function postFaltasPorComponente()
@@ -628,40 +601,12 @@ class DiarioController extends ApiCoreController
 
     protected function atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId)
     {
-        $notaExame = urldecode($this->serviceBoletim($turmaId, $alunoId)->preverNotaRecuperacao($componenteCurricularId));
-        $matricula = $this->findMatricula($turmaId, $alunoId);
-
-        $situacaoComponente = $this->serviceBoletim($turmaId, $alunoId)
-            ->getSituacaoComponentesCurriculares()
-            ->componentesCurriculares[$componenteCurricularId]
-            ->situacao;
-
-        $situacaoEmExame = ($situacaoComponente == App_Model_MatriculaSituacao::EM_EXAME ||
-            $situacaoComponente == App_Model_MatriculaSituacao::APROVADO_APOS_EXAME ||
-            $situacaoComponente == App_Model_MatriculaSituacao::REPROVADO);
-
-        if (!empty($notaExame) && $situacaoEmExame) {
-            if (is_numeric($matricula->cod_matricula) && is_numeric($componenteCurricularId) && is_numeric($notaExame)) {
-                DB::table('modules.nota_exame')->updateOrInsert(
-                    ['ref_cod_matricula' => $matricula->cod_matricula, 'ref_cod_componente_curricular' => $componenteCurricularId],
-                    ['nota_exame' => $notaExame]
-                );
-            }
-        } elseif (is_numeric($matricula->cod_matricula) && is_numeric($componenteCurricularId)) {
-            DB::table('modules.nota_exame')
-                ->where('ref_cod_matricula', $matricula->cod_matricula)
-                ->where('ref_cod_componente_curricular', $componenteCurricularId)
-                ->delete();
-        }
+        (new DiarioControllerService)->atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId);
     }
 
     private function truncate($val, $f = '0')
     {
-        if (($p = strpos($val, '.')) !== false) {
-            $val = floatval(substr($val, 0, $p + 1 + $f));
-        }
-
-        return $val;
+        return (new DiarioControllerService)->truncate($val, $f);
     }
 
     public function removeHtmlTags(string $text = ''): string

@@ -6,11 +6,11 @@ use App\Http\Requests\UpdateSchoolClassReportCardRequest;
 use App\Models\LegacySchoolClass;
 use App\Process;
 use CoreExt_Exception;
+use iEducar\Reports\Contracts\ReportCardTypes;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
-use Portabilis_Model_Report_TipoBoletim;
 
 class UpdateSchoolClassReportCardController extends Controller
 {
@@ -33,7 +33,7 @@ class UpdateSchoolClassReportCardController extends Controller
 
         return view('classroom.update-school-class-report-card.index', [
             'user' => $request->user(),
-            'reportCards' => Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums(),
+            'reportCards' => app(ReportCardTypes::class)->getEnums(),
         ]);
     }
 

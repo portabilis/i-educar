@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyRegistration;
+
 return new class extends clsCadastro
 {
     public $cod_matricula;
@@ -49,9 +51,13 @@ return new class extends clsCadastro
         $this->nome_url_cancelar = 'Voltar';
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
+        // Início > Escola > Alunos > Nome > Matrícula > Modalidade de ensino
+        $registration = LegacyRegistration::find($this->cod_matricula);
         $this->breadcrumb(currentPage: 'Modalidade de ensino', breadcrumbs: [
-            url(path: '/') => 'Início',
             url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_aluno_lst.php') => 'Alunos',
+            url(path: "intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url(path: "intranet/educar_matricula_det.php?cod_matricula={$this->cod_matricula}") => 'Matrícula',
         ]);
 
         $this->campoRotulo(nome: 'nm_aluno', campo: 'Aluno', valor: $this->matricula['nome']);
