@@ -50,19 +50,19 @@ return new class extends clsDetalhe
         $registro = $tmp_obj->detalhe();
 
         $registro['cep'] = int2CEP($registro['cep']);
-        $this->addDetalhe(['Código Instituição', "{$registro['cod_instituicao']}"]);
-        $this->addDetalhe(['Nome da Instituição', "{$registro['nm_instituicao']}"]);
-        $this->addDetalhe(['CEP', "{$registro['cep']}"]);
-        $this->addDetalhe(['Logradouro', "{$registro['logradouro']}"]);
-        $this->addDetalhe(['Bairro', "{$registro['bairro']}"]);
-        $this->addDetalhe(['Cidade', "{$registro['cidade']}"]);
-        $this->addDetalhe(['Tipo do Logradouro', "{$registro['ref_idtlog']}"]);
-        $this->addDetalhe(['UF', "{$registro['ref_sigla_uf']}"]);
-        $this->addDetalhe(['Número', "{$registro['numero']}"]);
-        $this->addDetalhe(['Complemento', "{$registro['complemento']}"]);
-        $this->addDetalhe(['DDD Telefone', "{$registro['ddd_telefone']}"]);
-        $this->addDetalhe(['Telefone', "{$registro['telefone']}"]);
-        $this->addDetalhe(['Nome do Responsável', "{$registro['nm_responsavel']}"]);
+        $this->addDetalhe(['Código Instituição', e($registro['cod_instituicao'])]);
+        $this->addDetalhe(['Nome da Instituição', e($registro['nm_instituicao'])]);
+        $this->addDetalhe(['CEP', e($registro['cep'])]);
+        $this->addDetalhe(['Logradouro', e($registro['logradouro'])]);
+        $this->addDetalhe(['Bairro', e($registro['bairro'])]);
+        $this->addDetalhe(['Cidade', e($registro['cidade'])]);
+        $this->addDetalhe(['Tipo do Logradouro', e($registro['ref_idtlog'])]);
+        $this->addDetalhe(['UF', e($registro['ref_sigla_uf'])]);
+        $this->addDetalhe(['Número', e($registro['numero'])]);
+        $this->addDetalhe(['Complemento', e($registro['complemento'])]);
+        $this->addDetalhe(['DDD Telefone', e($registro['ddd_telefone'])]);
+        $this->addDetalhe(['Telefone', e($registro['telefone'])]);
+        $this->addDetalhe(['Nome do Responsável', e($registro['nm_responsavel'])]);
 
         $obj_permissoes = new clsPermissoes;
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 559, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {

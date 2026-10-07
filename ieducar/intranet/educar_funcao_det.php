@@ -41,13 +41,13 @@ return new class extends clsDetalhe
         }
 
         if ($registro['cod_funcao']) {
-            $this->addDetalhe(['Funcão', "{$registro['cod_funcao']}"]);
+            $this->addDetalhe(['Funcão', e($registro['cod_funcao'])]);
         }
         if ($registro['nm_funcao']) {
-            $this->addDetalhe(['Nome Funcão', "{$registro['nm_funcao']}"]);
+            $this->addDetalhe(['Nome Funcão', e($registro['nm_funcao'])]);
         }
         if ($registro['abreviatura']) {
-            $this->addDetalhe(['Abreviatura', "{$registro['abreviatura']}"]);
+            $this->addDetalhe(['Abreviatura', e($registro['abreviatura'])]);
         }
 
         $opcoes = ['1' => 'Sim',
@@ -55,7 +55,7 @@ return new class extends clsDetalhe
         ];
 
         if (is_numeric($registro['professor'])) {
-            $this->addDetalhe(['Professor', "{$opcoes[$registro['professor']]}"]);
+            $this->addDetalhe(['Permitir vincular a turmas?', "{$opcoes[$registro['professor']]}"]);
         }
 
         $obj_permissoes = new clsPermissoes;
