@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\LegacySchool;
 use App\Models\LegacyUser;
 use App_Model_NivelTipoUsuario;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -61,6 +62,34 @@ class LegacyUserFactory extends Factory
                 ]);
             },
         ]);
+    }
+
+    /**
+     * Altera o nível do usuário para "escola".
+     */
+    public function school(): static
+    {
+        return $this->state([
+            'ref_cod_tipo_usuario' => function () {
+                return LegacyUserTypeFactory::new()->create([
+                    'nivel' => App_Model_NivelTipoUsuario::ESCOLA,
+                ]);
+            },
+        ]);
+    }
+
+    /**
+     * Vincula o usuário a uma escola, que é o que limita o que os níveis
+     * "escola" e "biblioteca" enxergam.
+     */
+    public function withSchool(LegacySchool $school): static
+    {
+        return $this->afterCreating(function (LegacyUser $user) use ($school) {
+            LegacyUserSchoolFactory::new()->create([
+                'ref_cod_usuario' => $user,
+                'ref_cod_escola' => $school,
+            ]);
+        });
     }
 
     /**
