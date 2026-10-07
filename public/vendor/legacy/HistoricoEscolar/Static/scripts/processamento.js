@@ -474,8 +474,9 @@
       $.each($('input.matricula:checked'), function(index, matricula){
         var serieId = $(matricula).data('serie_id');
         if ($.inArray(serieId, ids) < 0){
+          var $colunas = $(matricula).closest('tr').children();
           ids.push(serieId);
-          series.push($('<div />').text($.trim($(matricula).closest('tr').children().eq(2).text())).html());
+          series.push({nome : $.trim($colunas.eq(2).text()), curso : $.trim($colunas.eq(1).text())});
         }
       });
       return series;
@@ -486,7 +487,13 @@
       if (series.length < 2)
         return '';
 
-      var citadas = series.length > 3 ? series.slice(0, 3).join(', ') + ' e mais ' + (series.length - 3) : series.join(', ');
+      var nomes = $.map(series, function(serie){ return serie.nome.toUpperCase(); });
+      var rotulos = $.map(series, function(serie){
+        var nomeRepetido = $.grep(nomes, function(nome){ return nome == serie.nome.toUpperCase(); }).length > 1;
+        return $('<div />').text(nomeRepetido ? serie.nome + ' de ' + serie.curso : serie.nome).html();
+      });
+
+      var citadas = rotulos.length > 3 ? rotulos.slice(0, 3).join(', ') + ' e mais ' + (rotulos.length - 3) : rotulos.join(', ');
       return 'Os alunos marcados são de ' + series.length + ' séries (' + citadas + '). Não é possível processar séries diferentes juntas: processe uma série por vez.';
     }
 
