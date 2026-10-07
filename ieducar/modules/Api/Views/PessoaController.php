@@ -19,8 +19,21 @@ class PessoaController extends ApiCoreController
 {
     use LegacyAddressingFields;
 
+    // Cadastro de pessoa física (43) e de aluno (578), telas que consultam
+    // os dados pessoais por esta API.
+    private const PROCESSOS_DADOS_PESSOAIS = [43, Process::REGISTRATIONS];
+
+    protected function validatesAuthorizationToViewPersonalData()
+    {
+        return $this->validatesAuthorizationToAnyProcess(self::PROCESSOS_DADOS_PESSOAIS);
+    }
+
     protected function canGet()
     {
+        if (!$this->validatesAuthorizationToViewPersonalData()) {
+            return false;
+        }
+
         $can = true;
 
         if (!$this->getRequest()->id && !$this->getRequest()->cpf) {
@@ -315,6 +328,10 @@ class PessoaController extends ApiCoreController
 
     protected function loadPessoaParent()
     {
+        if (!$this->validatesAuthorizationToViewPersonalData()) {
+            return '';
+        }
+
         if ($this->getRequest()->id) {
             $_sql = ' SELECT (select nome from cadastro.pessoa where pessoa.idpes = fisica.idpes) as nome ,ideciv as estadocivil, data_nasc, sexo, falecido, cpf, (COALESCE(cpf, 0) <> 0) AS possui_cpf, document_absence_reason_id, document_absence_observation FROM cadastro.fisica WHERE idpes = $1; ';
 

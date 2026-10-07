@@ -37,16 +37,16 @@ return new class extends clsDetalhe
         $this->nome = $city->name;
 
         if ($this->nome) {
-            $this->addDetalhe(['Nome', $this->nome]);
+            $this->addDetalhe(['Nome', e($this->nome)]);
         }
         if ($city->state->name) {
-            $this->addDetalhe(['Estado', $city->state->name]);
+            $this->addDetalhe(['Estado', e($city->state->name)]);
         }
         if ($city->state->country->name) {
-            $this->addDetalhe(['Pais', $city->state->country->name]);
+            $this->addDetalhe(['Pais', e($city->state->country->name)]);
         }
         if ($this->cod_ibge) {
-            $this->addDetalhe(['Código INEP', $this->cod_ibge]);
+            $this->addDetalhe(['Código INEP', e($this->cod_ibge)]);
         }
 
         $obj_permissao = new clsPermissoes;
