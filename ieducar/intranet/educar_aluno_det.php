@@ -701,10 +701,7 @@ return new class extends clsDetalhe
         }
 
         if ($registro['idorg_exp_rg']) {
-            // Inalcançável: a tela lê `ref_idorg_rg`, e a coluna do documento é `idorg_exp_rg`.
-            // @codeCoverageIgnoreStart
             $this->addDetalhe(detalhe: ['Órgão Expedição RG', $registro['idorg_exp_rg']]);
-            // @codeCoverageIgnoreEnd
         }
 
         if ($registro['sigla_uf_exp_rg']) {

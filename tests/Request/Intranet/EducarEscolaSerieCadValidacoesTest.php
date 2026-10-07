@@ -274,7 +274,7 @@ test('junta todas as recusas em uma só resposta', function () {
 test('defeito: a edição recusada por componente inexistente já gravou o que veio antes', function () {
     ($this->submit)([$this->arts => [2030], 999999999 => []])
         ->assertOk()
-        ->assertSee('Cadastro não realizada.');
+        ->assertSee('Edição não realizada.');
 
     expect(($this->years)())->toBe([$this->arts => '{2030}']);
 });
@@ -314,15 +314,23 @@ test('no reenvio do cadastro valem a escola e a série dos campos ocultos', func
     expect(LegacySchoolGrade::query()->where('ref_cod_escola', $this->school->getKey())->where('ref_cod_serie', $grade->getKey())->exists())->toBeTrue();
 });
 
-// Defeito conhecido: sem nenhum componente marcado a tela repassa nulo a
-// métodos que exigem lista e estoura, na edição e na exclusão.
-test('defeito: sem nenhum componente marcado a tela estoura', function (string $action) {
-    $payload = LegacyFields::from($this->get($this->url)->assertOk()->getContent(), ['tipoacao' => $action]);
+// Sem nenhum componente marcado, a edição não mexe nos componentes vinculados.
+test('sem nenhum componente marcado a edição mantém os componentes como estão', function () {
+    $payload = LegacyFields::from($this->get($this->url)->assertOk()->getContent(), ['tipoacao' => 'Editar']);
+
+    unset($payload['disciplinas']);
+
+    $this->post($this->url, $payload)->assertRedirect('educar_escola_serie_lst.php');
+
+    expect(($this->years)())->toBe($this->unchanged);
+});
+
+// Defeito conhecido: sem nenhum componente marcado a exclusão repassa nulo à
+// verificação de dependência, que exige lista, e estoura.
+test('defeito: sem nenhum componente marcado a exclusão estoura', function () {
+    $payload = LegacyFields::from($this->get($this->url)->assertOk()->getContent(), ['tipoacao' => 'Excluir']);
 
     unset($payload['disciplinas']);
 
     $this->post($this->url, $payload)->assertServerError();
-})->with([
-    'na edição' => 'Editar',
-    'na exclusão' => 'Excluir',
-]);
+});

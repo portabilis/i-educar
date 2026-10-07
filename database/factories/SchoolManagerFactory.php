@@ -13,7 +13,7 @@ class SchoolManagerFactory extends Factory
     {
         return [
             'access_criteria_description' => $this->faker->text(25),
-            'chief' => $this->faker->boolean(),
+            'chief' => true,
             'employee_id' => static function () {
                 $individual = LegacyIndividualFactory::new()->create();
                 EmployeeFactory::new()->create([
@@ -23,9 +23,9 @@ class SchoolManagerFactory extends Factory
                 return $individual;
             },
             'school_id' => fn () => LegacySchoolFactory::new()->create(),
-            'role_id' => fn () => ManagerRoleFactory::new()->current(),
-            'access_criteria_id' => fn () => ManagerAccessCriteriaFactory::new()->current(),
-            'link_type_id' => fn () => ManagerLinkTypeFactory::new()->current(),
+            'role_id' => fn () => ManagerRoleFactory::new()->director(),
+            'access_criteria_id' => fn () => ManagerAccessCriteriaFactory::new()->indication(),
+            'link_type_id' => fn () => ManagerLinkTypeFactory::new()->permanent(),
         ];
     }
 }

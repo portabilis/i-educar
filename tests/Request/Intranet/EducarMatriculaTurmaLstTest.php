@@ -57,7 +57,7 @@ test('no remanejamento só lista as turmas em que a matrícula não está, com o
     ($this->list)(['acao' => 'remanejar'])
         ->assertOk()
         ->assertSee('Selecione uma turma para remanejar a matrícula')
-        ->assertSee('Turmas disponíveis para remanejamento')
+        ->assertSeeInOrder(['Alunos', 'Ana Alves', 'Matrícula', 'Remanejamento'])
         ->assertSee(($this->relocate)($this->beta), false)
         ->assertDontSee(($this->relocate)($this->alfa), false);
 });
