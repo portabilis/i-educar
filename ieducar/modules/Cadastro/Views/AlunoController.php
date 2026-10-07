@@ -899,8 +899,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->hidden('url_documento');
 
         $fileService = new FileService(urlPresigner: new UrlPresigner);
-        $idAluno = request()->exists('id') ? request('id') : null;
-        $files = $idAluno && is_numeric($idAluno) ? $fileService->getFiles(relation: LegacyStudent::find($idAluno), type: FileRelation::TYPE_MEDICAL_REPORT) : [];
+        // is_numeric aceita "123." e "1e3", que o PostgreSQL recusa como integer
+        $idAluno = filter_var(request('id'), FILTER_VALIDATE_INT);
+        $files = $idAluno ? $fileService->getFiles(relation: LegacyStudent::find($idAluno), type: FileRelation::TYPE_MEDICAL_REPORT) : [];
         $this->addHtml(html: view(view: 'uploads.upload', data: ['files' => $files, 'label' => 'Laudo Médico'])->render());
 
         $options = ['label' => $this->_getLabel('observacao_aluno'), 'required' => false, 'size' => 50, 'max_length' => 255, 'value' => $this->observacao];
