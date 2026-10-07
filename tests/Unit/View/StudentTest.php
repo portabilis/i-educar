@@ -5,6 +5,7 @@ namespace Tests\Unit\View;
 use App\Models\GuardianType;
 use App\Models\Individual;
 use App\Models\LogUnification;
+use App\Models\Person;
 use App\Models\Registration;
 use App\Models\Religion;
 use App\Models\Student;
@@ -15,6 +16,7 @@ class StudentTest extends ViewTestCase
 {
     protected $relations = [
         'individual' => Individual::class,
+        'person' => Person::class,
         'religion' => Religion::class,
         'registrations' => Registration::class,
         'createdBy' => Individual::class,

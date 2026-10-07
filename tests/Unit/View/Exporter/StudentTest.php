@@ -3,6 +3,7 @@
 namespace Tests\Unit\View\Exporter;
 
 use App\Models\Exporter\Student;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Tests\ViewTestCase;
 
@@ -134,6 +135,110 @@ class StudentTest extends ViewTestCase
         ];
         $this->assertInstanceOf(Student::class, $found);
         $this->assertEquals($expected, array_keys($found->getAttributes()));
+    }
+
+    public function test_relationship_mother_with_the_joined_columns(): void
+    {
+        $found = Student::query()->mother([
+            'religion',
+            'race',
+            'birthplace',
+            'marital_status',
+            'person_schooling_degree',
+            'phone',
+        ])->first();
+        $expected = [
+            'Religião da mãe',
+            'Raça da mãe',
+            'Naturalidade da mãe',
+            'Estado Civil da mãe',
+            'Escolaridade da mãe',
+            'Telefones da mãe',
+        ];
+        $this->assertInstanceOf(Student::class, $found);
+        $this->assertEquals($expected, array_keys($found->getAttributes()));
+    }
+
+    public function test_relationship_father_with_the_joined_columns(): void
+    {
+        $found = Student::query()->father([
+            'religion',
+            'race',
+            'marital_status',
+            'person_schooling_degree',
+            'phone',
+        ])->first();
+        $expected = [
+            'Religião do pai',
+            'Raça do pai',
+            'Estado Civil do pai',
+            'Escolaridade do pai',
+            'Telefones do pai',
+        ];
+        $this->assertInstanceOf(Student::class, $found);
+        $this->assertEquals($expected, array_keys($found->getAttributes()));
+    }
+
+    // Defeito conhecido: o join do estado da naturalidade do pai aponta para a
+    // cidade da mãe (`mbc`), então só funciona quando a naturalidade da mãe
+    // também foi pedida.
+    public function test_defeito_naturalidade_do_pai_depende_da_naturalidade_da_mae(): void
+    {
+        $found = Student::query()->mother(['birthplace'])->father(['birthplace'])->first();
+        $this->assertEquals(['Naturalidade da mãe', 'Naturalidade do pai'], array_keys($found->getAttributes()));
+
+        $this->expectException(QueryException::class);
+
+        Student::query()->father(['birthplace'])->first();
+    }
+
+    public function test_relationship_guardian_with_the_joined_columns(): void
+    {
+        $found = Student::query()->guardian([
+            'religion',
+            'race',
+            'birthplace',
+            'marital_status',
+            'person_schooling_degree',
+            'phone',
+        ])->first();
+        $expected = [
+            'Religião do responsável',
+            'Raça do responsável',
+            'Naturalidade do responsável',
+            'Estado Civil do responsável',
+            'Escolaridade do responsável',
+            'Telefones do responsável',
+        ];
+        $this->assertInstanceOf(Student::class, $found);
+        $this->assertEquals($expected, array_keys($found->getAttributes()));
+    }
+
+    public function test_relationship_projects(): void
+    {
+        $found = Student::query()->projects()->first();
+        $this->assertInstanceOf(Student::class, $found);
+        $this->assertEquals(['Projetos'], array_keys($found->getAttributes()));
+    }
+
+    public function test_relationship_uniform_distributions(): void
+    {
+        $found = Student::query()->uniform_distributions(['type', 'distribution_date', 'complete_kit'])->first();
+        $this->assertInstanceOf(Student::class, $found);
+        $this->assertEquals(['Kit Completo', 'Tipo', 'Data de Distribuição'], array_keys($found->getAttributes()));
+        $this->assertEquals('NÃO', $found->getAttribute('Kit Completo'));
+
+        $found = Student::query()->uniform_distributions(['type'])->first();
+        $this->assertEquals(['Tipo'], array_keys($found->getAttributes()));
+    }
+
+    public function test_relationship_transport(): void
+    {
+        $found = Student::query()->transport(['tipo_transporte', 'veiculo_transporte_escolar'])->first();
+        $this->assertInstanceOf(Student::class, $found);
+        $this->assertEquals(['tipo_transporte', 'veiculo_transporte_escolar'], array_keys($found->getAttributes()));
+        $this->assertContains($found->tipo_transporte, ['Não utiliza', 'Estadual', 'Municipal']);
+        $this->assertEquals('Não informado', $found->veiculo_transporte_escolar);
     }
 
     public function test_relationship_benefits(): void
