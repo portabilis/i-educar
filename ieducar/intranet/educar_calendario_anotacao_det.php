@@ -51,13 +51,13 @@ return new class extends clsDetalhe
         }
 
         if ($registro['cod_calendario_anotacao']) {
-            $this->addDetalhe(detalhe: ['Calendario Anotacão', "{$registro['cod_calendario_anotacao']}"]);
+            $this->addDetalhe(detalhe: ['Calendario Anotacão', e($registro['cod_calendario_anotacao'])]);
         }
         if ($registro['nm_anotacao']) {
-            $this->addDetalhe(detalhe: ['Nome Anotacão', "{$registro['nm_anotacao']}"]);
+            $this->addDetalhe(detalhe: ['Nome Anotacão', e($registro['nm_anotacao'])]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe(detalhe: ['Descricão', "{$registro['descricao']}"]);
+            $this->addDetalhe(detalhe: ['Descricão', e($registro['descricao'])]);
         }
 
         $obj_permissoes = new clsPermissoes;

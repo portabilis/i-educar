@@ -123,7 +123,7 @@ class LegacySchoolHistory extends LegacyModel
     protected function faltasGlobalizadas(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => is_numeric($value) ? (int) round($value) : null,
+            set: fn ($value) => is_numeric($value) ? (int) $value : null,
         );
     }
 

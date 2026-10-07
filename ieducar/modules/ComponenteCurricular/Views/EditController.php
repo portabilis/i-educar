@@ -1,6 +1,6 @@
 <?php
 
-class EditController extends Core_Controller_Page_EditController
+class ComponenteCurricular_Views_EditController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper = 'ComponenteCurricular_Model_ComponenteDataMapper';
 

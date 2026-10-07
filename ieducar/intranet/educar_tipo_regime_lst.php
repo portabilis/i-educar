@@ -87,12 +87,12 @@ return new class extends clsListagem
 
                 if ($nivel_usuario == 1) {
                     $this->addLinhas([
-                        "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['nm_tipo']}</a>",
-                        "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['ref_cod_instituicao']}</a>",
+                        "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">" . e($registro['nm_tipo']) . '</a>',
+                        "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">" . e($registro['ref_cod_instituicao']) . '</a>',
                     ]);
                 } else {
                     $this->addLinhas([
-                        "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">{$registro['nm_tipo']}</a>",
+                        "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">" . e($registro['nm_tipo']) . '</a>',
                     ]);
                 }
             }

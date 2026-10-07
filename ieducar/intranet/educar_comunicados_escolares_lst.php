@@ -114,7 +114,7 @@ return new class extends clsListagem
         }
         $this->addPaginador2(strUrl: 'educar_comunicados_escolares_lst.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: null, intResultadosPorPagina: $this->limite);
 
-        if ($obj_permissoes->permissao_cadastra(SchoolNotice::PROCESS, $this->pessoa_logada, 7)) {
+        if ($obj_permissao->permissao_cadastra(SchoolNotice::PROCESS, $this->pessoa_logada, 7)) {
             $this->acao = 'go("educar_comunicados_escolares_cad.php")';
             $this->nome_acao = 'Novo';
         }

@@ -2,7 +2,7 @@
 
 use App\Models\LegacyKnowledgeArea;
 
-class IndexController extends Core_Controller_Page_ListController
+class AreaConhecimento_Views_IndexController extends Core_Controller_Page_ListController
 {
     public $limite;
 
@@ -35,8 +35,8 @@ class IndexController extends Core_Controller_Page_ListController
                 $options = ['query' => ['id' => $registro->id]];
 
                 $this->addLinhas([
-                    CoreExt_View_Helper_UrlHelper::l($registro->nome, 'view', $options),
-                    CoreExt_View_Helper_UrlHelper::l($registro->secao, 'view', $options),
+                    CoreExt_View_Helper_UrlHelper::l((string) $registro->nome, 'view', $options),
+                    CoreExt_View_Helper_UrlHelper::l((string) $registro->secao, 'view', $options),
                     CoreExt_View_Helper_UrlHelper::l($registro->agrupar_descritores ? 'Sim' : 'Não', 'view', $options),
                 ]);
             }

@@ -11,13 +11,16 @@ class PostNotasRequest extends FormRequest
     public function rules()
     {
         return [
+            // Só número decimal comum; o numeric aceitaria notação científica, como 1e1.
             'nota' => [
                 'required',
                 'numeric',
+                'regex:/^-?\d+(\.\d+)?$/',
             ],
             'recuperacao' => [
                 'nullable',
                 'numeric',
+                'regex:/^-?\d+(\.\d+)?$/',
             ],
             // O boletim valida a etapa pelo calendário da matrícula.
             'etapa' => [
@@ -37,7 +40,7 @@ class PostNotasRequest extends FormRequest
                 'integer',
             ],
             'componente_id' => [
-                'nullable',
+                'required',
                 'integer',
             ],
         ];
