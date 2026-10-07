@@ -8,21 +8,11 @@ use Database\Factories\LegacyUserFactory;
 use Database\Factories\LegacyUserSchoolFactory;
 use Database\Factories\LegacyUserTypeFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Portabilis_Utils_User;
 use Tests\TestCase;
 
 class ConsultaMovimentoGeralTest extends TestCase
 {
     use DatabaseTransactions;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Portabilis_Utils_User::$_currentUserId = null;
-        Portabilis_Utils_User::$_nivelAcesso = null;
-        Portabilis_Utils_User::$_permissoes = null;
-    }
 
     public function test_school_user_does_not_get_students_of_another_school(): void
     {

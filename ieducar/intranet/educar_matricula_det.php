@@ -3,6 +3,7 @@
 use App\Models\LegacyAbandonmentType;
 use App\Models\LegacyCourse;
 use App\Models\LegacyEnrollment;
+use App\Models\LegacyGrade;
 use App\Models\LegacyStudent;
 use App\Models\LegacyTransferRequest;
 use App\Process;
@@ -89,10 +90,8 @@ return new class extends clsDetalhe
         $registro['ref_cod_curso'] = LegacyCourse::query()->whereKey($curso_id)->value('nm_curso');
 
         // Série
-        $obj_serie = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
-        $det_serie = $obj_serie->detalhe();
         $serie_id = $registro['ref_ref_cod_serie'];
-        $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
+        $registro['ref_ref_cod_serie'] = LegacyGrade::query()->whereKey($serie_id)->value('nm_serie');
 
         // Nome da instituição
         $obj_cod_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
@@ -106,11 +105,17 @@ return new class extends clsDetalhe
         $registro['ref_ref_cod_escola'] = $det_ref_cod_escola['nome'];
 
         // Nome do aluno
-        $nm_aluno = LegacyStudent::query()
+        $aluno = LegacyStudent::query()
             ->active()
             ->whereStudent($registro['ref_cod_aluno'])
             ->joinPerson()
-            ->value('pessoa.nome');
+            ->joinIndividual()
+            ->first([
+                'pessoa.nome',
+                'fisica.nome_social',
+            ]);
+
+        $nm_aluno = $aluno?->nome;
 
         if ($registro['cod_matricula']) {
             $this->addDetalhe(detalhe: ['Número Matrícula', $registro['cod_matricula']]);
@@ -448,7 +453,7 @@ return new class extends clsDetalhe
         $this->breadcrumb(currentPage: 'Matrícula', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
             url(path: 'intranet/educar_aluno_lst.php') => 'Alunos',
-            url(path: "intranet/educar_aluno_det.php?cod_aluno={$registro['ref_cod_aluno']}") => ($det_aluno['nome_social'] ?? null) ?: ($det_aluno['nome_aluno'] ?? null),
+            url(path: "intranet/educar_aluno_det.php?cod_aluno={$registro['ref_cod_aluno']}") => $aluno?->nome_social ?: $nm_aluno,
         ]);
 
         // js

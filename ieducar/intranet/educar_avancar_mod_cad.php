@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyEnrollment;
+use App\Models\LegacyGrade;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolGrade;
@@ -219,9 +220,9 @@ return new class extends clsCadastro
                 'pessoa.nome',
             ]);
         // Verifica o parametro na série pra exigir inep
-        $objSerie = new clsPmieducarSerie(cod_serie: $serieId);
-        $serieDet = $objSerie->detalhe();
-        $exigeInep = $serieDet['exigir_inep'];
+        $exigeInep = is_numeric($serieId)
+            ? LegacyGrade::query()->whereKey($serieId)->value('exigir_inep')
+            : null;
         // Retorna alunos sem inep
         $alunosSemInep = [];
 

@@ -7,6 +7,7 @@ use App\Models\LegacyCourse;
 use App\Models\LegacyDeficiency;
 use App\Models\LegacyDocument;
 use App\Models\LegacyGeneralConfiguration;
+use App\Models\LegacyGrade;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyInstitution;
@@ -791,11 +792,9 @@ class AlunoController extends ApiCoreController
 
     protected function loadSerieNome($id)
     {
-        $serie = new clsPmieducarSerie;
-        $serie->cod_serie = $id;
-        $serie = $serie->detalhe();
+        $nomeSerie = LegacyGrade::query()->whereKey($id)->value('nm_serie');
 
-        return $this->toUtf8($serie['nm_serie'], ['transform' => true]);
+        return $this->toUtf8($nomeSerie, ['transform' => true]);
     }
 
     protected function loadTransferenciaDataEntrada($matriculaId)

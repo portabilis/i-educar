@@ -11,7 +11,6 @@ use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Support\Exceptions\Error;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class DiarioController extends ApiCoreController
 {
@@ -609,40 +608,12 @@ class DiarioController extends ApiCoreController
 
     protected function atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId)
     {
-        $notaExame = urldecode($this->serviceBoletim($turmaId, $alunoId)->preverNotaRecuperacao($componenteCurricularId));
-        $matricula = $this->findMatricula($turmaId, $alunoId);
-
-        $situacaoComponente = $this->serviceBoletim($turmaId, $alunoId)
-            ->getSituacaoComponentesCurriculares()
-            ->componentesCurriculares[$componenteCurricularId]
-            ->situacao;
-
-        $situacaoEmExame = ($situacaoComponente == App_Model_MatriculaSituacao::EM_EXAME ||
-            $situacaoComponente == App_Model_MatriculaSituacao::APROVADO_APOS_EXAME ||
-            $situacaoComponente == App_Model_MatriculaSituacao::REPROVADO);
-
-        if (!empty($notaExame) && $situacaoEmExame) {
-            if (is_numeric($matricula->cod_matricula) && is_numeric($componenteCurricularId) && is_numeric($notaExame)) {
-                DB::table('modules.nota_exame')->updateOrInsert(
-                    ['ref_cod_matricula' => $matricula->cod_matricula, 'ref_cod_componente_curricular' => $componenteCurricularId],
-                    ['nota_exame' => $notaExame]
-                );
-            }
-        } elseif (is_numeric($matricula->cod_matricula) && is_numeric($componenteCurricularId)) {
-            DB::table('modules.nota_exame')
-                ->where('ref_cod_matricula', $matricula->cod_matricula)
-                ->where('ref_cod_componente_curricular', $componenteCurricularId)
-                ->delete();
-        }
+        (new DiarioControllerService)->atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId);
     }
 
     private function truncate($val, $f = '0')
     {
-        if (($p = strpos($val, '.')) !== false) {
-            $val = floatval(substr($val, 0, $p + 1 + $f));
-        }
-
-        return $val;
+        return (new DiarioControllerService)->truncate($val, $f);
     }
 
     public function removeHtmlTags(string $text = ''): string

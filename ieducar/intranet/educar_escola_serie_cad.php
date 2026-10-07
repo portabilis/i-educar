@@ -179,19 +179,17 @@ return new class extends clsCadastro
 
         // Editar
         if ($this->ref_cod_curso) {
-            $obj_serie = new clsPmieducarSerie;
-            $obj_serie->setOrderby('nm_serie ASC');
-            $lst_serie = $obj_serie->lista(
-                [
-                    'ref_cod_curso' => $this->ref_cod_curso,
-                    'ativo' => 1,
-                ]
-            );
+            $lst_serie = LegacyGrade::query()
+                ->active()
+                ->when(is_numeric($this->ref_cod_curso), fn ($q) => $q->whereCourse($this->ref_cod_curso))
+                ->orderBy('nm_serie')
+                ->get([
+                    'cod_serie',
+                    'nm_serie',
+                ]);
 
-            if (is_array($lst_serie) && count($lst_serie)) {
-                foreach ($lst_serie as $serie) {
-                    $opcoes_serie[$serie['cod_serie']] = $serie['nm_serie'];
-                }
+            foreach ($lst_serie as $serie) {
+                $opcoes_serie[$serie['cod_serie']] = $serie['nm_serie'];
             }
         }
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyCourse;
+use App\Models\LegacyGrade;
 use App\Models\LegacyPerson;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
@@ -130,9 +131,7 @@ return new class extends clsDetalhe
         $padrao_ano_escolar = (int) $curso?->padrao_ano_escolar;
 
         $this->ref_ref_cod_serie = $registro['ref_ref_cod_serie'];
-        $obj_ser = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
-        $det_ser = $obj_ser->detalhe();
-        $registro['ref_ref_cod_serie'] = $det_ser['nm_serie'];
+        $registro['ref_ref_cod_serie'] = LegacyGrade::query()->whereKey($registro['ref_ref_cod_serie'])->value('nm_serie');
 
         $obj_permissoes = new clsPermissoes;
 

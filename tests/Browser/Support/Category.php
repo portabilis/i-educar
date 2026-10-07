@@ -405,7 +405,6 @@ final class Category
                 key: 'cod_funcao',
                 context: ['ref_cod_instituicao'],
                 fields: ['abreviatura' => 'COORD'],
-                selects: ['professor' => 'Não'],
             ),
             // A descrição é gravada com no máximo 60 caracteres: o Novo() da tela
             // recusa qualquer coisa maior antes de chegar ao banco.

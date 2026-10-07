@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyCourse;
+use App\Models\LegacyGrade;
 
 return new class extends clsCadastro
 {
@@ -34,10 +35,11 @@ return new class extends clsCadastro
 
         if (is_numeric($this->serie_id)) {
             $retorno = 'Editar';
-            $obj = new clsPmieducarSerie($this->serie_id);
-            $registro = $obj->detalhe();
+            $serie = LegacyGrade::query()->find($this->serie_id);
 
-            if ($registro) {
+            if ($serie) {
+                $registro = $serie->getAttributes();
+
                 foreach ($registro as $campo => $val) {
                     $this->$campo = $val;
                 }
