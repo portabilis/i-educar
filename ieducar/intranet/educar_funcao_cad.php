@@ -47,12 +47,6 @@ return new class extends clsCadastro
                 }
                 $retorno = 'Editar';
             }
-
-            if ($this->professor == '0') {
-                $this->professor = 'N';
-            } elseif ($this->professor == '1') {
-                $this->professor = 'S';
-            }
         }
         $this->url_cancelar = ($retorno == 'Editar') ? "educar_funcao_det.php?cod_funcao={$registro['cod_funcao']}" : 'educar_funcao_lst.php';
         $this->nome_url_cancelar = 'Cancelar';
@@ -77,13 +71,7 @@ return new class extends clsCadastro
         // text
         $this->campoTexto(nome: 'nm_funcao', campo: 'Funcão', valor: $this->nm_funcao, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
         $this->campoTexto(nome: 'abreviatura', campo: 'Abreviatura', valor: $this->abreviatura, tamanhovisivel: 30, tamanhomaximo: 30, obrigatorio: true);
-        $opcoes = [
-            '' => 'Selecione',
-            'S' => 'Sim',
-            'N' => 'Não',
-        ];
-
-        $this->campoLista(nome: 'professor', campo: 'Professor', valor: $opcoes, default: $this->professor);
+        $this->campoCheck(nome: 'professor', campo: 'Permitir vincular a turmas?', valor: dbBool($this->professor));
     }
 
     public function Novo()
@@ -91,11 +79,7 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 634, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_funcao_lst.php');
 
-        if ($this->professor == 'N') {
-            $this->professor = '0';
-        } elseif ($this->professor == 'S') {
-            $this->professor = '1';
-        }
+        $this->professor = is_null($this->professor) ? 0 : 1;
 
         $obj = new LegacyRole;
         $obj->nm_funcao = $this->nm_funcao;
@@ -116,11 +100,7 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        if ($this->professor == 'N') {
-            $this->professor = '0';
-        } elseif ($this->professor == 'S') {
-            $this->professor = '1';
-        }
+        $this->professor = is_null($this->professor) ? 0 : 1;
 
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 634, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_funcao_lst.php');

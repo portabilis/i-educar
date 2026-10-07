@@ -30,7 +30,7 @@ return new class extends clsDetalhe
         $types = DeficiencyType::getDescriptiveValues();
 
         if ($registro['nm_deficiencia']) {
-            $this->addDetalhe(['Descrição', "{$registro['nm_deficiencia']}"]);
+            $this->addDetalhe(['Descrição', e($registro['nm_deficiencia'])]);
         }
 
         if ($registro['deficiency_type_id']) {

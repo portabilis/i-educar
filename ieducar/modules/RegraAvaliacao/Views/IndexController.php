@@ -3,7 +3,7 @@
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGrade;
 
-class IndexController extends Core_Controller_Page_ListController
+class RegraAvaliacao_Views_IndexController extends Core_Controller_Page_ListController
 {
     protected $_dataMapper = 'RegraAvaliacao_Model_RegraDataMapper';
 

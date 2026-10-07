@@ -230,16 +230,14 @@ test('sem mudar o padrão de ano escolar, as etapas das turmas ficam como estão
     expect(LegacySchoolClassStage::query()->where('ref_cod_turma', $schoolClass->getKey())->exists())->toBeTrue();
 });
 
-// Defeito conhecido: a exclusão é uma edição com ativo = 0, e a edição zera a
-// hora-falta que não recebeu.
-test('defeito: excluir o curso desativa e zera a hora-falta dele', function () {
+test('excluir o curso só desativa e mantém a hora-falta dele', function () {
     $this->post($this->url, ($this->edicao)(['tipoacao' => 'Excluir']))
         ->assertRedirect('educar_curso_lst.php');
 
     expect($this->course->refresh()->getAttributes())
         ->ativo->toBe(0)
         ->ref_usuario_exc->toBe($this->user->getKey())
-        ->hora_falta->toEqual(0);
+        ->hora_falta->toEqual(0.75);
 });
 
 // Defeito conhecido: com um código de curso não numérico a gravação falha e a
@@ -253,13 +251,10 @@ test('defeito: código de curso inválido estoura ao redesenhar o formulário', 
     expect($this->course->refresh()->ativo)->toBe(1);
 })->with(['Editar', 'Excluir']);
 
-// Defeito conhecido: a edição lê o registro antigo antes de gravar e segue em
-// frente sem conferir se o curso existe; o UPDATE não altera nada e a tela
-// responde como se tivesse gravado.
-test('defeito: editar um curso inexistente responde como se tivesse gravado', function () {
+test('avisa ao editar um curso que não existe', function () {
     $payload = ['cod_curso' => 999999999] + ($this->edicao)(['nm_curso' => 'Curso Fantasma']);
 
-    $this->post('/intranet/educar_curso_cad.php', $payload)->assertRedirect('educar_curso_lst.php');
+    $this->post('/intranet/educar_curso_cad.php', $payload)->assertOk()->assertSee('Edição não realizada.');
 
     expect(LegacyCourse::query()->where('nm_curso', 'Curso Fantasma')->exists())->toBeFalse();
 });

@@ -35,9 +35,12 @@ RUN apk add --update \
 RUN apk add --no-cache --virtual .phpize_deps $PHPIZE_DEPS
 
 RUN pecl install \
+    pcov \
     redis \
     xdebug
 
+# O pcov só é instalado, não habilitado: quem mede cobertura o carrega na
+# chamada (`php -d extension=pcov`), sem custo para o resto do container.
 RUN docker-php-ext-enable \
     redis \
     xdebug

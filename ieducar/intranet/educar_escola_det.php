@@ -91,15 +91,15 @@ return new class extends clsDetalhe
         $registro['ref_idpes'] = LegacyPerson::whereKey($registro['ref_idpes'])->value('nome');
 
         if ($registro['ref_cod_instituicao']) {
-            $this->addDetalhe(detalhe: ['Instituição', "{$registro['ref_cod_instituicao']}"]);
+            $this->addDetalhe(detalhe: ['Instituição', e($registro['ref_cod_instituicao'])]);
         }
 
         if ($nm_escola) {
-            $this->addDetalhe(detalhe: ['Escola', "{$nm_escola}"]);
+            $this->addDetalhe(detalhe: ['Escola', e($nm_escola)]);
         }
 
         if ($registro['sigla']) {
-            $this->addDetalhe(detalhe: ['Sigla', "{$registro['sigla']}"]);
+            $this->addDetalhe(detalhe: ['Sigla', e($registro['sigla'])]);
         }
 
         if ($registro['zona_localizacao']) {
@@ -110,7 +110,7 @@ return new class extends clsDetalhe
         }
 
         if ($registro['ref_idpes']) {
-            $this->addDetalhe(detalhe: ['Razão Social', "{$registro['ref_idpes']}"]);
+            $this->addDetalhe(detalhe: ['Razão Social', e($registro['ref_idpes'])]);
         }
 
         if (isset($place)) {
@@ -124,22 +124,22 @@ return new class extends clsDetalhe
         }
 
         if ($url) {
-            $this->addDetalhe(detalhe: ['Site', "{$url}"]);
+            $this->addDetalhe(detalhe: ['Site', e($url)]);
         }
         if ($email) {
-            $this->addDetalhe(detalhe: ['E-mail', "{$email}"]);
+            $this->addDetalhe(detalhe: ['E-mail', e($email)]);
         }
         if ($telefone_1) {
-            $this->addDetalhe(detalhe: ['Telefone 1', "{$telefone_1}"]);
+            $this->addDetalhe(detalhe: ['Telefone 1', e($telefone_1)]);
         }
         if ($telefone_2) {
-            $this->addDetalhe(detalhe: ['Telefone 2', "{$telefone_2}"]);
+            $this->addDetalhe(detalhe: ['Telefone 2', e($telefone_2)]);
         }
         if ($telefone_mov) {
-            $this->addDetalhe(detalhe: ['Celular', "{$telefone_mov}"]);
+            $this->addDetalhe(detalhe: ['Celular', e($telefone_mov)]);
         }
         if ($telefone_fax) {
-            $this->addDetalhe(detalhe: ['Fax', "{$telefone_fax}"]);
+            $this->addDetalhe(detalhe: ['Fax', e($telefone_fax)]);
         }
 
         $lst = LegacySchoolCourse::query()

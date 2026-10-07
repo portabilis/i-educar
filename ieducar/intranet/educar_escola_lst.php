@@ -15,6 +15,8 @@ return new class extends clsListagem
     public function Gerar()
     {
         $this->titulo = 'Escola - Listagem';
+        $this->buscaRapida = 'nm_escola';
+        $this->buscaRapidaRotulo = 'Buscar por nome da escola';
 
         $this->nm_escola = request('nm_escola');
         $this->ref_cod_instituicao = request('ref_cod_instituicao');
@@ -83,12 +85,12 @@ return new class extends clsListagem
             foreach ($lista as $registro) {
                 $linha = [];
 
-                $linha[] = "<a href=\"educar_escola_det.php?cod_escola={$registro['cod_escola']}\">{$registro['nome']}</a>";
+                $linha[] = "<a href=\"educar_escola_det.php?cod_escola={$registro['cod_escola']}\">" . e($registro['nome']) . '</a>';
                 if ($nivel == 1) {
                     $objInstituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
                     $detInstituicao = $objInstituicao->detalhe();
 
-                    $linha[] = "<a href=\"educar_escola_det.php?cod_escola={$registro['cod_escola']}\">{$detInstituicao['nm_instituicao']}</a>";
+                    $linha[] = "<a href=\"educar_escola_det.php?cod_escola={$registro['cod_escola']}\">" . e($detInstituicao['nm_instituicao']) . '</a>';
                 }
                 $this->addLinhas($linha);
             }

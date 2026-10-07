@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
+use iEducar\Reports\Contracts\ReportCardTypes;
 
 class TurmaController extends ApiCoreController
 {
@@ -134,11 +136,22 @@ class TurmaController extends ApiCoreController
     protected function ordenaAlunosDaTurmaAlfabetica()
     {
         $codTurma = $this->getRequest()->id;
-        $objMatriculaTurma = new clsPmieducarMatriculaTurma;
-        $lstMatriculaTurma = $objMatriculaTurma->lista(null, $codTurma, null, null, null, null, null, null, 3);
+
+        $enturmacoes = LegacyEnrollment::query()
+            ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+            ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+            ->join('cadastro.pessoa', 'pessoa.idpes', 'aluno.ref_idpes')
+            ->whereValid(includeDependency: false)
+            ->where('aluno.ativo', 1)
+            ->when(is_numeric($codTurma), fn ($q) => $q->whereSchoolClass($codTurma))
+            ->get([
+                'matricula_turma.ref_cod_matricula',
+                'matricula_turma.sequencial',
+                'pessoa.nome',
+            ]);
 
         $lstNomes = [];
-        foreach ($lstMatriculaTurma as $matricula) {
+        foreach ($enturmacoes as $matricula) {
             $lstNomes[] = [
                 'nome' => limpa_acentos(mb_strtoupper($matricula['nome'])),
                 'ref_cod_matricula' => $matricula['ref_cod_matricula'],
@@ -186,15 +199,15 @@ class TurmaController extends ApiCoreController
             }
         }
 
-        $tipos = Portabilis_Model_Report_TipoBoletim::getInstance()->getReports();
+        $tipos = app(ReportCardTypes::class)->getReports();
 
         if ($tipoDiferenciado && $tipoDiferenciado != $tipo) {
-            $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado]);
+            $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado] ?? null);
         } else {
             $exists = LegacySchoolClass::query()->whereDifferentStudents($codTurma)->exists();
 
             if ($exists) {
-                $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado]);
+                $this->appendResponse('tipo-boletim-diferenciado', $tipos[$tipoDiferenciado] ?? null);
             }
         }
 

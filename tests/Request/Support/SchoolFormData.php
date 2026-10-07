@@ -105,7 +105,7 @@ final class SchoolFormData
         return [
             'servidor_id' => $employees,
             'managers_role_id' => array_fill(0, $rows, ManagerRoleFactory::new()->current()->getKey()),
-            'managers_access_criteria_id' => array_fill(0, $rows, ManagerAccessCriteriaFactory::new()->current()->getKey()),
+            'managers_access_criteria_id' => array_fill(0, $rows, ManagerAccessCriteriaFactory::new()->indication()->getKey()),
             'managers_link_type_id' => array_fill(0, $rows, ManagerLinkTypeFactory::new()->current()->getKey()),
             'managers_chief' => array_map(static fn (int $row) => $row === $chief ? 1 : 0, array_keys($employees)),
             'managers_email' => array_fill(0, $rows, ''),
