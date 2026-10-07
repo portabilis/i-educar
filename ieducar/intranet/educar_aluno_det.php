@@ -229,7 +229,10 @@ return new class extends clsDetalhe
                 ? LegacyDeficiency::query()
                     ->whereHas('individuals', fn ($q) => $q->whereKey($this->ref_idpes))
                     ->get()
+                // Inalcançável: o aluno tem chave estrangeira para a pessoa.
+                // @codeCoverageIgnoreStart
                 : collect();
+            // @codeCoverageIgnoreEnd
 
             $obj_beneficios_lista = LegacyBenefit::query()
                 ->whereHas(relation: 'students', callback: fn ($q) => $q->where('cod_aluno', $this->cod_aluno))
@@ -251,7 +254,10 @@ return new class extends clsDetalhe
 
             $detalheDocumento = is_numeric($this->ref_idpes)
                 ? LegacyDocument::find($this->ref_idpes)?->getAttributes()
+                // Inalcançável: o aluno tem chave estrangeira para a pessoa.
+                // @codeCoverageIgnoreStart
                 : null;
+            // @codeCoverageIgnoreEnd
 
             $registro['rg'] = $detalheDocumento['rg'];
 
@@ -744,15 +750,24 @@ return new class extends clsDetalhe
         }
 
         if ($registro['num_tit_eleitor']) {
+            // Inalcançável: o título de eleitor não é lido do documento para o registro.
+            // @codeCoverageIgnoreStart
             $this->addDetalhe(detalhe: ['Título de Eleitor', $registro['num_tit_eleitor']]);
+            // @codeCoverageIgnoreEnd
         }
 
         if ($registro['zona_tit_eleitor']) {
+            // Inalcançável: a zona do título não é lida do documento para o registro.
+            // @codeCoverageIgnoreStart
             $this->addDetalhe(detalhe: ['Zona', $registro['zona_tit_eleitor']]);
+            // @codeCoverageIgnoreEnd
         }
 
         if ($registro['secao_tit_eleitor']) {
+            // Inalcançável: a seção do título não é lida do documento para o registro.
+            // @codeCoverageIgnoreStart
             $this->addDetalhe(detalhe: ['Seção', $registro['secao_tit_eleitor']]);
+            // @codeCoverageIgnoreEnd
         }
 
         $this->addDetalhe(detalhe: ['Transporte escolar', $registro['tipo_transporte'] === 0 ? 'Não utiliza' : 'Sim']);

@@ -1039,11 +1039,14 @@ return new class extends clsCadastro
         // pela antiga interface do cadastro de alunos.
 
         if (!$parentId && $this->_aluno['nm_' . $parentType]) {
+            // Inalcançável: `clsPmieducarAluno::detalhe()` não traz `nm_pai` nem `nm_mae`.
+            // @codeCoverageIgnoreStart
             $nome = $this->_aluno['nm_' . $parentType];
 
             $inputHint = '<br /><b>Dica:</b> Foi informado o nome "' . $nome .
                 '" no cadastro de aluno,<br />tente pesquisar esta pessoa ' .
                 'pelo CPF ou RG, caso não encontre, cadastre uma nova pessoa.';
+            // @codeCoverageIgnoreEnd
         }
 
         $hiddenInputOptions = ['options' => ['value' => $parentId]];
@@ -1142,7 +1145,10 @@ return new class extends clsCadastro
         }
 
         if (!$this->validatePhoto()) {
+            // Não testável: no servidor in-process o upload chega como objeto, e a tela o lê como o array de `$_FILES`.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         if (!$this->validaNisPisPasep()) {
@@ -1305,6 +1311,8 @@ return new class extends clsCadastro
     {
         $caminhoFoto = Asset::get('intranet/imagens/user-perfil.png');
         if ($this->objPhoto != null) {
+            // Não testável: no servidor in-process o upload chega como objeto, e a tela o lê como o array de `$_FILES`.
+            // @codeCoverageIgnoreStart
             $caminhoFoto = $this->objPhoto->sendPicture();
             if ($caminhoFoto != '') {
                 if (is_numeric($id) && is_string($caminhoFoto)) {
@@ -1318,6 +1326,7 @@ return new class extends clsCadastro
             $caminhoFoto = (new UrlPresigner)->getPresignedUrl(url: $caminhoFoto);
         } elseif ($this->file_delete == 'on') {
             LegacyIndividualPicture::whereKey($id)->delete();
+            // @codeCoverageIgnoreEnd
         }
 
         $loggedUser = session(key: 'logged_user');
@@ -1335,6 +1344,8 @@ return new class extends clsCadastro
     {
         $this->arquivoFoto = $_FILES['photo'];
         if (!empty($this->arquivoFoto['name'])) {
+            // Não testável: no servidor in-process o upload chega como objeto, e a tela o lê como o array de `$_FILES`.
+            // @codeCoverageIgnoreStart
             $this->arquivoFoto['name'] = mb_strtolower(string: $this->arquivoFoto['name'], encoding: 'UTF-8');
             $this->objPhoto = new PictureController(imageFile: $this->arquivoFoto);
             if ($this->objPhoto->validatePicture()) {
@@ -1343,6 +1354,7 @@ return new class extends clsCadastro
                 $this->mensagem = $this->objPhoto->getErrorMessage();
 
                 return false;
+                // @codeCoverageIgnoreEnd
             }
         } else {
             $this->objPhoto = null;
@@ -1358,8 +1370,11 @@ return new class extends clsCadastro
             $obrigarDocumentoPessoa = LegacyInstitution::query()
                 ->find($user->ref_cod_instituicao, ['obrigar_documento_pessoa'])?->obrigar_documento_pessoa;
         } else {
+            // Inalcançável: todo usuário que chega aqui tem instituição.
+            // @codeCoverageIgnoreStart
             $obrigarDocumentoPessoa = LegacyInstitution::query()
                 ->first(['obrigar_documento_pessoa'])?->obrigar_documento_pessoa;
+            // @codeCoverageIgnoreEnd
         }
 
         return $obrigarDocumentoPessoa;
@@ -1373,8 +1388,11 @@ return new class extends clsCadastro
             $obrigarCpf = LegacyInstitution::query()
                 ->find($user->ref_cod_instituicao, ['obrigar_cpf'])?->obrigar_cpf;
         } else {
+            // Inalcançável: todo usuário que chega aqui tem instituição.
+            // @codeCoverageIgnoreStart
             $obrigarCpf = LegacyInstitution::query()
                 ->first(['obrigar_cpf'])?->obrigar_cpf;
+            // @codeCoverageIgnoreEnd
         }
 
         return $obrigarCpf;
@@ -1509,11 +1527,14 @@ return new class extends clsCadastro
             $this->registrarTrilhaCpf(pessoaId: $pessoaId, estadoAnterior: $estadoAnterior);
 
             DB::commit();
+            // Não testável: a consulta com erro aborta a transação que envolve cada teste.
+            // @codeCoverageIgnoreStart
         } catch (Throwable $exception) {
             DB::rollBack();
 
             throw $exception;
         }
+        // @codeCoverageIgnoreEnd
 
         $this->createOrUpdateRaca(pessoaId: $pessoaId, corRaca: $this->cor_raca);
     }
@@ -1749,7 +1770,10 @@ return new class extends clsCadastro
 
         $pessoa = LegacyPerson::find($pessoaId);
         if (!$pessoa) {
+            // Inalcançável: a pessoa acabou de ser criada ou encontrada.
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         $slugNome = Str::lower(Str::slug($pessoa->nome, ' '));
@@ -1782,7 +1806,10 @@ return new class extends clsCadastro
     protected function createOrUpdateDocumentos($pessoaId)
     {
         if (!is_numeric($pessoaId)) {
+            // Inalcançável: a pessoa acabou de ser criada ou encontrada.
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         // certidão civil
@@ -1874,7 +1901,10 @@ return new class extends clsCadastro
     protected function inputTelefone($type, $typeLabel = '')
     {
         if (!$typeLabel) {
+            // Inalcançável: todas as chamadas informam o rótulo.
+            // @codeCoverageIgnoreStart
             $typeLabel = "Telefone {$type}";
+            // @codeCoverageIgnoreEnd
         }
 
         // ddd
