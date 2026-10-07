@@ -19,8 +19,11 @@ class LegacyIndividualFactory extends Factory
         $gender = $male ? 'M' : 'F';
 
         return [
+            // Pelo mesmo motivo da jurídica: quem está em cadastro.fisica é
+            // sempre pessoa física, e as buscas das telas filtram por tipo = 'F'.
             'idpes' => fn () => LegacyPersonFactory::new()->create([
                 'nome' => $name,
+                'tipo' => 'F',
             ]),
             'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
             'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),

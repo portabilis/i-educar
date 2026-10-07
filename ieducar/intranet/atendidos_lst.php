@@ -102,7 +102,7 @@ return new class extends clsListagem
                     ? "<span class='cpf-situacao cpf-situacao-com'>{$pessoa->individual->cpf}</span>"
                     : "<span class='cpf-situacao cpf-situacao-sem'>Sem CPF</span>";
                 $this->addLinhas(linha: [
-                    "<img src='imagens/noticia.jpg' border=0><a href='atendidos_det.php?cod_pessoa={$cod}'>$nome</a>",
+                    "<img src='imagens/noticia.jpg' border=0><a href='atendidos_det.php?cod_pessoa={$cod}'>" . e($nome) . '</a>',
                     $cpf,
                 ]);
             }

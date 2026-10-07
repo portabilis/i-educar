@@ -94,8 +94,8 @@ return new class extends clsListagem
                 $det = $registro->calendarNote;
 
                 $this->addLinhas(linha: [
-                    "<a href=\"educar_calendario_anotacao_cad.php?cod_calendario_anotacao={$det['cod_calendario_anotacao']}{$get}\">{$det['nm_anotacao']}</a>",
-                    "<a href=\"educar_calendario_anotacao_cad.php?cod_calendario_anotacao={$det['cod_calendario_anotacao']}{$get}\">{$det['descricao']}</a>",
+                    "<a href=\"educar_calendario_anotacao_cad.php?cod_calendario_anotacao={$det['cod_calendario_anotacao']}{$get}\">" . e($det['nm_anotacao']) . '</a>',
+                    "<a href=\"educar_calendario_anotacao_cad.php?cod_calendario_anotacao={$det['cod_calendario_anotacao']}{$get}\">" . e($det['descricao']) . '</a>',
                 ]);
             }
         }

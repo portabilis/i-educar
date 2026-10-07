@@ -101,10 +101,6 @@ return new class extends clsCadastro
         );
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb(currentPage: 'Registro de substituição do servidor', breadcrumbs: [
-            url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
-        ]);
-
         return $retorno;
     }
 
@@ -121,6 +117,12 @@ return new class extends clsCadastro
         }
 
         $this->campoRotulo(nome: 'nm_servidor', campo: 'Servidor', valor: $nm_servidor);
+
+        // Início > Servidores > Nome > Substituição de horário
+        $this->breadcrumb(currentPage: 'Substituição de horário', breadcrumbs: [
+            url(path: 'intranet/educar_servidor_lst.php') => 'Servidores',
+            url(path: "intranet/educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}") => $nm_servidor,
+        ]);
 
         $this->campoOculto(nome: 'ref_cod_servidor', valor: $this->ref_cod_servidor);
         $this->campoOculto(nome: 'professor', valor: $this->professor);
