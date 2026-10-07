@@ -3,9 +3,12 @@
 use Database\Factories\EmployeeFactory;
 use Database\Factories\LegacyEmployeeFactory;
 use Database\Factories\LegacyEmployeeRoleFactory;
+use Database\Factories\LegacyGradeFactory;
 use Database\Factories\LegacyInstitutionFactory;
+use Database\Factories\LegacyRoleFactory;
 use Database\Factories\LegacySchoolClassFactory;
 use Database\Factories\LegacySchoolClassTeacherFactory;
+use Database\Factories\LegacySchoolGradeFactory;
 use Database\Factories\LegacyStudentFactory;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Support\Facades\DB;
@@ -38,10 +41,17 @@ test('lista as séries do vínculo com turma do professor ao filtrar por escola 
         ->update(['exigir_vinculo_turma_professor' => 1]);
 
     $schoolClass = LegacySchoolClassFactory::new()->create();
+    $otherGrade = LegacySchoolGradeFactory::new()->create([
+        'ref_cod_escola' => $schoolClass->ref_ref_cod_escola,
+        'ref_cod_serie' => LegacyGradeFactory::new()->create(['ref_cod_curso' => $schoolClass->ref_cod_curso]),
+    ])->grade;
     $employee = EmployeeFactory::new()->create();
 
     LegacyEmployeeFactory::new()->create(['ref_cod_pessoa_fj' => $employee->getKey()]);
-    LegacyEmployeeRoleFactory::new()->create(['ref_cod_servidor' => $employee->getKey()]);
+    LegacyEmployeeRoleFactory::new()->create([
+        'ref_cod_servidor' => $employee->getKey(),
+        'ref_cod_funcao' => LegacyRoleFactory::new()->create(['professor' => 1]),
+    ]);
     LegacySchoolClassTeacherFactory::new()->create([
         'instituicao_id' => $institution->getKey(),
         'turma_id' => $schoolClass->getKey(),
@@ -58,5 +68,7 @@ test('lista as séries do vínculo com turma do professor ao filtrar por escola 
         'ano' => $schoolClass->ano,
     ]))
         ->assertOk()
-        ->assertSee($schoolClass->grade->name);
+        ->assertSee($schoolClass->grade->name)
+        ->assertDontSee($otherGrade->name)
+        ->assertDontSee(mb_strtoupper($otherGrade->name));
 });
