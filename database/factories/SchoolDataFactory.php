@@ -35,7 +35,7 @@ class SchoolDataFactory extends Factory
             'cep' => $this->faker->numerify('########'),
             'municipio' => $this->faker->city(),
             'uf_municipio' => $this->faker->stateAbbr(),
-            'inep' => $this->faker->numerify('########'),
+            'inep' => (string) $this->faker->numberBetween(10000000, 99999999),
             'telefone_ddd' => $this->faker->numerify('##'),
             'telefone' => $this->faker->numerify('3###-####'),
             'celular_ddd' => $this->faker->numerify('##'),
