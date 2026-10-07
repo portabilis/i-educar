@@ -326,7 +326,7 @@ test('ao usuário de biblioteca não oferece ação nenhuma, mesmo com permissã
     $registration = ($this->enrolled)();
 
     $this->actingAs(
-        LegacyUserFactory::new()->withAccess(578)->create([
+        LegacyUserFactory::new()->withAccess(578)->withSchool($this->scenario->school)->create([
             'ref_cod_instituicao' => $this->scenario->institution,
             'ref_cod_tipo_usuario' => LegacyUserTypeFactory::new()->create(['nivel' => App_Model_NivelTipoUsuario::BIBLIOTECA]),
         ])
