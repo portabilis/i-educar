@@ -31,4 +31,22 @@ class RegistrationStatusTest extends EnumTestCase
             15 => 'Falecido',
         ];
     }
+
+    public function test_inactive_statuses(): void
+    {
+        $this->assertSame([
+            RegistrationStatus::ABANDONED,
+            RegistrationStatus::TRANSFERRED,
+            RegistrationStatus::DECEASED,
+        ], RegistrationStatus::getStatusInactive());
+    }
+
+    public function test_registration_and_enrollment_status_calls_the_retained_student_reproved(): void
+    {
+        $values = RegistrationStatus::getRegistrationAndEnrollmentStatus();
+
+        $this->assertSame('Reprovado', $values[RegistrationStatus::REPROVED]);
+        $this->assertSame('Aprovado', $values[RegistrationStatus::APPROVED]);
+        $this->assertCount(count($this->getDescriptiveValues()), $values);
+    }
 }

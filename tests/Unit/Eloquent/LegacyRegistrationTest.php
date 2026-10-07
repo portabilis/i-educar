@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Eloquent;
 
+use App\Models\LegacyActiveLooking;
 use App\Models\LegacyCourse;
 use App\Models\LegacyDisciplineDependence;
 use App\Models\LegacyDisciplineExemption;
@@ -16,13 +17,22 @@ use App\Models\LegacyStudent;
 use App\Models\LegacyStudentAbsence;
 use App\Models\LegacyStudentDescriptiveOpinion;
 use App\Models\LegacyStudentScore;
+use App\Models\LegacyTransferRequest;
 use App\Models\RegistrationStatus;
+use App\Models\View\Situation;
 use App_Model_MatriculaSituacao;
+use Database\Factories\LegacyDeficiencyFactory;
+use Database\Factories\LegacyEnrollmentFactory;
 use Database\Factories\LegacyEvaluationRuleGradeYearFactory;
 use Database\Factories\LegacyIndividualFactory;
+use Database\Factories\LegacyInstitutionFactory;
+use Database\Factories\LegacyPersonFactory;
+use Database\Factories\LegacyRaceFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacySchoolClassFactory;
+use Database\Factories\LegacySchoolFactory;
 use Database\Factories\LegacyStudentFactory;
+use Database\Seeders\DefaultRelatorioSituacaoMatriculaTableSeeder;
 use Tests\EloquentTestCase;
 
 class LegacyRegistrationTest extends EloquentTestCase
@@ -43,6 +53,8 @@ class LegacyRegistrationTest extends EloquentTestCase
         'studentScore' => LegacyStudentScore::class,
         'studentDescriptiveOpinion' => LegacyStudentDescriptiveOpinion::class,
         'dependencies' => LegacyDisciplineDependence::class,
+        'transferStart' => LegacyTransferRequest::class,
+        'activeLookings' => LegacyActiveLooking::class,
     ];
 
     protected function getEloquentModelName(): string
@@ -195,5 +207,90 @@ class LegacyRegistrationTest extends EloquentTestCase
         $registration = LegacyRegistrationFactory::new()->create();
 
         $this->assertNull($registration->schoolClass);
+    }
+
+    public function test_school_classes_situations_and_discipline_scores(): void
+    {
+        $this->seed(DefaultRelatorioSituacaoMatriculaTableSeeder::class);
+
+        $registration = LegacyRegistrationFactory::new()->create(['aprovado' => RegistrationStatus::APPROVED, 'ativo' => 1]);
+        $enrollment = LegacyEnrollmentFactory::new()->create(['ref_cod_matricula' => $registration, 'ativo' => 1]);
+
+        $this->assertSame([$enrollment->ref_cod_turma], $registration->schoolClasses->modelKeys());
+        $this->assertInstanceOf(Situation::class, $registration->situations->first());
+        $this->assertInstanceOf(Situation::class, $registration->situation);
+        $this->assertInstanceOf(Situation::class, $registration->situationApproved);
+        $this->assertSame(RegistrationStatus::APPROVED, $registration->situationApproved->cod_situacao);
+        $this->assertTrue($registration->disciplineScores->isEmpty());
+    }
+
+    public function test_get_evaluation_rule_prefers_the_differentiated_rule_of_the_school(): void
+    {
+        $gradeYear = LegacyEvaluationRuleGradeYearFactory::new()->create(['ano_letivo' => 2030]);
+        $registration = LegacyRegistrationFactory::new()->create([
+            'ano' => 2030,
+            'ref_ref_cod_serie' => $gradeYear->serie_id,
+            'ref_ref_cod_escola' => LegacySchoolFactory::new()->create(['utiliza_regra_diferenciada' => true]),
+        ]);
+
+        $this->assertSame($gradeYear->regra_avaliacao_diferenciada_id, $registration->getEvaluationRule()->getKey());
+    }
+
+    public function test_filters(): void
+    {
+        $this->seed(DefaultRelatorioSituacaoMatriculaTableSeeder::class);
+
+        $institution = LegacyInstitutionFactory::new()->create();
+        $school = LegacySchoolFactory::new()->create(['ref_cod_instituicao' => $institution, 'zona_localizacao' => 2, 'localizacao_diferenciada' => 3]);
+        $student = fn (string $name) => LegacyStudentFactory::new()->create([
+            'ref_idpes' => LegacyIndividualFactory::new()->create(['idpes' => LegacyPersonFactory::new()->create(['nome' => $name, 'tipo' => 'F'])]),
+        ]);
+        $anaStudent = $student('Ana Alves');
+        $ana = LegacyRegistrationFactory::new()->create([
+            'ref_cod_aluno' => $anaStudent,
+            'ref_ref_cod_escola' => $school,
+            'aprovado' => RegistrationStatus::APPROVED,
+            'ultima_matricula' => 1,
+            'data_matricula' => '2030-02-01',
+            'dependencia' => true,
+            'ativo' => 1,
+        ]);
+        $bia = LegacyRegistrationFactory::new()->create([
+            'ref_cod_aluno' => $student('Bia Borges'),
+            'aprovado' => RegistrationStatus::RECLASSIFIED,
+            'ultima_matricula' => 0,
+            'data_matricula' => '2030-03-01',
+            'dependencia' => false,
+            'ativo' => 1,
+        ]);
+        $enrollment = LegacyEnrollmentFactory::new()->create(['ref_cod_matricula' => $ana, 'ativo' => 1]);
+        $anaStudent->individual->races()->attach($race = LegacyRaceFactory::new()->create());
+        $anaStudent->person->deficiencies()->attach(LegacyDeficiencyFactory::new()->create(['deficiency_type_id' => 5]));
+
+        $ids = fn ($query) => $query->whereIn('cod_matricula', [$ana->getKey(), $bia->getKey()])->orderBy('cod_matricula')->pluck('cod_matricula')->all();
+        $onlyAna = [$ana->getKey()];
+        $onlyBia = [$bia->getKey()];
+        $both = [$ana->getKey(), $bia->getKey()];
+
+        $this->assertSame($onlyAna, $ids(LegacyRegistration::query()->finalized()));
+        $this->assertSame($onlyBia, $ids(LegacyRegistration::query()->notFinalized()));
+        $this->assertSame($onlyAna, $ids(LegacyRegistration::query()->validStatus()));
+        $this->assertSame($onlyAna, $ids(LegacyRegistration::query()->whereLastRegistration()));
+        $this->assertSame($onlyAna, $ids(LegacyRegistration::query()->whereName('alves')));
+        $this->assertSame($onlyAna, $ids(LegacyRegistration::query()->whereInstitution($institution->getKey())));
+        $this->assertSame($onlyAna, $ids(LegacyRegistration::query()->whereDeficiencyTypes('5,6')));
+        $this->assertSame($onlyAna, $ids(LegacyRegistration::query()->whereRaceId($race->getKey())));
+        $this->assertSame($onlyAna, $ids(LegacyRegistration::query()->whereSituation(RegistrationStatus::APPROVED)));
+        $this->assertSame($onlyAna, $ids(LegacyRegistration::query()->whereSchoolClass($enrollment->ref_cod_turma)));
+        $this->assertSame($onlyBia, $ids(LegacyRegistration::query()->whereRegistration($bia->getKey())));
+        $this->assertSame($onlyAna, $ids(LegacyRegistration::query()->notReclassified()));
+        $this->assertSame($onlyAna, $ids(LegacyRegistration::query()->allRelationsActive()));
+        $this->assertSame($onlyBia, $ids(LegacyRegistration::query()->whereStartAfter('2030-02-15')));
+        $this->assertSame($onlyAna, $ids(LegacyRegistration::query()->whereEndBefore('2030-02-15')));
+        $this->assertSame($onlyAna, $ids(LegacyRegistration::query()->whereDependency(1)));
+        $this->assertSame($onlyBia, $ids(LegacyRegistration::query()->whereDependency(2)));
+        $this->assertSame($both, $ids(LegacyRegistration::query()->whereDependency(3)));
+        $this->assertSame($onlyAna, $ids(LegacyRegistration::query()->whereLocalizationZone(2)));
+        $this->assertSame($onlyAna, $ids(LegacyRegistration::query()->whereDifferentiatedLocalizationArea(3)));
     }
 }

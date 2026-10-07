@@ -6,6 +6,7 @@ use App\Models\LegacyDisciplineAbsence;
 use App\Models\LegacyGeneralAbsence;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyStudentAbsence;
+use Database\Factories\LegacyDisciplineAbsenceFactory;
 use Database\Factories\LegacyStudentAbsenceFactory;
 use RegraAvaliacao_Model_TipoPresenca;
 use Tests\EloquentTestCase;
@@ -38,5 +39,16 @@ class LegacyStudentAbsenceTest extends EloquentTestCase
             'tipo_falta' => RegraAvaliacao_Model_TipoPresenca::GERAL,
         ]);
         $this->assertTrue($model->isGeneral());
+    }
+
+    public function test_absences_are_by_discipline_when_the_rule_is_by_discipline(): void
+    {
+        $model = LegacyStudentAbsenceFactory::new()->create([
+            'tipo_falta' => RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE,
+        ]);
+        LegacyDisciplineAbsenceFactory::new()->create(['falta_aluno_id' => $model]);
+
+        $this->assertCount(1, $model->absences);
+        $this->assertInstanceOf(LegacyDisciplineAbsence::class, $model->absences->first());
     }
 }
