@@ -18,7 +18,7 @@ class Portabilis_View_Helper_DynamicInput_Serie extends Portabilis_View_Helper_D
         $ano = $options['options']['ano'] ?? null;
 
         if ($isOnlyProfessor && Portabilis_Business_Professor::canLoadSeriesAlocado($instituicaoId)) {
-            $resources = Portabilis_Business_Professor::seriesAlocado($instituicaoId, $escolaId, $cursoId, $userId);
+            $resources = Portabilis_Business_Professor::seriesAlocado($instituicaoId, $escolaId, $cursoId, $userId, $ano ?? $this->viewInstance->ano ?? null);
         } elseif ($escolaId && $cursoId && empty($resources)) {
             $resources = App_Model_IedFinder::getSeries($instituicaoId, $escolaId, $cursoId, $ano);
         }
