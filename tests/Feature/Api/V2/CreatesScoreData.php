@@ -160,4 +160,10 @@ trait CreatesScoreData
         return $this->withHeaders(['token' => 'valid-token'])
             ->postJson('/api/v2/pareceres-por-etapa-geral', Arr::except($this->scorePayload($data, $overrides), 'componente_id'));
     }
+
+    protected function postAnnualDisciplineOpinion(array $data, array $overrides = []): TestResponse
+    {
+        return $this->withHeaders(['token' => 'valid-token'])
+            ->postJson('/api/v2/pareceres-anual-por-componente', Arr::except($this->scorePayload($data, $overrides), 'etapa'));
+    }
 }
