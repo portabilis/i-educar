@@ -12,6 +12,7 @@ use Database\Factories\LegacySchoolClassFactory;
 use Database\Factories\LegacySchoolClassGradeFactory;
 use Database\Factories\LegacySchoolClassTeacherDisciplineFactory;
 use Database\Factories\LegacySchoolClassTeacherFactory;
+use Database\Factories\LegacySchoolCourseFactory;
 use Database\Factories\LegacySchoolGradeFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
@@ -262,5 +263,64 @@ class PortabilisBusinessProfessorTest extends TestCase
             $this->schoolClass->ref_ref_cod_escola,
             $this->employeeId
         ));
+    }
+
+    public function test_nome_do_curso_e_da_serie_so_leva_a_descricao_quando_ela_esta_preenchida()
+    {
+        $this->link($this->schoolClass);
+
+        $courseName = DB::table('pmieducar.curso')->where('cod_curso', $this->schoolClass->ref_cod_curso)->value('nm_curso');
+        $gradeName = DB::table('pmieducar.serie')->where('cod_serie', $this->schoolClass->ref_ref_cod_serie)->value('nm_serie');
+
+        foreach ([['', ''], [null, ''], ['Anos iniciais', ' (Anos iniciais)']] as [$description, $suffix]) {
+            DB::table('pmieducar.curso')->where('cod_curso', $this->schoolClass->ref_cod_curso)->update(['descricao' => $description]);
+            DB::table('pmieducar.serie')->where('cod_serie', $this->schoolClass->ref_ref_cod_serie)->update(['descricao' => $description]);
+
+            $courses = Portabilis_Business_Professor::cursosAlocado(
+                $this->institution->getKey(),
+                $this->schoolClass->ref_ref_cod_escola,
+                $this->employeeId
+            );
+
+            $grades = Portabilis_Business_Professor::seriesAlocado(
+                $this->institution->getKey(),
+                $this->schoolClass->ref_ref_cod_escola,
+                $this->schoolClass->ref_cod_curso,
+                $this->employeeId
+            );
+
+            $this->assertSame([$courseName . $suffix], array_column($courses, 'nome'));
+            $this->assertSame([$gradeName . $suffix], array_column($grades, 'nome'));
+        }
+    }
+
+    public function test_sem_o_campo_marcado_o_nome_do_curso_ministrado_so_leva_a_descricao_quando_ela_esta_preenchida()
+    {
+        DB::table('pmieducar.instituicao')
+            ->where('cod_instituicao', $this->institution->getKey())
+            ->update(['exigir_vinculo_turma_professor' => 0]);
+
+        $schoolId = $this->schoolClass->ref_ref_cod_escola;
+        $courseId = $this->schoolClass->ref_cod_curso;
+
+        if (!DB::table('pmieducar.escola_curso')->where('ref_cod_escola', $schoolId)->where('ref_cod_curso', $courseId)->exists()) {
+            LegacySchoolCourseFactory::new()->create(['ref_cod_escola' => $schoolId, 'ref_cod_curso' => $courseId]);
+        }
+
+        DB::table('pmieducar.servidor_curso_ministra')->insert([
+            'ref_cod_curso' => $courseId,
+            'ref_ref_cod_instituicao' => $this->institution->getKey(),
+            'ref_cod_servidor' => $this->employeeId,
+        ]);
+
+        $courseName = DB::table('pmieducar.curso')->where('cod_curso', $courseId)->value('nm_curso');
+
+        foreach ([['', ''], [null, ''], ['Anos iniciais', ' (Anos iniciais)']] as [$description, $suffix]) {
+            DB::table('pmieducar.curso')->where('cod_curso', $courseId)->update(['descricao' => $description]);
+
+            $courses = Portabilis_Business_Professor::cursosAlocado($this->institution->getKey(), $schoolId, $this->employeeId);
+
+            $this->assertSame([$courseName . $suffix], array_column($courses, 'nome'));
+        }
     }
 }

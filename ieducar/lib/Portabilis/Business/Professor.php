@@ -60,7 +60,7 @@ class Portabilis_Business_Professor
             $sql = '
                 SELECT DISTINCT
                     c.cod_curso as id,
-                    CASE WHEN (c.descricao is not null or c.descricao <> \'\')
+                    CASE WHEN (c.descricao is not null and c.descricao <> \'\')
                         THEN c.nm_curso||\' (\'||c.descricao||\')\'
                     ELSE c.nm_curso END as nome
                 FROM modules.professor_turma pt
@@ -91,7 +91,7 @@ class Portabilis_Business_Professor
             $sql = '
                 select
                     cod_curso as id,
-                    CASE WHEN (curso.descricao is not null or curso.descricao <> \'\')
+                    CASE WHEN (curso.descricao is not null and curso.descricao <> \'\')
                         THEN curso.nm_curso||\' (\'||curso.descricao||\')\'
                     ELSE curso.nm_curso END as nome
                 from
@@ -129,7 +129,7 @@ class Portabilis_Business_Professor
             $sql = '
                 SELECT DISTINCT
                     s.cod_serie as id,
-                    CASE WHEN (s.descricao is not null or s.descricao <> \'\')
+                    CASE WHEN (s.descricao is not null and s.descricao <> \'\')
                     THEN s.nm_serie||\' (\'||s.descricao||\')\'
                     ELSE s.nm_serie END as nome
                 FROM modules.professor_turma pt
