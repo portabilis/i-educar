@@ -4,7 +4,10 @@ use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDisciplineScore;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGeneralScore;
+use Database\Factories\LegacyDisciplineExemptionFactory;
 use Database\Factories\LegacyDisciplineFactory;
+use Database\Factories\LegacyExemptionStageFactory;
+use Database\Factories\LegacyScoreExamFactory;
 use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Feature\Api\V2\CreatesScoreData;
@@ -330,3 +333,38 @@ test('rejects stage greater than the school class stages', function (int $stage,
     'etapa 99 com a 3ª etapa sem nota' => [99, 2],
     'etapa 4 com todas as etapas lançadas' => [4, 3],
 ]);
+
+test('stores score of a discipline exempted for the registration and removes its exam score', function () {
+    $data = $this->createScoreData();
+    $registration = $data['registration'];
+
+    // Componente da turma dispensado em todas as etapas fica fora da lista de situações do boletim.
+    $exemption = LegacyDisciplineExemptionFactory::new()->create([
+        'ref_cod_matricula' => $registration,
+        'ref_cod_disciplina' => $data['discipline'],
+        'ref_cod_escola' => $registration->ref_ref_cod_escola,
+        'ref_cod_serie' => $registration->ref_ref_cod_serie,
+    ]);
+    foreach ([1, 2, 3, 4] as $stage) {
+        LegacyExemptionStageFactory::new()->create(['ref_cod_dispensa' => $exemption, 'etapa' => $stage]);
+    }
+
+    LegacyScoreExamFactory::new()->create([
+        'ref_cod_matricula' => $registration,
+        'ref_cod_componente_curricular' => $data['discipline'],
+    ]);
+
+    $this->postScore($data, ['nota' => 6, 'recuperacao' => null])
+        ->assertStatus(201)
+        ->assertJson(['message' => 'Nota salva com sucesso.']);
+
+    $this->assertDatabaseHas(LegacyDisciplineScore::class, [
+        'componente_curricular_id' => $data['discipline']->getKey(),
+        'etapa' => 1,
+        'nota_original' => 6,
+    ]);
+    $this->assertDatabaseMissing('modules.nota_exame', [
+        'ref_cod_matricula' => $registration->getKey(),
+        'ref_cod_componente_curricular' => $data['discipline']->getKey(),
+    ]);
+});
