@@ -107,8 +107,11 @@ class DiarioControllerService
 
         $boletim = new \Avaliacao_Service_Boletim($params);
 
+        // Inalcançável: `new` nunca devolve nulo.
         if (is_null($boletim)) {
+            // @codeCoverageIgnoreStart
             throw new \CoreExt_Exception("Não foi possível instanciar o serviço boletim para a matrícula {$registration->getKey()}.");
+            // @codeCoverageIgnoreEnd
         }
 
         return $boletim;
