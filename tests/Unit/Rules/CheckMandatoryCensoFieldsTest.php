@@ -2,14 +2,27 @@
 
 namespace Tests\Unit\Rules;
 
+use App\Models\LegacyCourse;
+use App\Models\LegacyInstitution;
+use App\Models\LegacySchool;
 use App\Rules\CheckMandatoryCensoFields;
+use App_Model_LocalFuncionamentoDiferenciado;
 use App_Model_TipoMediacaoDidaticoPedagogico;
+use Database\Factories\LegacyCourseFactory;
+use Database\Factories\LegacyInstitutionFactory;
+use Database\Factories\LegacySchoolFactory;
 use iEducar\Modules\Educacenso\Model\EtapaAgregada;
+use iEducar\Modules\Educacenso\Model\FormaOrganizacaoTurma;
+use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class CheckMandatoryCensoFieldsTest extends TestCase
 {
+    use DatabaseTransactions;
+
     private CheckMandatoryCensoFields $rule;
 
     protected function setUp(): void
@@ -476,5 +489,155 @@ class CheckMandatoryCensoFieldsTest extends TestCase
         $nok = new \stdClass;
         $nok->hora_inicial = '07:31:00';
         $this->assertFalse($this->rule->validaMinutosHorario($nok));
+    }
+
+    /**
+     * Uma turma presencial válida de uma instituição que obriga os campos do
+     * censo, numa escola sem local de funcionamento diferenciado.
+     */
+    private function mandatoryParams(array $overrides = []): \stdClass
+    {
+        $institution = LegacyInstitutionFactory::new()->create(['obrigar_campos_censo' => true]);
+
+        $params = new \stdClass;
+        $params->ref_cod_instituicao = $institution->getKey();
+        $params->ref_cod_curso = LegacyCourseFactory::new()->create(['ref_cod_instituicao' => $institution, 'modalidade_curso' => ModalidadeCurso::ENSINO_REGULAR])->getKey();
+        $params->ref_ref_cod_escola = LegacySchoolFactory::new()->create(['ref_cod_instituicao' => $institution, 'local_funcionamento' => '{1}'])->getKey();
+        $params->tipo_mediacao_didatico_pedagogico = App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL;
+        $params->hora_inicial = '08:00';
+        $params->hora_final = '12:00';
+        $params->hora_inicio_intervalo = '10:00';
+        $params->hora_fim_intervalo = '10:15';
+        $params->dias_semana = '{2,3,4,5,6}';
+        $params->etapa_educacenso = 14;
+        $params->etapa_agregada = null;
+        $params->organizacao_curricular = null;
+        $params->formas_organizacao_turma = FormaOrganizacaoTurma::SERIE_ANO;
+        $params->tipo_atendimento = '{0}';
+        $params->atividades_complementares = null;
+        $params->local_funcionamento_diferenciado = App_Model_LocalFuncionamentoDiferenciado::NAO_ESTA;
+        $params->carga_horaria_total = null;
+        $params->cod_eixo_curso_profissional = null;
+
+        foreach ($overrides as $field => $value) {
+            $params->{$field} = $value;
+        }
+
+        return $params;
+    }
+
+    public function test_turma_valida_passa_quando_a_instituicao_obriga_os_campos_do_censo(): void
+    {
+        $this->assertTrue($this->rule->passes('schoolClass', $this->mandatoryParams()));
+    }
+
+    public function test_sem_obrigar_os_campos_do_censo_nada_e_validado(): void
+    {
+        $params = $this->mandatoryParams(['hora_inicial' => null]);
+        LegacyInstitution::query()->whereKey($params->ref_cod_instituicao)->update(['obrigar_campos_censo' => false]);
+
+        $this->assertTrue($this->rule->passes('schoolClass', $params));
+    }
+
+    #[DataProvider('camposDaTurmaPresencial')]
+    public function test_turma_presencial_exige_horarios_e_dias_da_semana(string $field, string $message): void
+    {
+        $this->assertFalse($this->rule->passes('schoolClass', $this->mandatoryParams([$field => null])));
+        $this->assertSame($message, $this->rule->message());
+    }
+
+    public static function camposDaTurmaPresencial(): array
+    {
+        return [
+            ['hora_inicial', 'O campo hora inicial é obrigatório'],
+            ['hora_final', 'O campo hora final é obrigatório'],
+            ['hora_inicio_intervalo', 'O campo hora início intervalo é obrigatório'],
+            ['hora_fim_intervalo', 'O campo hora fim intervalo é obrigatório'],
+            ['dias_semana', 'O campo dias da semana é obrigatório'],
+        ];
+    }
+
+    public function test_formacao_geral_basica_exige_a_etapa_de_ensino(): void
+    {
+        $params = $this->mandatoryParams(['organizacao_curricular' => '{1}', 'etapa_agregada' => EtapaAgregada::ENSINO_MEDIO, 'etapa_educacenso' => null]);
+
+        $this->assertFalse($this->rule->passes('schoolClass', $params));
+        $this->assertStringContainsString('deve ser obrigatório quando o campo "Organização Curricular da Turma"', $this->rule->message());
+    }
+
+    public function test_unidade_socioeducativa_ou_prisional_nao_aceita_as_etapas_iniciais(): void
+    {
+        $params = $this->mandatoryParams([
+            'local_funcionamento_diferenciado' => App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL,
+            'etapa_educacenso' => 1,
+        ]);
+
+        $this->assertFalse($this->rule->passes('schoolClass', $params));
+        $this->assertSame('Quando o campo: Local de funcionamento diferenciado é: Unidade prisional, o campo: Etapa de ensino não pode ser nenhuma das seguintes opções: 1, 2, 3 ou 56.', $this->rule->message());
+    }
+
+    public function test_turma_com_atividade_complementar_exige_as_atividades(): void
+    {
+        $params = $this->mandatoryParams(['tipo_atendimento' => '{4}', 'atividades_complementares' => null]);
+
+        $this->assertFalse($this->rule->passes('schoolClass', $params));
+        $this->assertSame('Campo atividades complementares é obrigatório.', $this->rule->message());
+    }
+
+    public function test_turma_a_distancia_ou_semipresencial_precisa_ser_curricular(): void
+    {
+        $params = $this->mandatoryParams([
+            'tipo_atendimento' => '{5}',
+            'tipo_mediacao_didatico_pedagogico' => App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA,
+        ]);
+
+        $this->assertFalse($this->rule->passes('schoolClass', $params));
+        $this->assertStringContainsString('Tipo de Turma deve ser: Curricular (etapa de ensino)', $this->rule->message());
+    }
+
+    public function test_curso_de_eja_nao_aceita_turma_de_atividade_complementar(): void
+    {
+        $params = $this->mandatoryParams(['tipo_atendimento' => '{4}', 'atividades_complementares' => '{1}']);
+        LegacyCourse::query()->whereKey($params->ref_cod_curso)->update(['modalidade_curso' => ModalidadeCurso::EJA]);
+
+        $this->assertFalse($this->rule->passes('schoolClass', $params));
+        $this->assertStringContainsString('Educação de Jovens e Adultos (EJA)', $this->rule->message());
+    }
+
+    public function test_local_de_funcionamento_diferenciado_depende_do_local_da_escola(): void
+    {
+        $params = $this->mandatoryParams(['local_funcionamento_diferenciado' => App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO]);
+
+        $this->assertFalse($this->rule->passes('schoolClass', $params));
+        $this->assertStringContainsString('Unidade de atendimento socioeducativo quando o local de funcionamento da escola', $this->rule->message());
+
+        $params = $this->mandatoryParams(['local_funcionamento_diferenciado' => App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL]);
+
+        $this->assertFalse($this->rule->passes('schoolClass', $params));
+        $this->assertStringContainsString('Unidade prisional quando o local de funcionamento da escola', $this->rule->message());
+
+        LegacySchool::query()->whereKey($params->ref_ref_cod_escola)->update(['local_funcionamento' => '{9,10}']);
+
+        $this->assertTrue($this->rule->passes('schoolClass', $params));
+    }
+
+    public function test_etapa_de_qualificacao_profissional_exige_o_eixo(): void
+    {
+        $params = $this->mandatoryParams(['etapa_educacenso' => 67, 'cod_eixo_curso_profissional' => '']);
+
+        $this->assertFalse($this->rule->passes('schoolClass', $params));
+        $this->assertStringContainsString('Código do eixo do curso de qualificação profissional', $this->rule->message());
+
+        $params->cod_eixo_curso_profissional = 5;
+
+        $this->assertTrue($this->rule->passes('schoolClass', $params));
+    }
+
+    public function test_forma_de_organizacao_da_turma_depende_da_etapa(): void
+    {
+        $params = $this->mandatoryParams(['formas_organizacao_turma' => FormaOrganizacaoTurma::SEMESTRAL, 'etapa_educacenso' => 14]);
+
+        $this->assertFalse($this->rule->passes('schoolClass', $params));
+        $this->assertStringContainsString('Não é possível selecionar a opção: <b>Períodos semestrais</b>', $this->rule->message());
     }
 }
