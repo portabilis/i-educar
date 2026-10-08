@@ -4,6 +4,7 @@ use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacyUserFactory;
 use Database\Factories\LogUnificationFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -204,4 +205,96 @@ test('controladores, despachante, visão e utilitários legados nas bordas', fun
         ->and(SafeJson::decode('{"a":1}', true))->toBe(['a' => 1]);
 
     $estrategia(2);
+});
+
+test('telas de visualização e listagem, redirecionamento com código desconhecido e caminho vazio do despachante', function () {
+    $this->actingAs(LegacyUserFactory::new()->admin()->create());
+    $registration = LegacyRegistrationFactory::new()->create(['aprovado' => 3]);
+    $storage = new ReflectionProperty(CoreExt_Entity::class, '_classStorage');
+    $classes = $storage->getValue();
+    unset($classes['clspmieducarmatricula']);
+    $storage->setValue(null, $classes);
+
+    App_Model_Matricula::atualizaMatricula($registration->getKey(), auth()->id(), false);
+
+    $visualizacao = new class extends Core_Controller_Page_ViewController
+    {
+        protected $_dataMapper = 'Educacenso_Model_IesDataMapper';
+
+        protected $_titulo = 'IES';
+
+        public function getEntry()
+        {
+            throw new Exception('Registro não encontrado');
+        }
+    };
+
+    $listagem = new class extends Core_Controller_Page_ListController
+    {
+        protected $_dataMapper = 'Educacenso_Model_IesDataMapper';
+    };
+
+    $consulta = new class extends ConsultaBaseController
+    {
+        protected function canGetAlunos()
+        {
+            return false;
+        }
+
+        public function alunos()
+        {
+            return $this->getAlunos();
+        }
+    };
+
+    $_SERVER['REQUEST_URI'] = '';
+    $despachante = new CoreExt_Controller_Dispatcher_Standard;
+
+    try {
+        expect(semAvisosNoLegado(fn () => $visualizacao->Gerar()))->toBeFalse()
+            ->and($registration->fresh()->aprovado)->toBe(App_Model_MatriculaSituacao::REPROVADO)
+            ->and($listagem->getEntries())->toBeArray()
+            ->and($consulta->alunos())->toBeNull()
+            ->and($despachante->getControllerName())->toBe($despachante->getOption('controller_default_name'))
+            ->and(fn () => $consulta->simpleRedirect('/destino', 999))->toThrow(HttpResponseException::class);
+    } finally {
+        unset($_SERVER['REQUEST_URI']);
+    }
+});
+
+test('a listagem Portabilis carrega o estilo e o script da tela quando existem', function () {
+    $this->actingAs(LegacyUserFactory::new()->admin()->create());
+    $root = sys_get_temp_dir() . '/raiz-listagem';
+    @mkdir("{$root}/vendor/legacy/Escola/Assets/Stylesheets", 0777, true);
+    @mkdir("{$root}/vendor/legacy/Escola/Assets/Javascripts", 0777, true);
+    touch("{$root}/vendor/legacy/Escola/Assets/Stylesheets/Index.css");
+    touch("{$root}/vendor/legacy/Escola/Assets/Javascripts/Index.js");
+    $_SERVER['DOCUMENT_ROOT'] = $root;
+    Portabilis_View_Helper_Application::forgetLoadedAssets();
+
+    $listagem = new class extends Portabilis_Controller_Page_ListController
+    {
+        protected $_dataMapper = 'Educacenso_Model_IesDataMapper';
+
+        public function assets($dispatcher)
+        {
+            $this->loadResourceAssets($dispatcher);
+        }
+    };
+    $listagem->assets(new class
+    {
+        public function getControllerName()
+        {
+            return 'escola';
+        }
+
+        public function getActionName()
+        {
+            return 'index';
+        }
+    });
+
+    expect($listagem->getAppendedOutput())
+        ->toContain('/vendor/legacy/Escola/Assets/Stylesheets/Index.css')
+        ->toContain('/vendor/legacy/Escola/Assets/Javascripts/Index.js');
 });
