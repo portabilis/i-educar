@@ -1,7 +1,9 @@
 <?php
 
 use App\Jobs\EnrollmentsPromotionJob;
+use App\Models\Notification;
 use Database\Factories\LegacyUserFactory;
+use Illuminate\Bus\Batch;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Bus;
 use Tests\Request\Support\EnrollmentScenario;
@@ -36,6 +38,18 @@ test('envia para a fila a promoção das matrículas que casam com os filtros', 
         ->assertJson(['status' => 'success']);
 
     Bus::assertBatched(fn ($batch) => $batch->jobs->count() === 1 && $batch->jobs->first() instanceof EnrollmentsPromotionJob);
+
+    // Ao final do lote, quem pediu é avisado de quantas matrículas foram processadas.
+    Bus::assertBatched(function ($batch) {
+        $finished = Mockery::mock(Batch::class);
+        $finished->totalJobs = 1;
+        $batch->finallyCallbacks()[0]($finished);
+
+        return true;
+    });
+
+    expect(Notification::query()->where('user_id', $this->user->getKey())->value('text'))
+        ->toBe('Processo de atualização de matrículas finalizado. Total de itens processados: 1 matrícula(s)');
 });
 
 test('avisa quando nenhuma matrícula casa com os filtros', function () {
