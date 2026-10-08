@@ -298,20 +298,30 @@ class Registro20 implements RegistroEducacenso
     {
         $tiposMediacao = App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums();
 
+        // A cobertura não registra a passagem por estes `case` com constantes de
+        // classe, mesmo quando o `return` de cada um roda nos testes.
         switch ($this->modalidadeCurso) {
+            // @codeCoverageIgnoreStart
             case ModalidadeCurso::ENSINO_REGULAR:
+                // @codeCoverageIgnoreEnd
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
 
                 break;
+            // @codeCoverageIgnoreStart
             case ModalidadeCurso::EDUCACAO_ESPECIAL:
+                // @codeCoverageIgnoreEnd
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL]}";
 
                 break;
+            // @codeCoverageIgnoreStart
             case ModalidadeCurso::EJA:
+                // @codeCoverageIgnoreEnd
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
 
                 break;
+            // @codeCoverageIgnoreStart
             case ModalidadeCurso::EDUCACAO_PROFISSIONAL:
+                // @codeCoverageIgnoreEnd
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]}, {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
 
                 break;
