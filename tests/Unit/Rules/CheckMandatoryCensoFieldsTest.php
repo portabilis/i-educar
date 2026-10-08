@@ -664,4 +664,14 @@ class CheckMandatoryCensoFieldsTest extends TestCase
 
         $this->assertTrue($this->rule->passes('schoolClass', $this->mandatoryParams(['tipo_atendimento' => null, 'etapa_agregada' => EtapaAgregada::ENSINO_FUNDAMENTAL])));
     }
+
+    public function test_hora_sem_minutos_com_dois_digitos_nao_e_multipla_de_cinco()
+    {
+        $rule = new CheckMandatoryCensoFields;
+        $check = fn ($hora) => (fn () => $this->minutosMultiplosDeCinco($hora))->call($rule);
+
+        $this->assertFalse($check('10'));
+        $this->assertFalse($check('10:5'));
+        $this->assertTrue($check('10:05'));
+    }
 }
