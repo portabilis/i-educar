@@ -2,6 +2,7 @@
 
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyDisciplineScore;
+use App\Models\LegacyDisciplineScoreAverage;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGrade;
 use App\Models\LegacyInstitution;
@@ -2991,31 +2992,40 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     $etapasNotas = $this->calculaEtapaNotasAglutinada($id, $this->getNotasComponentes());
 
                     $qtdeEtapas = $this->getOption('etapas');
+                    // Etapas que o componente cursa: as do calendário ou, com etapas específicas, as definidas para o componente.
+                    $etapasComponente = $qtdeEtapas > 0 ? range(1, $qtdeEtapas) : [];
 
                     if ($this->getRegraAvaliacaoDefinirComponentePorEtapa() == '1') {
-                        $qtdeEtapaEspecifica = App_Model_IedFinder::getQtdeEtapasComponente($turmaId, $id, $infosMatricula['ref_cod_aluno']);
+                        $etapasEspecificas = App_Model_IedFinder::getEtapasComponente($turmaId, $id);
 
-                        $qtdeEtapas = ($qtdeEtapaEspecifica ? $qtdeEtapaEspecifica : $qtdeEtapas);
+                        if ($etapasEspecificas) {
+                            $etapasComponente = $etapasEspecificas;
+                            $qtdeEtapas = count($etapasEspecificas);
+                        }
                     }
 
                     $verificaDispensa = App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $id);
                     $consideraEtapas = [];
-                    // A dispensa pode ter etapas que o calendário da matrícula não tem; só as do calendário saem do divisor.
-                    $etapasDispensadas = 0;
 
                     for ($i = 1; $i <= $qtdeEtapas; $i++) {
                         $consideraEtapas['C' . $i] = in_array($i, $verificaDispensa) ? 0 : 1;
 
                         if (in_array($i, $verificaDispensa)) {
                             $consideraEtapas['E' . $i] = 0;
-                            $etapasDispensadas++;
                         }
                     }
 
-                    $qtdeEtapas -= $etapasDispensadas;
+                    // A dispensa pode ter etapas que o componente não cursa; só as que ele cursa saem do divisor.
+                    $qtdeEtapas -= count(array_intersect($etapasComponente, $verificaDispensa));
 
-                    // Componente dispensado em todas as etapas do calendário não tem média.
+                    // Componente dispensado em todas as etapas que cursa não tem média; a bloqueada é mantida.
                     if ($qtdeEtapas <= 0) {
+                        LegacyDisciplineScoreAverage::query()
+                            ->where('nota_aluno_id', $notaAlunoId)
+                            ->where('componente_curricular_id', $id)
+                            ->where('bloqueada', false)
+                            ->delete();
+
                         continue;
                     }
 
