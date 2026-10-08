@@ -56,13 +56,19 @@ test('mostra endereço, site, e-mail e os quatro telefones quando existem', func
         'email' => 'contato@escola-beta.test',
     ]);
 
-    $place = $school->addresses()->first();
+    // Endereço fixo: a tela imprime sem escapar, e um nome gerado com
+    // apóstrofo não bateria com o assertSee.
+    $school->addresses()->first()->update([
+        'address' => 'Rua das Palmeiras',
+        'neighborhood' => 'Jardim América',
+        'number' => '742',
+    ]);
 
     $this->get('/intranet/educar_escola_det.php?cod_escola=' . $school->getKey())
         ->assertOk()
-        ->assertSee($place->address)
-        ->assertSee($place->neighborhood)
-        ->assertSee($place->number)
+        ->assertSee('Rua das Palmeiras')
+        ->assertSee('Jardim América')
+        ->assertSee('742')
         ->assertSee('https://escola-beta.test')
         ->assertSee('contato@escola-beta.test')
         ->assertSeeInOrder(['Telefone 1', '(48) 34221001', 'Telefone 2', '(48) 34221002', 'Celular', '(48) 991221003', 'Fax', '(48) 34221004']);
@@ -168,9 +174,7 @@ test('quem só pode visualizar não recebe botões nem ações nos anos letivos'
         ->assertDontSee('educar_escola_cad.php?cod_escola=' . $this->school->getKey(), false);
 });
 
-// Defeito conhecido: o desvio de escola inexistente aponta para a listagem de
-// alunos, e não para a de escolas.
-test('defeito: uma escola inexistente leva à listagem de alunos', function () {
+test('volta para a listagem de escolas avisando quando a escola não existe', function () {
     $this->get('/intranet/educar_escola_det.php?cod_escola=0')
         ->assertRedirect('educar_escola_lst.php')
         ->assertSessionHas('error', 'Escola não encontrada. O registro não existe ou foi excluído. Use a busca abaixo para localizá-la.');
