@@ -40,4 +40,19 @@ class CacheManagerTest extends TestCase
 
         Cache::invalidateByTags(['testTag']);
     }
+
+    public function test_store_sem_suporte_a_tags_ignora_as_tags()
+    {
+        config(['cache.default' => 'file']);
+        $manager = new CacheManager(app());
+
+        $this->assertSame($manager->store(), $manager->tags(['qualquer']));
+    }
+
+    public function test_redis_usa_o_apelido_do_cliente_como_prefixo()
+    {
+        config(['cache.default' => 'redis', 'app.nickname' => 'cliente-teste']);
+
+        $this->assertSame('cliente-teste', (new CacheManager(app()))->getPrefix());
+    }
 }
