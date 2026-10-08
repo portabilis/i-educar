@@ -122,3 +122,25 @@ test('exclui os períodos selecionados', function () {
 
     expect(ReleasePeriod::query()->whereKey([$first->getKey(), $second->getKey()])->count())->toBe(0);
 });
+
+test('quando a confirmação da transação falha, desfaz e avisa no cadastro, na edição e na exclusão', function () {
+    $period = ($this->period)();
+    $database = Mockery::mock(app('db'))->makePartial();
+    $database->shouldReceive('commit')->andThrow(new RuntimeException('falha ao confirmar'));
+    DB::swap($database);
+
+    $this->post(route('release-period.create'), ($this->form)(['stage' => 2]))
+        ->assertRedirect(route('release-period.index'))
+        ->assertSessionHas('error', 'Não foi possível cadastrar o período.');
+
+    $this->post(route('release-period.update', $period), ($this->form)(['stage' => 3]))
+        ->assertRedirect(route('release-period.index'))
+        ->assertSessionHas('error', 'Não foi possível atualizar o período.');
+
+    $this->get(route('release-period.delete', ['periods' => [$period->getKey()]]))
+        ->assertRedirect(route('release-period.index'))
+        ->assertSessionHas('error', 'Não foi possível excluir o período.');
+
+    expect($period->refresh()->stage)->toBe(1)
+        ->and(ReleasePeriod::query()->where('stage', 2)->exists())->toBeFalse();
+});
