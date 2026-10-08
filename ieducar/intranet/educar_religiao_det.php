@@ -34,7 +34,10 @@ return new class extends clsDetalhe
         $registro = Religion::findOrFail(id: $this->cod_religiao, columns: ['id', 'name'])?->getAttributes();
 
         if (!$registro) {
+            // Inalcançável: o `findOrFail()` acima responde 404 antes de chegar aqui.
+            // @codeCoverageIgnoreStart
             $this->simpleRedirect(url: 'educar_religiao_lst.php');
+            // @codeCoverageIgnoreEnd
         }
 
         if ($registro['id']) {

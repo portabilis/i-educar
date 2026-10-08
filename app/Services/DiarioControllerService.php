@@ -149,9 +149,9 @@ class DiarioControllerService
             $registration = $this->findMatricula($turmaId, $alunoId);
         }
 
-        $situacaoComponente = $boletim->getSituacaoComponentesCurriculares()
-            ->componentesCurriculares[$componenteCurricularId]
-            ->situacao;
+        // A lista de situações não traz componente dispensado nem, em dependência, fora dela.
+        $situacaoComponente = ($boletim->getSituacaoComponentesCurriculares()
+            ->componentesCurriculares[$componenteCurricularId] ?? null)?->situacao;
 
         $situacaoEmExame = ($situacaoComponente == App_Model_MatriculaSituacao::EM_EXAME ||
             $situacaoComponente == App_Model_MatriculaSituacao::APROVADO_APOS_EXAME ||

@@ -21,7 +21,10 @@ return new class extends clsCadastro
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -76,10 +79,13 @@ return new class extends clsCadastro
             $matricula = (new clsPmieducarMatricula(cod_matricula: $this->cod_matricula));
             $matricula->modalidade_ensino = (int) $this->modalidade_ensino;
             $matricula->edita();
+            // Inalcançável: `edita()` devolve verdadeiro ou falso e não lança exceção.
+            // @codeCoverageIgnoreStart
         } catch (Exception) {
             $this->mensagem = 'Erro ao atualizar a modalidade de ensino.';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $this->mensagem = 'Modalidade de ensino atualizado com sucesso.';

@@ -95,7 +95,10 @@ return new class extends clsListagem
                 $nome = $pessoa->name;
 
                 if ($pessoa->social_name) {
+                    // Inalcançável: a pessoa física é carregada só com o CPF, então o nome social nunca vem preenchido.
+                    // @codeCoverageIgnoreStart
                     $nome = $pessoa->social_name . '<br> <i>Nome de registro: </i>' . $pessoa->name;
+                    // @codeCoverageIgnoreEnd
                 }
 
                 $cpf = $pessoa->individual?->cpf

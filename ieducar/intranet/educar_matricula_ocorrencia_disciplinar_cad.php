@@ -216,8 +216,11 @@ return new class extends clsCadastro
                 $resposta = json_decode($this->enviaOcorrenciaNovoEducacao($obj->id));
 
                 if (is_array($resposta->errors)) {
+                    // Não testável: depende da resposta de um serviço externo, e o ramo termina em `exit`.
+                    // @codeCoverageIgnoreStart
                     echo 'Erro ao enviar ocorrencia disciplinar ao sistema externo: ' . $resposta->errors[0];
                     exit;
+                    // @codeCoverageIgnoreEnd
                 }
             }
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
@@ -231,9 +234,12 @@ return new class extends clsCadastro
             return true;
         }
 
+        // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
@@ -263,9 +269,12 @@ return new class extends clsCadastro
             }
         }
 
+        // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()
@@ -282,9 +291,12 @@ return new class extends clsCadastro
             $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
         }
 
+        // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     protected function getDataHoraCadastro()

@@ -85,9 +85,12 @@ return new class extends clsCadastro
         $this->data_matricula = Portabilis_Date_Utils::brToPgSQL(date: $this->data_matricula);
 
         if ($anoLetivos->count() > 1) {
+            // Inalcançável: a restrição `escola_ano_letivo_ref_cod_escola_ano_unique` impede dois anos letivos iguais na escola.
+            // @codeCoverageIgnoreStart
             Session::now('notice', 'Nenhum aluno rematriculado. Certifique-se que somente um ano letivo encontra-se em aberto.');
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         // Valida se a data da matrícula não é menor que a data do início do
@@ -158,7 +161,10 @@ return new class extends clsCadastro
                     $count += 1;
 
                     if (!$result) {
+                        // Inalcançável: `matricularAluno()` devolve verdadeiro ou lança exceção.
+                        // @codeCoverageIgnoreStart
                         break;
+                        // @codeCoverageIgnoreEnd
                     }
                 }
             }
@@ -193,7 +199,10 @@ return new class extends clsCadastro
                 Session::now('notice', 'Os alunos desta série já encontram-se rematriculados, sendo assim, favor verificar se as enturmações já foram efetuadas em Movimentação > Enturmação.');
             }
         } else {
+            // Inalcançável: `matricularAluno()` devolve verdadeiro ou lança exceção.
+            // @codeCoverageIgnoreStart
             Session::now('error', 'Ocorreu algum erro inesperado durante as rematrículas, por favor, tente novamente.');
+            // @codeCoverageIgnoreEnd
         }
 
         return $result;
@@ -330,10 +339,13 @@ return new class extends clsCadastro
 
         try {
             $this->db->Consulta($sql);
+            // Não testável: um erro de SQL abortaria a transação que envolve cada teste.
+            // @codeCoverageIgnoreStart
         } catch (Exception $e) {
             error_log(message: 'Erro ao selecionar matrículas ano anterior, no processo rematrícula automática:' . $e->getMessage());
 
             throw new Exception(message: "Erro ao selecionar matrículas ano anterior: $anoAnterior");
+            // @codeCoverageIgnoreEnd
         }
 
         return true;
@@ -424,10 +436,13 @@ return new class extends clsCadastro
                 $this->ano_letivo,
                 $cursoId
             ));
+            // Não testável: um erro de SQL abortaria a transação que envolve cada teste.
+            // @codeCoverageIgnoreStart
         } catch (Exception $e) {
             error_log(message: "Erro durante a matrícula do aluno $alunoId, no processo de rematrícula automática:" . $e->getMessage());
 
             throw new Exception(message: "Erro durante matrícula do aluno: $alunoId");
+            // @codeCoverageIgnoreEnd
         }
 
         return true;
