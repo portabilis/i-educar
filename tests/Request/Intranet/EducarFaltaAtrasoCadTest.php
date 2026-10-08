@@ -58,7 +58,7 @@ test('abre o cadastro com as funções do servidor em ordem de matrícula', func
     $coordinator = $this->ana->role('Coordenador', '2002', teacher: false);
     $teacher = $this->ana->role('Professor', '1001');
 
-    $html = $this->get($this->new)->assertOk()->assertSee('Cadastrar')->getContent();
+    $html = $this->get($this->new)->assertOk()->assertSee('Salvar')->getContent();
     $fields = LegacyFields::from($html);
     $form = LegacyForm::from($html);
 
