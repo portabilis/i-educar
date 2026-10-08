@@ -5,8 +5,10 @@ use App\Models\LegacySchoolGrade;
 use App\User;
 use Database\Factories\LegacyGeneralConfigurationFactory;
 use Database\Factories\LegacyUserFactory;
+use iEducar\Support\Exceptions\Exception;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\DB;
 use Tests\Request\Support\EnrollmentScenario;
 use Tests\TestCase;
 
@@ -58,6 +60,19 @@ test('avisa quando não há séries no filtro, pede confirmação e então bloqu
     expect(($this->blocked)())->toBeTrue();
 
     ($this->update)(['confirmation' => 1]);
+
+    expect(($this->blocked)())->toBeFalse();
+});
+
+test('avisa quando a atualização em lote não é confirmada no banco', function () {
+    // O controller só captura as exceções do i-Educar.
+    $database = Mockery::mock(app('db'))->makePartial();
+    $database->shouldReceive('commit')->andThrow(new Exception('falha ao confirmar'));
+    DB::swap($database);
+
+    ($this->update)(['bloquear_enturmacao_sem_vagas' => 1, 'confirmation' => 1])
+        ->assertRedirect(route('block-enrollment.edit'))
+        ->assertSessionHas('error', 'Atualização em lote não realizada.');
 
     expect(($this->blocked)())->toBeFalse();
 });
