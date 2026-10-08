@@ -2,14 +2,19 @@
 
 namespace Tests\Feature;
 
+use App\Models\LegacyEnrollment;
+use App\Models\LegacyRegistration;
 use App\Services\FinalStatusImportService;
 use App_Model_MatriculaSituacao;
+use Database\Factories\LegacyDisciplineScoreAverageFactory;
 use Database\Factories\LegacyEnrollmentFactory;
 use Database\Factories\LegacyRegistrationFactory;
+use Database\Factories\LegacyRegistrationScoreFactory;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 use Tests\TestCase;
 
 class FinalStatusImportTest extends TestCase
@@ -567,5 +572,47 @@ class FinalStatusImportTest extends TestCase
 
         $this->assertEmpty($named['errors']);
         $this->assertEmpty($indexed['errors']);
+    }
+
+    public function test_a_transferencia_atualiza_a_situacao_das_medias_da_matricula()
+    {
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => now()->year, 'aprovado' => App_Model_MatriculaSituacao::EM_ANDAMENTO]);
+        $scores = LegacyRegistrationScoreFactory::new()->create(['matricula_id' => $registration]);
+        $average = LegacyDisciplineScoreAverageFactory::new()->create(['nota_aluno_id' => $scores, 'situacao' => App_Model_MatriculaSituacao::EM_ANDAMENTO]);
+        LegacyEnrollmentFactory::new()->create(['ref_cod_matricula' => $registration, 'ativo' => 1]);
+
+        $result = $this->service->processImport($this->analysisFor([[(string) $registration->getKey(), 'Transferido', '15/12/' . now()->year]]), $this->mapping(), LegacyUserFactory::new()->create());
+
+        $this->assertSame('completed', $result['status']);
+        $this->assertSame(App_Model_MatriculaSituacao::TRANSFERIDO, $average->refresh()->situacao);
+    }
+
+    public function test_desfaz_o_lote_quando_a_gravacao_falha()
+    {
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => now()->year, 'aprovado' => App_Model_MatriculaSituacao::EM_ANDAMENTO]);
+        LegacyRegistration::saving(fn () => throw new RuntimeException('banco indisponível'));
+
+        $result = $this->service->processImport($this->analysisFor([[(string) $registration->getKey(), 'Reprovado', '']]), $this->mapping(), LegacyUserFactory::new()->create());
+
+        $this->assertSame('failed', $result['status']);
+        $this->assertSame('Erro crítico no processamento: banco indisponível', $result['errors'][0]['error']);
+        $this->assertSame(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
+    }
+
+    public function test_erro_inesperado_ao_validar_a_linha_vira_erro_da_linha()
+    {
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => now()->year, 'aprovado' => App_Model_MatriculaSituacao::EM_ANDAMENTO]);
+        LegacyEnrollmentFactory::new()->create(['ref_cod_matricula' => $registration, 'ativo' => 1]);
+        $messages = ['sintaxe de entrada é inválida para tipo integer', 'conexão perdida'];
+        LegacyEnrollment::retrieved(function () use (&$messages) {
+            throw new RuntimeException(array_shift($messages));
+        });
+        $rows = [[(string) $registration->getKey(), 'Transferido', '15/12/' . now()->year]];
+
+        $first = $this->service->processImport($this->analysisFor($rows), $this->mapping(), LegacyUserFactory::new()->create());
+        $second = $this->service->processImport($this->analysisFor($rows), $this->mapping(), LegacyUserFactory::new()->create());
+
+        $this->assertSame("Matrícula ID tem valor inválido para matrícula: '{$registration->getKey()}'", $first['errors'][0]['error']);
+        $this->assertSame('Erro ao validar linha: conexão perdida', $second['errors'][0]['error']);
     }
 }
