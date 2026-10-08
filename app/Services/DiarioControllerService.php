@@ -88,6 +88,13 @@ class DiarioControllerService
         });
     }
 
+    public function validateComponenteMatricula(int $componenteCurricularId, int $matriculaId): bool
+    {
+        $componentes = \App_Model_IedFinder::getComponentesPorMatricula($matriculaId);
+
+        return in_array($componenteCurricularId, \CoreExt_Entity::entityFilterAttr($componentes, 'id', 'id'));
+    }
+
     public function getServiceBoletim(int $turmaId, int $alunoId, ?LegacyRegistration $registration): \Avaliacao_Service_Boletim
     {
         if (is_null($registration)) {

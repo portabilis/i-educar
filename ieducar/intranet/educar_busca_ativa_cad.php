@@ -44,7 +44,10 @@ return new class extends clsCadastro
         if ($user->isLibrary()) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         return true;
@@ -265,18 +268,27 @@ return new class extends clsCadastro
         if ($this->resultado_busca_ativa == ActiveLooking::ACTIVE_LOOKING_ABANDONMENT_RESULT) {
             $this->simpleRedirect(url: 'educar_abandono_cad.php?ref_cod_matricula=' . $this->ref_cod_matricula . '&ref_cod_aluno=' . $this->ref_cod_aluno);
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return true;
+            // @codeCoverageIgnoreEnd
         }
 
         if ($this->resultado_busca_ativa == ActiveLooking::ACTIVE_LOOKING_TRANSFER_RESULT) {
             $this->simpleRedirect(url: 'educar_transferencia_solicitacao_cad.php?ref_cod_matricula=' . $this->ref_cod_matricula . '&ref_cod_aluno=' . $this->ref_cod_aluno);
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return true;
+            // @codeCoverageIgnoreEnd
         }
 
         $this->simpleRedirect(url: 'educar_busca_ativa_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
 
+        // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+        // @codeCoverageIgnoreStart
         return true;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
@@ -313,7 +325,10 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclusão efetuada com sucesso.';
         $this->simpleRedirect(url: 'educar_busca_ativa_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
 
+        // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+        // @codeCoverageIgnoreStart
         return true;
+        // @codeCoverageIgnoreEnd
     }
 
     protected function loadAssets()

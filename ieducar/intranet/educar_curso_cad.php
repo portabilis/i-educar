@@ -425,7 +425,10 @@ return new class extends clsCadastro
     public function atualizaEtapasDasTurmasDoCurso($curso, $padraoAnoEscolar, $ano): void
     {
         if (!is_numeric($curso) || !is_numeric($ano)) {
+            // Inalcançável: só é chamada depois de a edição dar certo, com código numérico e ano vindo de `date()`.
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         (new SchoolClassStageService)->updateByCourse(

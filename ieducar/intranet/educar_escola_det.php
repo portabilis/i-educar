@@ -85,7 +85,10 @@ return new class extends clsDetalhe
                     LegacyPhone::TYPE_MOBILE => $telefone_2 = $numero,
                     LegacyPhone::TYPE_MOBILE_ALT => $telefone_mov = $numero,
                     LegacyPhone::TYPE_FAX => $telefone_fax = $numero,
+                    // A restrição `ck_fone_pessoa_tipo` só aceita os tipos de telefone 1 a 4.
+                    // @codeCoverageIgnoreStart
                     default => null,
+                    // @codeCoverageIgnoreEnd
                 };
             }
         }
@@ -211,7 +214,10 @@ return new class extends clsDetalhe
     public function listaAnos()
     {
         if (!$this->cod_escola) {
+            // Inalcançável: o `Gerar()` redireciona antes quando a escola não existe.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $existe = false;

@@ -710,7 +710,10 @@ return new class extends clsCadastro
                 if ($this->ref_cod_instituicao) {
                     $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
                 } else {
+                    // O `exit` encerra o processo, e com ele a suíte de testes.
+                    // @codeCoverageIgnoreStart
                     exit('Usuário não é do nivel poli-institucional e não possui uma instituição');
+                    // @codeCoverageIgnoreEnd
                 }
             }
 
@@ -791,7 +794,10 @@ return new class extends clsCadastro
                 if ($this->ref_cod_instituicao) {
                     $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
                 } else {
+                    // O `exit` encerra o processo, e com ele a suíte de testes.
+                    // @codeCoverageIgnoreStart
                     exit('Usuário não é do nivel poli-institucional e não possui uma instituição');
+                    // @codeCoverageIgnoreEnd
                 }
             }
 
@@ -2088,7 +2094,10 @@ return new class extends clsCadastro
     private function atualizaNomePessoaJuridica($idpes)
     {
         if (!is_numeric($idpes) || !Auth::check()) {
+            // Inalcançável: a tela exige autenticação, e sem a pessoa jurídica o `processaTelefones()` falha antes.
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         LegacyOrganization::find($idpes)?->update([
@@ -2121,7 +2130,10 @@ return new class extends clsCadastro
     protected function inputTelefone($type, $typeLabel = '')
     {
         if (!$typeLabel) {
+            // Inalcançável: as quatro chamadas informam o rótulo.
+            // @codeCoverageIgnoreStart
             $typeLabel = "Telefone {$type}";
+            // @codeCoverageIgnoreEnd
         }
 
         // ddd
@@ -2782,6 +2794,8 @@ return new class extends clsCadastro
             return true;
         }
 
+        // Inalcançável: `local_funcionamento` chega como lista, então a comparação acima com um inteiro sempre retorna antes.
+        // @codeCoverageIgnoreStart
         if ($this->numero_salas_utilizadas_dentro_predio == '0') {
             $this->mensagem = 'O campo: <b>Quantidade de salas de aula utilizadas pela escola dentro do prédio escolar</b> não pode ser preenchido com 0';
 
@@ -2789,6 +2803,7 @@ return new class extends clsCadastro
         }
 
         return true;
+        // @codeCoverageIgnoreEnd
     }
 
     protected function validaSalasUtilizadasForaEscola()

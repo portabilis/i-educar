@@ -584,7 +584,10 @@ return new class extends clsDetalhe
 
     public function permissaoDesenturmar()
     {
+        // Inalcançável: nada chama este método.
+        // @codeCoverageIgnoreStart
         return $this->getPermissaoVisualizar(Process::UNENROLLMENT);
+        // @codeCoverageIgnoreEnd
     }
 
     public function Formular()

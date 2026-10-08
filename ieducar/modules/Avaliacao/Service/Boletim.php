@@ -1582,6 +1582,19 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     /**
+     * Situação do componente na matrícula. A lista de situações só traz os
+     * componentes da matrícula, sem os dispensados e, em dependência, só os da
+     * dependência; componente com nota fora dela não tem situação.
+     *
+     * @param int $id
+     * @return int|null
+     */
+    protected function getCurricularComponentSituation($id)
+    {
+        return ($this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id] ?? null)?->situacao;
+    }
+
+    /**
      * Verifica se uma determinada situação tem prioridade sobre a outra.
      *
      * @param int $item1
@@ -2471,7 +2484,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $countEtapasRecuperacao = 0;
 
                 foreach ($_regraRecuperacao->getEtapas() as $__etapa) {
-                    $somaEtapasRecuperacao += $data['E' . $__etapa];
+                    // Etapa da regra ainda sem nota lançada entra como zero na soma
+                    $somaEtapasRecuperacao += $data['E' . $__etapa] ?? 0;
                     $countEtapasRecuperacao++;
                 }
 
@@ -2504,7 +2518,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $countEtapasRecuperacao = 0;
 
                 foreach ($_regraRecuperacao->getEtapas() as $__etapa) {
-                    $somaEtapasRecuperacao += $data['E' . $__etapa];
+                    // Etapa da regra ainda sem nota lançada entra como zero na soma
+                    $somaEtapasRecuperacao += $data['E' . $__etapa] ?? 0;
                     $countEtapasRecuperacao++;
                 }
 
@@ -3071,7 +3086,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
                     // Atualiza a situação de acordo com o que foi inserido na média anteriormente
                     $notaComponenteCurricularMedia->markOld();
-                    $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id]->situacao;
+                    $notaComponenteCurricularMedia->situacao = $this->getCurricularComponentSituation($id);
 
                     $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
                 }

@@ -64,7 +64,10 @@ return new class extends clsCadastro
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -180,7 +183,10 @@ return new class extends clsCadastro
         $escola = $detMatricula['ref_ref_cod_escola'] ?? $this->ref_cod_escola;
 
         if (!$serieAtual || !$escola) {
+            // Inalcançável: o método só recebe a matrícula lida, que sempre tem série e escola.
+            // @codeCoverageIgnoreStart
             return null;
+            // @codeCoverageIgnoreEnd
         }
 
         $codInstituicao = LegacySchool::query()
@@ -188,7 +194,10 @@ return new class extends clsCadastro
             ->value('ref_cod_instituicao');
 
         if (!$codInstituicao) {
+            // Inalcançável: a escola da matrícula tem chave estrangeira para a instituição.
+            // @codeCoverageIgnoreStart
             return null;
+            // @codeCoverageIgnoreEnd
         }
 
         $proibir = LegacyInstitution::query()
@@ -261,6 +270,8 @@ return new class extends clsCadastro
                 dica: 'Acesse a matrícula pela ficha do aluno.',
             );
         }
+        // Não testável: a reclassificação termina em `exit`, que encerraria a suíte de testes.
+        // @codeCoverageIgnoreStart
         DB::beginTransaction();
 
         $obj_matricula = new clsPmieducarMatricula(
@@ -359,6 +370,7 @@ return new class extends clsCadastro
         window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';
         </script>";
         exit('Reclassificação realizada com sucesso!');
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()

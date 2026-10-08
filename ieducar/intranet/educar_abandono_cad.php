@@ -66,7 +66,10 @@ return new class extends clsCadastro
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -237,9 +240,12 @@ return new class extends clsCadastro
                 $this->simpleRedirect(url: "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             }
 
+            // Inalcançável: `cadastraObs()` só devolve falso sem código de matrícula, e nesse caso o `edita()` acima já falhou.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Observação não pode ser salva.<br>';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
         $this->mensagem = 'Deixou de Frequentar não pode ser realizado.<br>';
 

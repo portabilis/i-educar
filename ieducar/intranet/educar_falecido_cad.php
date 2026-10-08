@@ -19,7 +19,10 @@ return new class extends clsCadastro
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -158,9 +161,12 @@ return new class extends clsCadastro
                 $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             }
 
+            // Inalcançável: `cadastraObservacaoFalecido()` só falha sem o código da matrícula, que o `edita()` acima já exigiu.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'A alteração não pode ser salva.<br>';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
         $this->mensagem = 'A alteração não pode ser realizado.<br>';
 
