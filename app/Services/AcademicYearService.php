@@ -669,8 +669,11 @@ class AcademicYearService
             if ($this->isLeapYear($adjustedDate)) {
                 $adjustedDate = str_replace('-02-29', '-02-28', $adjustedDate);
             }
+            // @codeCoverageIgnoreStart
         } catch (Exception $e) {
+            // Inalcançável: isLeapYear() já trata as próprias exceções.
         }
+        // @codeCoverageIgnoreEnd
 
         return $adjustedDate;
     }
