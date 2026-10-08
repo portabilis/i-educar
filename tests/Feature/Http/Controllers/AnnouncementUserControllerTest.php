@@ -21,7 +21,8 @@ beforeEach(function () {
     ($this->login)(LegacyUserFactory::new()->admin()->create());
     LegacyGeneralConfigurationFactory::new()->create(['ref_cod_instituicao' => $this->user->ref_cod_instituicao, 'active_on_ieducar' => true]);
 
-    $this->announcement = fn (array $attributes = []) => Announcement::query()->create($attributes + ['name' => 'Aviso', 'description' => 'x', 'created_by_user_id' => $this->user->getKey()]);
+    // A data de criação não é preenchível; entra depois, para ordenar.
+    $this->announcement = fn (array $attributes = []) => tap(Announcement::query()->create($attributes + ['name' => 'Aviso', 'description' => 'x', 'created_by_user_id' => $this->user->getKey()]), fn ($announcement) => $announcement->forceFill(['created_at' => $attributes['created_at'] ?? now()])->saveQuietly());
     $this->pivot = fn ($announcement) => $announcement->users()->whereKey($this->user->getKey())->first()?->pivot;
 });
 

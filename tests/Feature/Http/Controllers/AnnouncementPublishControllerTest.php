@@ -24,7 +24,8 @@ beforeEach(function () {
         'description' => '<p>Bem-vindos</p><script>alert(1)</script>',
         'tipo_usuario' => [[$this->type->getKey()]],
     ];
-    $this->announcement = fn (array $attributes = []) => Announcement::query()->create($attributes + ['name' => 'Antigo', 'description' => 'x', 'created_by_user_id' => $this->user->getKey()]);
+    // A data de criação não é preenchível; entra depois, para ordenar.
+    $this->announcement = fn (array $attributes = []) => tap(Announcement::query()->create($attributes + ['name' => 'Antigo', 'description' => 'x', 'created_by_user_id' => $this->user->getKey()]), fn ($announcement) => $announcement->forceFill(['created_at' => $attributes['created_at'] ?? now()])->saveQuietly());
 });
 
 test('a listagem traz os avisos, inclusive os inativos, do mais novo ao mais velho', function () {
