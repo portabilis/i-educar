@@ -21,7 +21,7 @@ beforeEach(function () {
 test('mostra os dados do tipo de turma, a instituição e o link de edição', function () {
     $this->get($this->url)
         ->assertOk()
-        ->assertSee($this->user->institution->nm_instituicao, false)
+        ->assertSee($this->user->institution->nm_instituicao)
         ->assertSee('Tempo Integral')
         ->assertSee('INTG')
         ->assertSee('educar_turma_tipo_cad.php?cod_turma_tipo=' . $this->type->getKey(), false);

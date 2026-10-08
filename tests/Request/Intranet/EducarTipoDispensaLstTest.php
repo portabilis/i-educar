@@ -28,7 +28,7 @@ test('lista os tipos de dispensa em ordem de nome, com a instituição e o botã
         ->assertSeeInOrder(['Registro Alfa', 'Registro Beta'])
         ->assertSee(($this->detail)($alfa), false)
         ->assertSee(($this->detail)($beta), false)
-        ->assertSee($this->user->institution->nm_instituicao, false)
+        ->assertSee($this->user->institution->nm_instituicao)
         ->assertSee('go("educar_tipo_dispensa_cad.php")', false);
 });
 
