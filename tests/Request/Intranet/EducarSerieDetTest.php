@@ -79,7 +79,7 @@ test('fora do nível de administrador não mostra a instituição nem os botões
     $this->get($this->url)
         ->assertOk()
         ->assertSee('Série Alfa')
-        ->assertDontSee($this->course->institution->nm_instituicao, false)
+        ->assertDontSee($this->course->institution->nm_instituicao)
         ->assertDontSee('educar_serie_cad.php?cod_serie=' . $this->grade->getKey(), false);
 });
 

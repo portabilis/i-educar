@@ -406,12 +406,15 @@ return new class extends clsCadastro
 
     public function arrayHhmmToMinutes($array)
     {
+        // Inalcançável: nenhum ponto do sistema chama este método.
+        // @codeCoverageIgnoreStart
         $total = 0;
         foreach ($array as $value) {
             $total += $this->hhmmToMinutes($value);
         }
 
         return $total;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Formular()
