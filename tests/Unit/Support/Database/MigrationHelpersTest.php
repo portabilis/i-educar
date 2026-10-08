@@ -1,9 +1,22 @@
 <?php
 
+use App\Models\LegacyPerson;
+use App\Models\LegacySchool;
 use App\Models\LegacyRace;
+use App\Setting;
+use App\SettingCategory;
+use App\Support\Database\AsView;
+use App\Support\Database\AuditTrigger;
 use App\Support\Database\CsvSeeder;
 use App\Support\Database\DropForeignKey;
+use App\Support\Database\DropPrimaryKey;
+use App\Support\Database\EnableDisableForeignKeys;
+use App\Support\Database\IncrementSequence;
+use App\Support\Database\MigrationUtils;
 use App\Support\Database\PrimaryKey;
+use App\Support\Database\SettingCategoryTrait;
+use App\Support\Database\SpecificReport;
+use App\Support\Database\UnknowUser;
 use App\Support\Database\UpdatedAtTrigger;
 use Database\Factories\LegacyPersonFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -19,8 +32,19 @@ function auxiliaresDeMigracao(): object
 {
     return new class
     {
+        use AsView, MigrationUtils {
+            AsView::dropView insteadof MigrationUtils;
+            MigrationUtils::dropView as dropViewDoUtils;
+        }
+        use AuditTrigger;
         use DropForeignKey;
+        use DropPrimaryKey;
+        use EnableDisableForeignKeys;
+        use IncrementSequence;
         use PrimaryKey;
+        use SettingCategoryTrait;
+        use SpecificReport;
+        use UnknowUser;
         use UpdatedAtTrigger;
 
         public function chama(string $metodo, ...$argumentos)
@@ -129,4 +153,62 @@ test('o seeder de CSV exige o arquivo e o modelo e grava cada linha', function (
     }
 
     expect(LegacyRace::query()->where('nm_raca', 'Raça de Teste')->whereNull('raca_educacenso')->exists())->toBeTrue();
+});
+
+test('remove a chave primária, ajusta a sequência e liga e desliga os gatilhos da tabela', function () {
+    DB::unprepared('create table public.cobertura_sequencia (id serial primary key, nome text)');
+    DB::table('public.cobertura_sequencia')->insert([['id' => 41, 'nome' => 'a']]);
+    $helpers = auxiliaresDeMigracao();
+
+    $helpers->incrementSequence('public.cobertura_sequencia');
+    $helpers->incrementSequence(LegacySchool::class);
+    $helpers->chama('disableForeignKeys', 'public.cobertura_sequencia');
+    $helpers->chama('enableForeignKeys', 'public.cobertura_sequencia');
+    $helpers->chama('dropPrimaryKeysFromTable', 'cobertura_sequencia');
+
+    expect(DB::table('public.cobertura_sequencia')->insertGetId(['nome' => 'b']))->toBe(42)
+        ->and(constraintsDa('cobertura_sequencia', 'PRIMARY KEY'))->toBe([]);
+});
+
+test('cria e remove views, views materializadas, executa SQL e recria os gatilhos de auditoria', function () {
+    $helpers = auxiliaresDeMigracao();
+    $sql = tempnam(sys_get_temp_dir(), 'sql');
+    file_put_contents($sql, 'create materialized view public.cobertura_materializada as select 1 as um');
+
+    try {
+        $helpers->createView('persons');
+        $helpers->dropView('public.persons');
+        $helpers->createView('persons');
+        $helpers->dropViewDoUtils('public.persons');
+        $helpers->executeSqlFile($sql);
+        $helpers->refreshMaterializedView('public.cobertura_materializada');
+        $helpers->dropMaterializedView('public.cobertura_materializada');
+    } finally {
+        unlink($sql);
+    }
+
+    config(['audit.skip' => []]);
+    $helpers->dropAuditTriggers();
+    $helpers->createAuditTriggers();
+
+    expect(DB::table('information_schema.views')->where('table_name', 'persons')->exists())->toBeFalse()
+        ->and(DB::table('information_schema.triggers')->where('trigger_name', 'like', '%_audit')->exists())->toBeTrue();
+});
+
+test('acha o usuário desconhecido, a categoria de configuração pelo nome e os relatórios do cliente', function () {
+    $helpers = auxiliaresDeMigracao();
+    LegacyPerson::query()->where('nome', 'Desconhecido')->update(['nome' => 'Desconhecido antigo']);
+
+    expect($helpers->checkUnknowUserExists())->toBeFalse()
+        ->and(fn () => $helpers->getUnknowUserId())->toThrow(Exception::class, 'Unknow user not found');
+
+    $pessoa = LegacyPersonFactory::new()->create(['nome' => 'Desconhecido']);
+    $categoria = SettingCategory::query()->firstOrFail();
+    Setting::query()->updateOrCreate(['key' => 'legacy.report.mostrar_relatorios'], ['value' => 'cliente-a', 'setting_category_id' => $categoria->id, 'type' => 'string']);
+
+    expect($helpers->getUnknowUserId())->toBe($pessoa->getKey())
+        ->and($helpers->chama('getSettingCategoryIdByName', $categoria->name))->toBe($categoria->id)
+        ->and($helpers->chama('getSettingCategoryIdByName', 'categoria que não existe'))->toBe(SettingCategory::query()->first()->id)
+        ->and($helpers->isReportFor('cliente-a'))->toBeTrue()
+        ->and($helpers->isNotReportFor('cliente-b'))->toBeTrue();
 });
