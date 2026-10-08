@@ -232,7 +232,7 @@ test('o preview mostra os filtros, as contagens e os avisos, e guarda tudo na se
         ->assertSee("Ensino Fundamental ({$this->course->getKey()})")
         ->assertSee("Primeiro Ano ({$this->grade->getKey()})")
         ->assertSee("Matemática ({$this->discipline->getKey()})")
-        ->assertSee('execute-form')
+        ->assertSee('id="execute-form"', false)
         ->assertViewHas('totalIeducar', 1)
         ->assertViewHas('totalIdiario', 0)
         ->assertViewHas('blockingError', null)
@@ -245,7 +245,7 @@ test('o preview bloqueia quando não há nada a excluir', function () {
     ($this->preview)([], array_diff($this->operations, ['remove_records']))
         ->assertOk()
         ->assertSee('Nenhum registro encontrado para os filtros selecionados.')
-        ->assertDontSee('execute-form');
+        ->assertDontSee('id="execute-form"', false);
 });
 
 test('o preview bloqueia quando há vínculos protegidos, detalhando quem os bloqueia', function () {
@@ -261,7 +261,7 @@ test('o preview bloqueia quando há vínculos protegidos, detalhando quem os blo
         ->assertOk()
         ->assertSee('Não é possível executar a operação.')
         ->assertSeeInOrder(['Matemática', 'Escola Aurora', 'Primeiro Ano', '2029'])
-        ->assertDontSee('execute-form');
+        ->assertDontSee('id="execute-form"', false);
 });
 
 test('executar sem o preview na sessão volta ao formulário', function () {
