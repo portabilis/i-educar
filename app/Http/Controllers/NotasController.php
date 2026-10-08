@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostNotasRequest;
+use iEducar\Modules\Enrollments\Exceptions\StudentExemptedFromDisciplineStage;
 use iEducar\Modules\EvaluationRules\Exceptions\DisciplineNotExistsForRegistrationStage;
 use iEducar\Modules\EvaluationRules\Exceptions\DisciplineNotExistsForSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\ExamScoreGreaterThanMaxAllowed;
@@ -41,6 +42,16 @@ class NotasController extends DiarioController
                 etapa: $etapa,
                 quantidadeEtapas: $quantidadeEtapas,
             )) {
+                if ($this->service->isAlunoDispensadoNaEtapa(
+                    componenteCurricularId: $componenteCurricularId,
+                    registration: $matricula,
+                    turmaId: $turmaId,
+                    etapa: $etapa,
+                    quantidadeEtapas: $quantidadeEtapas,
+                )) {
+                    throw new StudentExemptedFromDisciplineStage($componenteCurricularId, $matricula->getKey(), $etapa);
+                }
+
                 throw new DisciplineNotExistsForRegistrationStage($componenteCurricularId, $matricula->getKey(), $etapa);
             }
 
@@ -91,7 +102,7 @@ class NotasController extends DiarioController
             }
 
             $this->service->atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId, $matricula);
-        } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException|DisciplineNotExistsForSchoolClass|DisciplineNotExistsForRegistrationStage|MissingStagesException|StageNotExistsForSchoolClass|ScoreGreaterThanMaxAllowed|ScoreLesserThanMinAllowed|ExamScoreGreaterThanMaxAllowed $exception) {
+        } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException|DisciplineNotExistsForSchoolClass|DisciplineNotExistsForRegistrationStage|StudentExemptedFromDisciplineStage|MissingStagesException|StageNotExistsForSchoolClass|ScoreGreaterThanMaxAllowed|ScoreLesserThanMinAllowed|ExamScoreGreaterThanMaxAllowed $exception) {
             return $this->unprocessableResponse($exception);
         } catch (\Exception $exception) {
             return response()->json([

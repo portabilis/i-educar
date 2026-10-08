@@ -107,16 +107,43 @@ class DiarioControllerService
             return $this->isComponenteNaMatriculaNaEtapa($componenteCurricularId, $matriculaId, $turmaId, (int) $etapa);
         }
 
-        $etapasComponente = \App_Model_IedFinder::getEtapasComponente($turmaId, $componenteCurricularId)
-            ?: ($quantidadeEtapas > 0 ? range(1, $quantidadeEtapas) : []);
-
-        foreach ($etapasComponente as $etapaComponente) {
+        foreach ($this->getEtapasCursadas($componenteCurricularId, $turmaId, $quantidadeEtapas) as $etapaComponente) {
             if ($this->isComponenteNaMatriculaNaEtapa($componenteCurricularId, $matriculaId, $turmaId, (int) $etapaComponente)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Na etapa numérica, a etapa está entre as dispensadas; no exame (Rc), todas as etapas que o componente cursa estão.
+     */
+    public function isAlunoDispensadoNaEtapa(int $componenteCurricularId, LegacyRegistration $registration, int $turmaId, string $etapa, int $quantidadeEtapas): bool
+    {
+        $etapasDispensadas = \App_Model_IedFinder::validaDispensaPorMatricula(
+            $registration->getKey(),
+            $registration->ref_ref_cod_serie,
+            $registration->ref_ref_cod_escola,
+            $componenteCurricularId
+        );
+
+        if (is_numeric($etapa)) {
+            return in_array((int) $etapa, $etapasDispensadas);
+        }
+
+        $etapasCursadas = $this->getEtapasCursadas($componenteCurricularId, $turmaId, $quantidadeEtapas);
+
+        return $etapasCursadas && !array_diff($etapasCursadas, $etapasDispensadas);
+    }
+
+    /**
+     * Etapas específicas do componente ou, sem elas, as do calendário.
+     */
+    private function getEtapasCursadas(int $componenteCurricularId, int $turmaId, int $quantidadeEtapas): array
+    {
+        return \App_Model_IedFinder::getEtapasComponente($turmaId, $componenteCurricularId)
+            ?: ($quantidadeEtapas > 0 ? range(1, $quantidadeEtapas) : []);
     }
 
     private function isComponenteNaMatriculaNaEtapa(int $componenteCurricularId, int $matriculaId, int $turmaId, int $etapa): bool

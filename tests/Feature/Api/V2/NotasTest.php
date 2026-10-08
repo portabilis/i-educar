@@ -422,8 +422,8 @@ test('rejects score in a stage exempted for the registration', function () {
     $this->postScore($data, ['nota' => 6, 'recuperacao' => null, 'etapa' => 2])
         ->assertStatus(422)
         ->assertJson([
-            'message' => "Componente curricular de código {$data['discipline']->getKey()} não existe para a matrícula {$data['registration']->getKey()} na etapa 2.",
-            'code' => 1013,
+            'message' => "O(a) aluno(a) da matrícula {$data['registration']->getKey()} está dispensado(a) do componente curricular de código {$data['discipline']->getKey()} na etapa 2.",
+            'code' => 1014,
             'extra' => [
                 'registration_id' => $data['registration']->getKey(),
                 'discipline_id' => $data['discipline']->getKey(),
@@ -449,7 +449,11 @@ test('rejects exam score of a discipline exempted in every stage', function () {
 
     $this->postScore($data, ['nota' => 6, 'recuperacao' => null, 'etapa' => 'Rc'])
         ->assertStatus(422)
-        ->assertJson(['code' => 1013, 'extra' => ['stage' => 'Rc']]);
+        ->assertJson([
+            'message' => "O(a) aluno(a) da matrícula {$data['registration']->getKey()} está dispensado(a) do componente curricular de código {$data['discipline']->getKey()} em todas as etapas e não pode receber nota de exame.",
+            'code' => 1014,
+            'extra' => ['stage' => 'Rc'],
+        ]);
 
     $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
 });
@@ -511,7 +515,11 @@ test('rejects exam score of a discipline exempted in every specific stage', func
 
     $this->postScore($data, ['nota' => 6, 'recuperacao' => null, 'etapa' => 'Rc'])
         ->assertStatus(422)
-        ->assertJson(['code' => 1013, 'extra' => ['stage' => 'Rc']]);
+        ->assertJson([
+            'message' => "O(a) aluno(a) da matrícula {$data['registration']->getKey()} está dispensado(a) do componente curricular de código {$data['discipline']->getKey()} em todas as etapas e não pode receber nota de exame.",
+            'code' => 1014,
+            'extra' => ['stage' => 'Rc'],
+        ]);
 });
 
 test('rejects score of a discipline outside the dependency of the registration', function () {
