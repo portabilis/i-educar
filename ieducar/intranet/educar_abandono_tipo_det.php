@@ -36,7 +36,11 @@ return new class extends clsDetalhe
         $registro = LegacyAbandonmentType::find($this->cod_abandono_tipo)?->getAttributes();
 
         if (!$registro) {
-            $this->simpleRedirect(url: 'educar_abandono_tipo_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_abandono_tipo_lst.php',
+                registro: 'motivo de deixou de frequentar',
+                codigo: $this->cod_abandono_tipo,
+            );
         }
 
         $obj_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);

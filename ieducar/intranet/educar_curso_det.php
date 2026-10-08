@@ -51,7 +51,11 @@ return new class extends clsDetalhe
         $curso = LegacyCourse::query()->find($cod_curso);
 
         if (!$curso) {
-            $this->simpleRedirect('educar_curso_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_curso_lst.php',
+                registro: 'curso',
+                codigo: $cod_curso,
+            );
         }
 
         $registro = $curso->getAttributes();
@@ -128,6 +132,8 @@ return new class extends clsDetalhe
         $lst = $curso->qualifications?->toArray();
 
         if (!empty($lst)) {
+            // Inalcançável: a relação `qualifications` não existe mais em `LegacyCourse`, então `$lst` é sempre nulo.
+            // @codeCoverageIgnoreStart
             $tabela = '<TABLE>
                  <TR align=center>
                      <TD bgcolor=#ccdce6><B>Nome</B></TD>
@@ -150,15 +156,22 @@ return new class extends clsDetalhe
                 $cont++;
             }
             $tabela .= '</TABLE>';
+            // @codeCoverageIgnoreEnd
         }
 
         if ($habilitacao) {
+            // Inalcançável: `$habilitacao` só é definida no bloco acima, que nunca roda.
+            // @codeCoverageIgnoreStart
             $this->addDetalhe(['Habilitação', $tabela]);
+            // @codeCoverageIgnoreEnd
         }
 
         if ($registro['padrao_ano_escolar']) {
             if ($registro['padrao_ano_escolar'] == 0) {
+                // Inalcançável: o `if` externo só entra com valor verdadeiro, que nunca é igual a 0.
+                // @codeCoverageIgnoreStart
                 $registro['padrao_ano_escolar'] = 'não';
+                // @codeCoverageIgnoreEnd
             } elseif ($registro['padrao_ano_escolar'] == 1) {
                 $registro['padrao_ano_escolar'] = 'sim';
             }

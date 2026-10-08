@@ -299,7 +299,10 @@ class LegacyIndividual extends Model
         $cpf = preg_replace('/\D/', '', (string) $cpf);
 
         if ($cpf === null) {
+            // Inalcançável: sem o modificador `u`, o `preg_replace()` não falha com texto.
+            // @codeCoverageIgnoreStart
             return null;
+            // @codeCoverageIgnoreEnd
         }
 
         return static::query()->where('cpf', (int) $cpf)->first();

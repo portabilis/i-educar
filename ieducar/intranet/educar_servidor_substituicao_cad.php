@@ -60,7 +60,11 @@ return new class extends clsCadastro
 
             // Nenhum servidor com o código de servidor e instituição
             if ($cargaHoraria === null) {
-                $this->simpleRedirect(url: 'educar_servidor_lst.php');
+                $this->redirectNotFound(
+                    url: 'educar_servidor_lst.php',
+                    registro: 'servidor',
+                    codigo: $this->ref_cod_servidor,
+                );
             }
 
             $lista = EmployeeAllocation::query()
@@ -86,7 +90,10 @@ return new class extends clsCadastro
 
             $this->carga_horaria = $cargaHoraria;
         } else {
-            $this->simpleRedirect(url: 'educar_servidor_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_servidor_lst.php',
+                registro: 'servidor',
+            );
         }
 
         $this->url_cancelar = sprintf(

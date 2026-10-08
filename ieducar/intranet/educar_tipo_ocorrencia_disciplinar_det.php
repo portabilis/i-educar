@@ -35,7 +35,11 @@ return new class extends clsDetalhe
         $registro = LegacyDisciplinaryOccurrenceType::find($this->cod_tipo_ocorrencia_disciplinar)?->getAttributes();
 
         if (!$registro) {
-            $this->simpleRedirect('educar_tipo_ocorrencia_disciplinar_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_tipo_ocorrencia_disciplinar_lst.php',
+                registro: 'tipo de ocorrência disciplinar',
+                codigo: $this->cod_tipo_ocorrencia_disciplinar,
+            );
         }
 
         $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);

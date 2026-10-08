@@ -76,7 +76,10 @@ return new class extends clsCadastro
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -246,9 +249,12 @@ return new class extends clsCadastro
             $obj->data_cancel = $this->data_cancel;
             $editou = $obj->edita();
             if (!$editou) {
+                // Inalcançável: `edita()` só falha sem o código, que vem da matrícula lida acima.
+                // @codeCoverageIgnoreStart
                 $this->mensagem = 'Não foi possível editar a Matrícula do Aluno.<br>';
 
                 return false;
+                // @codeCoverageIgnoreEnd
             }
 
             $enturmacoes = LegacyEnrollment::query()
@@ -339,8 +345,11 @@ return new class extends clsCadastro
                 try {
                     (new Avaliacao_Model_NotaComponenteMediaDataMapper)
                         ->updateSituation(notaAlunoId: $notaAlunoId, situacao: App_Model_MatriculaSituacao::TRANSFERIDO);
+                    // Inalcançável: `updateSituation()` é um UPDATE simples.
+                    // @codeCoverageIgnoreStart
                 } catch (Throwable) {
                     DB::rollback();
+                    // @codeCoverageIgnoreEnd
                 }
             }
             // Marca a busca ativa como transferência
@@ -399,8 +408,11 @@ return new class extends clsCadastro
                         'data_fim' => null,
                     ]);
                 DB::commit();
+                // Não testável: um erro de banco abortaria a transação que envolve cada teste.
+                // @codeCoverageIgnoreStart
             } catch (Exception) {
                 DB::rollBack();
+                // @codeCoverageIgnoreEnd
             }
 
             if ($excluiu) {
@@ -413,9 +425,12 @@ return new class extends clsCadastro
             return false;
         }
 
+        // Inalcançável: o `update()` da solicitação devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Formular()

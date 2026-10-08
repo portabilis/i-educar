@@ -51,13 +51,24 @@ return new class extends clsCadastro
             $det_matricula = $obj_matricula->detalhe();
 
             if (!$det_matricula) {
-                $this->simpleRedirect('educar_matricula_lst.php');
+                $this->redirectNotFound(
+                    url: 'educar_matricula_lst.php',
+                    registro: 'matrícula',
+                    feminino: true,
+                    codigo: $this->ref_cod_matricula,
+                    dica: 'Acesse a matrícula pela ficha do aluno.',
+                );
             }
 
             $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
             $this->ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
         } else {
-            $this->simpleRedirect('educar_matricula_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_matricula_lst.php',
+                registro: 'matrícula',
+                feminino: true,
+                dica: 'Acesse a matrícula pela ficha do aluno.',
+            );
         }
 
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_serie) &&
@@ -174,10 +185,13 @@ return new class extends clsCadastro
                 turma: $this->ref_cod_turma,
                 ano: $ano
             );
+            // Inalcançável: a busca lança `DisciplineNotLinkedToRegistrationException`, que não é `App_Model_Exception`.
+            // @codeCoverageIgnoreStart
         } catch (App_Model_Exception $e) {
             $this->mensagem = $e->getMessage();
 
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         foreach ($componentes as $componente) {
@@ -206,7 +220,10 @@ return new class extends clsCadastro
     private function dependenciaValida(): bool
     {
         if (!LegacyRegistration::query()->whereKey($this->ref_cod_matricula)->exists()) {
+            // Inalcançável: a tela sai antes para matrícula inexistente.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         return LegacyDisciplineAcademicYear::query()
@@ -333,7 +350,10 @@ SQL;
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
         $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
 
+        // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+        // @codeCoverageIgnoreStart
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()

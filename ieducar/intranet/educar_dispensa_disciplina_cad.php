@@ -62,11 +62,25 @@ return new class extends clsCadastro
         if (is_numeric($this->ref_cod_matricula)) {
             $obj_matricula = new clsPmieducarMatricula(cod_matricula: $this->ref_cod_matricula, ativo: 1);
             $det_matricula = $obj_matricula->detalhe();
-            $this->redirectIf(condition: !$det_matricula, url: 'educar_matricula_lst.php');
+            if (!$det_matricula) {
+                $this->redirectNotFound(
+                    url: 'educar_matricula_lst.php',
+                    registro: 'matrícula',
+                    feminino: true,
+                    codigo: $this->ref_cod_matricula,
+                    dica: 'Acesse a matrícula pela ficha do aluno.',
+                );
+            }
+
             $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
             $this->ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
         } else {
-            $this->simpleRedirect('educar_matricula_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_matricula_lst.php',
+                registro: 'matrícula',
+                feminino: true,
+                dica: 'Acesse a matrícula pela ficha do aluno.',
+            );
         }
 
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_serie) &&
@@ -197,9 +211,12 @@ return new class extends clsCadastro
                 turma: $this->ref_cod_turma
             );
         } catch (App_Model_Exception $e) {
+            // Inalcançável: a busca lança `DisciplineNotLinkedToRegistrationException`, que não é `App_Model_Exception`.
+            // @codeCoverageIgnoreStart
             $this->mensagem = $e->getMessage();
 
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         foreach ($componentes as $componente) {
@@ -235,6 +252,8 @@ return new class extends clsCadastro
 
     public function existeComponenteSerie($serieId, $escolaId, $disciplinaId)
     {
+        // Inalcançável: nada chama este método.
+        // @codeCoverageIgnoreStart
         try {
             App_Model_IedFinder::getEscolaSerieDisciplina(
                 serieId: $serieId,
@@ -246,6 +265,7 @@ return new class extends clsCadastro
         }
 
         return true;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Novo()
@@ -359,9 +379,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
+        // Inalcançável: `edita()` só falha sem os códigos, que a tela sempre tem.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br />';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()
@@ -418,9 +441,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
+        // Inalcançável: `excluir()` só falha sem os códigos, que a tela sempre tem.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br />';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function montaEtapas()

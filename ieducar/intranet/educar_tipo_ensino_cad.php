@@ -38,12 +38,12 @@ return new class extends clsCadastro
 
         if (is_numeric($this->cod_tipo_ensino)) {
             $registro = LegacyEducationType::find($this->cod_tipo_ensino)?->getAttributes();
-            if (!$registro) {
-                $this->simpleRedirect('educar_tipo_ensino_lst.php');
-            }
-
-            if (!$registro['ativo']) {
-                $this->simpleRedirect('educar_tipo_ensino_lst.php');
+            if (!$registro || !$registro['ativo']) {
+                $this->redirectNotFound(
+                    url: 'educar_tipo_ensino_lst.php',
+                    registro: 'tipo de ensino',
+                    codigo: $this->cod_tipo_ensino,
+                );
             }
 
             if ($registro) {
