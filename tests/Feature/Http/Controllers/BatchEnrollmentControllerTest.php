@@ -1,8 +1,12 @@
 <?php
 
+use App\Exceptions\Registration\RegistrationException;
+use App\Http\Controllers\BatchEnrollmentController;
 use App\Listeners\LoginLegacySession;
 use App\Models\LegacyEnrollment;
 use App\Process;
+use App\Services\EnrollmentService;
+use App\Services\RegistrationService;
 use App\User;
 use Database\Factories\LegacyGeneralConfigurationFactory;
 use Database\Factories\LegacyUserFactory;
@@ -122,4 +126,68 @@ test('usuários de escola só operam turmas das próprias escolas', function () 
     $this->get("/enturmacao-em-lote/{$this->schoolClass->getKey()}")
         ->assertOk()
         ->assertViewHas('canCancelRegistration', false);
+});
+
+test('as mensagens contam quantos foram enturmados e quantos falharam por erro inesperado', function () {
+    $this->post("/enturmacao-em-lote/{$this->schoolClass->getKey()}", ['date' => '10/03/2030', 'registrations' => [$this->ana->getKey(), $this->bia->getKey()]])
+        ->assertOk()
+        ->assertSee('Foram enturmados 2 alunos.');
+
+    $this->schoolClass->update(['max_aluno' => 10]);
+    $enrollments = Mockery::mock(EnrollmentService::class);
+    $enrollments->shouldReceive('enroll')->andThrow(new RuntimeException('Turma bloqueada'));
+    app()->instance(EnrollmentService::class, $enrollments);
+    $other = $this->scenario->registration(['ref_cod_aluno' => $this->scenario->student('Caio Costa'), 'data_matricula' => '2030-02-01']);
+    $another = $this->scenario->registration(['ref_cod_aluno' => $this->scenario->student('Davi Dias'), 'data_matricula' => '2030-02-01']);
+
+    $this->post("/enturmacao-em-lote/{$this->schoolClass->getKey()}", ['date' => '10/03/2030', 'registrations' => [$other->getKey(), $another->getKey()]])
+        ->assertOk()
+        ->assertSee('Não foi possível enturmar 2 alunos.')
+        ->assertViewHas('fails', fn ($fails) => $fails->first((string) $other->getKey()) === 'Turma bloqueada');
+});
+
+test('as mensagens da desenturmação contam uma saída e várias falhas', function () {
+    $ana = $this->scenario->enroll($this->ana, $this->schoolClass, ['data_enturmacao' => '2030-02-05']);
+    $bia = $this->scenario->enroll($this->bia, $this->schoolClass, ['data_enturmacao' => '2030-02-05']);
+
+    $this->post("/cancelar-enturmacao-em-lote/{$this->schoolClass->getKey()}", ['date' => '01/01/2030', 'enrollments' => [$ana->getKey(), $bia->getKey()]])
+        ->assertOk()
+        ->assertSee('Não foi possível desenturmar 2 alunos.');
+
+    $this->post("/cancelar-enturmacao-em-lote/{$this->schoolClass->getKey()}", ['date' => '10/03/2030', 'enrollments' => [$ana->getKey()]])
+        ->assertOk()
+        ->assertSee('Foi desenturmado 1 aluno.');
+});
+
+test('as mensagens do cancelamento de matrícula contam uma ou várias falhas e um cancelamento', function () {
+    $this->scenario->enroll($this->ana, $this->schoolClass, ['data_enturmacao' => '2030-02-05']);
+    $this->scenario->enroll($this->bia, $this->schoolClass, ['data_enturmacao' => '2030-02-05']);
+    $real = app(RegistrationService::class);
+
+    $registrations = Mockery::mock($real)->makePartial();
+    $registrations->shouldReceive('cancelRegistration')->with(Mockery::on(fn ($registration) => $registration->is($this->ana)), Mockery::any())->andThrow(new RegistrationException('Matrícula com notas lançadas'));
+    $registrations->shouldReceive('cancelRegistration')->with(Mockery::on(fn ($registration) => $registration->is($this->bia)), Mockery::any())->andThrow(new RuntimeException('falha inesperada'));
+    app()->instance(RegistrationService::class, $registrations);
+
+    $this->post("/cancelar-matricula-em-lote/{$this->schoolClass->getKey()}", ['registrations' => [$this->ana->getKey(), $this->bia->getKey()]])
+        ->assertOk()
+        ->assertSee('Não foi possível cancelar 2 matrículas.')
+        ->assertViewHas('fails', fn ($fails) => $fails->first((string) $this->ana->getKey()) === 'Matrícula com notas lançadas'
+            && $fails->first((string) $this->bia->getKey()) === 'Não foi possível cancelar a matrícula.');
+
+    $this->post("/cancelar-matricula-em-lote/{$this->schoolClass->getKey()}", ['registrations' => [$this->ana->getKey()]])
+        ->assertOk()
+        ->assertSee('Não foi possível cancelar 1 matrícula.');
+
+    app()->instance(RegistrationService::class, $real);
+
+    $this->post("/cancelar-matricula-em-lote/{$this->schoolClass->getKey()}", ['registrations' => [$this->ana->getKey()]])
+        ->assertOk()
+        ->assertSee('Foi cancelada 1 matrícula.');
+});
+
+test('sem usuário logado não pode cancelar matrículas', function () {
+    auth()->logout();
+
+    expect((fn () => $this->canCancelRegistration())->call(app(BatchEnrollmentController::class)))->toBeFalse();
 });
