@@ -3000,17 +3000,23 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
                     $verificaDispensa = App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $id);
                     $consideraEtapas = [];
+                    // A dispensa pode ter etapas que o calendário da matrícula não tem; só as do calendário saem do divisor.
+                    $etapasDispensadas = 0;
 
                     for ($i = 1; $i <= $qtdeEtapas; $i++) {
                         $consideraEtapas['C' . $i] = in_array($i, $verificaDispensa) ? 0 : 1;
 
                         if (in_array($i, $verificaDispensa)) {
                             $consideraEtapas['E' . $i] = 0;
+                            $etapasDispensadas++;
                         }
                     }
 
-                    if ($verificaDispensa) {
-                        $qtdeEtapas = $qtdeEtapas - count($verificaDispensa);
+                    $qtdeEtapas -= $etapasDispensadas;
+
+                    // Componente dispensado em todas as etapas do calendário não tem média.
+                    if ($qtdeEtapas <= 0) {
+                        continue;
                     }
 
                     $notas = array_merge(['Se' => 0, 'Et' => $qtdeEtapas], $consideraEtapas);

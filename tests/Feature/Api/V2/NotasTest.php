@@ -2,6 +2,7 @@
 
 use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDisciplineScore;
+use App\Models\LegacyDisciplineScoreAverage;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGeneralScore;
 use Database\Factories\LegacyDisciplineExemptionFactory;
@@ -366,5 +367,53 @@ test('stores score of a discipline exempted for the registration and removes its
     $this->assertDatabaseMissing('modules.nota_exame', [
         'ref_cod_matricula' => $registration->getKey(),
         'ref_cod_componente_curricular' => $data['discipline']->getKey(),
+    ]);
+});
+
+test('calculates the discipline average without the exempted stages', function () {
+    $data = $this->createScoreData();
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 4);
+    $this->exemptDiscipline($data, [2]);
+
+    $this->postScore($data, ['nota' => 6, 'recuperacao' => null])->assertStatus(201);
+
+    // Fórmula Se / Et: 6 dividido pelas 3 etapas não dispensadas.
+    $this->assertDatabaseHas(LegacyDisciplineScoreAverage::class, [
+        'componente_curricular_id' => $data['discipline']->getKey(),
+        'media' => 2,
+    ]);
+});
+
+test('ignores exempted stages outside the school calendar when calculating the average', function () {
+    $data = $this->createScoreData();
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 1);
+    $this->exemptDiscipline($data, [2, 3, 4]);
+
+    $this->postScore($data, ['nota' => 6, 'recuperacao' => null])
+        ->assertStatus(201)
+        ->assertJson(['message' => 'Nota salva com sucesso.']);
+
+    $this->assertDatabaseHas(LegacyDisciplineScoreAverage::class, [
+        'componente_curricular_id' => $data['discipline']->getKey(),
+        'media' => 6,
+    ]);
+});
+
+test('stores score without average when every stage of the school calendar is exempted', function () {
+    $data = $this->createScoreData();
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 1);
+    $this->exemptDiscipline($data, [1]);
+
+    $this->postScore($data, ['nota' => 6, 'recuperacao' => null])
+        ->assertStatus(201)
+        ->assertJson(['message' => 'Nota salva com sucesso.']);
+
+    $this->assertDatabaseHas(LegacyDisciplineScore::class, [
+        'componente_curricular_id' => $data['discipline']->getKey(),
+        'etapa' => 1,
+        'nota_original' => 6,
+    ]);
+    $this->assertDatabaseMissing(LegacyDisciplineScoreAverage::class, [
+        'componente_curricular_id' => $data['discipline']->getKey(),
     ]);
 });

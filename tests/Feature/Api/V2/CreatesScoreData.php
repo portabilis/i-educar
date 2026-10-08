@@ -5,11 +5,13 @@ namespace Tests\Feature\Api\V2;
 use Database\Factories\LegacyAcademicYearStageFactory;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyDisciplineAcademicYearFactory;
+use Database\Factories\LegacyDisciplineExemptionFactory;
 use Database\Factories\LegacyDisciplineFactory;
 use Database\Factories\LegacyDisciplineSchoolClassFactory;
 use Database\Factories\LegacyEnrollmentFactory;
 use Database\Factories\LegacyEvaluationRuleFactory;
 use Database\Factories\LegacyEvaluationRuleGradeYearFactory;
+use Database\Factories\LegacyExemptionStageFactory;
 use Database\Factories\LegacyGradeFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacySchoolAcademicYearFactory;
@@ -131,6 +133,22 @@ trait CreatesScoreData
             'discipline' => $discipline,
             'registration' => $registration,
         ];
+    }
+
+    protected function exemptDiscipline(array $data, array $stages): void
+    {
+        $registration = $data['registration'];
+
+        $exemption = LegacyDisciplineExemptionFactory::new()->create([
+            'ref_cod_matricula' => $registration,
+            'ref_cod_disciplina' => $data['discipline'],
+            'ref_cod_escola' => $registration->ref_ref_cod_escola,
+            'ref_cod_serie' => $registration->ref_ref_cod_serie,
+        ]);
+
+        foreach ($stages as $stage) {
+            LegacyExemptionStageFactory::new()->create(['ref_cod_dispensa' => $exemption, 'etapa' => $stage]);
+        }
     }
 
     protected function scorePayload(array $data, array $overrides = []): array
