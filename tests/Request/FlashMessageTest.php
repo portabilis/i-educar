@@ -53,13 +53,15 @@ test('sem aviso na sessão não monta aviso nenhum', function () {
 test('no login o erro é um alerta e a confirmação é um status', function () {
     auth()->logout();
 
+    // Sem usuário logado, o login desvia para a tela de suspensão quando a
+    // instituição não está ativa no i-Educar; o force pula essa checagem.
     $this->withSession(['errors' => (new ViewErrorBag)->put('default', new MessageBag(['login' => 'Usuário ou senha incorretos.']))])
-        ->get('/login')
+        ->get('/login?force=1')
         ->assertOk()
         ->assertSee('<p class="error" role="alert">Usuário ou senha incorretos.</p>', false);
 
     $this->withSession(['status' => 'Enviamos o link para o seu e-mail.'])
-        ->get('/login')
+        ->get('/login?force=1')
         ->assertOk()
         ->assertSee('<p class="success" role="status">Enviamos o link para o seu e-mail.</p>', false);
 });
