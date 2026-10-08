@@ -22,7 +22,7 @@ test('mostra os dados da função e os links de novo e de edição', function (i
 
     $this->get(($this->url)($role))
         ->assertOk()
-        ->assertSeeInOrder(['Funcão', (string) $role->getKey(), 'Nome Funcão', 'Registro Alfa', 'Abreviatura', 'RA', 'Professor', $shown])
+        ->assertSeeInOrder(['Funcão', (string) $role->getKey(), 'Nome Funcão', 'Registro Alfa', 'Abreviatura', 'RA', 'Permitir vincular a turmas?', $shown])
         ->assertSee('educar_funcao_cad.php?cod_funcao=' . $role->getKey(), false)
         ->assertSee('educar_funcao_lst.php', false);
 })->with(['professor' => [1, 'Sim'], 'não professor' => [0, 'Não']]);

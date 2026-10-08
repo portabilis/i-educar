@@ -29,13 +29,18 @@ beforeEach(function () {
     };
 });
 
-test('cadastra uma função', function (string $teacher, int $stored) {
+// "Permitir vincular a turmas?" é um checkbox: marcado envia 1, desmarcado não envia nada.
+test('cadastra uma função', function (bool $teacher, int $stored) {
     $payload = LegacyFields::from($this->get($this->new)->assertOk()->getContent(), [
         'ref_cod_instituicao' => $this->institution,
         'nm_funcao' => 'Registro Alfa',
         'abreviatura' => 'RA',
-        'professor' => $teacher,
+        'professor' => '1',
     ]);
+
+    if (!$teacher) {
+        unset($payload['professor']);
+    }
 
     expect($payload['tipoacao'])->toBe('Novo');
 
@@ -47,7 +52,7 @@ test('cadastra uma função', function (string $teacher, int $stored) {
         ->ativo->toBe(1)
         ->ref_cod_instituicao->toBe($this->institution)
         ->ref_usuario_cad->toBe($this->user->getKey());
-})->with(['professor' => ['S', 1], 'não professor' => ['N', 0]]);
+})->with(['professor' => [true, 1], 'não professor' => [false, 0]]);
 
 test('abre a edição com os dados gravados e edita a função', function () {
     $role = ($this->role)();
@@ -57,10 +62,12 @@ test('abre a edição com os dados gravados e edita a função', function () {
     expect($fields['tipoacao'])->toBe('Editar')
         ->and($fields['nm_funcao'])->toBe('Registro Original')
         ->and($fields['abreviatura'])->toBe('RO')
-        ->and($fields['professor'])->toBe('S')
+        ->and($fields['professor'])->toBe('1')
         ->and($fields['cod_funcao'])->toBe((string) $role->getKey());
 
-    $this->post(($this->edit)($role), ['nm_funcao' => 'Registro Renomeado', 'abreviatura' => 'RR', 'professor' => 'N', 'ref_cod_instituicao' => $this->institution] + $fields)
+    unset($fields['professor']);
+
+    $this->post(($this->edit)($role), ['nm_funcao' => 'Registro Renomeado', 'abreviatura' => 'RR', 'ref_cod_instituicao' => $this->institution] + $fields)
         ->assertRedirect('educar_funcao_lst.php');
 
     expect($role->refresh())
@@ -74,7 +81,7 @@ test('abre a edição de uma função que não é de professor', function () {
     $role = ($this->role)();
     $role->update(['professor' => 0]);
 
-    expect(LegacyFields::from($this->get(($this->edit)($role))->assertOk()->getContent())['professor'])->toBe('N');
+    expect(LegacyFields::from($this->get(($this->edit)($role))->assertOk()->getContent()))->not->toHaveKey('professor');
 });
 
 test('exclui a função', function () {
