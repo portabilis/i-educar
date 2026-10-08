@@ -118,4 +118,9 @@ class ReCaptchaV3Test extends TestCase
     {
         $this->assertSame('A verificação do reCAPTCHA falhou', (new ReCaptchaV3)->message());
     }
+
+    public function test_mensagem_de_falha()
+    {
+        $this->assertSame('A verificação do reCAPTCHA falhou', (new ReCaptchaV3)->message());
+    }
 }
