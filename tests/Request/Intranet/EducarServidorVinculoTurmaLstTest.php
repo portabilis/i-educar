@@ -17,7 +17,18 @@ beforeEach(function () {
 
     $this->keys = "ref_cod_servidor={$this->id}&ref_cod_instituicao={$this->institution}";
     $this->detail = fn ($link) => 'educar_servidor_vinculo_turma_det.php?id=' . $link->getKey();
-    $this->list = fn (array $query = []) => $this->get("/intranet/educar_servidor_vinculo_turma_lst.php?{$this->keys}&" . http_build_query($query))->assertOk();
+    // Sem ano na URL a tela filtra pelo ano atual; o cenário é de 2030.
+    $this->list = fn (array $query = []) => $this->get("/intranet/educar_servidor_vinculo_turma_lst.php?{$this->keys}&" . http_build_query($query + ['ano' => 2030]))->assertOk();
+});
+
+test('sem ano na URL, lista só o ano atual', function () {
+    $old = $this->ana->classLink($this->school->schoolClass(['nm_turma' => 'Turma Antiga']));
+    $current = $this->ana->classLink($this->school->schoolClass(['nm_turma' => 'Turma Atual', 'ano' => now()->year]), ['ano' => now()->year]);
+
+    $this->get("/intranet/educar_servidor_vinculo_turma_lst.php?{$this->keys}")
+        ->assertOk()
+        ->assertSee(($this->detail)($current), false)
+        ->assertDontSee(($this->detail)($old), false);
 });
 
 test('lista os vínculos por escola, curso, série e turma, com a função, o tipo e os botões', function () {
