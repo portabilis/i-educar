@@ -202,4 +202,57 @@ class FileExportServiceTest extends TestCase
         $job->failed(new RuntimeException('boom'));
         $this->assertSame(FileExportStatus::ERROR->value, $this->export->refresh()->status_id);
     }
+
+    /**
+     * Troca o disco por um que diz não ter gravado o arquivo do padrão informado.
+     */
+    private function diskThatLoses(string $disk, string $pattern): void
+    {
+        $fake = \Mockery::mock(Storage::disk($disk))->makePartial();
+        $fake->shouldReceive('fileExists')->with(\Mockery::pattern($pattern))->andReturn(false);
+        Storage::set($disk, $fake);
+    }
+
+    public function test_falha_quando_a_ficha_do_aluno_nao_e_gravada(): void
+    {
+        $this->app->instance(StudentRecordReport::class, new class implements StudentRecordReport
+        {
+            public array $args = [];
+
+            public function dumps(array $options): string
+            {
+                return 'ficha em base64';
+            }
+        });
+        $this->diskThatLoses('local', '/Ficha_do_aluno\.pdf$/');
+
+        $service = new FileExportService($this->export, $this->args, 'local');
+        $service->setIssueStudentRecordReport(true);
+
+        $this->expectExceptionMessage('Não foi possível criar a ficha do aluno.');
+        $service->execute();
+    }
+
+    public function test_falha_quando_o_arquivo_compactado_nao_e_criado(): void
+    {
+        $this->diskThatLoses('local', '/\.zip$/');
+
+        $service = new FileExportService($this->export, $this->args, 'local');
+        $service->setIssueStudentRecordReport(false);
+
+        $this->expectExceptionMessage('Não foi possível criar o arquivo compactado.');
+        $service->execute();
+    }
+
+    public function test_falha_quando_o_arquivo_nao_chega_ao_disco_de_destino(): void
+    {
+        Storage::fake('destino');
+        $this->diskThatLoses('destino', '/\.zip$/');
+
+        $service = new FileExportService($this->export, $this->args, 'destino');
+        $service->setIssueStudentRecordReport(false);
+
+        $this->expectExceptionMessage('Não foi possível copia o arquivo compactado para o disco de destino.');
+        $service->execute();
+    }
 }
