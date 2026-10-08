@@ -9,6 +9,7 @@ use Database\Factories\LegacySchoolClassStageFactory;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\DB;
 use Tests\Request\Support\EnrollmentScenario;
 use Tests\TestCase;
 
@@ -111,4 +112,14 @@ test('atualiza as etapas do ano letivo das escolas do filtro', function () {
         ->and($stages[0]->dias_letivos)->toBe(100)
         ->and($stages[1]->data_inicio->format('Y-m-d'))->toBe('2030-08-01')
         ->and($stages[1]->data_fim->format('Y-m-d'))->toBe('2030-12-15');
+});
+
+test('avisa quando a atualização das etapas falha no banco', function () {
+    $database = Mockery::mock(app('db'))->makePartial();
+    $database->shouldReceive('commit')->andThrow(new RuntimeException('falha ao confirmar'));
+    DB::swap($database);
+
+    ($this->update)()
+        ->assertRedirect(route('stage.edit'))
+        ->assertSessionHas('error', 'Atualização em lote não realizada.');
 });
