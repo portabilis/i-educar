@@ -3,6 +3,8 @@
 namespace Tests\Unit\Services;
 
 use App\Exceptions\Registration\RegistrationException;
+use App\Models\LegacyEnrollment;
+use App\Models\LegacyRegistration;
 use App\Services\RegistrationService;
 use App\User;
 use App_Model_MatriculaSituacao;
@@ -94,5 +96,37 @@ class RegistrationServiceCancelTest extends TestCase
         $this->service->cancelRegistration($registration);
 
         $this->assertSame(0, $registration->refresh()->ativo);
+    }
+
+    public function test_avisa_quando_nao_consegue_desativar_as_enturmacoes(): void
+    {
+        $registration = LegacyRegistrationFactory::new()->create(['ativo' => 1]);
+        LegacyEnrollmentFactory::new()->create(['ref_cod_matricula' => $registration, 'ativo' => 1]);
+        LegacyEnrollment::saving(fn () => throw new \RuntimeException('banco indisponível'));
+
+        $this->expectException(RegistrationException::class);
+        $this->expectExceptionMessage('Não foi possível desativar as enturmações da matrícula.');
+
+        $this->service->cancelRegistration($registration);
+    }
+
+    public function test_avisa_quando_nao_consegue_marcar_a_ultima_matricula_da_sequencia(): void
+    {
+        $student = LegacyStudentFactory::new()->create();
+        $origin = LegacyGradeFactory::new()->create();
+        $destiny = LegacyGradeFactory::new()->create();
+        LegacyGradeSequenceFactory::new()->create(['ref_serie_origem' => $origin, 'ref_serie_destino' => $destiny, 'ativo' => 1]);
+        $previous = LegacyRegistrationFactory::new()->create(['ref_cod_aluno' => $student, 'ref_ref_cod_serie' => $origin, 'ano' => 2029, 'ativo' => 1, 'ultima_matricula' => 0]);
+        $registration = LegacyRegistrationFactory::new()->create(['ref_cod_aluno' => $student, 'ref_ref_cod_serie' => $destiny, 'ano' => 2030, 'ativo' => 1]);
+        LegacyRegistration::saving(function ($model) use ($previous) {
+            if ($model->is($previous)) {
+                throw new \RuntimeException('banco indisponível');
+            }
+        });
+
+        $this->expectException(RegistrationException::class);
+        $this->expectExceptionMessage('Não foi possível editar a "Última Matrícula da Sequência".');
+
+        $this->service->cancelRegistration($registration);
     }
 }
