@@ -62,14 +62,19 @@ test('a turma integral sai uma vez por turno dos alunos, ou uma vez só quando t
     $this->scenario->enrolled('Davi Manhã', $integral, ['data_enturmacao' => '2030-02-10', 'turno_id' => 1]);
     $this->scenario->enrolled('Eva Tarde', $integral, ['data_enturmacao' => '2030-02-10', 'turno_id' => 2]);
 
+    $this->teacher->classLink($integral);
+
     // Com todos os alunos no integral, a turma sai uma vez só.
     $plena = $this->scenario->schoolClass(['nm_turma' => 'Turma Plena', 'turma_turno_id' => 4]);
     $this->scenario->enrolled('Fabio Integral', $plena, ['data_enturmacao' => '2030-02-10', 'turno_id' => null]);
+    $this->teacher->classLink($plena);
 
     $content = ($this->export)()->json('conteudo');
 
     expect($content)
         ->toContain("|{$integral->getKey()}-1||TURMA INTEGRAL - MATUTINO|")
         ->toContain("|{$integral->getKey()}-2||TURMA INTEGRAL - VESPERTINO|")
-        ->toContain("|{$plena->getKey()}||TURMA PLENA|");
+        ->toContain("|{$plena->getKey()}||TURMA PLENA|")
+        ->toContain("|{$integral->getKey()}-1|")
+        ->toContain("|{$integral->getKey()}-2|");
 });
