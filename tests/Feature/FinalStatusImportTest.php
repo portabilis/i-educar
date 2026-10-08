@@ -6,6 +6,7 @@ use App\Services\FinalStatusImportService;
 use App_Model_MatriculaSituacao;
 use Database\Factories\LegacyEnrollmentFactory;
 use Database\Factories\LegacyRegistrationFactory;
+use Database\Factories\LegacyUserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -455,5 +456,116 @@ class FinalStatusImportTest extends TestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+    }
+
+    private function analysisFor(array $rows): array
+    {
+        return [
+            'headers' => ['ID Matrícula', 'Situação Final', 'Data de Saída'],
+            'file_data' => $rows,
+        ];
+    }
+
+    private function mapping(): array
+    {
+        return ['registration_id' => 'ID Matrícula', 'final_status' => 'Situação Final', 'exit_date' => 'Data de Saída', 'inexistente' => 'Coluna que não há'];
+    }
+
+    public function test_arquivo_vazio_nao_e_analisado()
+    {
+        $this->expectExceptionMessage('Arquivo vazio ou formato inválido.');
+
+        $this->service->analyzeUploadedFile(UploadedFile::fake()->createWithContent('vazio.csv', ''));
+    }
+
+    public function test_traduz_as_colunas_obrigatorias_e_lista_as_situacoes()
+    {
+        $this->assertSame(['registration_id' => 'ID da Matrícula', 'final_status' => 'Situação Final', 'exit_date' => 'Data de Saída'], $this->service->getRequiredColumnsTranslations());
+        $this->assertNotEmpty($this->service->getStatus());
+    }
+
+    public function test_importa_as_situacoes_e_pode_ignorar_as_aprovadas()
+    {
+        $approved = LegacyRegistrationFactory::new()->create(['ano' => now()->year, 'aprovado' => App_Model_MatriculaSituacao::EM_ANDAMENTO]);
+        $transferred = LegacyRegistrationFactory::new()->create(['ano' => now()->year, 'aprovado' => App_Model_MatriculaSituacao::EM_ANDAMENTO]);
+        $enrollment = LegacyEnrollmentFactory::new()->create(['ref_cod_matricula' => $transferred, 'ativo' => 1]);
+        $rows = [
+            [(string) $approved->getKey(), 'Aprovado', ''],
+            [(string) $transferred->getKey(), 'Transferido', '15/12/' . now()->year],
+        ];
+
+        $result = $this->service->processImport($this->analysisFor($rows), $this->mapping(), LegacyUserFactory::new()->create(), true);
+
+        $this->assertSame('completed', $result['status']);
+        $this->assertSame(1, $result['ignored']);
+        $this->assertSame(1, $result['processed']);
+        $this->assertSame(App_Model_MatriculaSituacao::EM_ANDAMENTO, $approved->refresh()->aprovado);
+        $this->assertSame(App_Model_MatriculaSituacao::TRANSFERIDO, $transferred->refresh()->aprovado);
+        $this->assertTrue((bool) $enrollment->refresh()->transferido);
+
+        $result = $this->service->processImport($this->analysisFor($rows), $this->mapping(), LegacyUserFactory::new()->create());
+
+        $this->assertSame('completed', $result['status']);
+        $this->assertSame(0, $result['ignored']);
+        $this->assertSame(2, $result['processed']);
+        $this->assertSame(App_Model_MatriculaSituacao::APROVADO, $approved->refresh()->aprovado);
+    }
+
+    public function test_nao_importa_nada_quando_alguma_linha_tem_erro()
+    {
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => now()->year, 'aprovado' => App_Model_MatriculaSituacao::EM_ANDAMENTO]);
+
+        $result = $this->service->processImport($this->analysisFor([
+            [(string) $registration->getKey(), 'Aprovado', ''],
+            ['abc', 'Aprovado', ''],
+        ]), $this->mapping(), null);
+
+        $this->assertSame('failed', $result['status']);
+        $this->assertSame(0, $result['processed']);
+        $this->assertSame(2, $result['total']);
+        $this->assertNotEmpty($result['errors']);
+        $this->assertSame(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
+    }
+
+    public function test_enturmacoes_inativas_com_outra_situacao_ou_remanejadas_barram_a_importacao()
+    {
+        $rows = [];
+        foreach (['remanejado', 'falecido', 'reclassificado'] as $flag) {
+            $registration = LegacyRegistrationFactory::new()->create(['ano' => now()->year, 'aprovado' => App_Model_MatriculaSituacao::EM_ANDAMENTO]);
+            LegacyEnrollmentFactory::new()->create(['ref_cod_matricula' => $registration, 'ativo' => 0, $flag => true]);
+            $rows[] = [(string) $registration->getKey(), 'Transferido', '15/12/' . now()->year];
+        }
+
+        $result = $this->service->processImport($this->analysisFor($rows), $this->mapping(), LegacyUserFactory::new()->create());
+
+        $this->assertSame('failed', $result['status']);
+        $this->assertCount(3, $result['errors']);
+        $this->assertStringContainsString('possui enturmação inativa com status incompatível', $result['errors'][0]['error']);
+    }
+
+    public function test_enturmacoes_inativas_sem_situacao_ou_com_a_mesma_situacao_sao_atualizadas()
+    {
+        $rows = [];
+        foreach ([[], ['transferido' => true]] as $flags) {
+            $registration = LegacyRegistrationFactory::new()->create(['ano' => now()->year, 'aprovado' => App_Model_MatriculaSituacao::EM_ANDAMENTO]);
+            LegacyEnrollmentFactory::new()->create($flags + ['ref_cod_matricula' => $registration, 'ativo' => 0]);
+            $rows[] = [(string) $registration->getKey(), 'Transferido', '15/12/' . now()->year];
+        }
+
+        $result = $this->service->processImport($this->analysisFor($rows), $this->mapping(), LegacyUserFactory::new()->create());
+
+        $this->assertSame('completed', $result['status']);
+        $this->assertSame(2, $result['processed']);
+    }
+
+    public function test_valida_linhas_ja_nomeadas_e_linhas_do_csv()
+    {
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => now()->year, 'aprovado' => App_Model_MatriculaSituacao::EM_ANDAMENTO]);
+
+        $named = $this->service->validateData([['registration_id' => (string) $registration->getKey(), 'final_status' => 'Aprovado', 'exit_date' => '']], []);
+        $indexed = $this->service->validateData([[(string) $registration->getKey(), 'Aprovado', '']], ['registration_id' => 0, 'final_status' => 1, 'exit_date' => 2]);
+
+        $this->assertEmpty($named['errors']);
+        $this->assertEmpty($indexed['errors']);
     }
 }
