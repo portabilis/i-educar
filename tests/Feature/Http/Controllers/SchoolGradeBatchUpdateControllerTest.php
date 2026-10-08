@@ -101,3 +101,10 @@ test('a falha do serviço e a exceção do serviço voltam como erro', function 
         ->assertOk()
         ->assertJson(['status' => 'error', 'message' => 'Erro ao processar atualização. Por favor, tente novamente.']);
 });
+
+test('a visualização avisa quando não consegue montar a prévia', function () {
+    // Código de escola inválido faz a consulta falhar; por isso este é o último passo do teste.
+    $this->getJson(route('school-grade.batch-update.preview', ['ano' => now()->year, 'escola_serie' => [1 => ['escolas' => ['abc'], 'series' => ['xyz']]]]))
+        ->assertOk()
+        ->assertJson(['status' => 'error', 'message' => 'Erro ao processar preview.']);
+});
