@@ -1244,6 +1244,8 @@ class App_Model_IedFinder extends CoreExt_Entity
             );
         }
 
+        // Sem o pacote da biblioteca a classe acima não existe e o método para aqui.
+        // @codeCoverageIgnoreStart
         $biblioteca = self::addClassToStorage(
             'clsPmieducarBiblioteca',
             null,
@@ -1260,6 +1262,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $biblioteca;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -1277,6 +1280,8 @@ class App_Model_IedFinder extends CoreExt_Entity
             return [];
         }
 
+        // Sem o pacote da biblioteca a classe acima não existe e o método para aqui.
+        // @codeCoverageIgnoreStart
         $_bibliotecas = self::addClassToStorage(
             'clsPmieducarBiblioteca',
             null,
@@ -1290,6 +1295,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $bibliotecas;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -1307,6 +1313,8 @@ class App_Model_IedFinder extends CoreExt_Entity
             return [];
         }
 
+        // Sem o pacote da biblioteca a classe acima não existe e o método para aqui.
+        // @codeCoverageIgnoreStart
         $_situacoes = self::addClassToStorage(
             'clsPmieducarSituacao',
             null,
@@ -1320,6 +1328,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $situacoes;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -1337,6 +1346,8 @@ class App_Model_IedFinder extends CoreExt_Entity
             return [];
         }
 
+        // Sem o pacote da biblioteca a classe acima não existe e o método para aqui.
+        // @codeCoverageIgnoreStart
         $_fontes = self::addClassToStorage(
             'clsPmieducarFonte',
             null,
@@ -1350,6 +1361,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $fontes;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -1371,6 +1383,8 @@ class App_Model_IedFinder extends CoreExt_Entity
             );
         }
 
+        // Sem o pacote da biblioteca a classe acima não existe e o método para aqui.
+        // @codeCoverageIgnoreStart
         $obra = self::addClassToStorage(
             'clsPmieducarAcervo',
             null,
@@ -1388,6 +1402,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $obra;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -1405,6 +1420,8 @@ class App_Model_IedFinder extends CoreExt_Entity
             return [];
         }
 
+        // Sem o pacote da biblioteca a classe acima não existe e o método para aqui.
+        // @codeCoverageIgnoreStart
         $resources = self::addClassToStorage(
             'clsPmieducarClienteTipo',
             null,
@@ -1418,6 +1435,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $filtered_resources;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
