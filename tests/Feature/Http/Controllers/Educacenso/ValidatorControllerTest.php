@@ -20,3 +20,9 @@ test('valida nome, data de nascimento e certidão pelas regras do censo', functi
     $this->getJson('/educacenso/validar/certidao-nascimento?' . http_build_query(['values' => ['12345678901234567890123456789012', '01/01/2015']]))->assertOk();
     $this->getJson('/educacenso/validar/cpf?value=1')->assertStatus(422)->assertExactJson(['error' => 'Wrong validator', 'success' => false]);
 });
+
+test('recusa um validador que não existe', function () {
+    $this->getJson('/educacenso/validar/cpf?value=1')
+        ->assertStatus(422)
+        ->assertExactJson(['error' => 'Wrong validator', 'success' => false]);
+});
