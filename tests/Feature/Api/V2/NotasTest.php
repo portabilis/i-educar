@@ -4,6 +4,7 @@ use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDisciplineScore;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGeneralScore;
+use App\Services\DiarioControllerService;
 use Database\Factories\LegacyDisciplineFactory;
 use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -330,3 +331,15 @@ test('rejects stage greater than the school class stages', function (int $stage,
     'etapa 99 com a 3ª etapa sem nota' => [99, 2],
     'etapa 4 com todas as etapas lançadas' => [4, 3],
 ]);
+
+test('unexpected failure answers 500 with the reason', function () {
+    $data = $this->createScoreData();
+    $service = Mockery::mock(DiarioControllerService::class)->makePartial();
+    $service->shouldReceive('getServiceBoletim')->andThrow(new Exception('falha inesperada'));
+    app()->instance(DiarioControllerService::class, $service);
+
+    $response = $this->postScore($data, ['nota' => 6]);
+
+    $response->assertStatus(500);
+    expect($response->json('message'))->toEndWith('(falha inesperada)');
+});
