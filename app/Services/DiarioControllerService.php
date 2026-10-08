@@ -95,6 +95,25 @@ class DiarioControllerService
         return in_array($componenteCurricularId, \CoreExt_Entity::entityFilterAttr($componentes, 'id', 'id'));
     }
 
+    /**
+     * A dispensa é por etapa: o componente dispensado numa etapa continua na matrícula nas demais.
+     * O exame (Rc) não tem etapa própria e só sai da matrícula com a dispensa em todas as etapas.
+     */
+    public function validateComponenteMatriculaEtapa(int $componenteCurricularId, int $matriculaId, int $turmaId, string $etapa): bool
+    {
+        $isExame = !is_numeric($etapa);
+
+        $componentes = \App_Model_IedFinder::getComponentesPorMatricula(
+            codMatricula: $matriculaId,
+            componenteCurricularId: $componenteCurricularId,
+            etapa: $isExame ? null : (int) $etapa,
+            turma: $turmaId,
+            ignorarDispensasParciais: $isExame,
+        );
+
+        return array_key_exists($componenteCurricularId, $componentes);
+    }
+
     public function getServiceBoletim(int $turmaId, int $alunoId, ?LegacyRegistration $registration): \Avaliacao_Service_Boletim
     {
         if (is_null($registration)) {

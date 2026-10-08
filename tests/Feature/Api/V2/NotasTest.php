@@ -6,13 +6,10 @@ use App\Models\LegacyDisciplineScore;
 use App\Models\LegacyDisciplineScoreAverage;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGeneralScore;
-use Database\Factories\LegacyDisciplineExemptionFactory;
 use Database\Factories\LegacyDisciplineFactory;
-use Database\Factories\LegacyExemptionStageFactory;
 use Database\Factories\LegacyScoreExamFactory;
 use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Cache;
 use Tests\Feature\Api\V2\CreatesScoreData;
 use Tests\TestCase;
 
@@ -337,20 +334,13 @@ test('rejects stage greater than the school class stages', function (int $stage,
     'etapa 4 com todas as etapas lançadas' => [4, 3],
 ]);
 
-test('stores score of a discipline exempted for the registration and removes its exam score', function () {
+test('stores score of a discipline partially exempted and removes its exam score', function () {
     $data = $this->createScoreData();
     $registration = $data['registration'];
+    $this->createSchoolCalendar($registration, $data['school_class'], 4);
 
-    // Componente da turma dispensado em todas as etapas fica fora da lista de situações do boletim.
-    $exemption = LegacyDisciplineExemptionFactory::new()->create([
-        'ref_cod_matricula' => $registration,
-        'ref_cod_disciplina' => $data['discipline'],
-        'ref_cod_escola' => $registration->ref_ref_cod_escola,
-        'ref_cod_serie' => $registration->ref_ref_cod_serie,
-    ]);
-    foreach ([1, 2, 3, 4] as $stage) {
-        LegacyExemptionStageFactory::new()->create(['ref_cod_dispensa' => $exemption, 'etapa' => $stage]);
-    }
+    // Componente com dispensa em alguma etapa fica fora da lista de situações do boletim.
+    $this->exemptDiscipline($data, [2]);
 
     LegacyScoreExamFactory::new()->create([
         'ref_cod_matricula' => $registration,
@@ -401,25 +391,6 @@ test('ignores exempted stages outside the school calendar when calculating the a
     ]);
 });
 
-test('stores score without average when every stage of the school calendar is exempted', function () {
-    $data = $this->createScoreData();
-    $this->createSchoolCalendar($data['registration'], $data['school_class'], 1);
-    $this->exemptDiscipline($data, [1]);
-
-    $this->postScore($data, ['nota' => 6, 'recuperacao' => null])
-        ->assertStatus(201)
-        ->assertJson(['message' => 'Nota salva com sucesso.']);
-
-    $this->assertDatabaseHas(LegacyDisciplineScore::class, [
-        'componente_curricular_id' => $data['discipline']->getKey(),
-        'etapa' => 1,
-        'nota_original' => 6,
-    ]);
-    $this->assertDatabaseMissing(LegacyDisciplineScoreAverage::class, [
-        'componente_curricular_id' => $data['discipline']->getKey(),
-    ]);
-});
-
 test('discounts the exempted stage from the specific stages of the discipline', function () {
     $data = $this->createScoreData(['definir_componente_etapa' => 1]);
     $this->createSchoolCalendar($data['registration'], $data['school_class'], 4);
@@ -438,26 +409,60 @@ test('discounts the exempted stage from the specific stages of the discipline', 
     ]);
 });
 
-test('removes the average of a discipline exempted in every stage after it was calculated', function (bool $locked) {
+test('rejects score in a stage exempted for the registration', function () {
     $data = $this->createScoreData();
-    $this->createSchoolCalendar($data['registration'], $data['school_class'], 1);
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 4);
+    $this->exemptDiscipline($data, [2]);
 
     $this->postScore($data, ['nota' => 6, 'recuperacao' => null])->assertStatus(201);
-    LegacyDisciplineScoreAverage::query()
-        ->where('componente_curricular_id', $data['discipline']->getKey())
-        ->update(['bloqueada' => $locked]);
 
+    $this->postScore($data, ['nota' => 6, 'recuperacao' => null, 'etapa' => 2])
+        ->assertStatus(422)
+        ->assertJson([
+            'message' => "Componente curricular de código {$data['discipline']->getKey()} não existe para a matrícula {$data['registration']->getKey()} na etapa 2.",
+            'code' => 1013,
+            'extra' => [
+                'registration_id' => $data['registration']->getKey(),
+                'discipline_id' => $data['discipline']->getKey(),
+                'stage' => '2',
+            ],
+        ]);
+
+    $this->assertDatabaseMissing(LegacyDisciplineScore::class, [
+        'componente_curricular_id' => $data['discipline']->getKey(),
+        'etapa' => 2,
+    ]);
+    // A nota da etapa dispensada não entra na média: 6 dividido pelas 3 etapas não dispensadas.
+    $this->assertDatabaseHas(LegacyDisciplineScoreAverage::class, [
+        'componente_curricular_id' => $data['discipline']->getKey(),
+        'media' => 2,
+    ]);
+});
+
+test('rejects exam score of a discipline exempted in every stage', function () {
+    $data = $this->createScoreData();
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 1);
     $this->exemptDiscipline($data, [1]);
-    // As etapas dispensadas ficam em cache por um minuto; a dispensa nova precisa ser lida do banco.
-    Cache::flush();
-    $this->postScore($data, ['nota' => 8, 'recuperacao' => null])->assertStatus(201);
 
-    $average = LegacyDisciplineScoreAverage::query()
-        ->where('componente_curricular_id', $data['discipline']->getKey());
+    $this->postScore($data, ['nota' => 6, 'recuperacao' => null, 'etapa' => 'Rc'])
+        ->assertStatus(422)
+        ->assertJson(['code' => 1013, 'extra' => ['stage' => 'Rc']]);
 
-    // Média bloqueada foi definida manualmente e não é alterada pelo lançamento.
-    expect($average->exists())->toBe($locked);
-})->with([
-    'média calculada' => [false],
-    'média bloqueada' => [true],
-]);
+    $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
+});
+
+test('stores exam score of a discipline exempted only in some stages', function () {
+    $data = $this->createScoreData();
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 2);
+    $this->exemptDiscipline($data, [2]);
+
+    $this->postScore($data, ['nota' => 6, 'recuperacao' => null])->assertStatus(201);
+
+    $this->postScore($data, ['nota' => 7, 'recuperacao' => null, 'etapa' => 'Rc'])->assertStatus(201);
+
+    $this->assertDatabaseHas(LegacyDisciplineScore::class, [
+        'componente_curricular_id' => $data['discipline']->getKey(),
+        'nota' => 7,
+        'etapa' => 'Rc',
+    ]);
+});

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostNotasRequest;
+use iEducar\Modules\EvaluationRules\Exceptions\DisciplineNotExistsForRegistrationStage;
 use iEducar\Modules\EvaluationRules\Exceptions\DisciplineNotExistsForSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\ExamScoreGreaterThanMaxAllowed;
 use iEducar\Modules\EvaluationRules\Exceptions\ScoreGreaterThanMaxAllowed;
@@ -31,6 +32,10 @@ class NotasController extends DiarioController
 
             $etapa = $request->input('etapa');
             $this->validateStageBySchoolCalendar($etapa, $turmaId, (int) $boletim->getOption('etapas'));
+
+            if (!$this->service->validateComponenteMatriculaEtapa($componenteCurricularId, $matricula->getKey(), $turmaId, $etapa)) {
+                throw new DisciplineNotExistsForRegistrationStage($componenteCurricularId, $matricula->getKey(), $etapa);
+            }
 
             $nota = $request->input('nota');
             $notaRecuperacao = $request->input('recuperacao');
@@ -79,7 +84,7 @@ class NotasController extends DiarioController
             }
 
             $this->service->atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId, $matricula);
-        } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException|DisciplineNotExistsForSchoolClass|MissingStagesException|StageNotExistsForSchoolClass|ScoreGreaterThanMaxAllowed|ScoreLesserThanMinAllowed|ExamScoreGreaterThanMaxAllowed $exception) {
+        } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException|DisciplineNotExistsForSchoolClass|DisciplineNotExistsForRegistrationStage|MissingStagesException|StageNotExistsForSchoolClass|ScoreGreaterThanMaxAllowed|ScoreLesserThanMinAllowed|ExamScoreGreaterThanMaxAllowed $exception) {
             return $this->unprocessableResponse($exception);
         } catch (\Exception $exception) {
             return response()->json([
