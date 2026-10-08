@@ -183,6 +183,31 @@ test('o eixo do curso profissional fica só nas etapas de qualificação', funct
         ->and($schoolClass->nao_informar_educacenso)->toBe(0);
 });
 
+test('as atividades complementares ficam quando o tipo de turma as tem, e a classe especial sai quando não é curricular', function () {
+    ($this->store)(($this->form)([
+        'tipo_atendimento' => (string) TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR,
+        'atividades_complementares' => [11, 12],
+        'classe_especial' => 1,
+    ]))->assertOk();
+
+    $schoolClass = LegacySchoolClass::query()->where('nm_turma', 'Turma A')->first();
+
+    expect($schoolClass->getRawOriginal('atividades_complementares'))->toBe('{11,12}')
+        ->and($schoolClass->getRawOriginal('tipo_atendimento'))->toBe('{4}')
+        ->and($schoolClass->classe_especial)->toBeNull();
+});
+
+test('com o iDiário configurado, os componentes são gravados consultando o serviço', function () {
+    ($this->idiario)()->shouldNotReceive('getClassroomsActivityByDiscipline');
+
+    ($this->store)(($this->form)([
+        'disciplinas' => [$this->math->getKey() => $this->math->getKey()],
+        'carga_horaria' => [$this->math->getKey() => '80'],
+    ]))->assertOk();
+
+    expect(LegacyDisciplineSchoolClass::query()->where('componente_curricular_id', $this->math->getKey())->count())->toBe(1);
+});
+
 test('edita a turma trocando o nome, limpando os componentes e gravando os códigos Inep dos turnos', function () {
     $schoolClass = ($this->schoolClass)();
     LegacyDisciplineSchoolClassFactory::new()->create([
