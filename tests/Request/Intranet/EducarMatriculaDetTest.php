@@ -338,6 +338,8 @@ test('ao usuário de biblioteca não oferece ação nenhuma, mesmo com permissã
         ->assertDontSee('educar_matricula_turma_lst.php', false);
 });
 
-test('sai para o detalhe do aluno quando a matrícula não existe', function () {
-    $this->get('/intranet/educar_matricula_det.php?cod_matricula=0')->assertRedirect('educar_aluno_det.php?cod_aluno=');
+test('volta para a listagem de alunos avisando quando a matrícula não existe', function () {
+    $this->get('/intranet/educar_matricula_det.php?cod_matricula=0')
+        ->assertRedirect('educar_aluno_lst.php')
+        ->assertSessionHas('error', 'Matrícula não encontrada. O registro não existe ou foi excluído. Acesse a matrícula pela ficha do aluno.');
 });
