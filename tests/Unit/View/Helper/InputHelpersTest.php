@@ -159,8 +159,13 @@ test('tipo de logradouro e dia e mês viram campos da tela', function () {
     expect(array_keys($tela->campos))->toContain('aniversario');
 });
 
-test('o campo de benefício ainda usa a classe legada de benefícios, que foi removida', function () {
+test('o campo de benefício só funciona com as opções prontas: sem elas usa a classe legada de benefícios, que foi removida', function () {
     $inputs = new Portabilis_View_Helper_Inputs(telaDosHelpers());
 
     expect(fn () => semAvisos(fn () => $inputs->beneficio()))->toThrow(Error::class, 'clsPmieducarAlunoBeneficio');
+
+    $tela = telaDosHelpers();
+    semAvisos(fn () => (new Portabilis_View_Helper_Inputs($tela))->beneficio([], ['resources' => [1 => 'Bolsa']]));
+
+    expect($tela->campos)->not->toBeEmpty();
 });
