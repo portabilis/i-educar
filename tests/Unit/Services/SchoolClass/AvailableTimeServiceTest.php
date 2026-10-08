@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services\SchoolClass;
 
 use App\Models\LegacyEnrollment;
+use App\Models\LegacyPeriod;
 use App\Models\LegacySchoolClass;
 use App\Services\SchoolClass\AvailableTimeService;
 use Database\Factories\LegacyEnrollmentFactory;
@@ -332,7 +333,8 @@ class AvailableTimeServiceTest extends TestCase
 
     public function test_turma_integral_compara_o_horario_do_turno_da_enturmacao(): void
     {
-        $fulltime = LegacyPeriodFactory::new()->full();
+        // O turno integral é o de código fixo 4.
+        $fulltime = LegacyPeriod::query()->find(Period::FULLTIME) ?? LegacyPeriodFactory::new()->create(['id' => Period::FULLTIME, 'nome' => 'Integral']);
         $hours = ['hora_inicial_matutino' => '07:00', 'hora_final_matutino' => '11:00', 'hora_inicial_vespertino' => '13:00', 'hora_final_vespertino' => '17:00'];
         $otherHours = ['hora_inicial_matutino' => '08:00', 'hora_final_matutino' => '12:00', 'hora_inicial_vespertino' => '13:30', 'hora_final_vespertino' => '17:30'];
 
@@ -342,13 +344,16 @@ class AvailableTimeServiceTest extends TestCase
             ['turno_id' => Period::MORNING]
         );
 
+        // De manhã os dois horários matutinos se cruzam; à tarde a outra
+        // enturmação é de manhã, então não há conflito.
         $this->assertFalse($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma, Period::MORNING));
-        $this->assertFalse($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma, Period::AFTERNOON));
+        $this->assertTrue($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma, Period::AFTERNOON));
         $this->assertFalse($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
 
         LegacyEnrollment::query()->where('ref_cod_matricula', $registration->cod_matricula)->update(['turno_id' => Period::AFTERNOON]);
 
         $this->assertFalse($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma, Period::AFTERNOON));
+        $this->assertTrue($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma, Period::MORNING));
     }
 
     public function test_turma_de_escolarizacao_nao_conflita_com_turma_de_aee(): void

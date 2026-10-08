@@ -280,6 +280,11 @@ class LegacySchoolClassTest extends EloquentTestCase
 
         $this->assertEquals([$discipline->getKey()], $this->model->getDisciplines()->pluck('id')->all());
 
+        $own = LegacyDisciplineFactory::new()->create();
+        LegacyDisciplineSchoolClassFactory::new()->create(['componente_curricular_id' => $own, 'turma_id' => $this->model]);
+
+        $this->assertEquals([$own->getKey()], $this->model->getDisciplines()->pluck('id')->all());
+
         $this->model->multiseriada = 1;
         LegacySchoolClassGradeFactory::new()->create([
             'escola_id' => $this->model->ref_ref_cod_escola,

@@ -640,4 +640,28 @@ class CheckMandatoryCensoFieldsTest extends TestCase
         $this->assertFalse($this->rule->passes('schoolClass', $params));
         $this->assertStringContainsString('Não é possível selecionar a opção: <b>Períodos semestrais</b>', $this->rule->message());
     }
+
+    public function test_pela_regra_completa_os_minutos_a_organizacao_curricular_a_combinacao_da_etapa_e_a_carga_horaria_tambem_barram(): void
+    {
+        $this->assertFalse($this->rule->passes('schoolClass', $this->mandatoryParams(['hora_inicial' => '08:03'])));
+        $this->assertStringContainsString('múltiplos de 5', $this->rule->message());
+
+        $this->assertFalse($this->rule->passes('schoolClass', $this->mandatoryParams(['hora_final' => '12h'])));
+        $this->assertStringContainsString('hora final deve ter os minutos múltiplos de 5', $this->rule->message());
+
+        $this->assertFalse($this->rule->passes('schoolClass', $this->mandatoryParams(['organizacao_curricular' => '{1}', 'etapa_agregada' => EtapaAgregada::ENSINO_FUNDAMENTAL])));
+        $this->assertStringContainsString('"Formação geral básica" só pode ser preenchida', $this->rule->message());
+
+        $this->assertFalse($this->rule->passes('schoolClass', $this->mandatoryParams([
+            'tipo_mediacao_didatico_pedagogico' => App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA,
+            'etapa_agregada' => EtapaAgregada::EDUCACAO_INFANTIL,
+            'etapa_educacenso' => 1,
+        ])));
+        $this->assertStringContainsString('não se aplica a essa combinação', $this->rule->message());
+
+        $this->assertFalse($this->rule->passes('schoolClass', $this->mandatoryParams(['etapa_educacenso' => 67, 'cod_eixo_curso_profissional' => 5, 'carga_horaria_total' => 10])));
+        $this->assertStringContainsString('Carga horária total (em horas)', $this->rule->message());
+
+        $this->assertTrue($this->rule->passes('schoolClass', $this->mandatoryParams(['tipo_atendimento' => null, 'etapa_agregada' => EtapaAgregada::ENSINO_FUNDAMENTAL])));
+    }
 }
