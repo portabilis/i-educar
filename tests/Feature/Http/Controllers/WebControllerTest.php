@@ -42,3 +42,12 @@ test('a página inicial vai para o front e os caminhos do front desconhecidos vo
     $this->get('/web/qualquer-coisa')->assertRedirect('intranet/educar_index.php');
     $this->get('/nao-existe')->assertNotFound();
 });
+
+test('as permissões de cadastrar e excluir também vão para o front', function () {
+    $user = LegacyUserFactory::new()->admin()->withAccess(Process::ENROLLMENT)->create();
+    $this->actingAs($user);
+
+    $this->getJson('/authorization')
+        ->assertOk()
+        ->assertExactJson(['view:' . Process::ENROLLMENT, 'modify:' . Process::ENROLLMENT, 'remove:' . Process::ENROLLMENT]);
+});
