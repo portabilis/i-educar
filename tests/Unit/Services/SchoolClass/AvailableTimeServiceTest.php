@@ -376,4 +376,13 @@ class AvailableTimeServiceTest extends TestCase
 
         $this->assertTrue($this->service->hasDates(LegacySchoolClass::query()->find($schoolClass->cod_turma)));
     }
+
+    public function test_turma_com_inicio_mas_sem_fim_do_ano_letivo_nao_tem_datas(): void
+    {
+        $schoolClass = \Mockery::mock(LegacySchoolClass::class)->makePartial();
+        $schoolClass->shouldReceive('getAttribute')->with('begin_academic_year')->andReturn(now());
+        $schoolClass->shouldReceive('getAttribute')->with('end_academic_year')->andReturn(null);
+
+        $this->assertFalse($this->service->hasDates($schoolClass));
+    }
 }
