@@ -25,6 +25,7 @@ use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacySchoolClassFactory;
 use Database\Factories\LegacySchoolClassStageFactory;
 use Database\Factories\LegacyUserFactory;
+use iEducar\Support\Exceptions\Exception;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Throwable;
@@ -85,6 +86,18 @@ class EnrollmentServiceTest extends TestCase
             'ref_cod_turma' => $enrollment->ref_cod_turma,
             'ativo' => 0,
         ]);
+    }
+
+    public function test_cancelamento_que_falha_ao_gravar_desfaz_e_devolve_falso()
+    {
+        $enrollment = LegacyEnrollmentFactory::new()->create([
+            'ref_cod_turma' => $this->schoolClass,
+        ]);
+        // O serviço só captura as exceções do i-Educar.
+        LegacyEnrollment::saving(fn () => throw new Exception('banco indisponível'));
+
+        $this->assertFalse($this->service->cancelEnrollment($enrollment, now()));
+        $this->assertSame(1, $enrollment->refresh()->ativo);
     }
 
     /**
