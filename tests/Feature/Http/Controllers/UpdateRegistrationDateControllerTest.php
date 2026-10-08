@@ -3,10 +3,12 @@
 use App\Jobs\UpdateRegistrationDateJob;
 use App\Listeners\LoginLegacySession;
 use App\Models\LegacyRegistration;
+use App\Models\Notification;
 use App\User;
 use Database\Factories\LegacyGeneralConfigurationFactory;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Auth\Events\Login;
+use Illuminate\Bus\Batch;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Bus;
 use Tests\Request\Support\EnrollmentScenario;
@@ -92,5 +94,14 @@ test('acima de quinhentas matrículas, a atualização vai para a fila em lotes'
         ->assertSessionHas('success', 'Serão atualizadas 501 matrículas. Você será notificado no final do processo');
 
     Bus::assertBatched(fn ($batch) => $batch->jobs->count() === 2 && $batch->jobs->every(fn ($job) => $job instanceof UpdateRegistrationDateJob));
+
+    // Ao final do lote, quem pediu é avisado do total atualizado.
+    Bus::assertBatched(function ($batch) {
+        $batch->finallyCallbacks()[0](Mockery::mock(Batch::class));
+
+        return true;
+    });
+    expect(Notification::query()->where('user_id', $this->user->getKey())->value('text'))
+        ->toBe('Atualização de datas de matrícula concluída. 501 matrículas atualizadas.');
     expect($this->registration->refresh()->data_matricula->format('Y-m-d'))->toBe('2030-02-01');
 });
