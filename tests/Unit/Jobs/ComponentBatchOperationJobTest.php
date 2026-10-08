@@ -15,12 +15,25 @@ class ComponentBatchOperationJobTest extends TestCase
 
     private ComponentBatchOperationJob $job;
 
+    private string $connection;
+
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->connection = DB::getDefaultConnection();
         $this->operation = new ComponentBatchOperation(['status_id' => 1]);
         $this->job = new ComponentBatchOperationJob($this->operation, 'escola-alfa');
+    }
+
+    /**
+     * O job troca a conexão padrão; devolve a original para os testes seguintes.
+     */
+    protected function tearDown(): void
+    {
+        DB::setDefaultConnection($this->connection);
+
+        parent::tearDown();
     }
 
     public function test_switches_the_connection_and_executes_the_operation(): void
