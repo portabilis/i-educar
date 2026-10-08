@@ -228,12 +228,13 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     private function escapeValue($valor): string
     {
-        return is_scalar($valor) ? htmlspecialchars((string) $valor, ENT_QUOTES) : '';
+        return is_scalar($valor) || $valor instanceof Stringable ? htmlspecialchars((string) $valor, ENT_QUOTES) : '';
     }
 
     private function escapeOptionText($texto): string
     {
-        return is_scalar($texto) ? htmlspecialchars((string) $texto, ENT_QUOTES, 'UTF-8', false) : '';
+        // Telas legadas passam entidades com `__toString()` como texto da opção.
+        return is_scalar($texto) || $texto instanceof Stringable ? htmlspecialchars((string) $texto, ENT_QUOTES, 'UTF-8', false) : '';
     }
 
     public function campoCpf($nome, $campo, $valor, $obrigatorio = false, $descricao = false, $disabled = false, $onChange = '')
