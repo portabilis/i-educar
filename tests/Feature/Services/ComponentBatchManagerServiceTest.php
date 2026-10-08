@@ -621,3 +621,14 @@ test('tabelas sem linhas no backup contam zero na restauração', function () {
         'pmieducar.dispensa_etapa' => ['action' => 'reinseridos', 'count' => 0],
     ]);
 });
+
+test('sem colunas a atualizar o conflito não faz nada e sem linhas não apaga nada', function () {
+    $call = fn (string $method, ...$arguments) => (fn () => $this->{$method}(...$arguments))->call($this->service);
+
+    expect($call('buildOnConflictClause', ['id', 'nome'], ['id', 'nome'], true))->toBe('DO NOTHING');
+
+    DB::enableQueryLog();
+    $call('deleteByColumns', 'pmieducar.serie', ['cod_serie'], []);
+
+    expect(DB::getQueryLog())->toBe([]);
+});
