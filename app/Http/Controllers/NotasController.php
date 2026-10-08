@@ -31,9 +31,16 @@ class NotasController extends DiarioController
             $boletim = $this->service->getServiceBoletim($turmaId, $alunoId, $matricula);
 
             $etapa = $request->input('etapa');
-            $this->validateStageBySchoolCalendar($etapa, $turmaId, (int) $boletim->getOption('etapas'));
+            $quantidadeEtapas = (int) $boletim->getOption('etapas');
+            $this->validateStageBySchoolCalendar($etapa, $turmaId, $quantidadeEtapas);
 
-            if (!$this->service->validateComponenteMatriculaEtapa($componenteCurricularId, $matricula->getKey(), $turmaId, $etapa)) {
+            if (!$this->service->validateComponenteMatriculaEtapa(
+                componenteCurricularId: $componenteCurricularId,
+                matriculaId: $matricula->getKey(),
+                turmaId: $turmaId,
+                etapa: $etapa,
+                quantidadeEtapas: $quantidadeEtapas,
+            )) {
                 throw new DisciplineNotExistsForRegistrationStage($componenteCurricularId, $matricula->getKey(), $etapa);
             }
 

@@ -6,7 +6,10 @@ use App\Models\LegacyDisciplineScore;
 use App\Models\LegacyDisciplineScoreAverage;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGeneralScore;
+use App\Models\LegacySchoolGradeDiscipline;
+use Database\Factories\LegacyDisciplineDependenceFactory;
 use Database\Factories\LegacyDisciplineFactory;
+use Database\Factories\LegacySchoolGradeDisciplineFactory;
 use Database\Factories\LegacyScoreExamFactory;
 use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -465,4 +468,80 @@ test('stores exam score of a discipline exempted only in some stages', function 
         'nota' => 7,
         'etapa' => 'Rc',
     ]);
+});
+
+test('rejects score in a stage outside the specific stages of the discipline', function (string $configuredIn) {
+    $data = $this->createScoreData();
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 4);
+    $specificStages = ['etapas_especificas' => 1, 'etapas_utilizadas' => '3,4'];
+
+    $disciplineSchoolClass = LegacyDisciplineSchoolClass::query()
+        ->where('turma_id', $data['school_class']->getKey())
+        ->where('componente_curricular_id', $data['discipline']->getKey());
+
+    if ($configuredIn === 'turma') {
+        $disciplineSchoolClass->update($specificStages);
+    } else {
+        // Sem vínculo na turma, os componentes e as etapas vêm da série da escola.
+        $disciplineSchoolClass->delete();
+        LegacySchoolGradeDiscipline::query()
+            ->where('ref_ref_cod_serie', $data['registration']->ref_ref_cod_serie)
+            ->where('ref_cod_disciplina', $data['discipline']->getKey())
+            ->update($specificStages);
+    }
+
+    $this->postScore($data, ['nota' => 6, 'recuperacao' => null])
+        ->assertStatus(422)
+        ->assertJson(['code' => 1013, 'extra' => ['stage' => '1']]);
+
+    $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
+})->with([
+    'etapas específicas na turma' => ['turma'],
+    'etapas específicas na série da escola' => ['serie'],
+]);
+
+test('rejects exam score of a discipline exempted in every specific stage', function () {
+    $data = $this->createScoreData();
+    $this->createSchoolCalendar($data['registration'], $data['school_class'], 4);
+    LegacyDisciplineSchoolClass::query()
+        ->where('turma_id', $data['school_class']->getKey())
+        ->where('componente_curricular_id', $data['discipline']->getKey())
+        ->update(['etapas_especificas' => 1, 'etapas_utilizadas' => '3,4']);
+    $this->exemptDiscipline($data, [3, 4]);
+
+    $this->postScore($data, ['nota' => 6, 'recuperacao' => null, 'etapa' => 'Rc'])
+        ->assertStatus(422)
+        ->assertJson(['code' => 1013, 'extra' => ['stage' => 'Rc']]);
+});
+
+test('rejects score of a discipline outside the dependency of the registration', function () {
+    $data = $this->createScoreData();
+    $registration = $data['registration'];
+    $registration->update(['dependencia' => true]);
+
+    // A dependência é de outro componente da série, não do componente lançado.
+    $schoolGradeDiscipline = LegacySchoolGradeDiscipline::query()
+        ->where('ref_ref_cod_serie', $registration->ref_ref_cod_serie)
+        ->where('ref_cod_disciplina', $data['discipline']->getKey())
+        ->firstOrFail();
+    $dependencyDiscipline = LegacyDisciplineFactory::new()->create();
+    LegacySchoolGradeDisciplineFactory::new()->create([
+        'ref_ref_cod_escola' => $registration->ref_ref_cod_escola,
+        'ref_ref_cod_serie' => $registration->ref_ref_cod_serie,
+        'ref_cod_disciplina' => $dependencyDiscipline,
+        'anos_letivos' => $schoolGradeDiscipline->anos_letivos,
+    ]);
+
+    LegacyDisciplineDependenceFactory::new()->create([
+        'ref_cod_matricula' => $registration,
+        'ref_cod_disciplina' => $dependencyDiscipline,
+        'ref_cod_escola' => $registration->ref_ref_cod_escola,
+        'ref_cod_serie' => $registration->ref_ref_cod_serie,
+    ]);
+
+    $this->postScore($data, ['nota' => 6, 'recuperacao' => null])
+        ->assertStatus(422)
+        ->assertJson(['code' => 1013]);
+
+    $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
 });

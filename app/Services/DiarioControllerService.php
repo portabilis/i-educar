@@ -7,6 +7,7 @@ use App\Models\LegacySchoolClass;
 use App\Models\RegistrationStatus;
 use App\Models\View\Discipline;
 use App_Model_MatriculaSituacao;
+use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -97,19 +98,40 @@ class DiarioControllerService
 
     /**
      * A dispensa é por etapa: o componente dispensado numa etapa continua na matrícula nas demais.
-     * O exame (Rc) não tem etapa própria e só sai da matrícula com a dispensa em todas as etapas.
+     * O exame (Rc) não tem etapa própria e vale enquanto o componente estiver na matrícula em alguma
+     * das etapas que cursa: as específicas do componente ou, sem elas, as do calendário.
      */
-    public function validateComponenteMatriculaEtapa(int $componenteCurricularId, int $matriculaId, int $turmaId, string $etapa): bool
+    public function validateComponenteMatriculaEtapa(int $componenteCurricularId, int $matriculaId, int $turmaId, string $etapa, int $quantidadeEtapas): bool
     {
-        $isExame = !is_numeric($etapa);
+        if (is_numeric($etapa)) {
+            return $this->isComponenteNaMatriculaNaEtapa($componenteCurricularId, $matriculaId, $turmaId, (int) $etapa);
+        }
 
-        $componentes = \App_Model_IedFinder::getComponentesPorMatricula(
-            codMatricula: $matriculaId,
-            componenteCurricularId: $componenteCurricularId,
-            etapa: $isExame ? null : (int) $etapa,
-            turma: $turmaId,
-            ignorarDispensasParciais: $isExame,
-        );
+        $etapasComponente = \App_Model_IedFinder::getEtapasComponente($turmaId, $componenteCurricularId)
+            ?: ($quantidadeEtapas > 0 ? range(1, $quantidadeEtapas) : []);
+
+        foreach ($etapasComponente as $etapaComponente) {
+            if ($this->isComponenteNaMatriculaNaEtapa($componenteCurricularId, $matriculaId, $turmaId, (int) $etapaComponente)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function isComponenteNaMatriculaNaEtapa(int $componenteCurricularId, int $matriculaId, int $turmaId, int $etapa): bool
+    {
+        try {
+            $componentes = \App_Model_IedFinder::getComponentesPorMatricula(
+                codMatricula: $matriculaId,
+                componenteCurricularId: $componenteCurricularId,
+                etapa: $etapa,
+                turma: $turmaId,
+            );
+        } catch (DisciplineNotLinkedToRegistrationException) {
+            // Sem vínculo na turma, a série só devolve o componente nas etapas específicas dele.
+            return false;
+        }
 
         return array_key_exists($componenteCurricularId, $componentes);
     }
