@@ -55,6 +55,14 @@ test('a tela abre para administradores e barra os demais', function () {
         ->get(route('academic-year.edit'))
         ->assertRedirect('/intranet/educar_configuracoes_index.php')
         ->assertSessionHasErrors(['Error' => 'Você não tem permissão para acessar este recurso']);
+
+    // Mesmo com o processo liberado, a tela é só dos administradores.
+    ($this->login)(LegacyUserFactory::new()->institutional()->withAccess(Process::ACADEMIC_YEAR_IMPORT)->create());
+
+    $this->from('/intranet/educar_configuracoes_index.php')
+        ->get(route('academic-year.edit'))
+        ->assertRedirect('/intranet/educar_configuracoes_index.php')
+        ->assertSessionHasErrors(['Error' => 'Você não tem permissão para acessar este recurso']);
 });
 
 test('o resultado mostra o que ficou na sessão e o esquece', function () {
