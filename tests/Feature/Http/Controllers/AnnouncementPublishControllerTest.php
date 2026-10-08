@@ -6,6 +6,7 @@ use App\User;
 use Database\Factories\LegacyGeneralConfigurationFactory;
 use Database\Factories\LegacyUserFactory;
 use Database\Factories\LegacyUserTypeFactory;
+use iEducar\Support\Exceptions\Exception;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -98,4 +99,18 @@ test('edita o aviso, ativando ou desativando', function () {
     $this->post(route('announcement.publish.update', $announcement), ($this->form)(['name' => 'Editado']));
 
     expect(Announcement::query()->withTrashed()->find($announcement->getKey())->trashed())->toBeTrue();
+});
+
+test('avisa quando não consegue cadastrar nem editar o aviso', function () {
+    $announcement = ($this->announcement)();
+    // O controller só captura as exceções do i-Educar.
+    Announcement::saving(fn () => throw new Exception('banco indisponível'));
+
+    $this->post(route('announcement.publish.store'), ($this->form)())
+        ->assertRedirect(route('announcement.publish.index'))
+        ->assertSessionHas('error', 'Cadastro não realizado.');
+
+    $this->post(route('announcement.publish.update', $announcement), ($this->form)())
+        ->assertRedirect(route('announcement.publish.edit', $announcement))
+        ->assertSessionHas('error', 'Edição não realizada.');
 });
