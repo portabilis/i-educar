@@ -64,6 +64,9 @@ test('troca a senha do usuário nas bases dos clientes e manda a nova por e-mail
     $antiga = $this->employee->senha;
 
     try {
+        $this->artisan('reset:password', ['username' => 'ninguem'])->assertExitCode(0);
+        Mail::assertNothingSent();
+
         $this->artisan('reset:password', ['username' => 'bia.login'])->assertExitCode(0);
     } finally {
         DB::setDefaultConnection('pgsql');
