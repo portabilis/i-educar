@@ -180,6 +180,8 @@ test('cria e remove views, views materializadas, executa SQL e recria os gatilho
         $helpers->dropView('public.persons');
         $helpers->createView('persons');
         $helpers->dropViewDoUtils('public.persons');
+        $helpers->dropView('public.educacenso_record20');
+        $helpers->createView('public.educacenso_record20', '2026-06-17');
         $helpers->executeSqlFile($sql);
         $helpers->refreshMaterializedView('public.cobertura_materializada');
         $helpers->dropMaterializedView('public.cobertura_materializada');
