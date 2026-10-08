@@ -50,11 +50,14 @@ describe('com uma escola pronta para o Censo', function () {
         // Só entram na análise as enturmações anteriores à data de referência do Censo.
         LegacyInstitution::query()->whereKey($this->scenario->institution)->update(['data_educacenso' => '2030-05-29']);
 
-        $schoolClass = $this->scenario->schoolClass(['nm_turma' => 'Turma Censo']);
+        $schoolClass = $this->scenario->schoolClass(['nm_turma' => 'Turma Censo', 'turma_turno_id' => $this->scenario->period(1)->getKey(), 'tipo_atendimento' => '{0}', 'etapa_educacenso' => 14, 'tipo_mediacao_didatico_pedagogico' => 1]);
         $this->scenario->enrolled('Ana Censo', $schoolClass, ['data_enturmacao' => '2030-02-10']);
 
         EmployeeScenario::named('Bia Docente', $this->scenario->institution)
-            ->classLink($schoolClass, [], [$this->scenario->discipline('Matemática')]);
+            ->classLink($schoolClass, [], [tap($this->scenario->discipline('Matemática'), fn ($discipline) => $discipline->update(['codigo_educacenso' => 3]))]);
+
+        // Uma disciplina sem docente vira aviso na análise do registro 20.
+        $this->scenario->discipline('História')->update(['codigo_educacenso' => 12]);
 
         $manager = EmployeeScenario::named('Caio Gestor', $this->scenario->institution);
         SchoolManagerFactory::new()->create(['school_id' => $this->scenario->school, 'employee_id' => $manager->employee]);
