@@ -42,12 +42,14 @@ test('a exportação exige o ano e a instituição', function () {
 
 test('exporta as matrículas em andamento do ano com a etapa convertida e os CPFs dos responsáveis', function () {
     $mother = StudentScenario::individual('Mãe da Bia', ['cpf' => '11111111111']);
+    $father = StudentScenario::individual('Pai da Bia', ['cpf' => '44444444444']);
     $guardian = StudentScenario::individual('Avó da Bia', ['cpf' => '33333333333']);
     $registration = $this->scenario->enrolled('Bia Borges', $this->schoolClass)->registration;
     LegacyIndividual::query()->whereKey($registration->student->ref_idpes)->update([
         'cpf' => '22222222222',
         'nome_social' => 'Bia',
         'idpes_mae' => $mother->getKey(),
+        'idpes_pai' => $father->getKey(),
         'idpes_responsavel' => $guardian->getKey(),
     ]);
     $this->scenario->enrolled('Caio Costa', $this->scenario->schoolClass(['etapa_educacenso' => null]));
@@ -56,5 +58,5 @@ test('exporta as matrículas em andamento do ano com a etapa convertida e os CPF
         ->assertOk()
         ->assertHeader('Content-Disposition', 'attachment; filename="exportacao_seb.txt"');
 
-    expect($response->getContent())->toBe("2030;12345678;22222222222;Bia;{$registration->getKey()};4;0;11111111111;1;33333333333;3;;\n");
+    expect($response->getContent())->toBe("2030;12345678;22222222222;Bia;{$registration->getKey()};4;0;11111111111;1;44444444444;2;33333333333;3\n");
 });
