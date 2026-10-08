@@ -301,7 +301,10 @@ class clsCadastro extends clsCampos
             $validador = $componente[2];
 
             if ($nomeCampo === 'avulso') {
+                // Inalcançável: nenhum construtor de campo cria o tipo 'avulso'.
+                // @codeCoverageIgnoreStart
                 continue;
+                // @codeCoverageIgnoreEnd
             }
 
             if (empty($validador) && $nomeCampo == 'cpf' && preg_match('/^(tab_add_[0-9])/', $nome) !== 1) {
