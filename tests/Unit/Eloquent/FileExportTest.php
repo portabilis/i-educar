@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Eloquent;
 
+use App\Models\Enums\FileExportStatus;
 use App\Models\FileExport;
 use App\Services\UrlPresigner;
 use Carbon\Carbon;
@@ -42,5 +43,22 @@ class FileExportTest extends EloquentTestCase
     protected function getEloquentModelName()
     {
         return FileExport::class;
+    }
+
+    public function test_status(): void
+    {
+        $this->model->status_id = FileExportStatus::WAITING->value;
+        $this->model->created_at = now();
+        $this->assertTrue($this->model->statusIsWaiting());
+        $this->assertFalse($this->model->statusIsError());
+        $this->assertFalse($this->model->statusIsSuccess());
+
+        // A exportação que espera há mais de cinco minutos é tratada como erro.
+        $this->model->created_at = now()->subMinutes(6);
+        $this->assertTrue($this->model->statusIsError());
+
+        $this->model->status_id = FileExportStatus::SUCCESS->value;
+        $this->assertTrue($this->model->statusIsSuccess());
+        $this->assertFalse($this->model->statusIsError());
     }
 }
