@@ -113,4 +113,9 @@ class ReCaptchaV3Test extends TestCase
             'legacy.app.recaptcha_v3.minimum_score' => 0.5,
         ]);
     }
+
+    public function test_a_mensagem_de_erro_fala_da_verificacao_do_recaptcha(): void
+    {
+        $this->assertSame('A verificação do reCAPTCHA falhou', (new ReCaptchaV3)->message());
+    }
 }
