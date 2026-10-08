@@ -7,6 +7,7 @@ use Database\Factories\LegacyGeneralConfigurationFactory;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\DB;
 use Tests\Request\Support\EnrollmentScenario;
 use Tests\TestCase;
 
@@ -23,7 +24,8 @@ beforeEach(function () {
 
     // A data de criação não é preenchível; entra depois, para ordenar.
     $this->announcement = fn (array $attributes = []) => tap(Announcement::query()->create($attributes + ['name' => 'Aviso', 'description' => 'x', 'created_by_user_id' => $this->user->getKey()]), fn ($announcement) => $announcement->forceFill(['created_at' => $attributes['created_at'] ?? now()])->saveQuietly());
-    $this->pivot = fn ($announcement) => $announcement->users()->whereKey($this->user->getKey())->first()?->pivot;
+    // A relação não carrega as datas do pivot; elas são lidas da tabela.
+    $this->pivot = fn ($announcement) => DB::table('announcement_users')->where('announcement_id', $announcement->getKey())->where('user_id', $this->user->getKey())->first();
 });
 
 test('sem aviso, a tela e a confirmação voltam ao início', function () {
