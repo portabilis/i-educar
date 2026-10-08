@@ -40,9 +40,8 @@ test('não oferece editar a quem só pode visualizar', function () {
         ->assertDontSee('educar_turma_tipo_cad.php', false);
 });
 
-// Defeito conhecido: a tela lê os atributos do registro antes de conferir se
-// ele existe; um código inexistente dá erro 500 em vez de voltar para a
-// listagem, como fazem as outras telas de tipo.
-test('defeito: estoura quando o tipo de turma não existe', function () {
-    $this->get('/intranet/educar_turma_tipo_det.php?cod_turma_tipo=0')->assertServerError();
+test('volta para a listagem avisando quando tipo de turma não existe', function () {
+    $this->get('/intranet/educar_turma_tipo_det.php?cod_turma_tipo=0')
+        ->assertRedirect('educar_turma_tipo_lst.php')
+        ->assertSessionHas('error', 'Tipo de turma não encontrado. O registro não existe ou foi excluído. Use a busca abaixo para localizá-lo.');
 });

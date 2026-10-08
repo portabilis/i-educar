@@ -37,7 +37,11 @@ return new class extends clsDetalhe
         $registro = $professorTurma?->getAttributes();
 
         if (!$registro) {
-            $this->simpleRedirect(url: 'educar_servidor_professor_vinculo_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_servidor_professor_vinculo_lst.php',
+                registro: 'vínculo com turma',
+                codigo: $this->id,
+            );
         }
 
         $turma = $professorTurma->schoolClass;

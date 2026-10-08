@@ -44,8 +44,11 @@ return new class extends clsDetalhe
             ->first();
 
         if (!$registro) {
-            $this->mensagem .= 'Registro não localizado.<br>';
-            $this->simpleRedirect('educar_escola_serie_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_escola_serie_lst.php',
+                registro: 'série da escola',
+                feminino: true,
+            );
         }
 
         $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);

@@ -22,7 +22,11 @@ return new class extends clsDetalhe
             ->find(request()->integer('id'));
 
         if (!$registro) {
-            $this->simpleRedirect(url: 'educar_comunicados_escolares_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_comunicados_escolares_lst.php',
+                registro: 'comunicado escolar',
+                codigo: request()->integer('id'),
+            );
         }
 
         $obj_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);

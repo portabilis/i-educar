@@ -413,8 +413,11 @@ return new class extends clsCadastro
             $registro = $obj->detalhe();
 
             if ($registro === false) {
-                throw new HttpResponseException(
-                    new RedirectResponse('educar_escola_lst.php')
+                $this->redirectNotFound(
+                    url: 'educar_escola_lst.php',
+                    registro: 'escola',
+                    feminino: true,
+                    codigo: $this->cod_escola,
                 );
             }
 

@@ -16,7 +16,11 @@ return new class extends clsDetalhe
         $motivo = DocumentAbsenceReason::withTrashed()->find(request()->integer('id'));
 
         if (!$motivo) {
-            $this->simpleRedirect(url: 'educar_motivo_ausencia_documentacao_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_motivo_ausencia_documentacao_lst.php',
+                registro: 'motivo de ausência de documentação',
+                codigo: request()->integer('id'),
+            );
         }
 
         $this->addDetalhe(detalhe: ['Motivo', e($motivo->name)]);
