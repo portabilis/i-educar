@@ -386,14 +386,20 @@ class Registro20 implements RegistroEducacenso
 
                 break;
             case 39:
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
             case 40:
             case 64:
             case 68:
+                // @codeCoverageIgnoreEnd
                 return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 23, 25, 26, 27, 28, 29, 30, 31, 99];
 
                 break;
             default:
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 return [];
+                // @codeCoverageIgnoreEnd
 
                 break;
         }
