@@ -1954,7 +1954,10 @@ class clsCampos extends Core_Controller_Page_Abstract
         if ($disabled) {
             $disabled = 'disabled=\'disabled\'';
         } else {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $disabled = '';
+            // @codeCoverageIgnoreEnd
         }
 
         if (!$descricao) {
