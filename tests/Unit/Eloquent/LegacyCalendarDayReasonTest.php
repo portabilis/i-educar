@@ -1,19 +1,10 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyCalendarDayReason;
-use App\Models\LegacySchool;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyCalendarDayReasonTest extends EloquentTestCase
-{
-    public $relationships = [
-        'school' => LegacySchool::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName()
-    {
-        return LegacyCalendarDayReason::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyCalendarDayReason::class));
+
+EloquentModelTestCase::registerModelTests();
