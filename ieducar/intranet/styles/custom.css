@@ -409,7 +409,7 @@ a.icons-top{
   font-family: "Open Sans", sans-serif;
 }
 
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
   .nvp_tabelaMenu input#busca-menu-input{
     width: 88% !important;
   }
@@ -528,7 +528,7 @@ a.menu_susp_root:after {
     background-size: 100%;
 }
 
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
   a.menu_susp_root:after {
     margin-top: 8px;
   }
@@ -1068,6 +1068,7 @@ td.area-conhecimento-destaque {
     background-color: #FFF;
 }
 
+.formcadastro .formdktd,
 #formcadastro .formdktd,
 .tableDetalhe .formdktd,
 .titulo-tabela-listagem {
@@ -1081,7 +1082,8 @@ td.area-conhecimento-destaque {
   padding: 8px !important;
 }
 
-#formcadastro input, #formcadastro textarea {
+#formcadastro input, #formcadastro textarea,
+.formcadastro input, .formcadastro textarea {
   border-radius: 3px;
   background-color: #ffffff;
   border: solid 1px #cddce6;
@@ -1116,7 +1118,9 @@ td.area-conhecimento-destaque {
 }
 
 #formcadastro .formmdtd,
-#formcadastro .formlttd{
+#formcadastro .formlttd,
+.formcadastro .formmdtd,
+.formcadastro .formlttd{
   color: #47728f;
   font-family: "Open Sans", sans-serif;
   font-size: 14px;
@@ -1239,7 +1243,8 @@ table.tabela-adicao {
     border: 0 !important;
 }
 
-table.tabela-adicao td {
+table.tabela-adicao td,
+table.tabela-adicao th {
   text-align: left;
   padding: 8px 15px !important;
   border: 0 !important;
