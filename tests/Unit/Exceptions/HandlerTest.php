@@ -1,48 +1,21 @@
 <?php
 
-namespace Tests\Unit\Exceptions;
-
-use App_Model_Exception;
 use iEducar\Modules\ErrorTracking\Tracker;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
-use ReflectionProperty;
-use RuntimeException;
 use Tests\TestCase;
-use Throwable;
 
-class HandlerTest extends TestCase
-{
-    private array $notified = [];
+uses(TestCase::class);
 
-    protected function setUp(): void
-    {
-        parent::setUp();
+beforeEach(function () {
+    $this->notified = [];
 
-        config(['app.trackerror' => true]);
-
-        // O handler só lê a rota fora do console, como numa requisição HTTP
-        $this->runningInConsole(false);
-
-        $this->app->instance(Tracker::class, new class($this->notified) implements Tracker
-        {
-            public function __construct(private array &$notified) {}
-
-            public function notify(Throwable $exception, array $data = [])
-            {
-                $this->notified[] = [$exception, $data];
-            }
-        });
-    }
-
-    private function runningInConsole(bool $console): void
-    {
+    $this->runningInConsole = function (bool $console) {
         (new ReflectionProperty($this->app, 'isRunningInConsole'))->setValue($this->app, $console);
-    }
+    };
 
-    private function report(Request $request): array
-    {
+    $this->report = function (Request $request): array {
         $this->app->instance('request', $request);
 
         $exception = new RuntimeException('falha antes do roteamento');
@@ -53,76 +26,83 @@ class HandlerTest extends TestCase
         $this->assertSame($exception, $this->notified[0][0]);
 
         return $this->notified[0][1];
-    }
+    };
 
-    private function routeTo(string $uri, string $controller): Request
-    {
+    $this->routeTo = function (string $uri, string $controller): Request {
         $request = Request::create('/' . $uri, 'GET', ['busca' => 'Ana']);
         $request->setRouteResolver(fn () => (new Route('GET', $uri, ['uses' => $controller, 'controller' => $controller]))->bind($request));
 
         return $request;
-    }
+    };
 
-    public function test_reports_exception_raised_before_the_route_is_resolved()
+    config(['app.trackerror' => true]);
+
+    // O handler só lê a rota fora do console, como numa requisição HTTP
+    ($this->runningInConsole)(false);
+
+    $this->app->instance(Tracker::class, new class($this->notified) implements Tracker
     {
-        $data = $this->report(Request::create('/api/v2/notas', 'POST'));
+        public function __construct(private array &$notified) {}
 
-        $this->assertSame('', $data['controller']);
-        $this->assertSame('', $data['action']);
-    }
+        public function notify(Throwable $exception, array $data = [])
+        {
+            $this->notified[] = [$exception, $data];
+        }
+    });
+});
 
-    public function test_reports_exception_from_a_closure_route()
-    {
-        $request = Request::create('/closure');
-        $request->setRouteResolver(fn () => new Route('GET', '/closure', fn () => 'ok'));
+test('reports exception raised before the route is resolved', function () {
+    $data = ($this->report)(Request::create('/api/v2/notas', 'POST'));
 
-        $data = $this->report($request);
+    $this->assertSame('', $data['controller']);
+    $this->assertSame('', $data['action']);
+});
 
-        $this->assertSame('', $data['controller']);
-    }
+test('reports exception from a closure route', function () {
+    $request = Request::create('/closure');
+    $request->setRouteResolver(fn () => new Route('GET', '/closure', fn () => 'ok'));
 
-    public function test_reports_controller_and_action_of_the_route()
-    {
-        $request = Request::create('/notas', 'POST');
-        $request->setRouteResolver(fn () => new Route('POST', '/notas', ['controller' => 'App\Http\Controllers\NotasController@store']));
+    $data = ($this->report)($request);
 
-        $data = $this->report($request);
+    $this->assertSame('', $data['controller']);
+});
 
-        $this->assertSame('NotasController', $data['controller']);
-        $this->assertSame('store', $data['action']);
-    }
+test('reports controller and action of the route', function () {
+    $request = Request::create('/notas', 'POST');
+    $request->setRouteResolver(fn () => new Route('POST', '/notas', ['controller' => 'App\Http\Controllers\NotasController@store']));
 
-    public function test_nao_envia_com_o_rastreador_desligado_nem_excecao_que_nao_deve_ser_reportada()
-    {
-        $this->app->make(ExceptionHandler::class)->report(new App_Model_Exception('não reportável'));
+    $data = ($this->report)($request);
 
-        config(['app.trackerror' => false]);
-        $this->app->make(ExceptionHandler::class)->report(new RuntimeException('desligado'));
+    $this->assertSame('NotasController', $data['controller']);
+    $this->assertSame('store', $data['action']);
+});
 
-        $this->assertSame([], $this->notified);
-    }
+test('nao envia com o rastreador desligado nem excecao que nao deve ser reportada', function () {
+    $this->app->make(ExceptionHandler::class)->report(new App_Model_Exception('não reportável'));
 
-    public function test_no_console_nao_envia_contexto_nem_rota()
-    {
-        $this->runningInConsole(true);
+    config(['app.trackerror' => false]);
+    $this->app->make(ExceptionHandler::class)->report(new RuntimeException('desligado'));
 
-        $this->app->make(ExceptionHandler::class)->report(new RuntimeException('no console'));
+    $this->assertSame([], $this->notified);
+});
 
-        $this->assertSame(['context' => [], 'controller' => null, 'action' => null], $this->notified[0][1]);
-    }
+test('no console nao envia contexto nem rota', function () {
+    ($this->runningInConsole)(true);
 
-    public function test_na_rota_do_legado_o_controller_e_o_caminho_da_tela()
-    {
-        $data = $this->report($this->routeTo('intranet/educar_aluno_lst.php', 'App\Http\Controllers\LegacyController@intranet'));
+    $this->app->make(ExceptionHandler::class)->report(new RuntimeException('no console'));
 
-        $this->assertSame(['context' => ['busca' => 'Ana'], 'controller' => 'intranet/educar_aluno_lst.php', 'action' => 'intranet'], $data);
-    }
+    $this->assertSame(['context' => [], 'controller' => null, 'action' => null], $this->notified[0][1]);
+});
 
-    public function test_controller_invocavel_usa_o_proprio_nome_como_acao()
-    {
-        $data = $this->report($this->routeTo('auth/callback', 'App\Http\Controllers\SocialiteCallbackController'));
+test('na rota do legado o controller e o caminho da tela', function () {
+    $data = ($this->report)(($this->routeTo)('intranet/educar_aluno_lst.php', 'App\Http\Controllers\LegacyController@intranet'));
 
-        $this->assertSame('SocialiteCallbackController', $data['controller']);
-        $this->assertSame('SocialiteCallbackController', $data['action']);
-    }
-}
+    $this->assertSame(['context' => ['busca' => 'Ana'], 'controller' => 'intranet/educar_aluno_lst.php', 'action' => 'intranet'], $data);
+});
+
+test('controller invocavel usa o proprio nome como acao', function () {
+    $data = ($this->report)(($this->routeTo)('auth/callback', 'App\Http\Controllers\SocialiteCallbackController'));
+
+    $this->assertSame('SocialiteCallbackController', $data['controller']);
+    $this->assertSame('SocialiteCallbackController', $data['action']);
+});
