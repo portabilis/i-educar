@@ -35,15 +35,15 @@
                     <th scope="row" class="formlttd" valign="top"><span class="form">Ano:</span></th>
                     <td class="formlttd" valign="top"><span class="form">{{ $schoolClass->year ?? null }}</span></td>
                 </tr>
-                <tr id="tr_ano">
+                <tr id="tr_vagas">
                     <th scope="row" class="formmdtd" valign="top"><span class="form">Total de vagas na turma:</span></th>
                     <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->max_aluno }}</span></td>
                 </tr>
-                <tr id="tr_ano">
+                <tr id="tr_vagas_disponiveis">
                     <th scope="row" class="formlttd" valign="top"><span class="form">Vagas disponíveis na turma:</span></th>
                     <td class="formlttd" valign="top"><span class="form">{{ $schoolClass->vacancies }}</span></td>
                 </tr>
-                <tr id="tr_ano">
+                <tr id="tr_calendario_letivo">
                     <th scope="row" class="formmdtd" valign="top"><span class="form">Calendário letivo:</span></th>
                     <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->begin_academic_year->format('d/m/Y') }} à {{ $schoolClass->end_academic_year->format('d/m/Y') }}</span></td>
                 </tr>

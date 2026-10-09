@@ -25,7 +25,7 @@
                     </span>
                 </td>
             </tr>
-            <tr id="tr_nm_instituicao">
+            <tr id="tr_type">
                 <td class="formlttd" valign="top"><span class="form">Tipo:</span></td>
                 <td class="formlttd" valign="top">
                     <span class="form">

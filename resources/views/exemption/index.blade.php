@@ -45,7 +45,7 @@
                     @include('form.select-grade')
                 </td>
             </tr>
-            <tr id="tr_nm_serie">
+            <tr id="tr_componente_curricular">
                 <td class="formlttd" valign="top"><span class="form">Componente curricular</span></td>
                 <td class="formlttd" valign="top">
                     @include('form.select-discipline-school-grade')

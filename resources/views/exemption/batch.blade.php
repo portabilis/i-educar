@@ -94,7 +94,7 @@
                     @include('form.select-school-class')
                 </td>
             </tr>
-            <tr id="tr_nm_serie">
+            <tr id="tr_situacao">
                 <td class="formmdtd" valign="top">
                     <span class="form">Situação</span>
                 </td>
@@ -114,7 +114,7 @@
                     </span>
                 </td>
             </tr>
-            <tr id="tr_nm_serie">
+            <tr id="tr_ref_cod_componente_curricular">
                 <td class="formlttd" valign="top">
                     <span class="form">Componentes curriculares</span>
                     <span class="campo_obrigatorio">*</span>
@@ -133,7 +133,7 @@
                     </span>
                 </td>
             </tr>
-            <tr id="tr_nm_serie">
+            <tr id="tr_exemption_type">
                 <td class="formmdtd" valign="top">
                     <span class="form">Tipo de dispensa</span>
                     <span class="campo_obrigatorio">*</span>

@@ -100,7 +100,7 @@
                     @include('form.select-school-class')
                 </td>
             </tr>
-            <tr id="tr_nm_serie">
+            <tr id="tr_situacao">
                 <td class="formmdtd" valign="top">
                     <span class="form">Situação</span>
                     <span class="campo_obrigatorio">*</span>
@@ -120,7 +120,7 @@
                     </span>
                 </td>
             </tr>
-            <tr id="tr_nm_serie">
+            <tr id="tr_nova_situacao">
                 <td class="formlttd" valign="top">
                     <span class="form">Nova situação</span>
                     <span class="campo_obrigatorio">*</span>
@@ -160,7 +160,7 @@
                 </td>
             </tr>
 
-            <tr id="tr_nm_data" class="field-transfer">
+            <tr id="tr_transferencia_data" class="field-transfer">
                 <td class="formlttd" valign="top">
                     <span class="form">Data da Transferência</span>
                     <span class="campo_obrigatorio">*</span>
@@ -172,7 +172,7 @@
                 </td>
             </tr>
 
-            <tr id="tr_nm_data" class="field-transfer">
+            <tr id="tr_transferencia_observacoes" class="field-transfer">
                 <td class="formlttd" valign="top">
                     <span class="form">Obsercações da Transferência</span>
                 </td>
