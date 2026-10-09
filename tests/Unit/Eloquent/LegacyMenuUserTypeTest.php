@@ -1,21 +1,15 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Menu;
 use App\Models\LegacyMenuUserType;
 use App\Models\LegacyUserType;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyMenuUserTypeTest extends EloquentTestCase
-{
-    protected $relations = [
-        'menus' => Menu::class,
-        'userType' => LegacyUserType::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return LegacyMenuUserType::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyMenuUserType::class, relations: [
+    'menus' => Menu::class,
+    'userType' => LegacyUserType::class,
+]));
+
+EloquentModelTestCase::registerModelTests();
