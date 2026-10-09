@@ -1,14 +1,10 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\RegionalType;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class RegionalTypeTest extends EloquentTestCase
-{
-    protected function getEloquentModelName(): string
-    {
-        return RegionalType::class;
-    }
-}
+uses(EloquentModelTestCase::class);
+
+beforeEach(fn () => $this->eloquent(RegionalType::class));
+
+EloquentModelTestCase::registerModelTests();
