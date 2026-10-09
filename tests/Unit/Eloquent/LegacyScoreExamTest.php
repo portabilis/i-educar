@@ -1,28 +1,21 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyRegistration;
 use App\Models\LegacyScoreExam;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyScoreExamTest extends EloquentTestCase
-{
-    protected $relations = [
+uses(EloquentModelTestCase::class);
+
+beforeEach(fn () => $this->eloquent(
+    LegacyScoreExam::class,
+    relations: [
         'registration' => LegacyRegistration::class,
-    ];
+    ],
+    legacyAttributes: [
+        'id' => 'idesco',
+        'description' => 'descricao',
+        'schooling' => 'escolaridade',
+    ],
+));
 
-    protected function getEloquentModelName(): string
-    {
-        return LegacyScoreExam::class;
-    }
-
-    protected function getLegacyAttributes(): array
-    {
-        return [
-            'id' => 'idesco',
-            'description' => 'descricao',
-            'schooling' => 'escolaridade',
-        ];
-    }
-}
+EloquentModelTestCase::registerModelTests();
