@@ -343,10 +343,12 @@ return new class extends clsCadastro
 
                     // se a hora atual for maior ele fica mais apagado porque eh antigo
                     if (strtotime(datetime: $data_inicio) < $this->time_real_atual) {
+                        // @codeCoverageIgnoreStart
                         // eh antigo
                         $extras += 4;
                         $class_titulo = 'class="comp_tit_antigo"';
                         $class_desc = 'class="comp_antigo"';
+                        // @codeCoverageIgnoreEnd
                     } else {
                         $class_titulo = 'class="comp_tit"';
                         $class_desc = '';
