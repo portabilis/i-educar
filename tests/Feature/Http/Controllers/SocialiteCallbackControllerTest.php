@@ -3,6 +3,7 @@
 use App\Events\UserSocialiteNotFound;
 use App\Models\LegacyEmployee;
 use App\User;
+use Database\Factories\LegacyEmployeeFactory;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Event;
@@ -76,4 +77,59 @@ test('usuário inativo vê o motivo da inativação ou a mensagem padrão', func
         ->assertSessionHasErrors(['login' => __('auth.inactive')]);
 
     $this->assertGuest();
+});
+
+test('entra com o usuário ativo quando um inativo tem o mesmo e-mail', function () {
+    $email = 'mesmo.email@exemplo.test';
+
+    $inativo = LegacyUserFactory::new()->create([
+        'cod_usuario' => LegacyEmployeeFactory::new()->create(['email' => $email, 'ativo' => 0])->ref_cod_pessoa_fj,
+        'ativo' => 0,
+    ]);
+    $ativo = LegacyUserFactory::new()->create([
+        'cod_usuario' => LegacyEmployeeFactory::new()->create(['email' => $email, 'ativo' => 1])->ref_cod_pessoa_fj,
+        'ativo' => 1,
+    ]);
+    provedorDevolve(usuarioDoProvedor($email));
+
+    $this->get(route('socialite.callback', ['code' => 'abc']))
+        ->assertSessionDoesntHaveErrors('login');
+
+    $this->assertAuthenticatedAs(User::query()->find($ativo->cod_usuario));
+    expect(User::query()->find($inativo->cod_usuario)->isInactive())->toBeTrue();
+});
+
+test('segue recusando quando o único usuário com o e-mail está inativo', function () {
+    $email = 'so.inativo@exemplo.test';
+
+    LegacyUserFactory::new()->create([
+        'cod_usuario' => LegacyEmployeeFactory::new()->create(['email' => $email, 'ativo' => 0])->ref_cod_pessoa_fj,
+        'ativo' => 0,
+    ]);
+    provedorDevolve(usuarioDoProvedor($email));
+
+    $this->get(route('socialite.callback', ['code' => 'abc']))
+        ->assertRedirect('/login')
+        ->assertSessionHasErrors('login');
+
+    $this->assertGuest();
+});
+
+test('não dispara o evento de usuário não encontrado para uma conta desativada', function () {
+    Event::fake([UserSocialiteNotFound::class]);
+    $email = 'desativado@portabilis.com.br';
+
+    LegacyUserFactory::new()->create([
+        'cod_usuario' => LegacyEmployeeFactory::new()->create(['email' => $email, 'ativo' => 0])->ref_cod_pessoa_fj,
+        'ativo' => 0,
+    ]);
+    provedorDevolve(usuarioDoProvedor($email));
+
+    $this->get(route('socialite.callback', ['code' => 'abc']))
+        ->assertRedirect('/login')
+        ->assertSessionHasErrors('login');
+
+    $this->assertGuest();
+    Event::assertNotDispatched(UserSocialiteNotFound::class);
+    expect(LegacyEmployee::query()->where('email', $email)->count())->toBe(1);
 });
