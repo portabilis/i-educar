@@ -3,7 +3,6 @@
 namespace App\Rules;
 
 use App\Services\DiarioControllerService;
-use App_Model_IedFinder;
 use Closure;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -37,7 +36,7 @@ class RegistrationExistsInSchoolClass implements ValidationRule
         // findMatricula aceita enturmações que o IedFinder recusa, como a de turma desativada;
         // o lançamento lê a regra de avaliação pelo IedFinder, então a matrícula precisa passar nos dois.
         try {
-            App_Model_IedFinder::getMatricula($registration->getKey());
+            $this->service->getMatricula($registration->getKey());
         } catch (StudentNotEnrolledInSchoolClass $exception) {
             $fail($exception->getMessage());
         }
