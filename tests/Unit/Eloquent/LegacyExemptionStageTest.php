@@ -1,22 +1,13 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyExemptionStage;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyExemptionStageTest extends EloquentTestCase
-{
-    protected $relations = [
-        'exemption' => LegacyDisciplineExemption::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyExemptionStage::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyExemptionStage::class, relations: [
+    'exemption' => LegacyDisciplineExemption::class,
+]));
+
+EloquentModelTestCase::registerModelTests();
