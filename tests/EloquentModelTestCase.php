@@ -51,6 +51,12 @@ abstract class EloquentModelTestCase extends TestCase
 
     protected ?Closure $factoryModifier = null;
 
+    /**
+     * Ajusta os atributos gerados para o teste de atualização: recebe o array
+     * e devolve o array alterado.
+     */
+    protected ?Closure $updateAttributes = null;
+
     private array $uniqueAttributeSets = [];
 
     /**
@@ -63,11 +69,13 @@ abstract class EloquentModelTestCase extends TestCase
         array $relations = [],
         array $legacyAttributes = [],
         ?Closure $factoryModifier = null,
+        ?Closure $updateAttributes = null,
     ): Model {
         $this->eloquentModel = $model;
         $this->relations = $relations;
         $this->legacyAttributes = $legacyAttributes;
         $this->factoryModifier = $factoryModifier;
+        $this->updateAttributes = $updateAttributes;
 
         return $this->model = $this->createNewModel();
     }
@@ -134,7 +142,9 @@ abstract class EloquentModelTestCase extends TestCase
 
     public function getAttributesForUpdate(): array
     {
-        return $this->buildAttributes();
+        $attributes = $this->buildAttributes();
+
+        return $this->updateAttributes ? ($this->updateAttributes)($attributes) : $attributes;
     }
 
     public function instanceNewEloquentModel(): Model
