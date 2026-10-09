@@ -307,19 +307,19 @@ class Registro20 implements RegistroEducacenso
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
 
                 break;
-            // @codeCoverageIgnoreStart
+                // @codeCoverageIgnoreStart
             case ModalidadeCurso::EDUCACAO_ESPECIAL:
                 // @codeCoverageIgnoreEnd
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL]}";
 
                 break;
-            // @codeCoverageIgnoreStart
+                // @codeCoverageIgnoreStart
             case ModalidadeCurso::EJA:
                 // @codeCoverageIgnoreEnd
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
 
                 break;
-            // @codeCoverageIgnoreStart
+                // @codeCoverageIgnoreStart
             case ModalidadeCurso::EDUCACAO_PROFISSIONAL:
                 // @codeCoverageIgnoreEnd
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]}, {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
