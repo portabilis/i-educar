@@ -154,3 +154,22 @@ test('a tela de relatório precisa definir o formulário e a preparação dos ar
     expect(fn () => $controller->form())->toThrow(Exception::class, "The method 'form' must be overridden!")
         ->and(fn () => $controller->beforeValidation())->toThrow(Exception::class, "The method 'beforeValidation' must be overridden!");
 });
+
+class RelatorioSemModelo extends RelatorioDoController
+{
+    public function templateName()
+    {
+        throw new RuntimeException('Modelo do relatório não encontrado');
+    }
+}
+
+test('quando o nome do modelo falha, o rastreador usa a classe do relatório e o erro ainda aparece', function () {
+    Mail::fake();
+    config(['legacy.modules.error.track' => true, 'legacy.modules.error.tracker_name' => 'EMAIL', 'legacy.report.show_error_details' => true]);
+    $_GET['print_report_with_get'] = 1;
+    $_POST = ['ano' => 2030];
+
+    // O nome do modelo é lido de novo só para identificar o relatório no
+    // rastreador; se ele falhar ali, o erro original continua sendo exibido.
+    expect(gerarRelatorio(new RelatorioDeTesteController(new RelatorioSemModelo)))->toContain('Detalhes: No report result to render!');
+});
