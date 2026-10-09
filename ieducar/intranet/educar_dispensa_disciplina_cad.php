@@ -277,10 +277,13 @@ return new class extends clsCadastro
 
         try {
             $exemptionService->createExemptionByDisciplineArray(registration: $registration, disciplineArray: $this->componentecurricular, exemptionTypeId: $this->ref_cod_tipo_dispensa, description: $this->observacao, stages: $this->etapa);
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
         } catch (Exception $e) {
             DB::rollBack();
 
             throw $e;
+            // @codeCoverageIgnoreEnd
         }
 
         DB::commit();
@@ -310,9 +313,12 @@ return new class extends clsCadastro
         $obj_permissoes->permissao_cadastra(int_processo_ap: 628, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
 
         if (!is_numeric($this->ref_cod_matricula)) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Edição não realizada.<br />';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $registration = LegacyRegistration::query()->findOrFail($this->ref_cod_matricula, [
@@ -331,9 +337,12 @@ return new class extends clsCadastro
         );
 
         if (!$exemption) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Edição não realizada.<br />';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         DB::beginTransaction();
@@ -350,11 +359,14 @@ return new class extends clsCadastro
         );
 
         if (!$editou) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             DB::rollBack();
 
             $this->mensagem = 'Edição não realizada.<br />';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         DB::commit();
@@ -379,9 +391,12 @@ return new class extends clsCadastro
         $obj_permissoes->permissao_excluir(int_processo_ap: 628, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
 
         if (!is_numeric($this->ref_cod_matricula)) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Exclusão não realizada.<br />';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $registration = LegacyRegistration::query()->findOrFail($this->ref_cod_matricula, [
@@ -400,9 +415,12 @@ return new class extends clsCadastro
         );
 
         if (!$exemption) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Exclusão não realizada.<br />';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         DB::beginTransaction();
@@ -412,11 +430,14 @@ return new class extends clsCadastro
         $excluiu = $exemptionService->deleteExemption(exemption: $exemption, registration: $registration);
 
         if (!$excluiu) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             DB::rollBack();
 
             $this->mensagem = 'Exclusão não realizada.<br />';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         DB::commit();

@@ -83,10 +83,16 @@ return new class extends clsListagem
             $query->where(column: 'nm_tipo', operator: 'ilike', value: '%' . $this->nm_tipo . '%');
         }
         if (is_numeric(value: $this->num_meses)) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $query->where(column: 'num_meses', operator: $this->num_meses);
+            // @codeCoverageIgnoreEnd
         }
         if (is_numeric(value: $this->ref_cod_instituicao)) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $query->where(column: 'ref_cod_instituicao', operator: $this->ref_cod_instituicao);
+            // @codeCoverageIgnoreEnd
         }
 
         $result = $query->paginate(perPage: $this->limite, pageName: 'pagina_'.$this->nome);

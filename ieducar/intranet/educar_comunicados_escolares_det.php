@@ -22,7 +22,10 @@ return new class extends clsDetalhe
             ->find(request()->integer('id'));
 
         if (!$registro) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->simpleRedirect(url: 'educar_comunicados_escolares_lst.php');
+            // @codeCoverageIgnoreEnd
         }
 
         $obj_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);

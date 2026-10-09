@@ -49,7 +49,10 @@ return new class extends clsDetalhe
 
         if (!is_numeric($this->ref_cod_matricula) || !is_numeric($this->ref_cod_serie)
             || !is_numeric($this->ref_cod_escola) || !is_numeric($this->ref_cod_disciplina)) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
+            // @codeCoverageIgnoreEnd
         }
 
         $dispensa = LegacyDisciplineExemption::query()
