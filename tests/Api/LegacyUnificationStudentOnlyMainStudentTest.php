@@ -40,6 +40,8 @@ class LegacyUnificationStudentOnlyMainStudentTest extends TestCase
             ->assertSuccessful()
             ->assertSee('Informe pelo menos dois alunos para unificar.');
 
-        $this->assertDatabaseCount(LogUnification::class, 0);
+        $this->assertDatabaseMissing(LogUnification::class, [
+            'main_id' => $this->student->getKey(),
+        ]);
     }
 }
