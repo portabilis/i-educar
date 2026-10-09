@@ -56,7 +56,7 @@
                 </tr>
                 <tr>
                     <td class="formmdtd" valign="top">
-                        <span class="form">Etapa</span>
+                        <span class="form"><label for="stage">Etapa</label></span>
                         <span class="campo_obrigatorio">*</span>
                     </td>
                     <td class="formmdtd" valign="top">
@@ -88,12 +88,12 @@
                                     <tr class="formmdtd dd tr-dates">
                                         <td class="formmdtd dd" valign="top">
                                             <input class="geral" onkeypress="formataData(this, event);" type="text"
-                                                   name="start_date[]"
+                                                   name="start_date[]" aria-label="Data inicial"
                                                    value="{{ $date->start_date->format('d/m/Y') }}"
                                                    size="9" maxlength="10" placeholder="dd/mm/aaaa">
                                         <td class="formmdtd dd" valign="top">
                                             <input class="geral" onkeypress="formataData(this, event);" type="text"
-                                                   name="end_date[]"
+                                                   name="end_date[]" aria-label="Data final"
                                                    value="{{ $date->end_date->format('d/m/Y') }}"
                                                    size="9" maxlength="10" placeholder="dd/mm/aaaa">
                                         </td>
@@ -109,11 +109,11 @@
                                 <tr class="formmdtd dd tr-dates">
                                     <td class="formmdtd dd" valign="top">
                                         <input class="geral" onkeypress="formataData(this, event);" type="text"
-                                               name="start_date[]"
+                                               name="start_date[]" aria-label="Data inicial"
                                                size="9" maxlength="10" placeholder="dd/mm/aaaa">
                                     <td class="formmdtd dd" valign="top">
                                         <input class="geral" onkeypress="formataData(this, event);" type="text"
-                                               name="end_date[]"
+                                               name="end_date[]" aria-label="Data final"
                                                size="9" maxlength="10" placeholder="dd/mm/aaaa">
                                     </td>
                                     <td align="center">

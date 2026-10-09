@@ -6,7 +6,7 @@ if (empty($records)) {
 
 @endphp
 
-<select name="record">
+<select name="record" aria-label="Registro">
     <option value="">Selecione um registro</option>
     @foreach($records as $record)
         <option value="{{ $record }}" @if(old('record', request('record')) == $record) selected @endif>

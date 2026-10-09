@@ -157,7 +157,7 @@
                 <td class="formmdtd" colspan="2">
                     <div style="padding: 10px;">
                         <p>Para confirmar a operação, digite <strong>delete</strong> no campo abaixo:</p>
-                        <input type="text" id="confirm_input" class="geral" style="width: 200px;" autocomplete="off" placeholder="Digite delete" onpaste="return false;" ondrop="return false;">
+                        <input type="text" id="confirm_input" aria-label="Digite delete para confirmar a operação" class="geral" style="width: 200px;" autocomplete="off" placeholder="Digite delete" onpaste="return false;" ondrop="return false;">
                     </div>
                 </td>
             </tr>
