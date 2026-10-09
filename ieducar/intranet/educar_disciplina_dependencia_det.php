@@ -47,7 +47,12 @@ return new class extends clsDetalhe
         }
 
         if (!$registro) {
-            $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
+            $this->redirectNotFound(
+                url: 'educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula,
+                registro: 'disciplina de dependência',
+                feminino: true,
+                dica: 'Confira os registros listados abaixo.',
+            );
         }
 
         $registro['ref_ref_cod_serie'] = LegacyGrade::query()->whereKey($this->ref_cod_serie)->value('nm_serie');

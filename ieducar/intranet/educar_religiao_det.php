@@ -31,13 +31,15 @@ return new class extends clsDetalhe
 
         $this->cod_religiao = $_GET['cod_religiao'];
 
-        $registro = Religion::findOrFail(id: $this->cod_religiao, columns: ['id', 'name'])?->getAttributes();
+        $registro = Religion::find(id: $this->cod_religiao, columns: ['id', 'name'])?->getAttributes();
 
         if (!$registro) {
-            // Inalcançável: o `findOrFail()` acima responde 404 antes de chegar aqui.
-            // @codeCoverageIgnoreStart
-            $this->simpleRedirect(url: 'educar_religiao_lst.php');
-            // @codeCoverageIgnoreEnd
+            $this->redirectNotFound(
+                url: 'educar_religiao_lst.php',
+                registro: 'religião',
+                feminino: true,
+                codigo: $this->cod_religiao,
+            );
         }
 
         if ($registro['id']) {

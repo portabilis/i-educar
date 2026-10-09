@@ -1,8 +1,6 @@
 <?php
 
 use App\Models\LegacyCalendarNote;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\RedirectResponse;
 
 return new class extends clsDetalhe
 {
@@ -42,15 +40,16 @@ return new class extends clsDetalhe
 
         $this->cod_calendario_anotacao = $_GET['cod_calendario_anotacao'];
 
-        $registro = LegacyCalendarNote::find($this->cod_calendario_anotacao)->getAttributes();
+        $registro = LegacyCalendarNote::find($this->cod_calendario_anotacao)?->getAttributes();
 
         if (!$registro) {
-            // Débito de cobertura: trecho ainda sem teste.
-            // @codeCoverageIgnoreStart
-            throw new HttpResponseException(
-                response: new RedirectResponse(url: 'educar_calendario_ano_letivo_lst.php')
+            $this->redirectNotFound(
+                url: 'educar_calendario_ano_letivo_lst.php',
+                registro: 'anotação do calendário',
+                feminino: true,
+                codigo: $this->cod_calendario_anotacao,
+                dica: 'Acesse a anotação pelo calendário do ano letivo.',
             );
-            // @codeCoverageIgnoreEnd
         }
 
         if ($registro['cod_calendario_anotacao']) {

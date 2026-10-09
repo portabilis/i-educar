@@ -29,15 +29,12 @@ return new class extends clsDetalhe
         $this->cod_tipo_ensino = $_GET['cod_tipo_ensino'];
 
         $registro = LegacyEducationType::find($this->cod_tipo_ensino)?->getAttributes();
-        if (!$registro) {
-            $this->simpleRedirect('educar_tipo_ensino_lst.php');
-        }
-
-        if (!$registro['ativo']) {
-            // Débito de cobertura: trecho ainda sem teste.
-            // @codeCoverageIgnoreStart
-            $this->simpleRedirect('educar_tipo_ensino_lst.php');
-            // @codeCoverageIgnoreEnd
+        if (!$registro || !$registro['ativo']) {
+            $this->redirectNotFound(
+                url: 'educar_tipo_ensino_lst.php',
+                registro: 'tipo de ensino',
+                codigo: $this->cod_tipo_ensino,
+            );
         }
 
         if ($registro['cod_tipo_ensino']) {

@@ -61,7 +61,11 @@ return new class extends clsDetalhe
         $historicoModel = LegacySchoolHistory::forStudentSequential($this->ref_cod_aluno, $this->sequencial)->first();
 
         if (!$historicoModel) {
-            $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->redirectNotFound(
+                url: "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}",
+                registro: 'histórico escolar',
+                dica: 'Confira os registros listados abaixo.',
+            );
         }
 
         $registro = $historicoModel->getAttributes();

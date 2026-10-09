@@ -15,7 +15,11 @@ class TurmaController extends ApiCoreController
 
     protected function turmasPorAno($escolaId, $ano)
     {
-        $turmasPorAno = LegacySchoolAcademicYear::query()->whereSchool($escolaId)->whereYearEq($ano)->value('turmas_por_ano');
+        if (!is_numeric($ano)) {
+            return false;
+        }
+
+        $turmasPorAno = LegacySchoolAcademicYear::query()->whereSchool($escolaId)->whereYearEq((int) $ano)->value('turmas_por_ano');
 
         return $turmasPorAno === 1;
     }

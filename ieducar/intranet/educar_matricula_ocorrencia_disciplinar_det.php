@@ -51,7 +51,12 @@ return new class extends clsDetalhe
             ?->getAttributes();
 
         if (!$registro) {
-            $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
+            $this->redirectNotFound(
+                url: "educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}",
+                registro: 'ocorrência disciplinar',
+                feminino: true,
+                dica: 'Confira os registros listados abaixo.',
+            );
         }
 
         $obj_ref_cod_matricula = new clsPmieducarMatricula($registro['ref_cod_matricula']);

@@ -33,13 +33,14 @@ return new class extends clsDetalhe
 
         $this->cod_tipo_regime = $_GET['cod_tipo_regime'];
 
-        $registro = LegacyRegimeType::findOrFail($this->cod_tipo_regime)?->getAttributes();
+        $registro = LegacyRegimeType::find($this->cod_tipo_regime)?->getAttributes();
 
         if (!$registro) {
-            // Débito de cobertura: trecho ainda sem teste.
-            // @codeCoverageIgnoreStart
-            $this->simpleRedirect('educar_tipo_regime_lst.php');
-            // @codeCoverageIgnoreEnd
+            $this->redirectNotFound(
+                url: 'educar_tipo_regime_lst.php',
+                registro: 'tipo de regime',
+                codigo: $this->cod_tipo_regime,
+            );
         }
 
         if ($registro['cod_tipo_regime']) {

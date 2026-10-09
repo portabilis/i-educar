@@ -109,8 +109,10 @@ return new class extends clsCadastro
             && LegacyStudent::query()->whereStudent($this->ref_cod_aluno)->exists();
 
         if (!$alunoExiste and !$this->ref_cod_turma_copiar_enturmacoes) {
-            throw new HttpResponseException(
-                response: new RedirectResponse(url: 'educar_aluno_lst.php')
+            $this->redirectNotFound(
+                url: 'educar_aluno_lst.php',
+                registro: 'aluno',
+                codigo: $this->ref_cod_aluno,
             );
         }
 

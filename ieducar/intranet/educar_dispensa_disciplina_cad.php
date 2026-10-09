@@ -62,11 +62,25 @@ return new class extends clsCadastro
         if (is_numeric($this->ref_cod_matricula)) {
             $obj_matricula = new clsPmieducarMatricula(cod_matricula: $this->ref_cod_matricula, ativo: 1);
             $det_matricula = $obj_matricula->detalhe();
-            $this->redirectIf(condition: !$det_matricula, url: 'educar_matricula_lst.php');
+            if (!$det_matricula) {
+                $this->redirectNotFound(
+                    url: 'educar_matricula_lst.php',
+                    registro: 'matrícula',
+                    feminino: true,
+                    codigo: $this->ref_cod_matricula,
+                    dica: 'Acesse a matrícula pela ficha do aluno.',
+                );
+            }
+
             $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
             $this->ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
         } else {
-            $this->simpleRedirect('educar_matricula_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_matricula_lst.php',
+                registro: 'matrícula',
+                feminino: true,
+                dica: 'Acesse a matrícula pela ficha do aluno.',
+            );
         }
 
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_serie) &&

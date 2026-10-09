@@ -52,7 +52,12 @@ return new class extends clsDetalhe
         ]) : null;
 
         if (!$serie) {
-            $this->simpleRedirect('educar_serie_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_serie_lst.php',
+                registro: 'série',
+                feminino: true,
+                codigo: $this->cod_serie,
+            );
         }
 
         $registro = $serie->getAttributes();

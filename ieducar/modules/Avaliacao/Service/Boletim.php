@@ -2,6 +2,7 @@
 
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyDisciplineScore;
+use App\Models\LegacyDisciplineScoreAverage;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGrade;
 use App\Models\LegacyInstitution;
@@ -2991,11 +2992,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     $etapasNotas = $this->calculaEtapaNotasAglutinada($id, $this->getNotasComponentes());
 
                     $qtdeEtapas = $this->getOption('etapas');
+                    // Etapas que o componente cursa: as do calendário ou, com etapas específicas, as definidas para o componente.
+                    $etapasComponente = $qtdeEtapas > 0 ? range(1, $qtdeEtapas) : [];
 
                     if ($this->getRegraAvaliacaoDefinirComponentePorEtapa() == '1') {
-                        $qtdeEtapaEspecifica = App_Model_IedFinder::getQtdeEtapasComponente($turmaId, $id, $infosMatricula['ref_cod_aluno']);
+                        $etapasEspecificas = App_Model_IedFinder::getEtapasComponente($turmaId, $id);
 
-                        $qtdeEtapas = ($qtdeEtapaEspecifica ? $qtdeEtapaEspecifica : $qtdeEtapas);
+                        if ($etapasEspecificas) {
+                            $etapasComponente = $etapasEspecificas;
+                            $qtdeEtapas = count($etapasEspecificas);
+                        }
                     }
 
                     $verificaDispensa = App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $id);
@@ -3009,8 +3015,18 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                         }
                     }
 
-                    if ($verificaDispensa) {
-                        $qtdeEtapas = $qtdeEtapas - count($verificaDispensa);
+                    // A dispensa pode ter etapas que o componente não cursa; só as que ele cursa saem do divisor.
+                    $qtdeEtapas -= count(array_intersect($etapasComponente, $verificaDispensa));
+
+                    // Componente dispensado em todas as etapas que cursa não tem média; a bloqueada é mantida.
+                    if ($qtdeEtapas <= 0) {
+                        LegacyDisciplineScoreAverage::query()
+                            ->where('nota_aluno_id', $notaAlunoId)
+                            ->where('componente_curricular_id', $id)
+                            ->where('bloqueada', false)
+                            ->delete();
+
+                        continue;
                     }
 
                     $notas = array_merge(['Se' => 0, 'Et' => $qtdeEtapas], $consideraEtapas);
