@@ -1,23 +1,14 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+beforeEach(function () {
+    $this->_entity = new Educacenso_Model_Aluno;
+});
 
-class Educacenso_Model_AlunoTest extends TestCase
-{
-    protected $_entity = null;
-
-    protected function setUp(): void
-    {
-        $this->_entity = new Educacenso_Model_Aluno;
-    }
-
-    public function test_entity_validators()
-    {
-        // Recupera os objetos CoreExt_Validate
-        $validators = $this->_entity->getDefaultValidatorCollection();
-        $this->assertInstanceOf('CoreExt_Validate_Numeric', $validators['aluno']);
-        $this->assertInstanceOf('CoreExt_Validate_Numeric', $validators['alunoInep']);
-        $this->assertInstanceOf('CoreExt_Validate_String', $validators['nomeInep']);
-        $this->assertInstanceOf('CoreExt_Validate_String', $validators['fonte']);
-    }
-}
+test('entity validators', function () {
+    // Recupera os objetos CoreExt_Validate
+    $validators = $this->_entity->getDefaultValidatorCollection();
+    $this->assertInstanceOf('CoreExt_Validate_Numeric', $validators['aluno']);
+    $this->assertInstanceOf('CoreExt_Validate_Numeric', $validators['alunoInep']);
+    $this->assertInstanceOf('CoreExt_Validate_String', $validators['nomeInep']);
+    $this->assertInstanceOf('CoreExt_Validate_String', $validators['fonte']);
+});
