@@ -1,34 +1,27 @@
 <?php
 
-namespace Tests\Educacenso\Deficiencia;
-
 use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaProfessor;
 use iEducar\Modules\Educacenso\Deficiencia\ValueDeficienciaMultipla;
 use Tests\TestCase;
 
-class DeficienciaMultiplaProfessorTest extends TestCase
-{
-    public function test_lista_os_pares_de_deficiencias_que_formam_deficiencia_multipla(): void
-    {
-        $combinacoes = (new DeficienciaMultiplaProfessor)->getCombinacoes();
+uses(TestCase::class);
 
-        $this->assertCount(14, $combinacoes);
-        $this->assertContains(['19', '24'], $combinacoes);
-        $this->assertContains(['24', '25'], $combinacoes);
-    }
+test('lista os pares de deficiencias que formam deficiencia multipla', function () {
+    $combinacoes = (new DeficienciaMultiplaProfessor)->getCombinacoes();
 
-    public function test_sem_deficiencias_o_valor_fica_vazio(): void
-    {
-        $this->assertNull((new ValueDeficienciaMultipla(new DeficienciaMultiplaProfessor, []))->getValue());
-    }
+    $this->assertCount(14, $combinacoes);
+    $this->assertContains(['19', '24'], $combinacoes);
+    $this->assertContains(['24', '25'], $combinacoes);
+});
 
-    public function test_um_par_da_lista_e_deficiencia_multipla(): void
-    {
-        $this->assertSame(1, (new ValueDeficienciaMultipla(new DeficienciaMultiplaProfessor, ['20', '25']))->getValue());
-    }
+test('sem deficiencias o valor fica vazio', function () {
+    $this->assertNull((new ValueDeficienciaMultipla(new DeficienciaMultiplaProfessor, []))->getValue());
+});
 
-    public function test_deficiencias_que_nao_formam_par_nao_sao_deficiencia_multipla(): void
-    {
-        $this->assertSame(0, (new ValueDeficienciaMultipla(new DeficienciaMultiplaProfessor, ['19', '20']))->getValue());
-    }
-}
+test('um par da lista e deficiencia multipla', function () {
+    $this->assertSame(1, (new ValueDeficienciaMultipla(new DeficienciaMultiplaProfessor, ['20', '25']))->getValue());
+});
+
+test('deficiencias que nao formam par nao sao deficiencia multipla', function () {
+    $this->assertSame(0, (new ValueDeficienciaMultipla(new DeficienciaMultiplaProfessor, ['19', '20']))->getValue());
+});
