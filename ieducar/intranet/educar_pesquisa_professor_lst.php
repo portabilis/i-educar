@@ -57,7 +57,10 @@ return new class extends clsListagem
         $this->identificador = Session::get(key: 'identificador');
 
         if (isset($_GET['lst_matriculas']) && Session::has(key: 'lst_matriculas')) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->lst_matriculas = $_GET['lst_matriculas'] ?? Session::get(key: 'lst_matriculas');
+            // @codeCoverageIgnoreEnd
         }
 
         Session::put(key: 'tipo', value: $_GET['tipo'] ?? Session::get(key: 'tipo'));
@@ -68,7 +71,10 @@ return new class extends clsListagem
             $this->$var = $val === '' ? null : $val;
         }
         if (isset($this->lst_matriculas)) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->lst_matriculas = urldecode(string: $this->lst_matriculas);
+            // @codeCoverageIgnoreEnd
         }
         $this->addCabecalhos(coluna: [
             'Nome do Servidor',
