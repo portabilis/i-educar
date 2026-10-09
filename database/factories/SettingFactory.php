@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Setting;
+use App\SettingCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class SettingFactory extends Factory
@@ -41,6 +42,8 @@ class SettingFactory extends Factory
             'value' => $value,
             'type' => $this->faker->randomElement(['string', 'integer', 'float', 'boolean']),
             'description' => $this->faker->words(3, true),
+            // As categorias vêm das migrações; a configuração entra na primeira delas.
+            'setting_category_id' => fn () => SettingCategory::query()->orderBy('id')->value('id'),
         ];
     }
 }

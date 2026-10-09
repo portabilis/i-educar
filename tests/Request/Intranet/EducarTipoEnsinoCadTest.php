@@ -31,3 +31,9 @@ test('edita e exclui tipo de ensino', function () {
     $this->post($url, $payload)->assertRedirect();
     $this->post($url, ['tipoacao' => 'Excluir'] + $payload)->assertRedirect();
 });
+
+test('volta para a listagem avisando quando o tipo de ensino não existe', function () {
+    $this->get('/intranet/educar_tipo_ensino_cad.php?cod_tipo_ensino=0')
+        ->assertRedirect('educar_tipo_ensino_lst.php')
+        ->assertSessionHas('error', 'Tipo de ensino não encontrado. O registro não existe ou foi excluído. Use a busca abaixo para localizá-lo.');
+});

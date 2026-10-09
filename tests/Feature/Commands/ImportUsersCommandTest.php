@@ -11,6 +11,7 @@ use Database\Factories\LegacyEmployeeFactory;
 use Database\Factories\LegacyInstitutionFactory;
 use Database\Factories\LegacyUserTypeFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -105,6 +106,46 @@ class ImportUsersCommandTest extends TestCase
         } finally {
             @unlink($filePath);
         }
+    }
+
+    public function test_import_users_command_creates_users_in_each_client_database(): void
+    {
+        Mail::fake();
+
+        $institution = LegacyInstitutionFactory::new()->create();
+        $this->app->instance(LegacyInstitution::class, $institution);
+        $this->ensureAdminUserTypeExists();
+        LegacyEmployeeFactory::new()->create(['matricula' => 'dup-tenant']);
+
+        // A base do cliente usa a mesma conexão do teste para enxergar o que foi
+        // criado aqui, inclusive depois de o comando descartá-la.
+        $pgsql = config('database.connections.pgsql');
+        config(['database.connections' => ['pgsql' => $pgsql, 'cliente' => $pgsql]]);
+        DB::extend('cliente', function (array $config, string $name) {
+            $connection = app('db.factory')->make($config, $name);
+            $connection->setPdo(DB::connection('pgsql')->getPdo());
+
+            return $connection;
+        });
+
+        $filePath = $this->createImportFile([
+            ['nome', 'sobrenome', 'email', 'matricula'],
+            ['Caio', 'Costa', 'caio@example.com', 'caio-tenant'],
+            ['Dani', 'Dias', 'dani@example.com', 'dup-tenant'],
+        ]);
+
+        try {
+            $this->artisan('import:users', ['filename' => $filePath, '--multi-tenant' => true])
+                ->expectsOutputToContain('O usuário dup-tenant não pode ser criado a matrícula já está em uso - cliente')
+                ->assertExitCode(0);
+        } finally {
+            DB::setDefaultConnection('pgsql');
+            @unlink($filePath);
+        }
+
+        $this->assertTrue(LegacyEmployee::query()->where('matricula', 'caio-tenant')->exists());
+        Mail::assertSent(NewUserMail::class, fn (NewUserMail $mail) => $mail->hasTo('caio@example.com'));
+        Mail::assertNotSent(NewUserMail::class, fn (NewUserMail $mail) => $mail->hasTo('dani@example.com'));
     }
 
     private function ensureAdminUserTypeExists(): void

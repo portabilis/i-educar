@@ -129,7 +129,7 @@ return new class extends clsListagem
 
         $dataFilter = [
             'rg' => preg_replace(pattern: '/\D/', replacement: '', subject: $this->rg_aluno),
-            'year' => $this->ano,
+            'year' => is_numeric(value: $this->ano) ? (int) $this->ano : null,
             'cpf' => preg_replace(pattern: '/\D/', replacement: '', subject: $this->cpf_aluno),
             'inep' => $this->cod_inep,
             'grade' => $this->ref_cod_serie,

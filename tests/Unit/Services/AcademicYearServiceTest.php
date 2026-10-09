@@ -7,6 +7,7 @@ use App\Models\EmployeeAllocation;
 use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDisciplineSchoolClass;
 use App\Models\LegacyEvaluationRuleGradeYear;
+use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolClass;
@@ -17,6 +18,7 @@ use App\Models\LegacySchoolCourse;
 use App\Models\LegacySchoolGrade;
 use App\Models\LegacyUser;
 use App\Services\AcademicYearService;
+use App\Services\iDiarioService;
 use Database\Factories\EmployeeAllocationFactory;
 use Database\Factories\EmployeeFactory;
 use Database\Factories\LegacyAcademicYearStageFactory;
@@ -24,10 +26,14 @@ use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyDisciplineAcademicYearFactory;
 use Database\Factories\LegacyDisciplineFactory;
 use Database\Factories\LegacyDisciplineSchoolClassFactory;
+use Database\Factories\LegacyDisciplineScoreFactory;
 use Database\Factories\LegacyEmployeeRoleFactory;
 use Database\Factories\LegacyEvaluationRuleFactory;
 use Database\Factories\LegacyEvaluationRuleGradeYearFactory;
+use Database\Factories\LegacyGeneralAbsenceFactory;
 use Database\Factories\LegacyGradeFactory;
+use Database\Factories\LegacyRegistrationFactory;
+use Database\Factories\LegacyRegistrationScoreFactory;
 use Database\Factories\LegacyRoleFactory;
 use Database\Factories\LegacySchoolAcademicYearFactory;
 use Database\Factories\LegacySchoolClassFactory;
@@ -40,6 +46,7 @@ use Database\Factories\LegacySchoolFactory;
 use Database\Factories\LegacySchoolGradeDisciplineFactory;
 use Database\Factories\LegacySchoolGradeFactory;
 use Database\Factories\LegacyStageTypeFactory;
+use Database\Factories\LegacyStudentAbsenceFactory;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -1842,5 +1849,137 @@ class AcademicYearServiceTest extends TestCase
         $this->assertEquals('completed', $result['status']);
         $this->assertEquals(1, $result['processed']);
         $this->assertEquals(0, $result['skipped']);
+    }
+
+    private function batchActionParams(array $overrides = []): array
+    {
+        return $overrides + [
+            'year' => $this->currentYear,
+            'schools' => [$this->school->cod_escola],
+            'user' => $this->createUser(),
+        ];
+    }
+
+    public function test_abrir_e_fechar_em_lote_validam_os_parametros(): void
+    {
+        $cases = [
+            [['schools' => []], 'Parâmetros de escola e ano letivo são obrigatórios.'],
+            [['schools' => 'x'], 'Parâmetro de escola deve ser um array.'],
+            [['year' => '2024.5'], 'Ano letivo deve ser um número inteiro.'],
+        ];
+
+        foreach ($cases as [$overrides, $message]) {
+            $result = $this->service->openAcademicYearBatch($this->batchActionParams($overrides));
+
+            expect($result['status'])->toBe('failed');
+            expect($result['errors'])->toBe([['error' => $message]]);
+        }
+    }
+
+    public function test_abrir_e_fechar_em_lote_recusam_escola_desconhecida_e_ano_letivo_inexistente(): void
+    {
+        $result = $this->service->openAcademicYearBatch($this->batchActionParams(['schools' => [999999999]]));
+        expect($result['errors'][0]['error'])->toBe('Escola ID 999999999 não encontrada ou inativa.');
+
+        $result = $this->service->closeAcademicYearBatch($this->batchActionParams());
+        expect($result['errors'][0]['error'])->toContain("Ano letivo {$this->currentYear} não encontrado ou inativo.");
+        expect($result['message'])->toBe('Processamento cancelado devido a erros de validação.');
+    }
+
+    public function test_abrir_em_lote_recusa_ano_em_andamento_ou_finalizado_e_abre_o_nao_iniciado(): void
+    {
+        $academicYear = LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola' => $this->school, 'ano' => $this->currentYear, 'andamento' => AcademicYearService::STATUS_IN_PROGRESS]);
+
+        $result = $this->service->openAcademicYearBatch($this->batchActionParams());
+        expect($result['errors'][0]['error'])->toContain('pois já está em andamento.');
+
+        $academicYear->update(['andamento' => AcademicYearService::STATUS_FINISHED]);
+        $result = $this->service->openAcademicYearBatch($this->batchActionParams());
+        expect($result['errors'][0]['error'])->toContain('pois já está finalizado.');
+
+        $academicYear->update(['andamento' => AcademicYearService::STATUS_NOT_STARTED]);
+        $result = $this->service->openAcademicYearBatch($this->batchActionParams());
+        expect($result['status'])->toBe('completed');
+        expect($result['processed'])->toBe(1);
+        expect($result['details'][0]['message'])->toContain('inicializado com sucesso');
+        expect($academicYear->refresh()->andamento)->toBe(AcademicYearService::STATUS_IN_PROGRESS);
+    }
+
+    public function test_fechar_em_lote_recusa_ano_finalizado_nao_iniciado_ou_com_matriculas_em_andamento(): void
+    {
+        $academicYear = LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola' => $this->school, 'ano' => $this->currentYear, 'andamento' => AcademicYearService::STATUS_FINISHED]);
+
+        $result = $this->service->closeAcademicYearBatch($this->batchActionParams());
+        expect($result['errors'][0]['error'])->toContain('já está finalizado.');
+
+        $academicYear->update(['andamento' => AcademicYearService::STATUS_NOT_STARTED]);
+        $result = $this->service->closeAcademicYearBatch($this->batchActionParams());
+        expect($result['errors'][0]['error'])->toContain('não está iniciado.');
+
+        $academicYear->update(['andamento' => AcademicYearService::STATUS_IN_PROGRESS]);
+        LegacyRegistrationFactory::new()->create([
+            'ref_ref_cod_escola' => $this->school,
+            'ref_cod_curso' => $this->course,
+            'ref_ref_cod_serie' => $this->grade,
+            'ano' => $this->currentYear,
+            'aprovado' => 3,
+            'ativo' => 1,
+            'ultima_matricula' => 1,
+        ]);
+        $result = $this->service->closeAcademicYearBatch($this->batchActionParams());
+        expect($result['errors'][0]['error'])->toContain('Existem matrículas em andamento.');
+
+        LegacyRegistration::query()->where('ref_ref_cod_escola', $this->school->cod_escola)->update(['aprovado' => 1]);
+        $result = $this->service->closeAcademicYearBatch($this->batchActionParams());
+        expect($result['status'])->toBe('completed');
+        expect($result['details'][0]['message'])->toContain('finalizado com sucesso');
+        expect($academicYear->refresh()->andamento)->toBe(AcademicYearService::STATUS_FINISHED);
+    }
+
+    public function test_criar_em_lote_recusa_ano_que_nao_e_inteiro(): void
+    {
+        $result = $this->service->createAcademicYearBatch([
+            'year' => '2024.5',
+            'schools' => [$this->school->cod_escola],
+            'periodos' => [['data_inicio' => '01/02/2024', 'data_fim' => '30/04/2024']],
+        ]);
+
+        expect($result['errors'][0]['error'])->toBe('Ano letivo deve ser um número inteiro.');
+    }
+
+    public function test_nao_remove_etapas_com_faltas_gerais_notas_ou_lancamentos_no_diario_online(): void
+    {
+        $academicYear = LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola' => $this->school, 'ano' => $this->currentYear]);
+        foreach ([1, 2] as $sequence) {
+            LegacyAcademicYearStageFactory::new()->create(['escola_ano_letivo_id' => $academicYear, 'ref_ano' => $this->currentYear, 'ref_ref_cod_escola' => $this->school->cod_escola, 'sequencial' => $sequence, 'ref_cod_modulo' => $this->stageType]);
+        }
+        $registration = LegacyRegistrationFactory::new()->create(['ref_ref_cod_escola' => $this->school, 'ano' => $this->currentYear, 'ativo' => 1]);
+
+        $absence = LegacyGeneralAbsenceFactory::new()->create(['falta_aluno_id' => LegacyStudentAbsenceFactory::new()->create(['matricula_id' => $registration]), 'etapa' => 2]);
+        try {
+            $this->service->validateAcademicYearModules($this->currentYear, $this->school->cod_escola, 1);
+            $this->fail('Deveria barrar pela falta geral.');
+        } catch (AcademicYearServiceException $e) {
+            expect($e->getMessage())->toBe('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.');
+        }
+        $absence->delete();
+
+        $score = LegacyDisciplineScoreFactory::new()->create(['nota_aluno_id' => LegacyRegistrationScoreFactory::new()->create(['matricula_id' => $registration]), 'etapa' => 2]);
+        try {
+            $this->service->validateAcademicYearModules($this->currentYear, $this->school->cod_escola, 1);
+            $this->fail('Deveria barrar pela nota.');
+        } catch (AcademicYearServiceException $e) {
+            expect($e->getMessage())->toBe('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.');
+        }
+        $score->delete();
+
+        config(['legacy.config.url_novo_educacao' => 'https://idiario.example', 'legacy.config.token_novo_educacao' => 'token']);
+        $this->mock(iDiarioService::class)->shouldReceive('getStepActivityByUnit')->with($this->school->cod_escola, $this->currentYear, 2)->andReturn(false, true);
+
+        $this->service->validateAcademicYearModules($this->currentYear, $this->school->cod_escola, 1);
+
+        $this->expectException(AcademicYearServiceException::class);
+        $this->expectExceptionMessage('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas no diário online.');
+        $this->service->validateAcademicYearModules($this->currentYear, $this->school->cod_escola, 1);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyRegistration;
+use App\Models\LegacyStudent;
 
 return new class extends clsCadastro
 {
@@ -30,7 +31,10 @@ return new class extends clsCadastro
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -71,11 +75,15 @@ return new class extends clsCadastro
         $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
         $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
 
-        $obj_aluno = new clsPmieducarAluno;
-        $lst_aluno = $obj_aluno->lista($this->ref_cod_aluno, null, null, null, null, null, null, null, null, null, 1);
-        if (is_array($lst_aluno)) {
-            $det_aluno = array_shift($lst_aluno);
-            $this->nm_aluno = $det_aluno['nome_aluno'];
+        if (is_numeric($this->ref_cod_aluno)) {
+            $this->nm_aluno = LegacyStudent::query()
+                ->active()
+                ->whereStudent($this->ref_cod_aluno)
+                ->joinPerson()
+                ->value('pessoa.nome');
+        }
+
+        if ($this->nm_aluno) {
             $this->campoTexto('nm_aluno', 'Aluno', $this->nm_aluno, 40, 255, false, false, false, '', '', '', '', true);
         }
 
@@ -109,9 +117,12 @@ return new class extends clsCadastro
                 $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             }
 
+            // Inalcançável: `setSaidaEscola()` só falha sem o código da matrícula, que o `edita()` acima já exigiu.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Observação não pode ser salva.<br>';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
         $this->mensagem = 'Saída da escola não pode ser realizada.<br>';
 

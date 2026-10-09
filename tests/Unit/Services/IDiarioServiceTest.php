@@ -317,6 +317,29 @@ class IDiarioServiceTest extends TestCase
                 'true',
                 true,
             ],
+            'step activity by unit returns false' => [
+                'getStepActivityByUnit',
+                [10, $year, 3],
+                '/api/v2/step_activity',
+                [
+                    'unity_id' => 10,
+                    'year' => $year,
+                    'step_number' => 3,
+                ],
+                'false',
+                false,
+            ],
+            'teacher classroom activity returns false' => [
+                'getTeacherClassroomsActivity',
+                [8, 16],
+                '/api/v2/teacher_classrooms/has_activities',
+                [
+                    'teacher_id' => 8,
+                    'classroom_id' => 16,
+                ],
+                'false',
+                false,
+            ],
             'discipline classroom activity returns false' => [
                 'getClassroomsActivityByDiscipline',
                 [[3, 4], 9],
@@ -329,6 +352,43 @@ class IDiarioServiceTest extends TestCase
                 false,
             ],
         ];
+    }
+
+    public function test_student_activity_returns_the_decoded_body_or_surfaces_the_failure(): void
+    {
+        $history = [];
+        $client = $this->createHttpClient([
+            new Response(200, [], json_encode(['has_activity' => true])),
+            new RuntimeException('Timeout'),
+        ], $history);
+
+        $service = $this->createService($client);
+
+        $this->assertEquals(['has_activity' => true], $service->getStudentActivity(7, new \DateTime('2030-05-10')));
+
+        try {
+            $service->getStudentActivity(7, new \DateTime('2030-05-10'));
+            $this->fail('Expected RuntimeException to be thrown.');
+        } catch (RuntimeException $e) {
+            $this->assertSame('Ocorreu um erro de integração com o i-Diário: Timeout', $e->getMessage());
+        }
+
+        parse_str($history[0]['request']->getUri()->getQuery(), $query);
+        $this->assertEquals(['student_id' => '7', 'exit_date' => '2030-05-10'], $query);
+    }
+
+    public function test_delete_requests_send_the_token_and_query(): void
+    {
+        $history = [];
+        $service = $this->createService($this->createHttpClient([new Response(204)], $history));
+
+        (fn () => $this->delete('/api/v2/registros', ['id' => 3]))->call($service);
+
+        $request = $history[0]['request'];
+
+        $this->assertSame('DELETE', $request->getMethod());
+        $this->assertStringStartsWith(rtrim(self::API_URL, '/') . '/api/v2/registros?id=3', (string) $request->getUri());
+        $this->assertEquals(self::API_TOKEN, $request->getHeaderLine('token'));
     }
 
     public static function activityFailuresProvider(): array

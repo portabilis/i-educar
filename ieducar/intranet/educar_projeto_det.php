@@ -26,7 +26,11 @@ return new class extends clsDetalhe
         $registro = LegacyProject::find(id: $this->cod_projeto)?->getAttributes();
 
         if (!$registro) {
-            $this->simpleRedirect(url: 'educar_projeto_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_projeto_lst.php',
+                registro: 'projeto',
+                codigo: $this->cod_projeto,
+            );
         }
 
         if ($registro['cod_projeto']) {

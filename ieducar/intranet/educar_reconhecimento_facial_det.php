@@ -21,7 +21,11 @@ return new class extends clsDetalhe
         $student = LegacyStudent::find($this->cod_aluno);
 
         if (!$student) {
-            $this->simpleRedirect('educar_aluno_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_aluno_lst.php',
+                registro: 'aluno',
+                codigo: $this->cod_aluno,
+            );
         }
 
         $this->addDetalhe(detalhe: ['Código Aluno', $student->getKey()]);

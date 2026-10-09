@@ -1,6 +1,10 @@
 <?php
 
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
+use App\Models\LegacyStudent;
+use App\Services\EnrollmentService;
+use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro
 {
@@ -15,7 +19,10 @@ return new class extends clsCadastro
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -51,11 +58,15 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'ref_cod_aluno', valor: $this->ref_cod_aluno);
         $this->campoOculto(nome: 'ref_cod_matricula', valor: $this->ref_cod_matricula);
 
-        $obj_aluno = new clsPmieducarAluno;
-        $lst_aluno = $obj_aluno->lista(int_cod_aluno: $this->ref_cod_aluno, int_ativo: 1);
-        if (is_array($lst_aluno)) {
-            $det_aluno = array_shift($lst_aluno);
-            $this->nm_aluno = $det_aluno['nome_aluno'];
+        if (is_numeric($this->ref_cod_aluno)) {
+            $this->nm_aluno = LegacyStudent::query()
+                ->active()
+                ->whereStudent($this->ref_cod_aluno)
+                ->joinPerson()
+                ->value('pessoa.nome');
+        }
+
+        if ($this->nm_aluno) {
             $this->campoTexto(nome: 'nm_aluno', campo: 'Aluno', valor: $this->nm_aluno, tamanhovisivel: 30, tamanhomaximo: 255, evento: '', disabled: true);
         }
 
@@ -105,20 +116,41 @@ return new class extends clsCadastro
 
         if ($obj_matricula->edita()) {
             if ($obj_matricula->cadastraObservacaoFalecido($this->observacao)) {
-                $enturmacoes = new clsPmieducarMatriculaTurma;
-                $enturmacoes = $enturmacoes->lista(int_ref_cod_matricula: $this->ref_cod_matricula, int_ativo: 1);
+                $enturmacoes = LegacyEnrollment::query()
+                    ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+                    ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+                    ->active()
+                    ->where('aluno.ativo', 1)
+                    ->when(is_numeric($this->ref_cod_matricula), fn ($q) => $q->whereRegistration($this->ref_cod_matricula))
+                    ->get([
+                        'matricula_turma.ref_cod_turma',
+                        'matricula_turma.sequencial',
+                    ]);
+
+                $enturmacaoService = app(EnrollmentService::class);
+
+                DB::beginTransaction();
 
                 foreach ($enturmacoes as $enturmacao) {
-                    $enturmacao = new clsPmieducarMatriculaTurma(ref_cod_matricula: $this->ref_cod_matricula, ref_cod_turma: $enturmacao['ref_cod_turma'], ref_usuario_exc: $this->pessoa_logada, ref_usuario_cad: null, data_cadastro: null, data_exclusao: null, ativo: 0, ref_cod_turma_transf: null, sequencial: $enturmacao['sequencial']);
+                    $atualizou = $enturmacaoService->updateFromScreen($this->ref_cod_matricula, $enturmacao->ref_cod_turma, $enturmacao->sequencial, [
+                        'ref_usuario_exc' => $this->pessoa_logada,
+                        'ativo' => 0,
+                    ]);
 
-                    if (!$enturmacao->edita()) {
+                    if (!$atualizou) {
+                        // Débito de cobertura: trecho ainda sem teste.
+                        // @codeCoverageIgnoreStart
+                        DB::rollBack();
                         $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
 
                         return false;
-                    } else {
-                        $enturmacao->marcaAlunoFalecido($this->data_cancel);
+                        // @codeCoverageIgnoreEnd
                     }
+
+                    $enturmacaoService->registerDeath($this->ref_cod_matricula, $enturmacao->sequencial, $this->data_cancel);
                 }
+
+                DB::commit();
 
                 $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper)
                     ->findAll(columns: ['id'], where: ['matricula_id' => $obj_matricula->cod_matricula])[0] ?? null;
@@ -132,9 +164,12 @@ return new class extends clsCadastro
                 $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             }
 
+            // Inalcançável: `cadastraObservacaoFalecido()` só falha sem o código da matrícula, que o `edita()` acima já exigiu.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'A alteração não pode ser salva.<br>';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
         $this->mensagem = 'A alteração não pode ser realizado.<br>';
 

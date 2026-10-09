@@ -37,7 +37,12 @@ return new class extends clsDetalhe
 
         $registro = LegacyRole::find(request()->integer('cod_funcao'))?->getAttributes();
         if (!$registro) {
-            $this->simpleRedirect('educar_funcao_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_funcao_lst.php',
+                registro: 'função',
+                feminino: true,
+                codigo: request()->integer('cod_funcao'),
+            );
         }
 
         if ($registro['cod_funcao']) {

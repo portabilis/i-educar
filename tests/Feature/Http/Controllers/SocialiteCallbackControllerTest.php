@@ -1,43 +1,86 @@
 <?php
 
+use App\Events\UserSocialiteNotFound;
 use App\Models\LegacyEmployee;
 use App\User;
 use Database\Factories\LegacyEmployeeFactory;
 use Database\Factories\LegacyUserFactory;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Event;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
+use Laravel\Socialite\Two\User as SocialiteUser;
 use Tests\TestCase;
 
-uses(TestCase::class);
+uses(TestCase::class, DatabaseTransactions::class);
 
-test('callback with invalid state redirects to login', function () {
-    $response = $this->withSession(['state' => 'expected-state'])
-        ->get('/auth/callback?code=code&state=other-state');
-
-    $response->assertRedirect('/login')
-        ->assertSessionHasErrors([
-            'login' => 'Sessão de login expirada. Tente entrar novamente.',
-        ]);
-});
-
-test('callback without state in session redirects to login', function () {
-    $response = $this->get('/auth/callback?code=code&state=reused-state');
-
-    $response->assertRedirect('/login')
-        ->assertSessionHasErrors('login');
-});
-
-function socialiteRetornaEmail(string $email): void
+function usuarioDoProvedor(string $email): SocialiteUser
 {
-    $socialite = Mockery::mock(Laravel\Socialite\Contracts\User::class);
-    $socialite->shouldReceive('getEmail')->andReturn($email);
-    $socialite->shouldReceive('getName')->andReturn('Pessoa de Teste');
-    $socialite->shouldReceive('getNickname')->andReturn('pessoa.teste');
-
-    Socialite::shouldReceive('driver->user')->andReturn($socialite);
+    return (new SocialiteUser)->map(['email' => $email]);
 }
 
-test('callback logs in the active user when an inactive user shares the e-mail', function () {
-    $email = 'mesmo.email.' . uniqid() . '@example.com';
+function provedorDevolve(SocialiteUser|Throwable $user): void
+{
+    $provider = Mockery::mock();
+    $user instanceof Throwable
+        ? $provider->shouldReceive('user')->andThrow($user)
+        : $provider->shouldReceive('user')->andReturn($user);
+
+    Socialite::shouldReceive('driver')->with('passport')->andReturn($provider);
+}
+
+test('sem autorização ou com a sessão expirada volta ao login', function () {
+    $this->get(route('socialite.callback', ['error' => 'access_denied']))
+        ->assertRedirect('/login')
+        ->assertSessionHasErrors(['login' => 'Autorização de acesso não concedida.']);
+
+    provedorDevolve(new InvalidStateException);
+
+    $this->get(route('socialite.callback', ['code' => 'abc']))
+        ->assertRedirect('/login')
+        ->assertSessionHasErrors(['login' => 'Sessão de login expirada. Tente entrar novamente.']);
+});
+
+test('avisa quando não acha o usuário nem depois do evento de usuário não encontrado', function () {
+    Event::fake([UserSocialiteNotFound::class]);
+    provedorDevolve(usuarioDoProvedor('ninguem@exemplo.test'));
+
+    $this->get(route('socialite.callback', ['code' => 'abc']))
+        ->assertRedirect('/login')
+        ->assertSessionHasErrors(['login' => 'Usuário não encontrado.']);
+
+    Event::assertDispatched(UserSocialiteNotFound::class, fn ($event) => $event->user->getEmail() === 'ninguem@exemplo.test');
+});
+
+test('um ouvinte do evento pode vincular o usuário, que então entra', function () {
+    $user = LegacyUserFactory::new()->create();
+    Event::listen(UserSocialiteNotFound::class, fn ($event) => LegacyEmployee::query()->whereKey($user->getKey())->update(['email' => $event->user->getEmail()]));
+    provedorDevolve(usuarioDoProvedor('novo@exemplo.test'));
+
+    $this->get(route('socialite.callback', ['code' => 'abc']))->assertRedirect('/');
+
+    $this->assertAuthenticatedAs(User::query()->find($user->getKey()));
+});
+
+test('usuário inativo vê o motivo da inativação ou a mensagem padrão', function () {
+    $user = LegacyUserFactory::new()->create();
+    LegacyEmployee::query()->whereKey($user->getKey())->update(['email' => 'inativo@exemplo.test', 'ativo' => 0, 'motivo' => 'Desligado da rede']);
+    provedorDevolve(usuarioDoProvedor('inativo@exemplo.test'));
+
+    $this->get(route('socialite.callback', ['code' => 'abc']))
+        ->assertRedirect('/login')
+        ->assertSessionHasErrors(['login' => 'Desligado da rede']);
+
+    LegacyEmployee::query()->whereKey($user->getKey())->update(['motivo' => null]);
+
+    $this->get(route('socialite.callback', ['code' => 'abc']))
+        ->assertSessionHasErrors(['login' => __('auth.inactive')]);
+
+    $this->assertGuest();
+});
+
+test('entra com o usuário ativo quando um inativo tem o mesmo e-mail', function () {
+    $email = 'mesmo.email@exemplo.test';
 
     $inativo = LegacyUserFactory::new()->create([
         'cod_usuario' => LegacyEmployeeFactory::new()->create(['email' => $email, 'ativo' => 0])->ref_cod_pessoa_fj,
@@ -47,47 +90,46 @@ test('callback logs in the active user when an inactive user shares the e-mail',
         'cod_usuario' => LegacyEmployeeFactory::new()->create(['email' => $email, 'ativo' => 1])->ref_cod_pessoa_fj,
         'ativo' => 1,
     ]);
+    provedorDevolve(usuarioDoProvedor($email));
 
-    socialiteRetornaEmail($email);
-
-    $this->get('/auth/callback?code=code&state=state')
+    $this->get(route('socialite.callback', ['code' => 'abc']))
         ->assertSessionDoesntHaveErrors('login');
 
-    $this->assertAuthenticatedAs(User::find($ativo->cod_usuario));
-    expect(User::find($inativo->cod_usuario)->isInactive())->toBeTrue();
+    $this->assertAuthenticatedAs(User::query()->find($ativo->cod_usuario));
+    expect(User::query()->find($inativo->cod_usuario)->isInactive())->toBeTrue();
 });
 
-test('callback keeps refusing when the only user with the e-mail is inactive', function () {
-    $email = 'so.inativo.' . uniqid() . '@example.com';
+test('segue recusando quando o único usuário com o e-mail está inativo', function () {
+    $email = 'so.inativo@exemplo.test';
 
     LegacyUserFactory::new()->create([
         'cod_usuario' => LegacyEmployeeFactory::new()->create(['email' => $email, 'ativo' => 0])->ref_cod_pessoa_fj,
         'ativo' => 0,
     ]);
+    provedorDevolve(usuarioDoProvedor($email));
 
-    socialiteRetornaEmail($email);
-
-    $this->get('/auth/callback?code=code&state=state')
+    $this->get(route('socialite.callback', ['code' => 'abc']))
         ->assertRedirect('/login')
         ->assertSessionHasErrors('login');
 
     $this->assertGuest();
 });
 
-test('callback does not create a new user for a deactivated Portabilis account', function () {
-    $email = 'desativado.' . uniqid() . '@portabilis.com.br';
+test('não dispara o evento de usuário não encontrado para uma conta desativada', function () {
+    Event::fake([UserSocialiteNotFound::class]);
+    $email = 'desativado@portabilis.com.br';
 
     LegacyUserFactory::new()->create([
         'cod_usuario' => LegacyEmployeeFactory::new()->create(['email' => $email, 'ativo' => 0])->ref_cod_pessoa_fj,
         'ativo' => 0,
     ]);
+    provedorDevolve(usuarioDoProvedor($email));
 
-    socialiteRetornaEmail($email);
-
-    $this->get('/auth/callback?code=code&state=state')
+    $this->get(route('socialite.callback', ['code' => 'abc']))
         ->assertRedirect('/login')
         ->assertSessionHasErrors('login');
 
     $this->assertGuest();
+    Event::assertNotDispatched(UserSocialiteNotFound::class);
     expect(LegacyEmployee::query()->where('email', $email)->count())->toBe(1);
 });

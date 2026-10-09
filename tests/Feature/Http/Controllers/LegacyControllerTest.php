@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LegacyController;
 use App\Models\LegacyRace;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -30,4 +31,42 @@ test('abrir um formulário depois de gravar não grava de novo', function () {
     $this->get('/intranet/educar_raca_cad.php')->assertOk();
 
     expect(LegacyRace::query()->where('nm_raca', 'Raça Gama')->count())->toBe(1);
+});
+
+test('arquivo do legado que não existe responde 404', function () {
+    $this->get('/intranet/tela_que_nao_existe.php')->assertNotFound();
+    $this->get('/modules/arquivo_que_nao_existe.php')->assertNotFound();
+    $this->get('/module/ModuloInexistente/index')->assertNotFound();
+});
+
+test('a resposta xml das telas do legado sai com o tipo xml', function () {
+    $this->get('/intranet/educar_funcao_xml.php?ins=0')
+        ->assertOk()
+        ->assertHeader('Content-Type', 'text/xml; charset=utf-8');
+});
+
+test('um resolvedor registrado pode trocar o arquivo da tela', function () {
+    $resolvers = new ReflectionProperty(LegacyController::class, 'resolvers');
+    $before = $resolvers->getValue();
+
+    LegacyController::resolver(fn ($uri) => str_ends_with($uri, 'tela_trocada.php') ? base_path('ieducar/intranet/educar_raca_lst.php') : null);
+
+    try {
+        $this->get('/intranet/tela_trocada.php')->assertOk()->assertSee('Raça');
+    } finally {
+        $resolvers->setValue(null, $before);
+    }
+});
+
+test('com a exibição de erros ligada não mexe no nível de erros', function () {
+    config(['legacy.display_errors' => true]);
+    $level = error_reporting(E_ALL);
+
+    try {
+        (fn () => $this->configureErrorsAndExceptions())->call(app(LegacyController::class));
+
+        expect(error_reporting())->toBe(E_ALL);
+    } finally {
+        error_reporting($level);
+    }
 });

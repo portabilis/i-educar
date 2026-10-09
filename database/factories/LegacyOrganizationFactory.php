@@ -20,11 +20,11 @@ class LegacyOrganizationFactory extends Factory
                 'nome' => $this->faker->company(),
                 'tipo' => 'J',
             ]),
-            'cnpj' => $this->faker->numerify('##############'),
+            'cnpj' => $this->faker->cnpj(formatted: false),
             'insc_estadual' => $this->faker->numerify('########'),
-            'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),
+            'origem_gravacao' => 'M',
             'idpes_cad' => fn () => LegacyUserFactory::new()->current(),
-            'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
+            'operacao' => 'I',
             'fantasia' => fn (array $attributes) => LegacyPerson::query()->find($attributes['idpes'])->nome,
         ];
     }

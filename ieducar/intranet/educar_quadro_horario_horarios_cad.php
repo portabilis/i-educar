@@ -154,7 +154,10 @@ return new class extends clsCadastro
 
                 if ($obj_permissoes->permissao_excluir(int_processo_ap: 641, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     if ($this->descricao) {
+                        // Inalcançável: a tela não tem a propriedade `descricao`.
+                        // @codeCoverageIgnoreStart
                         $this->fexcluir = true;
+                        // @codeCoverageIgnoreEnd
                     }
                 }
 
@@ -380,7 +383,10 @@ return new class extends clsCadastro
                         if (isset($this->lst_matriculas)) {
                             $this->lst_matriculas .= '' . $campo['ref_servidor_'] . '';
                         } else {
+                            // Inalcançável: `lst_matriculas` acabou de receber o resultado de `urldecode()`, então está sempre definida.
+                            // @codeCoverageIgnoreStart
                             $this->lst_matriculas .= ', ' . $campo['ref_servidor_'] . '';
+                            // @codeCoverageIgnoreEnd
                         }
                     } else {
                         $campo['ativo_'] = 2;
@@ -388,7 +394,10 @@ return new class extends clsCadastro
                         if (isset($this->lst_matriculas)) {
                             $this->lst_matriculas .= '' . $campo['ref_servidor_'] . '';
                         } else {
+                            // Inalcançável: `lst_matriculas` acabou de receber o resultado de `urldecode()`, então está sempre definida.
+                            // @codeCoverageIgnoreStart
                             $this->lst_matriculas .= ', ' . $campo['ref_servidor_'] . '';
+                            // @codeCoverageIgnoreEnd
                         }
                     }
 
@@ -754,7 +763,10 @@ return new class extends clsCadastro
                             $verifica = true;
                         }
                     } else {
+                        // Inalcançável: `edita()` só falha sem as chaves que o `detalhe()` acima acabou de exigir.
+                        // @codeCoverageIgnoreStart
                         $verifica = false;
+                        // @codeCoverageIgnoreEnd
                     }
                 } else {
                     $obj_horario = new clsPmieducarQuadroHorarioHorarios(
@@ -816,9 +828,12 @@ return new class extends clsCadastro
             $this->simpleRedirect(url: "educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}");
         }
 
+        // Inalcançável: `delete()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function makeExtra()

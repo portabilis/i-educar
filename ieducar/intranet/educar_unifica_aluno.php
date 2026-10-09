@@ -117,11 +117,14 @@ return new class extends clsCadastro
 
         try {
             DB::commit();
+            // Não testável: só roda se o commit da transação falhar.
+            // @codeCoverageIgnoreStart
         } catch (Throwable) {
             DB::rollBack();
             $this->mensagem = 'Não foi possível realizar a unificação';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $this->mensagem = '<span>Alunos unificados com sucesso.</span>';

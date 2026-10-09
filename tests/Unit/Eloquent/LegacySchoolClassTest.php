@@ -15,17 +15,23 @@ use App\Models\LegacySchoolClassStage;
 use App\Models\LegacySchoolGrade;
 use App\Models\LegacySchoolGradeDiscipline;
 use App\Models\SchoolClassInep;
+use App_Model_MatriculaSituacao;
+use Database\Factories\LegacyDisciplineAcademicYearFactory;
 use Database\Factories\LegacyDisciplineFactory;
 use Database\Factories\LegacyDisciplineSchoolClassFactory;
 use Database\Factories\LegacyEnrollmentFactory;
+use Database\Factories\LegacyEvaluationRuleFactory;
 use Database\Factories\LegacyGradeFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacySchoolAcademicYearFactory;
 use Database\Factories\LegacySchoolClassFactory;
 use Database\Factories\LegacySchoolClassGradeFactory;
 use Database\Factories\LegacySchoolClassStageFactory;
+use Database\Factories\LegacySchoolClassTeacherFactory;
 use Database\Factories\LegacySchoolFactory;
+use Database\Factories\LegacySchoolGradeDisciplineFactory;
 use Database\Factories\LegacySchoolGradeFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
 use Tests\EloquentTestCase;
 
@@ -208,5 +214,110 @@ class LegacySchoolClassTest extends EloquentTestCase
             }
         }
         $this->assertEquals($expected, $this->model->getDisciplines());
+    }
+
+    public function test_regent_and_teachers_relations(): void
+    {
+        LegacySchoolClassTeacherFactory::new()->create(['turma_id' => $this->model]);
+
+        $this->assertInstanceOf(BelongsTo::class, $this->model->regentPerson());
+        $this->assertCount(1, $this->model->schoolClassTeachers);
+    }
+
+    public function test_get_stages_by_calendar(): void
+    {
+        LegacySchoolClassStageFactory::new()->create(['ref_cod_turma' => $this->model]);
+
+        $this->assertCount(1, $this->model->getStages(false));
+        $this->assertCount(0, $this->model->getStages(true));
+    }
+
+    public function test_active_enrollments_with_cancellable_registration(): void
+    {
+        LegacyEnrollmentFactory::new()->create([
+            'ref_cod_turma' => $this->model,
+            'ref_cod_matricula' => LegacyRegistrationFactory::new()->create(['ano' => $this->model->ano, 'aprovado' => App_Model_MatriculaSituacao::EM_ANDAMENTO]),
+        ]);
+        LegacyEnrollmentFactory::new()->create([
+            'ref_cod_turma' => $this->model,
+            'ref_cod_matricula' => LegacyRegistrationFactory::new()->create(['ano' => $this->model->ano, 'aprovado' => App_Model_MatriculaSituacao::APROVADO]),
+        ]);
+
+        $this->assertCount(1, $this->model->getActiveEnrollmentsWithCancellableRegistration());
+    }
+
+    public function test_deny_enrollments_when_no_vacancy_follows_the_school_grade(): void
+    {
+        $this->model->schoolGrade->update(['bloquear_enturmacao_sem_vagas' => 1]);
+
+        $this->assertTrue($this->model->denyEnrollmentsWhenNoVacancy());
+    }
+
+    public function test_class_time_in_hours(): void
+    {
+        $this->model->hora_inicial = '08:00';
+        $this->model->hora_final = '12:30';
+
+        $this->assertEquals(4, $this->model->getClassTime());
+    }
+
+    public function test_grade_disciplines(): void
+    {
+        LegacyDisciplineAcademicYearFactory::new()->create(['ano_escolar_id' => $this->model->ref_ref_cod_serie]);
+
+        $this->assertCount(1, $this->model->gradeDisciplines);
+    }
+
+    public function test_get_disciplines_falls_back_to_the_school_grade_and_reads_all_grades_of_a_multigrade_class(): void
+    {
+        $discipline = LegacyDisciplineFactory::new()->create();
+        LegacySchoolGradeDisciplineFactory::new()->create([
+            'ref_ref_cod_escola' => $this->model->ref_ref_cod_escola,
+            'ref_ref_cod_serie' => $this->model->ref_ref_cod_serie,
+            'ref_cod_disciplina' => $discipline,
+            'anos_letivos' => '{' . $this->model->ano . '}',
+        ]);
+
+        $this->assertEquals([$discipline->getKey()], $this->model->getDisciplines()->pluck('id')->all());
+
+        $own = LegacyDisciplineFactory::new()->create();
+        LegacyDisciplineSchoolClassFactory::new()->create(['componente_curricular_id' => $own, 'turma_id' => $this->model]);
+
+        $this->assertEquals([$own->getKey()], $this->model->getDisciplines()->pluck('id')->all());
+
+        $this->model->multiseriada = 1;
+        LegacySchoolClassGradeFactory::new()->create([
+            'escola_id' => $this->model->ref_ref_cod_escola,
+            'serie_id' => $this->model->ref_ref_cod_serie,
+            'turma_id' => $this->model,
+        ]);
+
+        $this->assertEquals([$discipline->getKey()], $this->model->getDisciplines()->pluck('id')->all());
+    }
+
+    public function test_get_evaluation_rule_differentiated_by_the_school(): void
+    {
+        $differentiated = LegacyEvaluationRuleFactory::new()->create();
+        $this->model->school->update(['utiliza_regra_diferenciada' => true]);
+        LegacyEvaluationRuleGradeYear::query()
+            ->where('serie_id', $this->model->ref_ref_cod_serie)
+            ->where('ano_letivo', $this->model->ano)
+            ->update(['regra_avaliacao_diferenciada_id' => $differentiated->getKey()]);
+
+        $this->assertEquals($differentiated->getKey(), $this->model->getEvaluationRule()->getKey());
+    }
+
+    public function test_allows_integrated_workload_by_curricular_organization_or_stage(): void
+    {
+        $this->model->organizacao_curricular = null;
+        $this->model->etapa_educacenso = 14;
+        $this->assertFalse($this->model->permiteCargaHorariaIntegralizada());
+
+        $this->model->etapa_educacenso = 39;
+        $this->assertTrue($this->model->permiteCargaHorariaIntegralizada());
+
+        $this->model->etapa_educacenso = 14;
+        $this->model->organizacao_curricular = '{5}';
+        $this->assertTrue($this->model->permiteCargaHorariaIntegralizada());
     }
 }

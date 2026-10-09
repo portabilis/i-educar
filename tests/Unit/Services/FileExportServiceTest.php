@@ -3,13 +3,17 @@
 namespace Tests\Unit\Services;
 
 use App\Jobs\FileExporterJob;
+use App\Models\Enums\FileExportStatus;
+use App\Models\FileRelation;
 use App\Services\FileExportService;
 use Database\Factories\FileExportFactory;
+use Database\Factories\FileFactory;
 use Database\Factories\LegacyCourseFactory;
 use Database\Factories\LegacyEnrollmentFactory;
 use Database\Factories\LegacyEvaluationRuleGradeYearFactory;
 use Database\Factories\LegacyGradeFactory;
 use Database\Factories\LegacyIndividualFactory;
+use Database\Factories\LegacyIndividualPictureFactory;
 use Database\Factories\LegacyInstitutionFactory;
 use Database\Factories\LegacyPersonFactory;
 use Database\Factories\LegacyRegistrationFactory;
@@ -19,17 +23,24 @@ use Database\Factories\LegacySchoolFactory;
 use Database\Factories\LegacySchoolGradeFactory;
 use Database\Factories\LegacyStudentFactory;
 use Database\Seeders\DefaultRelatorioSituacaoMatriculaTableSeeder;
+use iEducar\Reports\Contracts\StudentRecordReport;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 use Tests\TestCase;
+use ZipArchive;
 
 class FileExportServiceTest extends TestCase
 {
     use DatabaseTransactions;
 
     private array $args = [];
+
+    private $export;
+
+    private $student;
 
     protected function setUp(): void
     {
@@ -51,7 +62,7 @@ class FileExportServiceTest extends TestCase
         ]);
         Storage::fake('local');
         Storage::disk('local')->put('student.jpg', 'content');
-        $student = LegacyStudentFactory::new()->create([
+        $this->student = $student = LegacyStudentFactory::new()->create([
             'ref_idpes' => $person->idpes,
             'ativo' => 1,
             'url_documento' => json_encode([
@@ -119,5 +130,129 @@ class FileExportServiceTest extends TestCase
         $service->setIssueStudentRecordReport(false);
         $service->execute();
         Storage::disk('local')->assertExists($zipPath);
+    }
+
+    private function zipPath(): string
+    {
+        return "{$this->export->getConnectionName()}/zip/{$this->export->hash}/{$this->export->filename}.zip";
+    }
+
+    private function zipEntries(): array
+    {
+        $zip = new ZipArchive;
+        $zip->open(Storage::disk('local')->path($this->zipPath()));
+        $entries = [];
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $entries[] = $zip->getNameIndex($i);
+        }
+        $zip->close();
+
+        return $entries;
+    }
+
+    public function test_exporta_laudos_foto_e_a_ficha_do_aluno_e_ignora_documentos_sem_endereco(): void
+    {
+        Storage::disk('local')->put('laudo.pdf', 'laudo');
+        Storage::disk('local')->put('foto.png', 'foto');
+        $this->student->update(['url_documento' => json_encode([['data' => '01/01/2030', 'url' => '']])]);
+        $this->student->medicalReports()->attach(FileFactory::new()->create(['url' => url(Storage::disk('local')->url('laudo.pdf'))])->getKey(), ['type' => FileRelation::TYPE_MEDICAL_REPORT]);
+        LegacyIndividualPictureFactory::new()->create(['idpes' => $this->student->ref_idpes, 'caminho' => url(Storage::disk('local')->url('foto.png'))]);
+
+        $this->app->instance(StudentRecordReport::class, new class implements StudentRecordReport
+        {
+            public array $args = [];
+
+            public function dumps(array $options): string
+            {
+                return 'ficha em base64';
+            }
+        });
+
+        $service = new FileExportService($this->export, $this->args, 'local');
+        $service->setIssueStudentRecordReport(true);
+        $service->execute();
+
+        $folder = preg_replace('/[^\w\s]/u', '', mb_strtoupper($this->student->person->nome)) . " ({$this->student->getKey()})";
+
+        $this->assertEqualsCanonicalizing([
+            "{$folder}/Laudo-01.pdf",
+            "{$folder}/Foto.png",
+            "{$folder}/Ficha_do_aluno.pdf",
+        ], $this->zipEntries());
+        $this->assertSame(FileExportStatus::SUCCESS->value, $this->export->refresh()->status_id);
+    }
+
+    public function test_sem_alunos_exporta_um_arquivo_avisando(): void
+    {
+        $service = new FileExportService($this->export, ['year' => 1999] + $this->args, 'local');
+        $service->setIssueStudentRecordReport(false);
+        $service->execute();
+
+        $this->assertSame(["{$this->export->filename}/nenhum_documento_exportado.txt"], $this->zipEntries());
+    }
+
+    public function test_o_job_roda_a_exportacao_e_marca_a_falha(): void
+    {
+        $job = new FileExporterJob($this->export, $this->args);
+
+        $job->handle();
+        Storage::disk('local')->assertExists($this->zipPath());
+        $this->assertSame([$this->export->getConnectionName(), 'file-export'], $job->tags());
+
+        $job->failed(new RuntimeException('boom'));
+        $this->assertSame(FileExportStatus::ERROR->value, $this->export->refresh()->status_id);
+    }
+
+    /**
+     * Troca o disco por um que diz não ter gravado o arquivo do padrão informado.
+     */
+    private function diskThatLoses(string $disk, string $pattern): void
+    {
+        $fake = \Mockery::mock(Storage::disk($disk))->makePartial();
+        $fake->shouldReceive('fileExists')->with(\Mockery::pattern($pattern))->andReturn(false);
+        Storage::set($disk, $fake);
+    }
+
+    public function test_falha_quando_a_ficha_do_aluno_nao_e_gravada(): void
+    {
+        $this->app->instance(StudentRecordReport::class, new class implements StudentRecordReport
+        {
+            public array $args = [];
+
+            public function dumps(array $options): string
+            {
+                return 'ficha em base64';
+            }
+        });
+        $this->diskThatLoses('local', '/Ficha_do_aluno\.pdf$/');
+
+        $service = new FileExportService($this->export, $this->args, 'local');
+        $service->setIssueStudentRecordReport(true);
+
+        $this->expectExceptionMessage('Não foi possível criar a ficha do aluno.');
+        $service->execute();
+    }
+
+    public function test_falha_quando_o_arquivo_compactado_nao_e_criado(): void
+    {
+        $this->diskThatLoses('local', '/\.zip$/');
+
+        $service = new FileExportService($this->export, $this->args, 'local');
+        $service->setIssueStudentRecordReport(false);
+
+        $this->expectExceptionMessage('Não foi possível criar o arquivo compactado.');
+        $service->execute();
+    }
+
+    public function test_falha_quando_o_arquivo_nao_chega_ao_disco_de_destino(): void
+    {
+        Storage::fake('destino');
+        $this->diskThatLoses('destino', '/\.zip$/');
+
+        $service = new FileExportService($this->export, $this->args, 'destino');
+        $service->setIssueStudentRecordReport(false);
+
+        $this->expectExceptionMessage('Não foi possível copia o arquivo compactado para o disco de destino.');
+        $service->execute();
     }
 }

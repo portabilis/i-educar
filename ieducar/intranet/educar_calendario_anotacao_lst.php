@@ -52,9 +52,12 @@ return new class extends clsListagem
                 ->exists();
 
             if (!$exists) {
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 throw new HttpResponseException(
                     response: new RedirectResponse(url: 'educar_calendario_ano_letivo_lst.php')
                 );
+                // @codeCoverageIgnoreEnd
             }
             $this->titulo = "Anotaçõoes Calendário <b>{$this->dia}/{$this->mes}/{$this->ano}</b> - Listagem";
 

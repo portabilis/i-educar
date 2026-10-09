@@ -2,6 +2,7 @@
 
 use App\Models\Employee;
 use App\Models\EmployeeWithdrawal;
+use App\Models\LegacyGrade;
 use App\Models\LegacyPerson;
 use App\Models\WithdrawalReason;
 use App\Services\EmployeeService;
@@ -217,6 +218,10 @@ return new class extends clsCadastro
                 );
 
                 if ($lista) {
+                    $cursosPorSerie = LegacyGrade::query()
+                        ->whereIn('cod_serie', array_filter(array_column($lista, 'ref_cod_serie'), 'is_numeric'))
+                        ->pluck('ref_cod_curso', 'cod_serie');
+
                     // Passa todos os valores obtidos no registro para atributos do objeto
                     foreach ($lista as $val) {
                         $temp = [];
@@ -226,9 +231,7 @@ return new class extends clsCadastro
                         $temp['ref_cod_escola'] = $val['ref_cod_escola'];
                         $temp['ref_cod_disciplina'] = $val['ref_cod_disciplina'];
                         $temp['ref_cod_substituto'] = $val['ref_servidor_substituto'];
-                        $objTemp = new clsPmieducarSerie($val['ref_cod_serie']);
-                        $detalheTemp = $objTemp->detalhe();
-                        $temp['ref_cod_curso'] = $detalheTemp['ref_cod_curso'];
+                        $temp['ref_cod_curso'] = $cursosPorSerie[$val['ref_cod_serie']] ?? null;
                         $this->alocacao_array[] = $temp;
                     }
 
@@ -475,9 +478,12 @@ return new class extends clsCadastro
                 $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
             }
         } else {
+            // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Cadastro não realizado.<br>';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $fileService = new FileService(new UrlPresigner);
@@ -627,9 +633,12 @@ return new class extends clsCadastro
             $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
         }
 
+        // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -661,9 +670,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_servidor_afastamento_lst.php');
         }
 
+        // Inalcançável: `delete()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function makeExtra()

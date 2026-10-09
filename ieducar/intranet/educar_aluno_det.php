@@ -24,8 +24,6 @@ use App\Models\UniformDistribution;
 use App\Services\FileService;
 use App\Services\IndividualCpfStateService;
 use App\Services\UrlPresigner;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
@@ -84,14 +82,54 @@ return new class extends clsDetalhe
         $this->nivel_usuario = $this->obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         $this->titulo = 'Aluno - Detalhe';
         $this->cod_aluno = $this->getQueryString(name: 'cod_aluno');
-        $tmp_obj = new clsPmieducarAluno(cod_aluno: $this->cod_aluno);
-        $registro = $tmp_obj->detalhe();
+        $aluno = null;
+
+        if (is_numeric($this->cod_aluno)) {
+            $aluno = LegacyStudent::query()
+                ->whereStudent($this->cod_aluno)
+                ->first([
+                    'cod_aluno',
+                    'ref_cod_religiao',
+                    'ref_usuario_exc',
+                    'ref_usuario_cad',
+                    'ref_idpes',
+                    'data_cadastro',
+                    'data_exclusao',
+                    'ativo',
+                    'analfabeto',
+                    'tipo_responsavel',
+                    'aluno_estado_id',
+                    'recursos_prova_inep',
+                    'recebe_escolarizacao_em_outro_espaco',
+                    'justificativa_falta_documentacao',
+                    'url_laudo_medico',
+                    'codigo_sistema',
+                    'veiculo_transporte_escolar',
+                    'parentesco_um',
+                    'autorizado_um',
+                    'parentesco_dois',
+                    'autorizado_dois',
+                    'parentesco_tres',
+                    'autorizado_tres',
+                    'parentesco_quatro',
+                    'autorizado_quatro',
+                    'parentesco_cinco',
+                    'autorizado_cinco',
+                    'url_documento',
+                    'emancipado',
+                    'tipo_transporte',
+                    'rota_transporte',
+                    'utiliza_transporte_rural',
+                ]);
+        }
+
+        $registro = $aluno?->getAttributes() ?? [];
 
         if (empty($registro)) {
-            throw new HttpResponseException(
-                response: new RedirectResponse(
-                    url: URL::to(path: 'intranet/educar_aluno_lst.php')
-                )
+            $this->redirectNotFound(
+                url: URL::to(path: 'intranet/educar_aluno_lst.php'),
+                registro: 'aluno',
+                codigo: $this->cod_aluno,
             );
         }
 
@@ -189,7 +227,10 @@ return new class extends clsDetalhe
                 ? LegacyDeficiency::query()
                     ->whereHas('individuals', fn ($q) => $q->whereKey($this->ref_idpes))
                     ->get()
+                // Inalcançável: o aluno tem chave estrangeira para a pessoa.
+                // @codeCoverageIgnoreStart
                 : collect();
+            // @codeCoverageIgnoreEnd
 
             $obj_beneficios_lista = LegacyBenefit::query()
                 ->whereHas(relation: 'students', callback: fn ($q) => $q->where('cod_aluno', $this->cod_aluno))
@@ -211,7 +252,10 @@ return new class extends clsDetalhe
 
             $detalheDocumento = is_numeric($this->ref_idpes)
                 ? LegacyDocument::find($this->ref_idpes)?->getAttributes()
+                // Inalcançável: o aluno tem chave estrangeira para a pessoa.
+                // @codeCoverageIgnoreStart
                 : null;
+            // @codeCoverageIgnoreEnd
 
             $registro['rg'] = $detalheDocumento['rg'];
 
@@ -421,10 +465,55 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['País de Origem', $registro['pais_origem']]);
         }
 
-        $responsavel = $tmp_obj->getResponsavelAluno(exibirUrl: true);
+        $fisicaAluno = LegacyIndividual::query()
+            ->with([
+                'father:idpes,nome',
+                'mother:idpes,nome',
+                'responsible:idpes,nome',
+            ])
+            ->find($registro['ref_idpes'], [
+                'idpes',
+                'idpes_pai',
+                'idpes_mae',
+                'idpes_responsavel',
+            ]);
 
-        if ($responsavel && is_null(value: $registro['ref_idpes_responsavel'])) {
-            $this->addDetalhe(detalhe: ['Nome do Responsável', $responsavel['nome_responsavel']]);
+        $tipoResponsavel = $registro['tipo_responsavel'];
+        $nomeResponsavelAluno = null;
+
+        $linkPessoa = fn ($idpes, $nome) => sprintf(
+            '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">%s</a>',
+            $idpes,
+            $nome
+        );
+
+        if ($tipoResponsavel == 'p' || $tipoResponsavel == null) {
+            if ($fisicaAluno?->idpes_pai && $fisicaAluno->father) {
+                $nomeResponsavelAluno = $linkPessoa($fisicaAluno->father->idpes, $fisicaAluno->father->nome);
+            }
+        }
+
+        if ($tipoResponsavel == 'm' || ($nomeResponsavelAluno == null && $tipoResponsavel == null)) {
+            if ($fisicaAluno?->idpes_mae && $fisicaAluno->mother) {
+                $nomeResponsavelAluno = $linkPessoa($fisicaAluno->mother->idpes, $fisicaAluno->mother->nome);
+            }
+        }
+
+        if ($tipoResponsavel == 'r' || ($nomeResponsavelAluno == null && $tipoResponsavel == null)) {
+            if ($fisicaAluno?->idpes_responsavel && $fisicaAluno->responsible) {
+                $nomeResponsavelAluno = $linkPessoa($fisicaAluno->responsible->idpes, $fisicaAluno->responsible->nome);
+            }
+        }
+
+        if ($tipoResponsavel == 'a') {
+            if ($fisicaAluno?->idpes_mae && $fisicaAluno?->idpes_pai && $fisicaAluno->mother && $fisicaAluno->father) {
+                $nomeResponsavelAluno = $linkPessoa($fisicaAluno->father->idpes, $fisicaAluno->father->nome)
+                    . ', ' . $linkPessoa($fisicaAluno->mother->idpes, $fisicaAluno->mother->nome);
+            }
+        }
+
+        if (is_null(value: $registro['ref_idpes_responsavel'])) {
+            $this->addDetalhe(detalhe: ['Nome do Responsável', $nomeResponsavelAluno]);
         }
 
         if ($registro['ref_idpes_responsavel']) {
@@ -659,15 +748,24 @@ return new class extends clsDetalhe
         }
 
         if ($registro['num_tit_eleitor']) {
+            // Inalcançável: o título de eleitor não é lido do documento para o registro.
+            // @codeCoverageIgnoreStart
             $this->addDetalhe(detalhe: ['Título de Eleitor', $registro['num_tit_eleitor']]);
+            // @codeCoverageIgnoreEnd
         }
 
         if ($registro['zona_tit_eleitor']) {
+            // Inalcançável: a zona do título não é lida do documento para o registro.
+            // @codeCoverageIgnoreStart
             $this->addDetalhe(detalhe: ['Zona', $registro['zona_tit_eleitor']]);
+            // @codeCoverageIgnoreEnd
         }
 
         if ($registro['secao_tit_eleitor']) {
+            // Inalcançável: a seção do título não é lida do documento para o registro.
+            // @codeCoverageIgnoreStart
             $this->addDetalhe(detalhe: ['Seção', $registro['secao_tit_eleitor']]);
+            // @codeCoverageIgnoreEnd
         }
 
         $this->addDetalhe(detalhe: ['Transporte escolar', $registro['tipo_transporte'] === 0 ? 'Não utiliza' : 'Sim']);

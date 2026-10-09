@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyCourse;
+use App\Models\LegacyGrade;
+
 return new class extends clsDetalhe
 {
     public $titulo;
@@ -36,18 +39,33 @@ return new class extends clsDetalhe
 
         $this->cod_serie = $_GET['cod_serie'];
 
-        $tmp_obj = new clsPmieducarSerie($this->cod_serie);
-        $registro = $tmp_obj->detalhe();
+        $serie = is_numeric($this->cod_serie) ? LegacyGrade::query()->find($this->cod_serie, [
+            'cod_serie',
+            'nm_serie',
+            'ref_cod_curso',
+            'etapa_curso',
+            'concluinte',
+            'carga_horaria',
+            'dias_letivos',
+            'idade_ideal',
+            'observacao_historico',
+        ]) : null;
 
-        if (!$registro) {
-            $this->simpleRedirect('educar_serie_lst.php');
+        if (!$serie) {
+            $this->redirectNotFound(
+                url: 'educar_serie_lst.php',
+                registro: 'série',
+                feminino: true,
+                codigo: $this->cod_serie,
+            );
         }
 
-        $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
-        $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-        $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
+        $registro = $serie->getAttributes();
 
-        $registro['ref_cod_instituicao'] = $det_ref_cod_curso['ref_cod_instituicao'];
+        $curso = LegacyCourse::query()->find($registro['ref_cod_curso'], ['nm_curso', 'ref_cod_instituicao']);
+        $registro['ref_cod_curso'] = $curso->nm_curso;
+
+        $registro['ref_cod_instituicao'] = $curso->ref_cod_instituicao;
         $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
         $obj_instituicao_det = $obj_instituicao->detalhe();
         $registro['ref_cod_instituicao'] = $obj_instituicao_det['nm_instituicao'];

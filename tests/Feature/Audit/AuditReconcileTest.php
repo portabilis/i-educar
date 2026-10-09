@@ -2,10 +2,13 @@
 
 namespace Tests\Feature\Audit;
 
+use App\Console\Commands\AuditReconcileCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use RuntimeException;
+use Throwable;
 
 class AuditReconcileTest extends AuditTestCase
 {
@@ -274,6 +277,67 @@ class AuditReconcileTest extends AuditTestCase
             DB::purge('auditoria_alvo');
             DB::connection('auditoria_admin')->unprepared("drop database if exists {$database} with (force);");
             DB::purge('auditoria_admin');
+        }
+    }
+
+    public function test_sem_conexoes_de_clientes_nada_e_verificado(): void
+    {
+        config(['database.connections' => ['pgsql' => config('database.connections.pgsql')]]);
+
+        $this->artisan('audit:reconcile')
+            ->expectsOutput('Nenhuma conexão encontrada: nada foi verificado.')
+            ->assertExitCode(1);
+    }
+
+    public function test_banco_de_cliente_sem_auditoria_instalada_e_ignorado(): void
+    {
+        $pgsql = config('database.connections.pgsql');
+        config(['database.connections' => ['pgsql' => $pgsql, 'cliente_sem_auditoria' => array_merge($pgsql, ['database' => 'postgres'])]]);
+
+        try {
+            $this->artisan('audit:reconcile', ['-v' => true])
+                ->expectsOutput('cliente_sem_auditoria: auditoria não instalada, ignorado.')
+                ->assertExitCode(0);
+        } finally {
+            DB::setDefaultConnection('pgsql');
+        }
+    }
+
+    public function test_detalha_as_diferencas_e_conta_as_conexoes_que_falham(): void
+    {
+        $pgsql = config('database.connections.pgsql');
+        config(['database.connections' => ['pgsql' => $pgsql, 'cliente' => $pgsql]]);
+
+        // A reconciliação usa a conexão do cliente como padrão; o delta vem pronto
+        // para não alterar o banco da suíte.
+        $this->app->bind(AuditReconcileCommand::class, fn () => new class extends AuditReconcileCommand
+        {
+            public static ?Throwable $falha = null;
+
+            public function getAuditTriggersDelta(): array
+            {
+                if (self::$falha) {
+                    throw self::$falha;
+                }
+
+                return ['public.alvo' => ['drop' => ['sobra_audit'], 'create' => true]];
+            }
+        });
+
+        try {
+            $this->artisan('audit:reconcile', ['--dry-run' => true, '-v' => true])
+                ->expectsOutput('  public.alvo: remover sobra_audit, criar trigger')
+                ->assertExitCode(1);
+
+            $command = $this->app->make(AuditReconcileCommand::class);
+            $command::$falha = new RuntimeException('sem permissão');
+
+            $this->artisan('audit:reconcile')
+                ->expectsOutput('cliente: sem permissão')
+                ->expectsOutput('1 conexão(ões) com falha. Reexecute o comando: a reconciliação é idempotente.')
+                ->assertExitCode(1);
+        } finally {
+            DB::setDefaultConnection('pgsql');
         }
     }
 

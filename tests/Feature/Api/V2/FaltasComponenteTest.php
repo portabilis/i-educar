@@ -2,6 +2,7 @@
 
 use App\Models\LegacyDisciplineAbsence;
 use App\Models\LegacyGeneralAbsence;
+use App\Services\DiarioControllerService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Feature\Api\V2\CreatesAbsenceData;
 use Tests\TestCase;
@@ -337,4 +338,16 @@ test('rejects discipline of another grade in a multigrade school class', functio
         ]);
 
     $this->assertDatabaseCount(LegacyDisciplineAbsence::class, 0);
+});
+
+test('unexpected failure answers 500 with the reason', function () {
+    $data = $this->createAbsenceData(RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE);
+    $service = Mockery::mock(DiarioControllerService::class)->makePartial();
+    $service->shouldReceive('getServiceBoletim')->andThrow(new Exception('falha inesperada'));
+    app()->instance(DiarioControllerService::class, $service);
+
+    $response = $this->withHeaders(['token' => 'valid-token'])->postJson('/api/v2/falta-componente', $this->disciplineAbsencePayload($data));
+
+    $response->assertStatus(500);
+    expect($response->json('message'))->toEndWith('(falha inesperada)');
 });

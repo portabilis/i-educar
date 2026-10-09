@@ -1,8 +1,11 @@
 <?php
 
+use App\Models\LegacyCourse;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyDisciplineDependence;
+use App\Models\LegacyGrade;
 use App\Models\LegacyRegistration;
+use App\Models\LegacyStudent;
 
 return new class extends clsDetalhe
 {
@@ -44,24 +47,20 @@ return new class extends clsDetalhe
         }
 
         if (!$registro) {
-            $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
+            $this->redirectNotFound(
+                url: 'educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula,
+                registro: 'disciplina de dependência',
+                feminino: true,
+                dica: 'Confira os registros listados abaixo.',
+            );
         }
 
-        $obj_serie = new clsPmieducarSerie($this->ref_cod_serie);
-        $det_serie = $obj_serie->detalhe();
-        $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
+        $registro['ref_ref_cod_serie'] = LegacyGrade::query()->whereKey($this->ref_cod_serie)->value('nm_serie');
 
         // Dados da matrícula
         $obj_ref_cod_matricula = new clsPmieducarMatricula;
         $matricula = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
         $detalhe_aluno = array_shift($matricula);
-
-        $obj_aluno = new clsPmieducarAluno;
-        $lista = $obj_aluno->lista(
-            int_cod_aluno: $detalhe_aluno['ref_cod_aluno'],
-            int_ativo: 1
-        );
-        $det_aluno = array_shift($lista);
 
         $obj_escola = new clsPmieducarEscola(
             cod_escola: $this->ref_cod_escola,
@@ -69,12 +68,16 @@ return new class extends clsDetalhe
         );
         $obj_escola->detalhe();
 
-        $nm_aluno = $det_aluno['nome_aluno'];
+        $nm_aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($detalhe_aluno['ref_cod_aluno'])
+            ->joinPerson()
+            ->value('pessoa.nome');
 
         // Dados do curso
-        $obj_ref_cod_curso = new clsPmieducarCurso($detalhe_aluno['ref_cod_curso']);
-        $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-        $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
+        $registro['ref_cod_curso'] = LegacyCourse::query()
+            ->whereKey($detalhe_aluno['ref_cod_curso'])
+            ->value('nm_curso');
 
         if ($registro['ref_cod_matricula']) {
             $this->addDetalhe(['Matricula', $registro['ref_cod_matricula']]);

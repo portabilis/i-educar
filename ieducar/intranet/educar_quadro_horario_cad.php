@@ -82,7 +82,10 @@ return new class extends clsCadastro
     public function Gerar()
     {
         if ($this->retorno == 'Editar') {
+            // Inalcançável: a propriedade `retorno` nunca é preenchida.
+            // @codeCoverageIgnoreStart
             $this->Excluir();
+            // @codeCoverageIgnoreEnd
         }
 
         // primary keys

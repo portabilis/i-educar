@@ -154,7 +154,10 @@ return new class extends clsDetalhe
         $files = $fileService->getFiles(relation: LegacyIndividual::find($cod_pessoa));
 
         if (is_array(value: $files) && count(value: $files) > 0) {
+            // Inalcançável: `getFiles()` devolve uma coleção, que nunca passa no `is_array()`.
+            // @codeCoverageIgnoreStart
             $this->addHtml(html: view(view: 'uploads.upload-details', data: ['files' => $files])->render());
+            // @codeCoverageIgnoreEnd
         }
 
         $obj_permissao = new clsPermissoes;

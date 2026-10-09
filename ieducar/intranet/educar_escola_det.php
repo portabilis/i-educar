@@ -48,7 +48,12 @@ return new class extends clsDetalhe
         $registro = $tmp_obj->detalhe();
 
         if (!$registro) {
-            $this->simpleRedirect(url: 'educar_aluno_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_escola_lst.php',
+                registro: 'escola',
+                feminino: true,
+                codigo: $this->cod_escola,
+            );
         }
 
         $obj_ref_cod_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
@@ -80,7 +85,10 @@ return new class extends clsDetalhe
                     LegacyPhone::TYPE_MOBILE => $telefone_2 = $numero,
                     LegacyPhone::TYPE_MOBILE_ALT => $telefone_mov = $numero,
                     LegacyPhone::TYPE_FAX => $telefone_fax = $numero,
+                    // A restrição `ck_fone_pessoa_tipo` só aceita os tipos de telefone 1 a 4.
+                    // @codeCoverageIgnoreStart
                     default => null,
+                    // @codeCoverageIgnoreEnd
                 };
             }
         }
@@ -206,7 +214,10 @@ return new class extends clsDetalhe
     public function listaAnos()
     {
         if (!$this->cod_escola) {
+            // Inalcançável: o `Gerar()` redireciona antes quando a escola não existe.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $existe = false;

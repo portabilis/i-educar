@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
+use App\Models\LegacyStudent;
 use App\Process;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -60,7 +62,10 @@ return new class extends clsListagem
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -99,12 +104,12 @@ return new class extends clsListagem
         $matricula = $obj_ref_cod_matricula->lista(int_cod_matricula: $this->ref_cod_matricula);
         $detalhe_aluno = array_shift(array: $matricula);
 
-        $obj_aluno = (new clsPmieducarAluno)->lista(
-            int_cod_aluno: $detalhe_aluno['ref_cod_aluno'],
-            int_ativo: 1
-        );
+        $nm_aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($detalhe_aluno['ref_cod_aluno'])
+            ->joinPerson()
+            ->value('pessoa.nome');
 
-        $det_aluno = array_shift(array: $obj_aluno);
         $obj_escola = new clsPmieducarEscola(
             cod_escola: $this->ref_cod_escola,
             bloquear_lancamento_diario_anos_letivos_encerrados: 1
@@ -116,7 +121,7 @@ return new class extends clsListagem
             $this->campoRotulo(nome: 'nm_escola', campo: 'Escola', valor: $det_escola['nome']);
         }
 
-        $this->campoRotulo(nome: 'nm_pessoa', campo: 'Nome do Aluno', valor: $det_aluno['nome_aluno']);
+        $this->campoRotulo(nome: 'nm_pessoa', campo: 'Nome do Aluno', valor: $nm_aluno);
 
         // Filtros de foreign keys
         $opcoes = ['' => 'Selecione'];
@@ -202,20 +207,22 @@ return new class extends clsListagem
         }
         $total = $obj_matricula_turma->_total;
 
-        $enturmacoesMatricula = (new clsPmieducarMatriculaTurma)->lista3(
-            int_ref_cod_matricula: $this->ref_cod_matricula,
-            int_ativo: 1,
-        );
+        $turmasEnturmadas = LegacyEnrollment::query()
+            ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+            ->join('pmieducar.curso', 'curso.cod_curso', 'matricula.ref_cod_curso')
+            ->join('pmieducar.serie', 'serie.cod_serie', 'matricula.ref_ref_cod_serie')
+            ->join('pmieducar.turma', 'turma.cod_turma', 'matricula_turma.ref_cod_turma')
+            ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+            ->join('cadastro.pessoa', 'pessoa.idpes', 'aluno.ref_idpes')
+            ->join('cadastro.fisica', 'fisica.idpes', 'pessoa.idpes')
+            ->active()
+            ->when(is_numeric($this->ref_cod_matricula), fn ($q) => $q->whereRegistration($this->ref_cod_matricula))
+            ->pluck('matricula_turma.ref_cod_turma');
 
         $turmasThisSerie = $lista;
         // lista turmas disponiveis para enturmacao, somente lista as turmas sem enturmacao
         foreach ($turmasThisSerie as $turma) {
-            $turmaHasEnturmacao = false;
-            foreach ($enturmacoesMatricula as $enturmacao) {
-                if (!$turmaHasEnturmacao && $turma['cod_turma'] == $enturmacao['ref_cod_turma']) {
-                    $turmaHasEnturmacao = true;
-                }
-            }
+            $turmaHasEnturmacao = $turmasEnturmadas->contains($turma['cod_turma']);
 
             if ($turmaHasEnturmacao) {
                 $enturmado = 'Sim';
@@ -283,11 +290,6 @@ return new class extends clsListagem
         }
     }
 
-    public function makeExtra()
-    {
-        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-matricula-turma-lst.js');
-    }
-
     public function Formular()
     {
         $this->title = 'Matricula Turma';
@@ -299,7 +301,10 @@ return new class extends clsListagem
         $user = Auth::user();
         $allow = Gate::allows('view', $process);
         if ($user->isLibrary()) {
+            // Inalcançável: o construtor já mandou o usuário de biblioteca para o início.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         return $allow;
@@ -307,6 +312,8 @@ return new class extends clsListagem
 
     private function getPermissaoModificar($process)
     {
+        // Inalcançável: nada chama este método.
+        // @codeCoverageIgnoreStart
         $user = Auth::user();
         $allow = Gate::allows('view', $process);
         if ($user->isLibrary()) {
@@ -314,5 +321,6 @@ return new class extends clsListagem
         }
 
         return $allow;
+        // @codeCoverageIgnoreEnd
     }
 };

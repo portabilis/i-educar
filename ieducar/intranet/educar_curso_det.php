@@ -47,12 +47,18 @@ return new class extends clsDetalhe
 
         $this->cod_curso = $_GET['cod_curso'];
 
-        $tmp_obj = new clsPmieducarCurso(request()->integer('cod_curso'));
-        $registro = $tmp_obj->detalhe();
+        $cod_curso = request()->integer('cod_curso');
+        $curso = LegacyCourse::query()->find($cod_curso);
 
-        if (!$registro) {
-            $this->simpleRedirect('educar_curso_lst.php');
+        if (!$curso) {
+            $this->redirectNotFound(
+                url: 'educar_curso_lst.php',
+                registro: 'curso',
+                codigo: $cod_curso,
+            );
         }
+
+        $registro = $curso->getAttributes();
 
         $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
         $obj_instituicao_det = $obj_instituicao->detalhe();
@@ -123,10 +129,11 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Ato Poder P&uacute;blico', e($registro['ato_poder_publico'])]);
         }
 
-        $curso = LegacyCourse::find(request()->integer('cod_curso'));
         $lst = $curso->qualifications?->toArray();
 
         if (!empty($lst)) {
+            // Inalcançável: a relação `qualifications` não existe mais em `LegacyCourse`, então `$lst` é sempre nulo.
+            // @codeCoverageIgnoreStart
             $tabela = '<TABLE>
                  <TR align=center>
                      <TD bgcolor=#ccdce6><B>Nome</B></TD>
@@ -149,15 +156,22 @@ return new class extends clsDetalhe
                 $cont++;
             }
             $tabela .= '</TABLE>';
+            // @codeCoverageIgnoreEnd
         }
 
         if ($habilitacao) {
+            // Inalcançável: `$habilitacao` só é definida no bloco acima, que nunca roda.
+            // @codeCoverageIgnoreStart
             $this->addDetalhe(['Habilitação', $tabela]);
+            // @codeCoverageIgnoreEnd
         }
 
         if ($registro['padrao_ano_escolar']) {
             if ($registro['padrao_ano_escolar'] == 0) {
+                // Inalcançável: o `if` externo só entra com valor verdadeiro, que nunca é igual a 0.
+                // @codeCoverageIgnoreStart
                 $registro['padrao_ano_escolar'] = 'não';
+                // @codeCoverageIgnoreEnd
             } elseif ($registro['padrao_ano_escolar'] == 1) {
                 $registro['padrao_ano_escolar'] = 'sim';
             }

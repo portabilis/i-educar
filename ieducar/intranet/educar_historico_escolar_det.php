@@ -61,17 +61,20 @@ return new class extends clsDetalhe
         $historicoModel = LegacySchoolHistory::forStudentSequential($this->ref_cod_aluno, $this->sequencial)->first();
 
         if (!$historicoModel) {
-            $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->redirectNotFound(
+                url: "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}",
+                registro: 'histórico escolar',
+                dica: 'Confira os registros listados abaixo.',
+            );
         }
 
         $registro = $historicoModel->getAttributes();
 
-        $obj_aluno = new clsPmieducarAluno;
-        $lst_aluno = $obj_aluno->lista(int_cod_aluno: $registro['ref_cod_aluno'], int_ativo: 1);
-        if (is_array($lst_aluno)) {
-            $det_aluno = array_shift($lst_aluno);
-            $nm_aluno = $det_aluno['nome_aluno'];
-        }
+        $nm_aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($registro['ref_cod_aluno'])
+            ->joinPerson()
+            ->value('pessoa.nome');
 
         if ($nm_aluno) {
             $this->addDetalhe(['Aluno', "{$nm_aluno}"]);

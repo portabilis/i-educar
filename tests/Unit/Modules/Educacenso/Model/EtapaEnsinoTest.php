@@ -47,6 +47,10 @@ class EtapaEnsinoTest extends TestCase
             'Presencial curricular Normal/Magistério sem FGB' => [$presencial, true, false, EtapaAgregada::ENSINO_MEDIO_NORMAL_MAGISTERIO, false, null],
             'Presencial cur+ativ Ensino Médio sem FGB' => [$presencial, false, true, EtapaAgregada::ENSINO_MEDIO, false, null],
             'Presencial cur+ativ Normal/Magistério sem FGB' => [$presencial, false, true, EtapaAgregada::ENSINO_MEDIO_NORMAL_MAGISTERIO, false, null],
+
+            // Etapa agregada que a mediação presencial não oferece
+            'Presencial curricular sem etapa agregada' => [$presencial, true, false, null, false, null],
+            'Presencial cur+ativ Educação Infantil' => [$presencial, false, true, EtapaAgregada::EDUCACAO_INFANTIL, false, null],
         ];
 
         foreach ($casos as $descricao => [$mediacao, $curricular, $comAtividadeComplementar, $etapaAgregada, $temFormacaoGeralBasica, $esperado]) {

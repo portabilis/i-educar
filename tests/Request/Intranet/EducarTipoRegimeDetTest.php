@@ -13,6 +13,8 @@ test('mostra o detalhe de tipo de regime', function () {
     $this->get('/intranet/educar_tipo_regime_det.php?cod_tipo_regime=' . $this->record->getKey())->assertOk();
 });
 
-test('responde não encontrado quando tipo de regime não existe', function () {
-    $this->get('/intranet/educar_tipo_regime_det.php?cod_tipo_regime=0')->assertNotFound();
+test('volta para a listagem avisando quando tipo de regime não existe', function () {
+    $this->get('/intranet/educar_tipo_regime_det.php?cod_tipo_regime=0')
+        ->assertRedirect('educar_tipo_regime_lst.php')
+        ->assertSessionHas('error', 'Tipo de regime não encontrado. O registro não existe ou foi excluído. Use a busca abaixo para localizá-lo.');
 });

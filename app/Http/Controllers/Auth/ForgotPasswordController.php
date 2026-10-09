@@ -42,6 +42,13 @@ class ForgotPasswordController extends Controller
      */
     public function sendResetLinkEmail(Request $request)
     {
+        $request->validate([
+            'login' => 'required|string',
+        ], [
+            'login.required' => 'O campo matrícula é obrigatório.',
+            'login.string' => 'O campo matrícula é obrigatório.',
+        ]);
+
         $response = $this->broker()->sendResetLink(
             $request->only('login')
         );

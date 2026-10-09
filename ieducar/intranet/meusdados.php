@@ -242,6 +242,9 @@ return new class extends clsCadastro
             }
         }
 
+        // Fora dos testes: daqui em diante a gravação termina com `exit()`, que
+        // encerraria o processo que roda a suíte.
+        // @codeCoverageIgnoreStart
         $dadosAtualizar = [
             'receber_novidades' => $this->receber_novidades ? 1 : 0,
             'atualizou_cadastro' => 1,
@@ -305,6 +308,7 @@ return new class extends clsCadastro
         $this->mensagem = 'Edição efetuada com sucesso.<br>';
         header('Location: index.php');
         exit();
+        // @codeCoverageIgnoreEnd
     }
 
     // Retorna true caso a foto seja válida
