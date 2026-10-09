@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests\Unit\App\Models;
-
 use App\Models\FileRelation;
 use App\Models\LegacyBenefit;
 use App\Models\LegacyDeficiency;
@@ -27,242 +25,220 @@ use Database\Factories\LegacySchoolHistoryDisciplineFactory;
 use Database\Factories\LegacySchoolHistoryFactory;
 use Database\Factories\LegacyStudentFactory;
 use Illuminate\Support\Facades\DB;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyStudentTest extends EloquentTestCase
-{
-    /**
-     * @var array
-     */
-    protected $relations = [
-        'individual' => LegacyIndividual::class,
-        'person' => LegacyPerson::class,
-        'registrations' => LegacyRegistration::class,
-        'inep' => StudentInep::class,
-        'benefits' => LegacyBenefit::class,
-        'deficiencies' => LegacyDeficiency::class,
-        'medicalRecord' => LegacyStudentMedicalRecord::class,
-        'historicalHeightWeight' => LegacyStudentHistoricalHeightWeight::class,
-        'schoolHistories' => LegacySchoolHistory::class,
-        'lastRegistration' => LegacyRegistration::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return LegacyStudent::class;
-    }
+beforeEach(fn () => $this->eloquent(LegacyStudent::class, relations: [
+    'individual' => LegacyIndividual::class,
+    'person' => LegacyPerson::class,
+    'registrations' => LegacyRegistration::class,
+    'inep' => StudentInep::class,
+    'benefits' => LegacyBenefit::class,
+    'deficiencies' => LegacyDeficiency::class,
+    'medicalRecord' => LegacyStudentMedicalRecord::class,
+    'historicalHeightWeight' => LegacyStudentHistoricalHeightWeight::class,
+    'schoolHistories' => LegacySchoolHistory::class,
+    'lastRegistration' => LegacyRegistration::class,
+]));
 
-    public function test_attributes()
-    {
-        $this->assertEquals($this->model->tipo_responsavel, $this->model->guardianType);
-        $this->assertEquals($this->model->inep ? $this->model->inep->number : null, $this->model->inepNumber);
-        $this->assertEquals($this->model->aluno_estado_id, $this->model->stateRegistrationId);
-    }
+EloquentModelTestCase::registerModelTests();
 
-    public function test_get_guardian_name(): void
-    {
-        $individual = LegacyIndividualFactory::new()->father()->mother()->guardian()->create();
-        $model = LegacyStudentFactory::new()->create([
-            'ref_idpes' => $individual,
-        ]);
+test('attributes', function () {
+    $this->assertEquals($this->model->tipo_responsavel, $this->model->guardianType);
+    $this->assertEquals($this->model->inep ? $this->model->inep->number : null, $this->model->inepNumber);
+    $this->assertEquals($this->model->aluno_estado_id, $this->model->stateRegistrationId);
+});
 
-        $join = $model->individual->mother->name . ', ' . $model->individual->father->name;
-        $expected = match ($model->guardianType) {
-            'm' => $model->individual->mother->name,
-            'p' => $model->individual->father->name,
-            'r' => $model->individual->responsible->name,
-            'a' => strlen($join) < 3 ? null : $join,
-            default => null
-        };
-        $this->assertEquals($expected, $model->getGuardianName());
-    }
+test('get guardian name', function () {
+    $individual = LegacyIndividualFactory::new()->father()->mother()->guardian()->create();
+    $model = LegacyStudentFactory::new()->create([
+        'ref_idpes' => $individual,
+    ]);
 
-    public function test_get_guardian_cpf(): void
-    {
-        $join = ($this->model->individual->mother->individual->cpf ?? 'não informado') . ', ' . ($this->individual->model->father->individual->cpf ?? 'não informado');
-        $expected = match ($this->model->guardianType) {
-            'm' => $this->individual->mother->individual->cpf ?? 'não informado',
-            'p' => $this->individual->father->individual->cpf ?? 'não informado',
-            'r' => $this->individual->responsible->individual->cpf ?? 'não informado',
-            'a' => strlen($join) < 3 ? null : $join,
-            default => null
-        };
-        $this->assertEquals($expected, $this->model->getGuardianCpf());
-    }
+    $join = $model->individual->mother->name . ', ' . $model->individual->father->name;
+    $expected = match ($model->guardianType) {
+        'm' => $model->individual->mother->name,
+        'p' => $model->individual->father->name,
+        'r' => $model->individual->responsible->name,
+        'a' => strlen($join) < 3 ? null : $join,
+        default => null
+    };
+    $this->assertEquals($expected, $model->getGuardianName());
+});
 
-    public function test_scope_active(): void
-    {
-        LegacyStudentFactory::new()->create(['ativo' => 0]);
-        $found = $this->instanceNewEloquentModel()->active()->get();
-        $this->assertCount(1, $found);
-    }
+test('get guardian cpf', function () {
+    $join = ($this->model->individual->mother->individual->cpf ?? 'não informado') . ', ' . ($this->individual->model->father->individual->cpf ?? 'não informado');
+    $expected = match ($this->model->guardianType) {
+        'm' => $this->individual->mother->individual->cpf ?? 'não informado',
+        'p' => $this->individual->father->individual->cpf ?? 'não informado',
+        'r' => $this->individual->responsible->individual->cpf ?? 'não informado',
+        'a' => strlen($join) < 3 ? null : $join,
+        default => null
+    };
+    $this->assertEquals($expected, $this->model->getGuardianCpf());
+});
 
-    public function test_scope_male(): void
-    {
-        LegacyIndividual::query()->update([
-            'sexo' => null,
-        ]);
+test('scope active', function () {
+    LegacyStudentFactory::new()->create(['ativo' => 0]);
+    $found = $this->instanceNewEloquentModel()->active()->get();
+    $this->assertCount(1, $found);
+});
 
-        $individual = LegacyIndividualFactory::new()->create(['sexo' => 'M']);
-        LegacyStudentFactory::new()->create([
-            'ref_idpes' => $individual,
-        ]);
-        $found = $this->instanceNewEloquentModel()->male()->get();
-        $this->assertCount(1, $found);
-    }
+test('scope male', function () {
+    LegacyIndividual::query()->update([
+        'sexo' => null,
+    ]);
 
-    public function test_scope_female(): void
-    {
-        LegacyIndividual::query()->update([
-            'sexo' => null,
-        ]);
+    $individual = LegacyIndividualFactory::new()->create(['sexo' => 'M']);
+    LegacyStudentFactory::new()->create([
+        'ref_idpes' => $individual,
+    ]);
+    $found = $this->instanceNewEloquentModel()->male()->get();
+    $this->assertCount(1, $found);
+});
 
-        $individual = LegacyIndividualFactory::new()->create(['sexo' => 'F']);
-        $student2 = LegacyStudentFactory::new()->create([
-            'ref_idpes' => $individual,
-        ]);
-        $found = $this->instanceNewEloquentModel()->female()->whereIn('cod_aluno', [
-            $student2->cod_aluno,
-            $this->model->cod_aluno,
-        ])->get();
-        $this->assertCount(1, $found);
-    }
+test('scope female', function () {
+    LegacyIndividual::query()->update([
+        'sexo' => null,
+    ]);
 
-    public function test_document_and_single_deficiency(): void
-    {
-        $student = LegacyStudentFactory::new()->create();
-        LegacyDocumentFactory::new()->create(['idpes' => $student->ref_idpes]);
-        $deficiency = LegacyDeficiencyFactory::new()->create();
-        $student->deficiencies()->attach($deficiency);
+    $individual = LegacyIndividualFactory::new()->create(['sexo' => 'F']);
+    $student2 = LegacyStudentFactory::new()->create([
+        'ref_idpes' => $individual,
+    ]);
+    $found = $this->instanceNewEloquentModel()->female()->whereIn('cod_aluno', [
+        $student2->cod_aluno,
+        $this->model->cod_aluno,
+    ])->get();
+    $this->assertCount(1, $found);
+});
 
-        $this->assertInstanceOf(LegacyDocument::class, $student->document);
-        $this->assertSame($student->ref_idpes, $student->document->idpes);
-        $this->assertInstanceOf(LegacyDeficiency::class, $student->deficiency);
-        $this->assertSame($deficiency->getKey(), $student->deficiency->getKey());
-    }
+test('document and single deficiency', function () {
+    $student = LegacyStudentFactory::new()->create();
+    LegacyDocumentFactory::new()->create(['idpes' => $student->ref_idpes]);
+    $deficiency = LegacyDeficiencyFactory::new()->create();
+    $student->deficiencies()->attach($deficiency);
 
-    public function test_school_history_disciplines(): void
-    {
-        $student = LegacyStudentFactory::new()->create();
-        $history = LegacySchoolHistoryFactory::new()->create(['ref_cod_aluno' => $student]);
-        LegacySchoolHistoryDisciplineFactory::new()->create([
-            'historico_escolar_id' => $history->id,
-            'ref_ref_cod_aluno' => $student->getKey(),
-            'ref_sequencial' => $history->sequencial,
-        ]);
+    $this->assertInstanceOf(LegacyDocument::class, $student->document);
+    $this->assertSame($student->ref_idpes, $student->document->idpes);
+    $this->assertInstanceOf(LegacyDeficiency::class, $student->deficiency);
+    $this->assertSame($deficiency->getKey(), $student->deficiency->getKey());
+});
 
-        $this->assertCount(1, $student->schoolHistoryDisciplines);
-        $this->assertInstanceOf(LegacySchoolHistoryDiscipline::class, $student->schoolHistoryDisciplines->first());
-    }
+test('school history disciplines', function () {
+    $student = LegacyStudentFactory::new()->create();
+    $history = LegacySchoolHistoryFactory::new()->create(['ref_cod_aluno' => $student]);
+    LegacySchoolHistoryDisciplineFactory::new()->create([
+        'historico_escolar_id' => $history->id,
+        'ref_ref_cod_aluno' => $student->getKey(),
+        'ref_sequencial' => $history->sequencial,
+    ]);
 
-    public function test_last_registration_is_the_newest_active_one(): void
-    {
-        $student = LegacyStudentFactory::new()->create();
-        LegacyRegistrationFactory::new()->create(['ref_cod_aluno' => $student, 'ano' => 2030, 'ativo' => 1]);
-        $newest = LegacyRegistrationFactory::new()->create(['ref_cod_aluno' => $student, 'ano' => 2031, 'ativo' => 1]);
-        LegacyRegistrationFactory::new()->create(['ref_cod_aluno' => $student, 'ano' => 2032, 'ativo' => 0]);
+    $this->assertCount(1, $student->schoolHistoryDisciplines);
+    $this->assertInstanceOf(LegacySchoolHistoryDiscipline::class, $student->schoolHistoryDisciplines->first());
+});
 
-        $this->assertSame($newest->getKey(), $student->lastRegistration->getKey());
-    }
+test('last registration is the newest active one', function () {
+    $student = LegacyStudentFactory::new()->create();
+    LegacyRegistrationFactory::new()->create(['ref_cod_aluno' => $student, 'ano' => 2030, 'ativo' => 1]);
+    $newest = LegacyRegistrationFactory::new()->create(['ref_cod_aluno' => $student, 'ano' => 2031, 'ativo' => 1]);
+    LegacyRegistrationFactory::new()->create(['ref_cod_aluno' => $student, 'ano' => 2032, 'ativo' => 0]);
 
-    public function test_registration_transfer_is_the_current_transfer_of_a_student_without_a_newer_registration(): void
-    {
-        $student = LegacyStudentFactory::new()->create();
+    $this->assertSame($newest->getKey(), $student->lastRegistration->getKey());
+});
 
-        $this->assertNull($student->registration_transfer);
+test('registration transfer is the current transfer of a student without a newer registration', function () {
+    $student = LegacyStudentFactory::new()->create();
 
-        $transfer = LegacyRegistrationFactory::new()->create([
-            'ref_cod_aluno' => $student,
-            'ativo' => 1,
-            'aprovado' => RegistrationStatus::TRANSFERRED,
-        ]);
-        LegacyEnrollmentFactory::new()->create(['ref_cod_matricula' => $transfer, 'ativo' => 1]);
+    $this->assertNull($student->registration_transfer);
 
-        $this->assertSame($transfer->getKey(), $student->fresh()->registration_transfer->getKey());
-    }
+    $transfer = LegacyRegistrationFactory::new()->create([
+        'ref_cod_aluno' => $student,
+        'ativo' => 1,
+        'aprovado' => RegistrationStatus::TRANSFERRED,
+    ]);
+    LegacyEnrollmentFactory::new()->create(['ref_cod_matricula' => $transfer, 'ativo' => 1]);
 
-    public function test_has_report(): void
-    {
-        $student = LegacyStudentFactory::new()->create();
+    $this->assertSame($transfer->getKey(), $student->fresh()->registration_transfer->getKey());
+});
 
-        $this->assertFalse($student->hasReport());
+test('has report', function () {
+    $student = LegacyStudentFactory::new()->create();
 
-        $student->files()->attach(FileFactory::new()->create(), ['type' => FileRelation::TYPE_MEDICAL_REPORT]);
+    $this->assertFalse($student->hasReport());
 
-        $this->assertTrue($student->hasReport());
+    $student->files()->attach(FileFactory::new()->create(), ['type' => FileRelation::TYPE_MEDICAL_REPORT]);
 
-        $student->load('medicalReports');
+    $this->assertTrue($student->hasReport());
 
-        $this->assertTrue($student->hasReport());
-    }
+    $student->load('medicalReports');
 
-    public function test_guardions_are_the_parents_actually_registered(): void
-    {
-        $this->assertTrue(LegacyStudentFactory::new()->create()->getGuardions()->isEmpty());
+    $this->assertTrue($student->hasReport());
+});
 
-        $mother = LegacyIndividualFactory::new()->create();
-        DB::table('cadastro.pessoa')->where('idpes', $mother->getKey())->update(['nome' => 'NÃO REGISTRADO']);
-        $individual = LegacyIndividualFactory::new()->father()->create(['idpes_mae' => $mother]);
-        $student = LegacyStudentFactory::new()->create(['ref_idpes' => $individual]);
+test('guardions are the parents actually registered', function () {
+    $this->assertTrue(LegacyStudentFactory::new()->create()->getGuardions()->isEmpty());
 
-        $guardions = $student->getGuardions();
+    $mother = LegacyIndividualFactory::new()->create();
+    DB::table('cadastro.pessoa')->where('idpes', $mother->getKey())->update(['nome' => 'NÃO REGISTRADO']);
+    $individual = LegacyIndividualFactory::new()->father()->create(['idpes_mae' => $mother]);
+    $student = LegacyStudentFactory::new()->create(['ref_idpes' => $individual]);
 
-        $this->assertCount(1, $guardions);
-        $this->assertSame($individual->father->name, $guardions->first()->name);
-    }
+    $guardions = $student->getGuardions();
 
-    public function test_guardian_name_and_cpf_of_the_responsible(): void
-    {
-        $guardian = LegacyIndividualFactory::new()->create(['cpf' => 12345678909]);
-        $individual = LegacyIndividualFactory::new()->create(['idpes_responsavel' => $guardian]);
-        $student = LegacyStudentFactory::new()->create(['ref_idpes' => $individual, 'tipo_responsavel' => 'r']);
+    $this->assertCount(1, $guardions);
+    $this->assertSame($individual->father->name, $guardions->first()->name);
+});
 
-        $this->assertSame($guardian->person->name, $student->getGuardianName());
-        $this->assertSame('123.456.789-09', $student->getGuardianCpf());
-    }
+test('guardian name and cpf of the responsible', function () {
+    $guardian = LegacyIndividualFactory::new()->create(['cpf' => 12345678909]);
+    $individual = LegacyIndividualFactory::new()->create(['idpes_responsavel' => $guardian]);
+    $student = LegacyStudentFactory::new()->create(['ref_idpes' => $individual, 'tipo_responsavel' => 'r']);
 
-    public function test_filters_by_the_registrations(): void
-    {
-        $ana = LegacyStudentFactory::new()->create();
-        $bia = LegacyStudentFactory::new()->create();
-        $old = LegacyRegistrationFactory::new()->create(['ref_cod_aluno' => $ana, 'ano' => 2030, 'ultima_matricula' => 0]);
-        $current = LegacyRegistrationFactory::new()->create(['ref_cod_aluno' => $ana, 'ano' => 2031, 'ultima_matricula' => 1]);
-        LegacyRegistrationFactory::new()->create([
-            'ref_cod_aluno' => $bia,
-            'ano' => 2031,
-            'ref_ref_cod_escola' => $old->ref_ref_cod_escola,
-            'ultima_matricula' => 1,
-        ]);
+    $this->assertSame($guardian->person->name, $student->getGuardianName());
+    $this->assertSame('123.456.789-09', $student->getGuardianCpf());
+});
 
-        $ids = fn ($query) => $query->whereIn('cod_aluno', [$ana->getKey(), $bia->getKey()])->orderBy('cod_aluno')->pluck('cod_aluno')->all();
+test('filters by the registrations', function () {
+    $ana = LegacyStudentFactory::new()->create();
+    $bia = LegacyStudentFactory::new()->create();
+    $old = LegacyRegistrationFactory::new()->create(['ref_cod_aluno' => $ana, 'ano' => 2030, 'ultima_matricula' => 0]);
+    $current = LegacyRegistrationFactory::new()->create(['ref_cod_aluno' => $ana, 'ano' => 2031, 'ultima_matricula' => 1]);
+    LegacyRegistrationFactory::new()->create([
+        'ref_cod_aluno' => $bia,
+        'ano' => 2031,
+        'ref_ref_cod_escola' => $old->ref_ref_cod_escola,
+        'ultima_matricula' => 1,
+    ]);
 
-        $this->assertSame([$ana->getKey()], $ids(LegacyStudent::query()->whereRegistrationYear(2030)));
-        $this->assertSame([$ana->getKey(), $bia->getKey()], $ids(LegacyStudent::query()->whereRegistrationYear(2031)));
-        $this->assertSame([$ana->getKey(), $bia->getKey()], $ids(LegacyStudent::query()->whereSchool($old->ref_ref_cod_escola)));
-        $this->assertSame([$bia->getKey()], $ids(LegacyStudent::query()->whereLastRegistrationSchool($old->ref_ref_cod_escola)));
-        $this->assertSame([$ana->getKey()], $ids(LegacyStudent::query()->whereCourse($current->ref_cod_curso)));
-        $this->assertSame([$ana->getKey()], $ids(LegacyStudent::query()->whereGrade($current->ref_ref_cod_serie)));
-    }
+    $ids = fn ($query) => $query->whereIn('cod_aluno', [$ana->getKey(), $bia->getKey()])->orderBy('cod_aluno')->pluck('cod_aluno')->all();
 
-    public function test_filters_by_name_report_and_activity(): void
-    {
-        $named = fn (string $name) => LegacyStudentFactory::new()->create([
-            'ref_idpes' => LegacyIndividualFactory::new()->create([
-                'idpes' => LegacyPersonFactory::new()->create(['nome' => $name, 'tipo' => 'F']),
-            ]),
-        ]);
-        $ana = $named('Ana Alves');
-        $bia = $named('Bia Borges');
-        $ana->files()->attach(FileFactory::new()->create(), ['type' => FileRelation::TYPE_MEDICAL_REPORT]);
+    $this->assertSame([$ana->getKey()], $ids(LegacyStudent::query()->whereRegistrationYear(2030)));
+    $this->assertSame([$ana->getKey(), $bia->getKey()], $ids(LegacyStudent::query()->whereRegistrationYear(2031)));
+    $this->assertSame([$ana->getKey(), $bia->getKey()], $ids(LegacyStudent::query()->whereSchool($old->ref_ref_cod_escola)));
+    $this->assertSame([$bia->getKey()], $ids(LegacyStudent::query()->whereLastRegistrationSchool($old->ref_ref_cod_escola)));
+    $this->assertSame([$ana->getKey()], $ids(LegacyStudent::query()->whereCourse($current->ref_cod_curso)));
+    $this->assertSame([$ana->getKey()], $ids(LegacyStudent::query()->whereGrade($current->ref_ref_cod_serie)));
+});
 
-        $ids = fn ($query) => $query->whereIn('cod_aluno', [$ana->getKey(), $bia->getKey()])->pluck('cod_aluno')->all();
+test('filters by name report and activity', function () {
+    $named = fn (string $name) => LegacyStudentFactory::new()->create([
+        'ref_idpes' => LegacyIndividualFactory::new()->create([
+            'idpes' => LegacyPersonFactory::new()->create(['nome' => $name, 'tipo' => 'F']),
+        ]),
+    ]);
+    $ana = $named('Ana Alves');
+    $bia = $named('Bia Borges');
+    $ana->files()->attach(FileFactory::new()->create(), ['type' => FileRelation::TYPE_MEDICAL_REPORT]);
 
-        $this->assertSame([$ana->getKey()], $ids(LegacyStudent::query()->whereStudentNameLike('na al')));
-        $this->assertSame([$ana->getKey()], $ids(LegacyStudent::query()->whereWithReport()));
-        $this->assertSame([$bia->getKey()], $ids(LegacyStudent::query()->whereWithoutReport()));
+    $ids = fn ($query) => $query->whereIn('cod_aluno', [$ana->getKey(), $bia->getKey()])->pluck('cod_aluno')->all();
 
-        $bia->update(['ativo' => 0]);
+    $this->assertSame([$ana->getKey()], $ids(LegacyStudent::query()->whereStudentNameLike('na al')));
+    $this->assertSame([$ana->getKey()], $ids(LegacyStudent::query()->whereWithReport()));
+    $this->assertSame([$bia->getKey()], $ids(LegacyStudent::query()->whereWithoutReport()));
 
-        $this->assertSame([$ana->getKey()], $ids(LegacyStudent::query()->whereActive()));
-    }
-}
+    $bia->update(['ativo' => 0]);
+
+    $this->assertSame([$ana->getKey()], $ids(LegacyStudent::query()->whereActive()));
+});
