@@ -1,22 +1,13 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\File;
 use App\Models\FileRelation;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class FileRelationTest extends EloquentTestCase
-{
-    protected $relations = [
-        'file' => File::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return FileRelation::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(FileRelation::class, relations: [
+    'file' => File::class,
+]));
+
+EloquentModelTestCase::registerModelTests();
