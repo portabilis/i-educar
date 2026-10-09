@@ -1,17 +1,13 @@
 <?php
 
-namespace Tests\Unit\Intranet;
-
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolClass;
-use clsPmieducarTurma;
 use Database\Factories\EmployeeFactory;
 use Database\Factories\LegacySchoolClassGradeFactory;
 use Database\Factories\LegacySchoolClassTypeFactory;
 use Database\Factories\LegacyUserFactory;
 use Database\Factories\LegacyUserSchoolFactory;
 use Database\Factories\SchoolClassInepFactory;
-use Exception;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Tests\Request\Support\EnrollmentScenario;
@@ -23,37 +19,17 @@ use Tests\TestCase;
  * campo são testadas direto na classe, junto com os filtros das duas
  * listagens e as consultas avulsas.
  */
-class ClsPmieducarTurmaTest extends TestCase
-{
-    use DatabaseTransactions;
+uses(TestCase::class, DatabaseTransactions::class);
 
-    private int $user;
-
-    private int $institution;
-
-    private EnrollmentScenario $scenario;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $user = LegacyUserFactory::new()->admin()->create();
-
-        $this->user = $user->getKey();
-        $this->institution = $user->ref_cod_instituicao;
-        $this->scenario = EnrollmentScenario::for($user, 2030);
-    }
-
-    private function row(int $id): object
-    {
+beforeEach(function () {
+    $this->row = function (int $id): object {
         return DB::table('pmieducar.turma')->where('cod_turma', $id)->first();
-    }
+    };
 
     /**
      * Uma turma com todos os campos que a classe grava.
      */
-    private function full(?int $id = null): clsPmieducarTurma
-    {
+    $this->full = function (?int $id = null): clsPmieducarTurma {
         $second = $this->scenario->grade('Série secundária');
         $regent = EmployeeFactory::new()->create(['institution_id' => $this->institution]);
 
@@ -114,10 +90,9 @@ class ClsPmieducarTurmaTest extends TestCase
         $object->cod_curso = null;
 
         return $object;
-    }
+    };
 
-    private function assertFull(object $row, bool $withStartTime = true): void
-    {
+    $this->assertFull = function (object $row, bool $withStartTime = true) {
         $this->assertSame('Turma Completa', $row->nm_turma);
         $this->assertSame('TCO', $row->sgl_turma);
         $this->assertSame(32, $row->max_aluno);
@@ -158,222 +133,7 @@ class ClsPmieducarTurmaTest extends TestCase
         $this->assertSame('15:00:00', $row->hora_inicio_intervalo_vespertino);
         $this->assertSame('15:20:00', $row->hora_fim_intervalo_vespertino);
         $this->assertSame('17:15:00', $row->hora_final_vespertino);
-    }
-
-    public function test_cadastra_com_todos_os_campos(): void
-    {
-        $id = $this->full()->cadastra();
-        $row = $this->row($id);
-
-        $this->assertFull($row);
-        $this->assertSame(1, $row->ativo);
-        $this->assertSame($this->user, $row->ref_usuario_cad);
-    }
-
-    public function test_cadastra_so_com_os_campos_obrigatorios(): void
-    {
-        $id = (new clsPmieducarTurma(
-            ref_usuario_cad: $this->user,
-            nm_turma: 'Turma Mínima',
-            max_aluno: 10,
-            multiseriada: 0,
-            ref_cod_turma_tipo: LegacySchoolClassTypeFactory::new()->create()->getKey(),
-        ))->cadastra();
-
-        $row = $this->row($id);
-
-        $this->assertSame('Turma Mínima', $row->nm_turma);
-        $this->assertNull($row->ref_ref_cod_serie);
-        $this->assertNull($row->ref_cod_disciplina_dispensada);
-        $this->assertNull($row->hora_inicial);
-    }
-
-    public function test_nao_grava_nem_consulta_sem_os_campos_obrigatorios(): void
-    {
-        $empty = new clsPmieducarTurma;
-
-        $this->assertFalse($empty->cadastra());
-        $this->assertFalse($empty->edita());
-        $this->assertFalse($empty->detalhe());
-        $this->assertFalse($empty->checaAnoLetivoEmAndamento());
-        $this->assertNull($empty->getInep());
-        $this->assertNull($empty->getInepTurno(1));
-        $this->assertSame('2030-12-20', (new clsPmieducarTurma(data_exclusao: '2030-12-20'))->data_exclusao);
-    }
-
-    public function test_edita_preenchendo_todos_os_campos(): void
-    {
-        $id = $this->scenario->schoolClass(['nm_turma' => 'Turma Antiga'])->getKey();
-
-        $object = $this->full($id);
-        // A hora inicial fica de fora: com ela a edição estoura (ver o defeito abaixo).
-        $object->hora_inicial = false;
-        $object->parecer_1_etapa = 'Parecer um';
-        $object->parecer_2_etapa = 'Parecer dois';
-        $object->parecer_3_etapa = 'Parecer três';
-        $object->parecer_4_etapa = 'Parecer quatro';
-
-        $this->assertTrue($object->edita());
-
-        $row = $this->row($id);
-
-        $this->assertFull($row, withStartTime: false);
-        $this->assertSame($this->user, $row->ref_usuario_exc);
-        $this->assertStringStartsWith('2030-01-15 08:00:00', $row->data_cadastro);
-        $this->assertSame('Parecer um', $row->parecer_1_etapa);
-        $this->assertSame('Parecer dois', $row->parecer_2_etapa);
-        $this->assertSame('Parecer três', $row->parecer_3_etapa);
-        $this->assertSame('Parecer quatro', $row->parecer_4_etapa);
-    }
-
-    // Defeito conhecido: editar só com o código e o usuário apaga o regente, a
-    // série secundária, as etapas do Educacenso, a disciplina dispensada e os
-    // horários por turno, porque a edição grava NULL no que não recebeu valor.
-    // É o que a tela de pareceres da turma faz.
-    public function test_defeito_editar_sem_informar_os_campos_opcionais_os_apaga(): void
-    {
-        $id = $this->full()->cadastra();
-
-        $object = new clsPmieducarTurma($id, $this->user);
-        $object->cod_curso = null;
-
-        $this->assertTrue($object->edita());
-
-        $row = $this->row($id);
-
-        foreach ([
-            'ref_cod_regente', 'ref_ref_cod_escola_mult', 'ref_ref_cod_serie_mult', 'cod_curso_profissional', 'etapa_educacenso',
-            'etapa_agregada', 'ref_cod_disciplina_dispensada', 'local_funcionamento_diferenciado', 'classe_especial', 'formacao_alternancia',
-            'hora_inicial_matutino', 'hora_inicio_intervalo_matutino', 'hora_fim_intervalo_matutino', 'hora_final_matutino',
-            'hora_inicial_vespertino', 'hora_inicio_intervalo_vespertino', 'hora_fim_intervalo_vespertino', 'hora_final_vespertino',
-        ] as $column) {
-            $this->assertNull($row->{$column}, $column);
-        }
-
-        // Os campos cujo padrão é falso, e os que não têm ramo de limpeza, ficam como estavam.
-        $this->assertSame('07:30:00', $row->hora_inicial);
-        $this->assertSame('11:45:00', $row->hora_final);
-        $this->assertSame(2, $row->tipo_boletim_diferenciado);
-        $this->assertSame('{0,5}', $row->tipo_atendimento);
-        $this->assertSame(1, $row->tipo_mediacao_didatico_pedagogico);
-        $this->assertSame('Turma Completa', $row->nm_turma);
-        $this->assertSame('{2,3,4}', $row->dias_semana);
-        $this->assertSame(1, $row->nao_informar_educacenso);
-    }
-
-    public function test_editar_com_nulo_limpa_e_com_falso_preserva(): void
-    {
-        $id = $this->full()->cadastra();
-
-        $object = new clsPmieducarTurma($id, $this->user);
-        $object->cod_curso = null;
-
-        foreach (['hora_final', 'hora_inicio_intervalo', 'hora_fim_intervalo', 'tipo_boletim_diferenciado', 'tipo_atendimento', 'tipo_mediacao_didatico_pedagogico'] as $property) {
-            $object->{$property} = null;
-        }
-
-        foreach ([
-            'hora_inicial_matutino', 'hora_inicio_intervalo_matutino', 'hora_fim_intervalo_matutino', 'hora_final_matutino',
-            'hora_inicial_vespertino', 'hora_inicio_intervalo_vespertino', 'hora_fim_intervalo_vespertino', 'hora_final_vespertino',
-        ] as $property) {
-            $object->{$property} = false;
-        }
-
-        $this->assertTrue($object->edita());
-
-        $row = $this->row($id);
-
-        $this->assertNull($row->hora_final);
-        $this->assertNull($row->hora_inicio_intervalo);
-        $this->assertNull($row->hora_fim_intervalo);
-        $this->assertNull($row->tipo_boletim_diferenciado);
-        $this->assertNull($row->tipo_atendimento);
-        $this->assertNull($row->tipo_mediacao_didatico_pedagogico);
-        $this->assertSame('07:30:00', $row->hora_inicial_matutino);
-        $this->assertSame('17:15:00', $row->hora_final_vespertino);
-    }
-
-    // Defeito conhecido: a edição monta a atribuição de `hora_inicial` duas
-    // vezes no mesmo UPDATE; com a hora informada, ou nula, o banco recusa.
-    public function test_defeito_editar_com_hora_inicial_estoura(): void
-    {
-        $object = new clsPmieducarTurma($this->scenario->schoolClass()->getKey(), $this->user, hora_inicial: '07:30:00');
-        $object->cod_curso = null;
-
-        $this->expectException(Exception::class);
-
-        $object->edita();
-    }
-
-    public function test_defeito_editar_com_hora_inicial_nula_estoura(): void
-    {
-        $object = new clsPmieducarTurma($this->scenario->schoolClass()->getKey(), $this->user);
-        $object->cod_curso = null;
-        $object->hora_inicial = null;
-
-        $this->expectException(Exception::class);
-
-        $object->edita();
-    }
-
-    // Defeito conhecido: a edição grava `cod_curso`, coluna que não existe na
-    // tabela de turmas (o nome é `ref_cod_curso`).
-    public function test_defeito_editar_com_cod_curso_estoura(): void
-    {
-        $object = new clsPmieducarTurma($this->scenario->schoolClass()->getKey(), $this->user);
-        $object->cod_curso = $this->scenario->course->getKey();
-
-        $this->expectException(Exception::class);
-
-        $object->edita();
-    }
-
-    // Defeito conhecido: a classe aceita uma data de fechamento e tenta gravá-la
-    // em `data_fechamento`, coluna que não existe na tabela de turmas.
-    public function test_defeito_cadastrar_com_data_de_fechamento_estoura(): void
-    {
-        $object = $this->full();
-        $object->data_fechamento = '2030-12-20';
-
-        $this->expectException(Exception::class);
-
-        $object->cadastra();
-    }
-
-    public function test_defeito_editar_com_data_de_fechamento_estoura(): void
-    {
-        $object = new clsPmieducarTurma($this->scenario->schoolClass()->getKey(), $this->user, data_fechamento: '2030-12-20');
-        $object->cod_curso = null;
-
-        $this->expectException(Exception::class);
-
-        $object->edita();
-    }
-
-    public function test_detalha_e_informa_o_ano_letivo_alunos_inep_e_disciplina_dispensada(): void
-    {
-        $discipline = $this->scenario->discipline('Ensino Religioso')->getKey();
-        $schoolClass = $this->scenario->schoolClass(['nm_turma' => 'Turma Alfa', 'ref_cod_disciplina_dispensada' => $discipline]);
-        $id = $schoolClass->getKey();
-        $object = new clsPmieducarTurma($id);
-
-        $this->assertSame('Turma Alfa', $object->detalhe()['nm_turma']);
-        $this->assertNotFalse($object->checaAnoLetivoEmAndamento());
-        $this->assertEmpty($object->possuiAlunosVinculados());
-        $this->assertNull($object->getInep());
-        $this->assertTrue(clsPmieducarTurma::verificaDisciplinaDispensada($id, $discipline));
-        $this->assertNull(clsPmieducarTurma::getDisciplinaDispensada($this->scenario->schoolClass()->getKey()));
-
-        $this->scenario->enrolled('Ana Alves', $schoolClass);
-        SchoolClassInepFactory::new()->create(['cod_turma' => $id, 'cod_turma_inep' => 12345678]);
-        SchoolClassInepFactory::new()->create(['cod_turma' => $id, 'cod_turma_inep' => 87654321, 'turma_turno_id' => 1]);
-        LegacySchoolAcademicYear::query()->where('ref_cod_escola', $this->scenario->school->getKey())->update(['andamento' => 2]);
-
-        $this->assertNotEmpty($object->possuiAlunosVinculados());
-        $this->assertEquals(12345678, $object->getInep());
-        $this->assertEquals(87654321, $object->getInepTurno(1));
-        $this->assertEmpty($object->checaAnoLetivoEmAndamento());
-    }
+    };
 
     /**
      * Duas turmas que diferem em tudo o que as listagens filtram: a primeira
@@ -381,8 +141,7 @@ class ClsPmieducarTurmaTest extends TestCase
      *
      * @return array{0: LegacySchoolClass, 1: LegacySchoolClass}
      */
-    private function pair(): array
-    {
+    $this->pair = function (): array {
         $second = LegacyUserFactory::new()->admin()->create();
         $other = EnrollmentScenario::for($second, 2029);
         $regent = EmployeeFactory::new()->create(['institution_id' => $this->institution]);
@@ -432,13 +191,12 @@ class ClsPmieducarTurmaTest extends TestCase
         ]);
 
         return [$wanted, $unwanted];
-    }
+    };
 
     /**
      * @return array<int, array<string, mixed>>
      */
-    private function filters(LegacySchoolClass $wanted): array
-    {
+    $this->filters = function (LegacySchoolClass $wanted): array {
         $school = ['int_ref_ref_cod_escola' => $wanted->ref_ref_cod_escola];
 
         return [
@@ -467,129 +225,331 @@ class ClsPmieducarTurmaTest extends TestCase
             ['tipo_boletim' => 7],
             $school + ['ano' => 2030],
         ];
+    };
+
+    $user = LegacyUserFactory::new()->admin()->create();
+
+    $this->user = $user->getKey();
+    $this->institution = $user->ref_cod_instituicao;
+    $this->scenario = EnrollmentScenario::for($user, 2030);
+});
+
+test('cadastra com todos os campos', function () {
+    $id = ($this->full)()->cadastra();
+    $row = ($this->row)($id);
+
+    ($this->assertFull)($row);
+    $this->assertSame(1, $row->ativo);
+    $this->assertSame($this->user, $row->ref_usuario_cad);
+});
+
+test('cadastra so com os campos obrigatorios', function () {
+    $id = (new clsPmieducarTurma(
+        ref_usuario_cad: $this->user,
+        nm_turma: 'Turma Mínima',
+        max_aluno: 10,
+        multiseriada: 0,
+        ref_cod_turma_tipo: LegacySchoolClassTypeFactory::new()->create()->getKey(),
+    ))->cadastra();
+
+    $row = ($this->row)($id);
+
+    $this->assertSame('Turma Mínima', $row->nm_turma);
+    $this->assertNull($row->ref_ref_cod_serie);
+    $this->assertNull($row->ref_cod_disciplina_dispensada);
+    $this->assertNull($row->hora_inicial);
+});
+
+test('nao grava nem consulta sem os campos obrigatorios', function () {
+    $empty = new clsPmieducarTurma;
+
+    $this->assertFalse($empty->cadastra());
+    $this->assertFalse($empty->edita());
+    $this->assertFalse($empty->detalhe());
+    $this->assertFalse($empty->checaAnoLetivoEmAndamento());
+    $this->assertNull($empty->getInep());
+    $this->assertNull($empty->getInepTurno(1));
+    $this->assertSame('2030-12-20', (new clsPmieducarTurma(data_exclusao: '2030-12-20'))->data_exclusao);
+});
+
+test('edita preenchendo todos os campos', function () {
+    $id = $this->scenario->schoolClass(['nm_turma' => 'Turma Antiga'])->getKey();
+
+    $object = ($this->full)($id);
+    // A hora inicial fica de fora: com ela a edição estoura (ver o defeito abaixo).
+    $object->hora_inicial = false;
+    $object->parecer_1_etapa = 'Parecer um';
+    $object->parecer_2_etapa = 'Parecer dois';
+    $object->parecer_3_etapa = 'Parecer três';
+    $object->parecer_4_etapa = 'Parecer quatro';
+
+    $this->assertTrue($object->edita());
+
+    $row = ($this->row)($id);
+
+    ($this->assertFull)($row, withStartTime: false);
+    $this->assertSame($this->user, $row->ref_usuario_exc);
+    $this->assertStringStartsWith('2030-01-15 08:00:00', $row->data_cadastro);
+    $this->assertSame('Parecer um', $row->parecer_1_etapa);
+    $this->assertSame('Parecer dois', $row->parecer_2_etapa);
+    $this->assertSame('Parecer três', $row->parecer_3_etapa);
+    $this->assertSame('Parecer quatro', $row->parecer_4_etapa);
+});
+
+// Defeito conhecido: editar só com o código e o usuário apaga o regente, a
+// série secundária, as etapas do Educacenso, a disciplina dispensada e os
+// horários por turno, porque a edição grava NULL no que não recebeu valor.
+// É o que a tela de pareceres da turma faz.
+test('defeito editar sem informar os campos opcionais os apaga', function () {
+    $id = ($this->full)()->cadastra();
+
+    $object = new clsPmieducarTurma($id, $this->user);
+    $object->cod_curso = null;
+
+    $this->assertTrue($object->edita());
+
+    $row = ($this->row)($id);
+
+    foreach ([
+        'ref_cod_regente', 'ref_ref_cod_escola_mult', 'ref_ref_cod_serie_mult', 'cod_curso_profissional', 'etapa_educacenso',
+        'etapa_agregada', 'ref_cod_disciplina_dispensada', 'local_funcionamento_diferenciado', 'classe_especial', 'formacao_alternancia',
+        'hora_inicial_matutino', 'hora_inicio_intervalo_matutino', 'hora_fim_intervalo_matutino', 'hora_final_matutino',
+        'hora_inicial_vespertino', 'hora_inicio_intervalo_vespertino', 'hora_fim_intervalo_vespertino', 'hora_final_vespertino',
+    ] as $column) {
+        $this->assertNull($row->{$column}, $column);
     }
 
-    public function test_lista_por_cada_filtro(): void
-    {
-        [$wanted, $unwanted] = $this->pair();
+    // Os campos cujo padrão é falso, e os que não têm ramo de limpeza, ficam como estavam.
+    $this->assertSame('07:30:00', $row->hora_inicial);
+    $this->assertSame('11:45:00', $row->hora_final);
+    $this->assertSame(2, $row->tipo_boletim_diferenciado);
+    $this->assertSame('{0,5}', $row->tipo_atendimento);
+    $this->assertSame(1, $row->tipo_mediacao_didatico_pedagogico);
+    $this->assertSame('Turma Completa', $row->nm_turma);
+    $this->assertSame('{2,3,4}', $row->dias_semana);
+    $this->assertSame(1, $row->nao_informar_educacenso);
+});
 
-        $both = [$wanted->getKey(), $unwanted->getKey()];
+test('editar com nulo limpa e com falso preserva', function () {
+    $id = ($this->full)()->cadastra();
 
-        $list = function (array $filters) use ($both) {
-            $rows = (new clsPmieducarTurma)->lista(...$filters) ?: [];
+    $object = new clsPmieducarTurma($id, $this->user);
+    $object->cod_curso = null;
 
-            return array_values(array_intersect(array_column($rows, 'cod_turma'), $both));
-        };
-
-        foreach ($this->filters($wanted) as $filters) {
-            $this->assertSame([$wanted->getKey()], $list($filters), json_encode($filters));
-        }
-
-        $school = ['int_ref_ref_cod_escola' => $wanted->ref_ref_cod_escola];
-
-        $this->assertSame([$wanted->getKey()], $list($school + ['somenteAnoLetivoEmAndamento' => true]));
-        $this->assertSame([], $list($school + ['int_ativo' => 0]));
-        $this->assertSame([], $list($school + ['visivel' => false]));
+    foreach (['hora_final', 'hora_inicio_intervalo', 'hora_fim_intervalo', 'tipo_boletim_diferenciado', 'tipo_atendimento', 'tipo_mediacao_didatico_pedagogico'] as $property) {
+        $object->{$property} = null;
     }
 
-    // Defeito conhecido: o filtro por nome de lista() monta a consulta com uma
-    // variável que não existe; a condição vira "qualquer turma tem nome" e não
-    // filtra nada.
-    public function test_defeito_o_filtro_por_nome_de_lista_nao_filtra(): void
-    {
-        [$wanted, $unwanted] = $this->pair();
-
-        $ids = array_column((new clsPmieducarTurma)->lista(str_nm_turma: 'Alfa'), 'cod_turma');
-
-        $this->assertContains($wanted->getKey(), $ids);
-        $this->assertContains($unwanted->getKey(), $ids);
+    foreach ([
+        'hora_inicial_matutino', 'hora_inicio_intervalo_matutino', 'hora_fim_intervalo_matutino', 'hora_final_matutino',
+        'hora_inicial_vespertino', 'hora_inicio_intervalo_vespertino', 'hora_fim_intervalo_vespertino', 'hora_final_vespertino',
+    ] as $property) {
+        $object->{$property} = false;
     }
 
-    public function test_lista_pode_esconder_as_turmas_fora_do_educacenso(): void
-    {
-        $hidden = $this->scenario->schoolClass(['nao_informar_educacenso' => 1])->getKey();
+    $this->assertTrue($object->edita());
 
-        $object = new clsPmieducarTurma;
+    $row = ($this->row)($id);
 
-        $this->assertEquals([$hidden], array_column($object->lista(int_cod_turma: $hidden), 'cod_turma'));
+    $this->assertNull($row->hora_final);
+    $this->assertNull($row->hora_inicio_intervalo);
+    $this->assertNull($row->hora_fim_intervalo);
+    $this->assertNull($row->tipo_boletim_diferenciado);
+    $this->assertNull($row->tipo_atendimento);
+    $this->assertNull($row->tipo_mediacao_didatico_pedagogico);
+    $this->assertSame('07:30:00', $row->hora_inicial_matutino);
+    $this->assertSame('17:15:00', $row->hora_final_vespertino);
+});
 
-        $object->listarNaoInformarEducacenso = false;
+// Defeito conhecido: a edição monta a atribuição de `hora_inicial` duas
+// vezes no mesmo UPDATE; com a hora informada, ou nula, o banco recusa.
+test('defeito editar com hora inicial estoura', function () {
+    $object = new clsPmieducarTurma($this->scenario->schoolClass()->getKey(), $this->user, hora_inicial: '07:30:00');
+    $object->cod_curso = null;
 
-        $this->assertFalse($object->lista(int_cod_turma: $hidden));
+    $this->expectException(Exception::class);
 
-        $object->listarNaoInformarEducacenso = true;
+    $object->edita();
+});
 
-        $object->setCamposLista('cod_turma');
+test('defeito editar com hora inicial nula estoura', function () {
+    $object = new clsPmieducarTurma($this->scenario->schoolClass()->getKey(), $this->user);
+    $object->cod_curso = null;
+    $object->hora_inicial = null;
 
-        $this->assertEquals([$hidden], $object->lista(int_cod_turma: $hidden));
+    $this->expectException(Exception::class);
+
+    $object->edita();
+});
+
+// Defeito conhecido: a edição grava `cod_curso`, coluna que não existe na
+// tabela de turmas (o nome é `ref_cod_curso`).
+test('defeito editar com cod curso estoura', function () {
+    $object = new clsPmieducarTurma($this->scenario->schoolClass()->getKey(), $this->user);
+    $object->cod_curso = $this->scenario->course->getKey();
+
+    $this->expectException(Exception::class);
+
+    $object->edita();
+});
+
+// Defeito conhecido: a classe aceita uma data de fechamento e tenta gravá-la
+// em `data_fechamento`, coluna que não existe na tabela de turmas.
+test('defeito cadastrar com data de fechamento estoura', function () {
+    $object = ($this->full)();
+    $object->data_fechamento = '2030-12-20';
+
+    $this->expectException(Exception::class);
+
+    $object->cadastra();
+});
+
+test('defeito editar com data de fechamento estoura', function () {
+    $object = new clsPmieducarTurma($this->scenario->schoolClass()->getKey(), $this->user, data_fechamento: '2030-12-20');
+    $object->cod_curso = null;
+
+    $this->expectException(Exception::class);
+
+    $object->edita();
+});
+
+test('detalha e informa o ano letivo alunos inep e disciplina dispensada', function () {
+    $discipline = $this->scenario->discipline('Ensino Religioso')->getKey();
+    $schoolClass = $this->scenario->schoolClass(['nm_turma' => 'Turma Alfa', 'ref_cod_disciplina_dispensada' => $discipline]);
+    $id = $schoolClass->getKey();
+    $object = new clsPmieducarTurma($id);
+
+    $this->assertSame('Turma Alfa', $object->detalhe()['nm_turma']);
+    $this->assertNotFalse($object->checaAnoLetivoEmAndamento());
+    $this->assertEmpty($object->possuiAlunosVinculados());
+    $this->assertNull($object->getInep());
+    $this->assertTrue(clsPmieducarTurma::verificaDisciplinaDispensada($id, $discipline));
+    $this->assertNull(clsPmieducarTurma::getDisciplinaDispensada($this->scenario->schoolClass()->getKey()));
+
+    $this->scenario->enrolled('Ana Alves', $schoolClass);
+    SchoolClassInepFactory::new()->create(['cod_turma' => $id, 'cod_turma_inep' => 12345678]);
+    SchoolClassInepFactory::new()->create(['cod_turma' => $id, 'cod_turma_inep' => 87654321, 'turma_turno_id' => 1]);
+    LegacySchoolAcademicYear::query()->where('ref_cod_escola', $this->scenario->school->getKey())->update(['andamento' => 2]);
+
+    $this->assertNotEmpty($object->possuiAlunosVinculados());
+    $this->assertEquals(12345678, $object->getInep());
+    $this->assertEquals(87654321, $object->getInepTurno(1));
+    $this->assertEmpty($object->checaAnoLetivoEmAndamento());
+});
+
+test('lista por cada filtro', function () {
+    [$wanted, $unwanted] = ($this->pair)();
+
+    $both = [$wanted->getKey(), $unwanted->getKey()];
+
+    $list = function (array $filters) use ($both) {
+        $rows = (new clsPmieducarTurma)->lista(...$filters) ?: [];
+
+        return array_values(array_intersect(array_column($rows, 'cod_turma'), $both));
+    };
+
+    foreach (($this->filters)($wanted) as $filters) {
+        $this->assertSame([$wanted->getKey()], $list($filters), json_encode($filters));
     }
 
-    public function test_lista3_por_cada_filtro(): void
-    {
-        [$wanted, $unwanted] = $this->pair();
+    $school = ['int_ref_ref_cod_escola' => $wanted->ref_ref_cod_escola];
 
-        $both = [$wanted->getKey(), $unwanted->getKey()];
+    $this->assertSame([$wanted->getKey()], $list($school + ['somenteAnoLetivoEmAndamento' => true]));
+    $this->assertSame([], $list($school + ['int_ativo' => 0]));
+    $this->assertSame([], $list($school + ['visivel' => false]));
+});
 
-        $list = function (array $filters) use ($both) {
-            $rows = (new clsPmieducarTurma)->lista3(...$filters) ?: [];
+// Defeito conhecido: o filtro por nome de lista() monta a consulta com uma
+// variável que não existe; a condição vira "qualquer turma tem nome" e não
+// filtra nada.
+test('defeito o filtro por nome de lista nao filtra', function () {
+    [$wanted, $unwanted] = ($this->pair)();
 
-            return array_values(array_intersect(array_column($rows, 'cod_turma'), $both));
-        };
+    $ids = array_column((new clsPmieducarTurma)->lista(str_nm_turma: 'Alfa'), 'cod_turma');
 
-        foreach ($this->filters($wanted) as $filters) {
-            $this->assertSame([$wanted->getKey()], $list($filters), json_encode($filters));
-        }
+    $this->assertContains($wanted->getKey(), $ids);
+    $this->assertContains($unwanted->getKey(), $ids);
+});
 
-        $school = ['int_ref_ref_cod_escola' => $wanted->ref_ref_cod_escola];
+test('lista pode esconder as turmas fora do educacenso', function () {
+    $hidden = $this->scenario->schoolClass(['nao_informar_educacenso' => 1])->getKey();
 
-        $this->assertSame([], $list($school + ['int_ativo' => 0]));
-        $this->assertSame([], $list($school + ['visivel' => false]));
+    $object = new clsPmieducarTurma;
 
-        $object = new clsPmieducarTurma;
-        $object->setCamposLista('cod_turma');
+    $this->assertEquals([$hidden], array_column($object->lista(int_cod_turma: $hidden), 'cod_turma'));
 
-        $this->assertEquals([$wanted->getKey()], $object->lista3(int_cod_turma: $wanted->getKey()));
-        $this->assertFalse($object->lista3(int_cod_turma: 999999999));
+    $object->listarNaoInformarEducacenso = false;
+
+    $this->assertFalse($object->lista(int_cod_turma: $hidden));
+
+    $object->listarNaoInformarEducacenso = true;
+
+    $object->setCamposLista('cod_turma');
+
+    $this->assertEquals([$hidden], $object->lista(int_cod_turma: $hidden));
+});
+
+test('lista3 por cada filtro', function () {
+    [$wanted, $unwanted] = ($this->pair)();
+
+    $both = [$wanted->getKey(), $unwanted->getKey()];
+
+    $list = function (array $filters) use ($both) {
+        $rows = (new clsPmieducarTurma)->lista3(...$filters) ?: [];
+
+        return array_values(array_intersect(array_column($rows, 'cod_turma'), $both));
+    };
+
+    foreach (($this->filters)($wanted) as $filters) {
+        $this->assertSame([$wanted->getKey()], $list($filters), json_encode($filters));
     }
 
-    public function test_lista3_acha_a_turma_pela_serie_e_pelo_curso_das_series_adicionais(): void
-    {
-        $second = $this->scenario->grade('Segundo Ano');
-        $schoolClass = $this->scenario->schoolClass(['nm_turma' => 'Turma Multi', 'multiseriada' => 1]);
+    $school = ['int_ref_ref_cod_escola' => $wanted->ref_ref_cod_escola];
 
-        LegacySchoolClassGradeFactory::new()->create([
-            'escola_id' => $this->scenario->school,
-            'serie_id' => $second,
-            'turma_id' => $schoolClass,
-        ]);
+    $this->assertSame([], $list($school + ['int_ativo' => 0]));
+    $this->assertSame([], $list($school + ['visivel' => false]));
 
-        $object = new clsPmieducarTurma;
+    $object = new clsPmieducarTurma;
+    $object->setCamposLista('cod_turma');
 
-        $this->assertContains($schoolClass->getKey(), array_column($object->lista3(int_ref_ref_cod_serie: $second->getKey()), 'cod_turma'));
-        $this->assertContains($schoolClass->getKey(), array_column($object->lista3(int_ref_cod_curso: $this->scenario->course->getKey()), 'cod_turma'));
-        $this->assertContains($schoolClass->getKey(), array_column($object->lista(int_ref_ref_cod_serie: $second->getKey()), 'cod_turma'));
-    }
+    $this->assertEquals([$wanted->getKey()], $object->lista3(int_cod_turma: $wanted->getKey()));
+    $this->assertFalse($object->lista3(int_cod_turma: 999999999));
+});
 
-    public function test_lista3_restringe_as_escolas_do_usuario_informado(): void
-    {
-        [$wanted, $unwanted] = $this->pair();
+test('lista3 acha a turma pela serie e pelo curso das series adicionais', function () {
+    $second = $this->scenario->grade('Segundo Ano');
+    $schoolClass = $this->scenario->schoolClass(['nm_turma' => 'Turma Multi', 'multiseriada' => 1]);
 
-        LegacyUserSchoolFactory::new()->create(['ref_cod_usuario' => $this->user, 'ref_cod_escola' => $wanted->ref_ref_cod_escola]);
+    LegacySchoolClassGradeFactory::new()->create([
+        'escola_id' => $this->scenario->school,
+        'serie_id' => $second,
+        'turma_id' => $schoolClass,
+    ]);
 
-        $object = new clsPmieducarTurma;
-        $object->codUsuario = $this->user;
+    $object = new clsPmieducarTurma;
 
-        $ids = array_column($object->lista3(), 'cod_turma');
+    $this->assertContains($schoolClass->getKey(), array_column($object->lista3(int_ref_ref_cod_serie: $second->getKey()), 'cod_turma'));
+    $this->assertContains($schoolClass->getKey(), array_column($object->lista3(int_ref_cod_curso: $this->scenario->course->getKey()), 'cod_turma'));
+    $this->assertContains($schoolClass->getKey(), array_column($object->lista(int_ref_ref_cod_serie: $second->getKey()), 'cod_turma'));
+});
 
-        $this->assertContains($wanted->getKey(), $ids);
-        $this->assertNotContains($unwanted->getKey(), $ids);
-    }
+test('lista3 restringe as escolas do usuario informado', function () {
+    [$wanted, $unwanted] = ($this->pair)();
 
-    public function test_lista3_filtra_pelo_nome(): void
-    {
-        [$wanted] = $this->pair();
+    LegacyUserSchoolFactory::new()->create(['ref_cod_usuario' => $this->user, 'ref_cod_escola' => $wanted->ref_ref_cod_escola]);
 
-        $this->assertContains($wanted->getKey(), array_column((new clsPmieducarTurma)->lista3(str_nm_turma: 'Alfa'), 'cod_turma'));
-        $this->assertFalse((new clsPmieducarTurma)->lista3(str_nm_turma: 'Nome que nenhuma turma tem'));
-    }
-}
+    $object = new clsPmieducarTurma;
+    $object->codUsuario = $this->user;
+
+    $ids = array_column($object->lista3(), 'cod_turma');
+
+    $this->assertContains($wanted->getKey(), $ids);
+    $this->assertNotContains($unwanted->getKey(), $ids);
+});
+
+test('lista3 filtra pelo nome', function () {
+    [$wanted] = ($this->pair)();
+
+    $this->assertContains($wanted->getKey(), array_column((new clsPmieducarTurma)->lista3(str_nm_turma: 'Alfa'), 'cod_turma'));
+    $this->assertFalse((new clsPmieducarTurma)->lista3(str_nm_turma: 'Nome que nenhuma turma tem'));
+});
