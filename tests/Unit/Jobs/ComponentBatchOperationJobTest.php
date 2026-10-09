@@ -1,63 +1,41 @@
 <?php
 
-namespace Tests\Unit\Jobs;
-
 use App\Jobs\ComponentBatchOperationJob;
 use App\Models\ComponentBatchOperation;
 use App\Services\ComponentBatchManagerService;
 use Illuminate\Support\Facades\DB;
-use RuntimeException;
 use Tests\TestCase;
 
-class ComponentBatchOperationJobTest extends TestCase
-{
-    private ComponentBatchOperation $operation;
+uses(TestCase::class);
 
-    private ComponentBatchOperationJob $job;
+beforeEach(function () {
+    $this->connection = DB::getDefaultConnection();
+    $this->operation = new ComponentBatchOperation(['status_id' => 1]);
+    $this->job = new ComponentBatchOperationJob($this->operation, 'escola-alfa');
+});
 
-    private string $connection;
+afterEach(function () {
+    DB::setDefaultConnection($this->connection);
+});
 
-    protected function setUp(): void
-    {
-        parent::setUp();
+test('switches the connection and executes the operation', function () {
+    $this->mock(ComponentBatchManagerService::class)
+        ->shouldReceive('execute')->once()->with($this->operation)->andReturn([]);
 
-        $this->connection = DB::getDefaultConnection();
-        $this->operation = new ComponentBatchOperation(['status_id' => 1]);
-        $this->job = new ComponentBatchOperationJob($this->operation, 'escola-alfa');
-    }
+    $this->job->handle();
 
-    /**
-     * O job troca a conexão padrão; devolve a original para os testes seguintes.
-     */
-    protected function tearDown(): void
-    {
-        DB::setDefaultConnection($this->connection);
+    $this->assertSame('escola-alfa', DB::getDefaultConnection());
+});
 
-        parent::tearDown();
-    }
+test('marks the operation as failed with the error', function () {
+    $this->mock(ComponentBatchManagerService::class)
+        ->shouldReceive('failed')->once()->with($this->operation, 'boom');
 
-    public function test_switches_the_connection_and_executes_the_operation(): void
-    {
-        $this->mock(ComponentBatchManagerService::class)
-            ->shouldReceive('execute')->once()->with($this->operation)->andReturn([]);
+    $this->job->failed(new RuntimeException('boom'));
 
-        $this->job->handle();
+    $this->assertSame('escola-alfa', DB::getDefaultConnection());
+});
 
-        $this->assertSame('escola-alfa', DB::getDefaultConnection());
-    }
-
-    public function test_marks_the_operation_as_failed_with_the_error(): void
-    {
-        $this->mock(ComponentBatchManagerService::class)
-            ->shouldReceive('failed')->once()->with($this->operation, 'boom');
-
-        $this->job->failed(new RuntimeException('boom'));
-
-        $this->assertSame('escola-alfa', DB::getDefaultConnection());
-    }
-
-    public function test_tags_the_job_with_the_connection(): void
-    {
-        $this->assertSame(['escola-alfa', 'component-batch-operation'], $this->job->tags());
-    }
-}
+test('tags the job with the connection', function () {
+    $this->assertSame(['escola-alfa', 'component-batch-operation'], $this->job->tags());
+});
