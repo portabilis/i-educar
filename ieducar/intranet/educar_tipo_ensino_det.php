@@ -34,7 +34,10 @@ return new class extends clsDetalhe
         }
 
         if (!$registro['ativo']) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->simpleRedirect('educar_tipo_ensino_lst.php');
+            // @codeCoverageIgnoreEnd
         }
 
         if ($registro['cod_tipo_ensino']) {

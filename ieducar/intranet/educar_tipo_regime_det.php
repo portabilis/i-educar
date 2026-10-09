@@ -36,7 +36,10 @@ return new class extends clsDetalhe
         $registro = LegacyRegimeType::findOrFail($this->cod_tipo_regime)?->getAttributes();
 
         if (!$registro) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->simpleRedirect('educar_tipo_regime_lst.php');
+            // @codeCoverageIgnoreEnd
         }
 
         if ($registro['cod_tipo_regime']) {

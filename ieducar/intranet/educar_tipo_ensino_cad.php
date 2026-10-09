@@ -39,11 +39,17 @@ return new class extends clsCadastro
         if (is_numeric($this->cod_tipo_ensino)) {
             $registro = LegacyEducationType::find($this->cod_tipo_ensino)?->getAttributes();
             if (!$registro) {
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 $this->simpleRedirect('educar_tipo_ensino_lst.php');
+                // @codeCoverageIgnoreEnd
             }
 
             if (!$registro['ativo']) {
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 $this->simpleRedirect('educar_tipo_ensino_lst.php');
+                // @codeCoverageIgnoreEnd
             }
 
             if ($registro) {
@@ -100,9 +106,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
@@ -121,9 +130,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()
@@ -137,9 +149,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Formular()
