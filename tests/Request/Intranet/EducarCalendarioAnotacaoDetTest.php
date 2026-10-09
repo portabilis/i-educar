@@ -27,3 +27,9 @@ test('mostra o detalhe da anotação do calendário', function () {
         ->assertOk()
         ->assertSee('Anotação Alfa');
 });
+
+test('volta para o calendário avisando quando a anotação não existe', function () {
+    $this->get('/intranet/educar_calendario_anotacao_det.php?cod_calendario_anotacao=0')
+        ->assertRedirect('educar_calendario_ano_letivo_lst.php')
+        ->assertSessionHas('error', 'Anotação do calendário não encontrada. O registro não existe ou foi excluído. Acesse a anotação pelo calendário do ano letivo.');
+});
