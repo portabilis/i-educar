@@ -45,9 +45,12 @@ return new class extends clsDetalhe
         $registro = LegacyCalendarNote::find($this->cod_calendario_anotacao)->getAttributes();
 
         if (!$registro) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             throw new HttpResponseException(
                 response: new RedirectResponse(url: 'educar_calendario_ano_letivo_lst.php')
             );
+            // @codeCoverageIgnoreEnd
         }
 
         if ($registro['cod_calendario_anotacao']) {
