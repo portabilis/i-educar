@@ -54,4 +54,15 @@ class UpdateRegistrationDateJobTest extends TestCase
 
         $this->assertSame(['escola-alfa', 'update-registration-date'], $job->tags());
     }
+
+    public function test_lote_cancelado_nao_altera_nada(): void
+    {
+        $registration = LegacyRegistrationFactory::new()->create(['data_matricula' => '2030-01-10']);
+        [$job, $batch] = (new UpdateRegistrationDateJob([$registration->getKey()], '2030-02-01', null, false, DB::getDefaultConnection(), $this->user))->withFakeBatch();
+        $batch->cancel();
+
+        $job->handle();
+
+        $this->assertSame('2030-01-10', $registration->refresh()->data_matricula->format('Y-m-d'));
+    }
 }

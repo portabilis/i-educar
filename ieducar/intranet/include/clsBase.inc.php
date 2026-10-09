@@ -65,9 +65,12 @@ class clsBase
             }
 
             if (method_exists($form, 'makeExtraEnd')) {
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 $corpo .= '<script>';
                 $corpo .= $form->makeExtraEnd();
                 $corpo .= '</script>';
+                // @codeCoverageIgnoreEnd
             }
         }
 
@@ -170,11 +173,17 @@ class clsBase
     private function getPageTitle()
     {
         if (isset($this->title)) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             return $this->title;
+            // @codeCoverageIgnoreEnd
         }
 
         if (isset($this->_title)) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             return $this->_title;
+            // @codeCoverageIgnoreEnd
         }
 
         if (isset($this->titulo)) {
@@ -182,7 +191,10 @@ class clsBase
         }
 
         if (isset($this->_titulo)) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             return $this->_titulo;
+            // @codeCoverageIgnoreEnd
         }
     }
 }

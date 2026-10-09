@@ -23,7 +23,16 @@ class CommandsTest extends TestCase
 
     public function test_console_command_legacy_create_tests()
     {
-        $this->artisan('legacy:create:tests')->assertExitCode(0);
+        // Os testes gerados ficam em tests/Pages/Intranet, fora do Git: o que falta é
+        // criado, e rodar de novo encontra os arquivos que já existem.
+        @unlink(base_path('tests/Pages/Intranet/TopicIndexTest.php'));
+
+        $this->artisan('legacy:create:tests')
+            ->expectsOutput('Teste TopicIndexTest criado para a rota /intranet/topic_index.php')
+            ->assertExitCode(0);
+        $this->artisan('legacy:create:tests')
+            ->expectsOutput('Teste TopicIndexTest criado para a rota /intranet/topic_index.php já criado ou houve falha')
+            ->assertExitCode(0);
     }
 
     public function test_console_command_notifications_delete()

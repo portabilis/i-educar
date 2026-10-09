@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyGeneralDescriptiveOpinion;
+use App\Services\DiarioControllerService;
 use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Feature\Api\V2\CreatesScoreData;
@@ -119,4 +120,16 @@ test('does not store when registration is not found', function () {
         ->assertJsonValidationErrors(['aluno_id']);
 
     $this->assertDatabaseCount(LegacyGeneralDescriptiveOpinion::class, 0);
+});
+
+test('unexpected failure answers 500 with the reason', function () {
+    $data = $this->createScoreData(annualGeneralOpinionRule());
+    $service = Mockery::mock(DiarioControllerService::class)->makePartial();
+    $service->shouldReceive('getServiceBoletim')->andThrow(new Exception('falha inesperada'));
+    app()->instance(DiarioControllerService::class, $service);
+
+    $response = $this->postAnnualGeneralOpinion($data, ['parecer' => 'Bom']);
+
+    $response->assertStatus(500);
+    expect($response->json('message'))->toEndWith('(falha inesperada)');
 });

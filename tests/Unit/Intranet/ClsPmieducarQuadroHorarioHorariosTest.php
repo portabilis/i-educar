@@ -155,8 +155,9 @@ class ClsPmieducarQuadroHorarioHorariosTest extends TestCase
         $this->assertSame('2031-01-02 03:04:05', $row->data_cadastro);
         $this->assertSame(0, $row->ativo);
         $this->assertSame(5, $row->dia_semana);
-        // A data de exclusão informada é ignorada: a edição grava sempre o momento atual.
-        $this->assertSame(now()->format('Y-m-d'), substr($row->data_exclusao, 0, 10));
+        // A data de exclusão informada é ignorada: a edição grava o momento atual do
+        // banco, que pode estar em outro fuso que o PHP.
+        $this->assertSame(DB::selectOne('select current_date::text as hoje')->hoje, substr($row->data_exclusao, 0, 10));
     }
 
     public function test_editar_sem_informar_o_substituto_o_apaga(): void

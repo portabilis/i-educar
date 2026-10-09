@@ -57,6 +57,15 @@ class ValueTurmaMaisEducacaoTest extends TestCase
         $this->assertEquals(0, $value->getValue());
     }
 
+    public function test_turma_curricular_de_etapa_aceita_fora_da_eja_tem_valor()
+    {
+        $value = $this->getValueObject();
+        $value->setTipoAtendimento(TipoAtendimentoTurma::CURRICULAR_ETAPA_ENSINO);
+        $value->setEtapaEnsino(14);
+
+        $this->assertEquals(1, $value->getValue());
+    }
+
     /**
      * @return ValueTurmaMaisEducacao
      */

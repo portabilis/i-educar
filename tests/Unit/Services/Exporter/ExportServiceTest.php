@@ -124,4 +124,16 @@ class ExportServiceTest extends TestCase
             $this->export->filename
         );
     }
+
+    public function test_o_job_roda_a_exportacao_no_disco_padrao(): void
+    {
+        Storage::fake(config('filesystems.default'));
+        $job = new DatabaseToCsvExporter($this->export);
+
+        $job->handle();
+
+        $this->assertTrue(Storage::disk(config('filesystems.default'))->exists($this->getFilename()));
+        $this->assertNotNull($this->export->refresh()->url);
+        $this->assertSame([$this->export->getConnectionName(), 'csv-export'], $job->tags());
+    }
 }

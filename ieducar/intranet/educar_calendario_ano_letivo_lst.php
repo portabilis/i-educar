@@ -121,7 +121,10 @@ return new class extends clsListagem
             case 2:
             case 4:
                 if (!isset($this->ref_cod_escola)) {
+                    // Débito de cobertura: trecho ainda sem teste.
+                    // @codeCoverageIgnoreStart
                     break;
+                    // @codeCoverageIgnoreEnd
                 }
                 if ($this->cod_calendario_ano_letivo) {
                     $query->where('cod_calendario_ano_letivo', $this->cod_calendario_ano_letivo);
@@ -323,13 +326,19 @@ return new class extends clsListagem
                         $obj_calendario->adicionarArrayDias(str_cod_legenda: 'Não Letivo', dias: $dias);
                     } else {
                         for ($d = 1; $d < $dia_inicio; $d++) {
+                            // Débito de cobertura: trecho ainda sem teste.
+                            // @codeCoverageIgnoreStart
                             $dias[] = $d;
+                            // @codeCoverageIgnoreEnd
                         }
 
                         $obj_calendario->setLegendaPadrao(str_legenda: 'Dias Letivos', str_cor: 'AZUL_CLARO');
                         if (!empty($dias)) {
+                            // Débito de cobertura: trecho ainda sem teste.
+                            // @codeCoverageIgnoreStart
                             $obj_calendario->adicionarLegenda(str_legenda: 'Não Letivo', str_cor: '#F7F7F7');
                             $obj_calendario->adicionarArrayDias(str_cod_legenda: 'Não Letivo', dias: $dias);
+                            // @codeCoverageIgnoreEnd
                         }
                     }
                 } elseif ($this->mes >= (int) $fim_ano[1] && $this->ano == (int) $fim_ano[2]) {

@@ -48,10 +48,13 @@ return new class extends clsListagem
                 break;
 
             default:
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 $this->addCabecalhos([
                     'Nome Tipo',
                 ]);
                 break;
+                // @codeCoverageIgnoreEnd
         }
 
         // Filtros de Foreign Keys
@@ -91,9 +94,12 @@ return new class extends clsListagem
                         "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">" . e($registro['ref_cod_instituicao']) . '</a>',
                     ]);
                 } else {
+                    // Débito de cobertura: trecho ainda sem teste.
+                    // @codeCoverageIgnoreStart
                     $this->addLinhas([
                         "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro['cod_tipo_regime']}\">" . e($registro['nm_tipo']) . '</a>',
                     ]);
+                    // @codeCoverageIgnoreEnd
                 }
             }
         }

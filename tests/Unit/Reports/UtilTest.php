@@ -71,4 +71,29 @@ class UtilTest extends TestCase
     {
         $this->assertEquals('01:00', Util::formatWorkload(1));
     }
+
+    public function test_nomeia_as_etapas_pelo_numero_de_modulos(): void
+    {
+        $this->assertSame([['step' => 'An', 'name' => 'ANUAL']], Util::moduleName());
+        $this->assertSame([['step' => 1, 'name' => 'ANUAL', 'abbreviation' => 'ANUAL']], Util::moduleName(collect([1])));
+        $this->assertSame('2° SEMESTRE', Util::moduleName(collect([1, 2]))[1]['name']);
+        $this->assertSame('3° TRIM.', Util::moduleName(collect([1, 2, 3]))[2]['abbreviation']);
+        $this->assertSame('4° BIMESTRE', Util::moduleName(collect([1, 2, 3, 4]))[3]['name']);
+        $this->assertSame([], Util::moduleName(collect([1, 2, 3, 4, 5]))[0]);
+    }
+
+    public function test_aplica_a_mascara_e_formata_o_cep_com_oito_digitos(): void
+    {
+        $this->assertSame('123.456', Util::mask('123456789', '###.###'));
+        $this->assertSame('88000-000', Util::formatPostcode('88000000'));
+        $this->assertSame('8800', Util::formatPostcode('8800'));
+        $this->assertNull(Util::formatPostcode(null));
+    }
+
+    public function test_a_situacao_final_da_matricula_prevalece_sobre_a_do_componente(): void
+    {
+        $this->assertSame('Transferido', Util::disciplineSituation('Aprovado', 'Transferido'));
+        $this->assertSame('Remanejado', Util::disciplineSituation('Remanejado', 'Cursando'));
+        $this->assertSame('Aprovado', Util::disciplineSituation('Aprovado', 'Cursando'));
+    }
 }

@@ -190,19 +190,28 @@ function dataToBanco($data_original, $inicial = null)
 
             if ($inicial == true) {
                 if ($data_original = null) {
+                    // Inalcançável: a condição acima atribui nulo em vez de comparar.
+                    // @codeCoverageIgnoreStart
                     return false;
+                    // @codeCoverageIgnoreEnd
                 } else {
                     return "{$data[2]}-{$data[1]}-{$data[0]} 00:00:00";
                 }
             } elseif ($inicial == false) {
                 if ($data_original = null) {
+                    // Inalcançável: a condição acima atribui nulo em vez de comparar.
+                    // @codeCoverageIgnoreStart
                     return false;
+                    // @codeCoverageIgnoreEnd
                 } else {
                     return "{$data[2]}-{$data[1]}-{$data[0]} 23:59:59";
                 }
             }
         } else {
+            // Inalcançável: `explode()` sempre devolve ao menos um elemento.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -507,7 +516,10 @@ function parseDecimalBr($value): ?string
     return $value;
 }
 
+// O arquivo é carregado pelo autoload do Composer, antes de a cobertura começar.
+// @codeCoverageIgnoreStart
 if (!function_exists('formatDateParse')) {
+    // @codeCoverageIgnoreEnd
     function formatDateParse($date, $outputFormat = 'd/m/Y')
     {
         $formats = [

@@ -136,6 +136,9 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
                 throw new Exception('No report result to render!');
             }
 
+            // Fora dos testes: a entrega do PDF termina com `exit()`, que encerraria
+            // o processo que roda a suíte.
+            // @codeCoverageIgnoreStart
             $this->headers($result);
 
             ob_clean();
@@ -143,6 +146,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
             echo $result;
             exit();
+            // @codeCoverageIgnoreEnd
         } catch (Exception $e) {
             // Respeita o $dontReport do handler para não reportar erros de uso
             if (config('legacy.modules.error.track') && app(ExceptionHandler::class)->shouldReport($e)) {

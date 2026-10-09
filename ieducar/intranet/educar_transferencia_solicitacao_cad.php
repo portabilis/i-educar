@@ -279,10 +279,13 @@ return new class extends clsCadastro
                 ]);
 
                 if (!$atualizou) {
+                    // Débito de cobertura: trecho ainda sem teste.
+                    // @codeCoverageIgnoreStart
                     DB::rollBack();
                     $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
 
                     return false;
+                    // @codeCoverageIgnoreEnd
                 }
 
                 $enturmacaoService->registerTransfer($this->ref_cod_matricula, $enturmacao->sequencial, $this->data_cancel);

@@ -24,3 +24,9 @@ test('mostra o detalhe do comunicado escolar', function () {
         ->assertOk()
         ->assertSee('Comunicado Alfa');
 });
+
+test('volta para a listagem avisando quando o comunicado não existe', function () {
+    $this->get('/intranet/educar_comunicados_escolares_det.php?id=0')
+        ->assertRedirect('educar_comunicados_escolares_lst.php')
+        ->assertSessionHas('error', 'Comunicado escolar não encontrado. O registro não existe ou foi excluído. Use a busca abaixo para localizá-lo.');
+});

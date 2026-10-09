@@ -5,6 +5,7 @@ namespace Tests\Unit\Observers;
 use App\Menu;
 use App\Services\MenuCacheService;
 use Database\Factories\MenuFactory;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
@@ -117,5 +118,23 @@ class MenuObserverTest extends TestCase
         });
 
         $this->assertCacheWasCleared(988005);
+    }
+
+    public function test_falha_ao_limpar_o_cache_e_reportada_sem_impedir_a_gravacao()
+    {
+        $cache = \Mockery::mock(MenuCacheService::class);
+        $cache->shouldReceive('flushAll')->andThrow(new \RuntimeException('redis fora do ar'));
+        $this->app->instance(MenuCacheService::class, $cache);
+        $reported = [];
+        $this->app->make(ExceptionHandler::class)->reportable(function (\RuntimeException $e) use (&$reported) {
+            $reported[] = $e->getMessage();
+
+            return false;
+        });
+
+        $menu = MenuFactory::new()->create();
+
+        $this->assertTrue($menu->exists);
+        $this->assertContains('redis fora do ar', $reported);
     }
 }

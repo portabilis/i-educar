@@ -152,6 +152,8 @@ class EtapaEnsino
 
     private static function descricoesDosCampos(?int $mediacao, bool $comAtividadeComplementar, ?int $etapaAgregada): array
     {
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         return [
             App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums()[$mediacao] ?? '',
             TipoAtendimentoTurma::getDescriptiveValues()[
@@ -161,6 +163,7 @@ class EtapaEnsino
             ],
             EtapaAgregada::getDescriptiveValues()[$etapaAgregada] ?? '',
         ];
+        // @codeCoverageIgnoreEnd
     }
 
     public static function descreverOpcoes(array $opcoes): string

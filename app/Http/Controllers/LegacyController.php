@@ -177,11 +177,15 @@ class LegacyController extends Controller
     {
         $headers = [];
 
+        // No SAPI de linha de comando, onde rodam os testes, headers_list() volta
+        // sempre vazia e o corpo do laço não é executado.
         foreach (headers_list() as $header) {
+            // @codeCoverageIgnoreStart
             // O limite 2 mantém inteiro um valor que contenha ":", como uma URL.
             [$name, $value] = array_pad(explode(':', $header, 2), 2, '');
 
             $headers[trim($name)] = trim($value);
+            // @codeCoverageIgnoreEnd
         }
 
         $hasContentType = array_any(
@@ -333,7 +337,9 @@ class LegacyController extends Controller
      */
     private function overrideGlobals()
     {
+        // Só roda fora do SAPI de linha de comando, onde rodam os testes.
         if (PHP_SAPI !== 'cli') {
+            // @codeCoverageIgnoreStart
             $_SERVER['REQUEST_URI'] = $_SERVER['REQUEST_URI'] ?? $this->request->getRequestUri();
 
             $_GET = empty($_GET) ? $this->request->query->all() : $_GET;
@@ -342,6 +348,7 @@ class LegacyController extends Controller
             $_COOKIE = empty($_COOKIE) ? $this->request->cookies->all() : $_COOKIE;
 
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         // A requisição vem do container, e não de $this->request: a rota guarda

@@ -3,11 +3,16 @@
 namespace Tests\Unit\Eloquent;
 
 use App\Setting;
+use App\SettingCategory;
 use Database\Factories\SettingFactory;
 use Tests\EloquentTestCase;
 
 class SettingTest extends EloquentTestCase
 {
+    protected $relations = [
+        'category' => SettingCategory::class,
+    ];
+
     /**
      * @return string
      */

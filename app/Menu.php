@@ -69,6 +69,11 @@ class Menu extends Model
         })->toTree();
     }
 
+    /**
+     * Não é chamado em lugar nenhum: fica fora da cobertura até ser removido.
+     *
+     * @codeCoverageIgnore
+     */
     private static function getMenusByIds($ids): Collection
     {
         return static::query()

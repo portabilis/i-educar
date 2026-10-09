@@ -78,4 +78,14 @@ class MappedAttributesTest extends TestCase
         $this->assertEquals('id', $model->getTranslateMappedAttribute('cod'));
         $this->assertEquals('name', $model->getTranslateMappedAttribute('nome'));
     }
+
+    public function test_sem_mapa_definido_nao_ha_atributos_mapeados(): void
+    {
+        $model = new class extends Model
+        {
+            use MappedAttributes;
+        };
+
+        $this->assertSame([], $model->getMappedAttributes());
+    }
 }

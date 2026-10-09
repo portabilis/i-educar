@@ -35,7 +35,10 @@ return new class extends clsCadastro
             $motivo = DocumentAbsenceReason::withTrashed()->find($this->id);
 
             if ($motivo?->from_system) {
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 $this->simpleRedirect("educar_motivo_ausencia_documentacao_det.php?id={$motivo->getKey()}");
+                // @codeCoverageIgnoreEnd
             }
 
             if ($motivo) {

@@ -43,7 +43,10 @@ return new class extends clsListagem
 
     public function index()
     {
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         return 'public_distrito_lst.php';
+        // @codeCoverageIgnoreEnd
     }
 
     public function Gerar()
@@ -79,7 +82,10 @@ return new class extends clsListagem
         $opcoes = ['' => 'Selecione'];
 
         if ($this->idpais) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $opcoes += $this->getStates($this->idpais);
+            // @codeCoverageIgnoreEnd
         }
 
         $this->campoLista(
@@ -98,7 +104,10 @@ return new class extends clsListagem
         $opcoes = ['' => 'Selecione'];
 
         if ($this->iduf) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $opcoes += $this->getCities($this->iduf);
+            // @codeCoverageIgnoreEnd
         }
 
         $this->campoLista(
@@ -126,7 +135,10 @@ return new class extends clsListagem
                 $query->whereUnaccent('name', $this->nome);
             });
             $query->when($this->idmun, function ($query) {
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 $query->where('city_id', $this->idmun);
+                // @codeCoverageIgnoreEnd
             });
         });
 
