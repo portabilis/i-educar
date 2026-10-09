@@ -259,9 +259,11 @@ test('na edição, mantém as aulas que ficaram, acrescenta as novas e desativa 
     $this->ana->lesson($this->class, $this->botany, 2, '09:00', '10:00');
 
     $html = $this->get(($this->url)())->getContent();
-    $html = ($this->remove)($html, 1);
+    // A tela lista as aulas sem ordenação; a de Artes pode vir em qualquer posição.
+    $row = collect(($this->carried)($html))->search(fn ($lesson) => $lesson['ref_ref_cod_disciplina_'] == $this->arts->getKey());
+    $html = ($this->remove)($html, $row);
 
-    expect(($this->carried)($html)[1])->toMatchArray(['ref_ref_cod_disciplina_' => $this->arts->getKey(), 'ativo_' => 0])
+    expect(($this->carried)($html)[$row])->toMatchArray(['ref_ref_cod_disciplina_' => $this->arts->getKey(), 'ativo_' => 0])
         ->and($html)->not->toContain('08:00');
 
     $html = ($this->include)($html, $this->arts, '10:00', '11:00');
