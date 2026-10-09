@@ -240,17 +240,13 @@ test('defeito: a edição recusada por etapa inválida apaga as etapas que exist
     expect(($this->saved)(2030))->toBe([]);
 });
 
-// Defeito conhecido: a exclusão chama o serviço, que desativa o ano letivo e
-// apaga as etapas, e em seguida testa uma variável que nunca foi definida. O
-// ano é excluído, mas a tela responde que a exclusão não foi realizada.
-test('defeito: excluir o ano letivo funciona mas a tela diz que não', function () {
+test('excluir o ano letivo desativa o ano, apaga as etapas e volta para a listagem de escolas', function () {
     $year = ($this->year)(2030);
 
     $payload = LegacyFields::from($this->get(($this->url)(2030))->assertOk()->getContent(), ['tipoacao' => 'Excluir']);
 
     $this->post(($this->url)(2030), $payload)
-        ->assertOk()
-        ->assertSee('Exclusão não realizada.');
+        ->assertRedirect('educar_escola_lst.php');
 
     expect($year->refresh()->ativo)->toBe(0)
         ->and(($this->saved)(2030))->toBe([]);
