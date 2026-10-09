@@ -1,37 +1,32 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers;
-
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
-class ForgotPasswordControllerTest extends TestCase
-{
-    public function test_reset_link_request_without_login_returns_validation_error(): void
-    {
-        Notification::fake();
+uses(TestCase::class);
 
-        $response = $this->from('/password/reset')->post('/password/email');
+test('reset link request without login returns validation error', function () {
+    Notification::fake();
 
-        $response->assertRedirect('/password/reset')
-            ->assertSessionHasErrors([
-                'login' => 'O campo matrícula é obrigatório.',
-            ]);
+    $response = $this->from('/password/reset')->post('/password/email');
 
-        Notification::assertNothingSent();
-    }
+    $response->assertRedirect('/password/reset')
+        ->assertSessionHasErrors([
+            'login' => 'O campo matrícula é obrigatório.',
+        ]);
 
-    public function test_reset_link_request_with_blank_login_returns_validation_error(): void
-    {
-        Notification::fake();
+    Notification::assertNothingSent();
+});
 
-        $response = $this->from('/password/reset')->post('/password/email', ['login' => '   ']);
+test('reset link request with blank login returns validation error', function () {
+    Notification::fake();
 
-        $response->assertRedirect('/password/reset')
-            ->assertSessionHasErrors([
-                'login' => 'O campo matrícula é obrigatório.',
-            ]);
+    $response = $this->from('/password/reset')->post('/password/email', ['login' => '   ']);
 
-        Notification::assertNothingSent();
-    }
-}
+    $response->assertRedirect('/password/reset')
+        ->assertSessionHasErrors([
+            'login' => 'O campo matrícula é obrigatório.',
+        ]);
+
+    Notification::assertNothingSent();
+});
