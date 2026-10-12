@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\LegacyPerson;
-use App\Models\LegacySchool;
 use App\Models\LegacyRace;
+use App\Models\LegacySchool;
 use App\Setting;
 use App\SettingCategory;
 use App\Support\Database\AsView;
