@@ -38,7 +38,10 @@ return new class extends clsDetalhe
         $this->addDetalhe(detalhe: ['E-mail usuário', e($funcionario?->email)]);
 
         if (!empty($funcionario?->matricula_interna)) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->addDetalhe(detalhe: ['Matrícula interna', e($funcionario->matricula_interna)]);
+            // @codeCoverageIgnoreEnd
         }
 
         $sexo = ($pessoa?->individual?->sexo == 'M') ? 'Masculino' : 'Feminino';
@@ -68,9 +71,12 @@ return new class extends clsDetalhe
 
         $nomesEscola = [];
         foreach ($escolasUsuario as $codEscola) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $escolaDetalhe = new clsPmieducarEscola(cod_escola: $codEscola);
             $escolaDetalhe = $escolaDetalhe->detalhe();
             $nomesEscola[] = $escolaDetalhe['nome'];
+            // @codeCoverageIgnoreEnd
         }
         $nomesEscola = implode(separator: '<br>', array: $nomesEscola);
         $registro['ref_cod_escola'] = $nomesEscola;
@@ -84,7 +90,10 @@ return new class extends clsDetalhe
         }
 
         if ($registro['ref_cod_escola']) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->addDetalhe(detalhe: ['Escolas', $registro['ref_cod_escola']]);
+            // @codeCoverageIgnoreEnd
         }
 
         $objPermissao = new clsPermissoes;

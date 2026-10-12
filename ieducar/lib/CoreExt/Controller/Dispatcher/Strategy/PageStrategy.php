@@ -77,7 +77,10 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategy extends CoreExt_Contro
     public function dispatch()
     {
         if (extension_loaded('newrelic')) {
+            // A extensão do New Relic não está instalada no ambiente dos testes.
+            // @codeCoverageIgnoreStart
             newrelic_name_transaction($_SERVER['REDIRECT_URL']);
+            // @codeCoverageIgnoreEnd
         }
 
         $this->setRequest($this->getController()->getRequest());

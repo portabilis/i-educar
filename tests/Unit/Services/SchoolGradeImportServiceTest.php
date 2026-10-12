@@ -2,6 +2,8 @@
 
 namespace Tests\Unit\Services;
 
+use App\Models\LegacyOrganization;
+use App\Models\LegacyPerson;
 use App\Models\LegacySchoolGrade;
 use App\Models\LegacySchoolGradeDiscipline;
 use App\Services\SchoolGradeImportService;
@@ -1162,5 +1164,56 @@ class SchoolGradeImportServiceTest extends TestCase
         $this->assertEquals(1, $result2['processed']);
         $this->assertNotEmpty($result2['details']);
         $this->assertStringContainsString('atualizada', $result2['details'][0]['message']);
+    }
+
+    /**
+     * Escola com ano letivo, curso e componentes prontos para a importação.
+     */
+    private function readyScenario(int $progress = 1): array
+    {
+        $user = LegacyUserFactory::new()->create();
+        $school = LegacySchoolFactory::new()->create();
+        $grade = LegacyGradeFactory::new()->create();
+        $year = now()->year;
+
+        LegacySchoolAcademicYearFactory::new()->create(['ref_cod_escola' => $school->cod_escola, 'ano' => $year, 'ativo' => 1, 'andamento' => $progress]);
+        LegacySchoolCourseFactory::new()->create(['ref_cod_escola' => $school->cod_escola, 'ref_cod_curso' => $grade->ref_cod_curso, 'anos_letivos' => '{' . $year . '}', 'ativo' => 1]);
+        LegacyDisciplineAcademicYearFactory::new()->create(['ano_escolar_id' => $grade->cod_serie, 'anos_letivos' => '{' . $year . '}']);
+
+        return [$school, $grade, ['schools' => [$school->cod_escola], 'grades' => [$grade->cod_serie], 'year' => $year, 'user' => $user]];
+    }
+
+    public function test_situacao_desconhecida_do_ano_letivo_aparece_no_erro()
+    {
+        [, , $params] = $this->readyScenario(9);
+
+        $result = $this->service->processSchoolGradeUpdate($params);
+
+        $this->assertEquals('failed', $result['status']);
+        $this->assertStringContainsString('desconhecido', $result['errors'][0]['error']);
+    }
+
+    public function test_erro_inesperado_ao_validar_vira_erro_da_combinacao()
+    {
+        [$school, $grade, $params] = $this->readyScenario(2);
+        LegacyPerson::retrieved(fn () => throw new \RuntimeException('falha ao ler a pessoa'));
+        LegacyOrganization::retrieved(fn () => throw new \RuntimeException('falha ao ler a organização'));
+
+        $result = $this->service->processSchoolGradeUpdate($params);
+
+        $this->assertEquals('failed', $result['status']);
+        $this->assertSame("Erro ao validar escola ID {$school->cod_escola} e série ID {$grade->cod_serie}.", $result['errors'][0]['error']);
+    }
+
+    public function test_desfaz_tudo_quando_a_gravacao_falha()
+    {
+        [$school, $grade, $params] = $this->readyScenario();
+        LegacySchoolGrade::saving(fn () => throw new \RuntimeException('banco indisponível'));
+
+        $result = $this->service->processSchoolGradeUpdate($params);
+
+        $this->assertEquals('failed', $result['status']);
+        $this->assertSame('Erro interno no processamento.', $result['errors'][0]['error']);
+        $this->assertDatabaseMissing('pmieducar.escola_serie', ['ref_cod_escola' => $school->cod_escola, 'ref_cod_serie' => $grade->cod_serie]);
     }
 }

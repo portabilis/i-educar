@@ -3,9 +3,23 @@
 namespace Tests\Feature\Commands\UpdateDisciplinesCommand;
 
 use App\Models\MigratedDiscipline;
+use Database\Factories\LegacyDisciplineAbsenceFactory;
+use Database\Factories\LegacyDisciplineDescriptiveOpinionFactory;
+use Database\Factories\LegacyDisciplineExemptionFactory;
 use Database\Factories\LegacyDisciplineFactory;
+use Database\Factories\LegacyDisciplineScoreAverageFactory;
+use Database\Factories\LegacyDisciplineScoreFactory;
 use Database\Factories\LegacyGradeFactory;
+use Database\Factories\LegacyRegistrationFactory;
+use Database\Factories\LegacyRegistrationScoreFactory;
+use Database\Factories\LegacySchoolClassFactory;
+use Database\Factories\LegacySchoolClassTeacherDisciplineFactory;
+use Database\Factories\LegacySchoolClassTeacherFactory;
+use Database\Factories\LegacyScoreExamFactory;
+use Database\Factories\LegacyStudentAbsenceFactory;
+use Database\Factories\LegacyStudentDescriptiveOpinionFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
@@ -59,6 +73,50 @@ class UpdateDisciplinesCommandTest extends TestCase
                 ->count());
         } finally {
             @unlink($filePath);
+        }
+    }
+
+    public function test_sem_copiadores_informados_move_notas_medias_exames_pareceres_faltas_dispensas_e_vinculos_do_ano_e_da_serie(): void
+    {
+        $from = LegacyDisciplineFactory::new()->create();
+        $to = LegacyDisciplineFactory::new()->create();
+        $schoolClass = LegacySchoolClassFactory::new()->create(['ano' => 2030]);
+        $grade = $schoolClass->ref_ref_cod_serie;
+        $registration = LegacyRegistrationFactory::new()->create(['ano' => 2030, 'ref_ref_cod_serie' => $grade, 'ref_ref_cod_escola' => $schoolClass->ref_ref_cod_escola, 'ref_cod_curso' => $schoolClass->ref_cod_curso]);
+
+        $score = LegacyRegistrationScoreFactory::new()->create(['matricula_id' => $registration]);
+        LegacyDisciplineScoreFactory::new()->create(['nota_aluno_id' => $score, 'componente_curricular_id' => $from]);
+        LegacyDisciplineScoreAverageFactory::new()->create(['nota_aluno_id' => $score, 'componente_curricular_id' => $from]);
+        LegacyScoreExamFactory::new()->create(['ref_cod_matricula' => $registration, 'ref_cod_componente_curricular' => $from]);
+        $opinion = LegacyStudentDescriptiveOpinionFactory::new()->create(['matricula_id' => $registration]);
+        LegacyDisciplineDescriptiveOpinionFactory::new()->create(['parecer_aluno_id' => $opinion, 'componente_curricular_id' => $from]);
+        $absence = LegacyStudentAbsenceFactory::new()->create(['matricula_id' => $registration]);
+        LegacyDisciplineAbsenceFactory::new()->create(['falta_aluno_id' => $absence, 'componente_curricular_id' => $from]);
+        LegacyDisciplineExemptionFactory::new()->create(['ref_cod_matricula' => $registration, 'ref_cod_disciplina' => $from]);
+        LegacySchoolClassTeacherDisciplineFactory::new()->create([
+            'professor_turma_id' => LegacySchoolClassTeacherFactory::new()->create(['turma_id' => $schoolClass, 'ano' => 2030]),
+            'componente_curricular_id' => $from,
+        ]);
+
+        $filePath = $this->createImportFile([[$from->getKey(), $to->getKey(), $grade, 2030]]);
+
+        try {
+            $this->artisan('update:disciplines', ['filename' => $filePath])->assertExitCode(0);
+        } finally {
+            @unlink($filePath);
+        }
+
+        foreach ([
+            ['modules.nota_componente_curricular', 'componente_curricular_id'],
+            ['modules.nota_componente_curricular_media', 'componente_curricular_id'],
+            ['modules.nota_exame', 'ref_cod_componente_curricular'],
+            ['modules.parecer_componente_curricular', 'componente_curricular_id'],
+            ['modules.falta_componente_curricular', 'componente_curricular_id'],
+            ['pmieducar.dispensa_disciplina', 'ref_cod_disciplina'],
+            ['modules.professor_turma_disciplina', 'componente_curricular_id'],
+        ] as [$table, $column]) {
+            $this->assertSame(0, DB::table($table)->where($column, $from->getKey())->count(), $table);
+            $this->assertSame(1, DB::table($table)->where($column, $to->getKey())->count(), $table);
         }
     }
 

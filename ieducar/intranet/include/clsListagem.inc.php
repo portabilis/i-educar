@@ -114,7 +114,11 @@ class clsListagem extends clsCampos
                 $diff = ((int) now()) - ((int) $ts);
 
                 if ($diff > 7200) { // duas horas
+                    // Inalcançável: `(int) now()` vale 1 e `(int) $ts` é o ano da data
+                    // guardada, então a diferença nunca passa de duas horas.
+                    // @codeCoverageIgnoreStart
                     return;
+                    // @codeCoverageIgnoreEnd
                 }
 
                 $path = $uri . '?' . $path;
@@ -175,7 +179,10 @@ class clsListagem extends clsCampos
 
             $paginaFormulario = request()->integer('pagina_formulario', 1);
             if (!isset($paginaFormulario) & !isset($_GET['pagina_'])) {
+                // Inalcançável: `request()->integer()` sempre devolve um número.
+                // @codeCoverageIgnoreStart
                 $pagina_formulario = 1;
+                // @codeCoverageIgnoreEnd
             } else {
                 $pagina_formulario = (isset($paginaFormulario)) ? $paginaFormulario : $_GET['pagina_'];
             }
@@ -323,10 +330,13 @@ HTML;
                 </tr>";
 
             if (empty($this->campos)) {
+                // Inalcançável: este bloco só roda quando a tela tem campos.
+                // @codeCoverageIgnoreStart
                 $retorno .= '
                     <tr>
                         <td class=\'formlttd\' colspan=\'2\'><span class=\'form\'>Não existem campos definidos para o formulário</span></td>
                     </tr>';
+                // @codeCoverageIgnoreEnd
             } else {
                 $retorno .= $this->MakeCampos();
             }

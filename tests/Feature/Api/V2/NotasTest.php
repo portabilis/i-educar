@@ -7,6 +7,7 @@ use App\Models\LegacyDisciplineScoreAverage;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGeneralScore;
 use App\Models\LegacySchoolGradeDiscipline;
+use App\Services\DiarioControllerService;
 use Database\Factories\LegacyDisciplineDependenceFactory;
 use Database\Factories\LegacyDisciplineFactory;
 use Database\Factories\LegacySchoolGradeDisciplineFactory;
@@ -552,4 +553,16 @@ test('rejects score of a discipline outside the dependency of the registration',
         ->assertJson(['code' => 1013]);
 
     $this->assertDatabaseCount(LegacyDisciplineScore::class, 0);
+});
+
+test('unexpected failure answers 500 with the reason', function () {
+    $data = $this->createScoreData();
+    $service = Mockery::mock(DiarioControllerService::class)->makePartial();
+    $service->shouldReceive('getServiceBoletim')->andThrow(new Exception('falha inesperada'));
+    app()->instance(DiarioControllerService::class, $service);
+
+    $response = $this->postScore($data, ['nota' => 6]);
+
+    $response->assertStatus(500);
+    expect($response->json('message'))->toEndWith('(falha inesperada)');
 });

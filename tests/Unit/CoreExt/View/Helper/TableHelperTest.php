@@ -150,4 +150,13 @@ class CoreExt_View_TableHelperTest extends TestCase
         $table = $table->createTable();
         $this->assertEquals(trim($this->_tableRowAttributesExpected), $table);
     }
+
+    public function test_a_tabela_vira_texto_com_o_html_montado(): void
+    {
+        $table = CoreExt_View_Helper_TableHelper::getInstance();
+        $table->resetTable();
+        $table->addBodyRow([['data' => 'Ana']]);
+
+        $this->assertSame($table->createTable(), (string) $table);
+    }
 }

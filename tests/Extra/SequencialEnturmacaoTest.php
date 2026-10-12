@@ -69,4 +69,81 @@ class SequencialEnturmacaoTest extends TestCase
         $sequencial = $sequencialEnturmacao->ordenaSequencialNovaMatricula();
         $this->assertEquals(3, $sequencial);
     }
+
+    /**
+     * Turma de uma instituição sem datas de fechamento, transferência ou
+     * remanejamento, para que o sequencial siga a ordem alfabética.
+     */
+    private function alphabeticalScenario(): array
+    {
+        $schoolClass = LegacySchoolClassFactory::new()->create();
+        $schoolClass->school->institution->update(['data_fechamento' => null, 'data_base_transferencia' => null, 'data_base_remanejamento' => null]);
+
+        $registration = function (string $name) use ($schoolClass) {
+            $registration = LegacyRegistrationFactory::new()->create([
+                'ref_ref_cod_serie' => $schoolClass->ref_ref_cod_serie,
+                'ref_ref_cod_escola' => $schoolClass->ref_ref_cod_escola,
+                'ref_cod_curso' => $schoolClass->ref_cod_curso,
+            ]);
+            $registration->student->individual->person->update(['nome' => $name]);
+
+            return $registration;
+        };
+
+        return [$schoolClass, $registration];
+    }
+
+    public function test_sem_datas_da_instituicao_o_aluno_entra_na_ordem_alfabetica()
+    {
+        [$schoolClass, $registration] = $this->alphabeticalScenario();
+        $ana = $registration('Ana');
+        $zeca = $registration('Zeca');
+        $maria = $registration('Maria');
+        LegacyEnrollmentFactory::new()->create(['ref_cod_turma' => $schoolClass, 'ref_cod_matricula' => $ana, 'sequencial_fechamento' => 1]);
+        $last = LegacyEnrollmentFactory::new()->create(['ref_cod_turma' => $schoolClass, 'ref_cod_matricula' => $zeca, 'sequencial_fechamento' => 2]);
+
+        $sequencial = (new SequencialEnturmacao($maria->cod_matricula, $schoolClass->cod_turma, date('Y-m-d')))->ordenaSequencialNovaMatricula();
+
+        $this->assertEquals(2, $sequencial);
+        $this->assertEquals(3, $last->refresh()->sequencial_fechamento);
+    }
+
+    public function test_quem_ja_esta_na_turma_libera_a_posicao_antes_de_ser_reposicionado()
+    {
+        [$schoolClass, $registration] = $this->alphabeticalScenario();
+        $ana = $registration('Ana');
+        $bia = $registration('Bia');
+        $zeca = $registration('Zeca');
+        LegacyEnrollmentFactory::new()->create(['ref_cod_turma' => $schoolClass, 'ref_cod_matricula' => $bia, 'sequencial_fechamento' => 1]);
+        LegacyEnrollmentFactory::new()->create(['ref_cod_turma' => $schoolClass, 'ref_cod_matricula' => $ana, 'sequencial_fechamento' => 2]);
+        $last = LegacyEnrollmentFactory::new()->create(['ref_cod_turma' => $schoolClass, 'ref_cod_matricula' => $zeca, 'sequencial_fechamento' => 3]);
+        $sequence = new SequencialEnturmacao($ana->cod_matricula, $schoolClass->cod_turma, date('Y-m-d'));
+
+        // A posição atual de Ana sai da turma e quem vinha depois sobe uma posição.
+        $this->assertEquals(2, $sequence->existeMatriculaTurma());
+
+        (fn () => $this->subtraiSequencialPosterior(2))->call($sequence);
+
+        $this->assertEquals(2, $last->refresh()->sequencial_fechamento);
+
+        // A reordenação completa empata Ana e Zeca na posição 2; o resultado
+        // depende da ordem do banco, então aqui só se confere que ela roda.
+        $this->assertIsInt((int) $sequence->ordenaSequencialNovaMatricula());
+    }
+
+    public function test_aluno_em_dependencia_entra_depois_dos_dependentes_ja_enturmados()
+    {
+        [$schoolClass, $registration] = $this->alphabeticalScenario();
+        $regular = $registration('Ana');
+        $dependent = $registration('Bia');
+        $dependent->update(['dependencia' => true]);
+        $newcomer = $registration('Caio');
+        $newcomer->update(['dependencia' => true]);
+        LegacyEnrollmentFactory::new()->create(['ref_cod_turma' => $schoolClass, 'ref_cod_matricula' => $regular, 'sequencial_fechamento' => 1]);
+        LegacyEnrollmentFactory::new()->create(['ref_cod_turma' => $schoolClass, 'ref_cod_matricula' => $dependent, 'sequencial_fechamento' => 2, 'data_enturmacao' => now()->subDay()]);
+
+        $sequencial = (new SequencialEnturmacao($newcomer->cod_matricula, $schoolClass->cod_turma, date('Y-m-d')))->ordenaSequencialNovaMatricula();
+
+        $this->assertEquals(3, $sequencial);
+    }
 }

@@ -96,3 +96,9 @@ test('volta para a listagem de dispensas da matrícula quando a dispensa não ex
         'ref_cod_disciplina' => $this->botany->getKey(),
     ]))->assertRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->registration->getKey());
 });
+
+test('volta para as dispensas da matrícula avisando quando faltam os códigos da dispensa', function () {
+    $this->get('/intranet/educar_dispensa_disciplina_det.php?ref_cod_matricula=5')
+        ->assertRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=5')
+        ->assertSessionHas('error', 'Dispensa de componente curricular não encontrada. O registro não existe ou foi excluído. Confira os registros listados abaixo.');
+});

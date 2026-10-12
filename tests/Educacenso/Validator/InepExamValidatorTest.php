@@ -382,4 +382,11 @@ class InepExamValidatorTest extends TestCase
 
         $this->assertTrue($validator->isValid());
     }
+
+    public function test_material_didatico_em_braille_exige_cegueira_ou_surdocegueira()
+    {
+        $validator = new InepExamValidator([RecursosRealizacaoProvas::MATERIAL_DIDATICO_EM_BRAILLE], [Deficiencias::BAIXA_VISAO]);
+
+        $this->assertFalse($validator->isValid());
+    }
 }

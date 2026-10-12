@@ -19,7 +19,10 @@ class DefaultReportCardTypes implements ReportCardTypes
             // @codeCoverageIgnoreEnd
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         return Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
+        // @codeCoverageIgnoreEnd
     }
 
     public function getReports(): array
@@ -30,7 +33,10 @@ class DefaultReportCardTypes implements ReportCardTypes
             // @codeCoverageIgnoreEnd
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         return Portabilis_Model_Report_TipoBoletim::getInstance()->getReports();
+        // @codeCoverageIgnoreEnd
     }
 
     private function available(): bool

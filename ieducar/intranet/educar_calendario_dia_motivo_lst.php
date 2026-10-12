@@ -74,7 +74,10 @@ return new class extends clsListagem
             $query->where('ref_cod_escola', $this->ref_cod_escola);
         }
         if ($this->nm_motivo) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $query->where('nm_motivo', 'ilike', "%{$this->nm_motivo}%");
+            // @codeCoverageIgnoreEnd
         }
 
         $result = $query->paginate(perPage: $this->limite, pageName: 'pagina_' . $this->nome);

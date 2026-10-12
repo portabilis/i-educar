@@ -9,8 +9,14 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 
+  workflow_dispatch:
+
 permissions:
   contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   default:
@@ -18,7 +24,9 @@ jobs:
 
     if: '! github.event.pull_request.draft'
 
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
+
+    timeout-minutes: 60
 
     env:
       APP_URL: http://localhost:8000
@@ -42,7 +50,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres
+        image: postgres:18-alpine
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -61,6 +69,7 @@ jobs:
           extensions: bcmath, gd, pdo, pcntl, pdo_pgsql, pgsql, zip
         env:
           update: true
+          runner: self-hosted
 
       - name: Get composer cache directory
         id: composer-cache

@@ -27,10 +27,14 @@ class CanStoreActiveLooking implements Rule
 
                 return false;
             }
+            // Inalcançável: o início já não pode ser anterior à matrícula e o
+            // retorno não pode ser anterior ao início.
             if ($legacyActiveLooking->data_fim->lt($registrationDate)) {
+                // @codeCoverageIgnoreStart
                 $this->msg = 'Data de retorno não pode ser menor que a data da matrícula';
 
                 return false;
+                // @codeCoverageIgnoreEnd
             }
         }
 
