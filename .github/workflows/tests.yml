@@ -13,7 +13,6 @@ on:
 
 permissions:
   contents: read
-  # O TIA baixa o baseline publicado pelo workflow tia-baseline.yml
   actions: read
 
 concurrency:
@@ -49,7 +48,6 @@ jobs:
       LEGACY_SEED_DATA: false
       COMPOSER_ALLOW_SUPERUSER: 1
       NODE_OPTIONS: --max_old_space_size=1024
-      # O TIA usa a CLI gh para buscar o baseline
       GH_TOKEN: ${{ github.token }}
 
     services:
@@ -64,7 +62,6 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
 
     steps:
-      # Histórico completo: o TIA compara o commit atual com o gravado no baseline
       - name: Setup PHP
         uses: actions/checkout@v7
         with:
@@ -74,7 +71,6 @@ jobs:
         with:
           php-version: '8.5'
           extensions: bcmath, gd, pdo, pcntl, pdo_pgsql, pgsql, zip
-          # O TIA precisa de um driver de cobertura para saber o que cada teste usa
           coverage: pcov
         env:
           update: true
@@ -97,6 +93,5 @@ jobs:
       - name: Prepare tests
         run: php artisan legacy:create:tests
 
-      # Roda só os testes afetados pela mudança, a partir do baseline da main
       - name: Unit tests
         run: vendor/bin/pest --tia --baselined

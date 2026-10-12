@@ -1,12 +1,5 @@
 name: TIA baseline
 
-# Grava o grafo de impacto dos testes (Pest TIA) a partir da main e o publica
-# como artefato. O job de testes dos PRs baixa o baseline mais recente deste
-# workflow e roda só os testes afetados pela mudança.
-#
-# O Pest procura por este arquivo pelo nome (tia-baseline.yml) e pelo artefato
-# chamado pest-tia-baseline; não renomeie nenhum dos dois.
-
 on:
   push:
     branches:
@@ -43,7 +36,6 @@ jobs:
       LEGACY_SEED_DATA: false
       COMPOSER_ALLOW_SUPERUSER: 1
       NODE_OPTIONS: --max_old_space_size=1024
-      # O TIA usa a CLI gh para buscar o baseline anterior
       GH_TOKEN: ${{ github.token }}
 
     services:
@@ -58,7 +50,6 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
 
     steps:
-      # Histórico completo: o TIA compara o commit atual com o gravado no grafo
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
@@ -67,7 +58,6 @@ jobs:
         with:
           php-version: '8.5'
           extensions: bcmath, gd, pdo, pcntl, pdo_pgsql, pgsql, zip
-          # O TIA precisa de um driver de cobertura para gravar o grafo
           coverage: pcov
         env:
           update: true
@@ -89,7 +79,6 @@ jobs:
       - name: Prepare tests
         run: php artisan legacy:create:tests
 
-      # Parte do baseline anterior e regrava o que mudou desde ele
       - name: Record TIA graph
         run: vendor/bin/pest --tia --baselined
 
