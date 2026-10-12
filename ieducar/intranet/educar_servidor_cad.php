@@ -470,8 +470,26 @@ JS;
         Portabilis_View_Helper_Application::embedJavascript($this, $script);
     }
 
+
+    private function validaCargaHoraria(): bool
+    {
+        if (preg_match('/^0+:0+$/', trim((string) $this->carga_horaria)) === 1) {
+            $this->mensagem = 'A carga horária deve ser maior que 00:00.<br>';
+
+            return false;
+        }
+
+        return true;
+    }
+
     public function Novo()
     {
+
+        if (!$this->validaCargaHoraria()) {
+            return false;
+        }
+
+
         $this->cod_servidor = (int) $this->cod_servidor;
         $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
 
@@ -544,6 +562,10 @@ JS;
 
     public function Editar()
     {
+        if (!$this->validaCargaHoraria()) {
+            return false;
+        }
+
         if (!$this->validaExclusaoFuncoes()) {
             $this->mensagem = 'Edição não realizada. O servidor possui funções vinculadas a falta/atraso!';
 
