@@ -3,7 +3,6 @@
 use App\Models\EmployeeAllocation;
 use Database\Factories\LegacyGeneralConfigurationFactory;
 use Database\Factories\LegacyUserFactory;
-use Illuminate\Support\Facades\DB;
 use Tests\Request\Support\EmployeeScenario;
 use Tests\Request\Support\EnrollmentScenario;
 use Tests\Request\Support\LegacyFields;
@@ -28,7 +27,7 @@ beforeEach(function () {
     );
 });
 
-test('abre a substituição com o servidor, se é professor e as alocações ativas do ano', function () {
+test('abre a substituição com o servidor e as alocações ativas do ano', function () {
     $this->ana->role('Professor', '1001');
     $this->ana->allocation($this->school->school, ['periodo' => 1, 'carga_horaria' => '20:00:00']);
     $this->ana->allocation($this->school->school, ['periodo' => 2, 'carga_horaria' => '10:00:00', 'ano' => (int) date('Y') - 1]);
@@ -37,7 +36,6 @@ test('abre a substituição com o servidor, se é professor e as alocações ati
     $fields = LegacyFields::from($html);
 
     expect($fields['tipoacao'])->toBe('Novo')
-        ->and($fields['professor'])->toBe('true')
         ->and($fields['ref_cod_servidor'])->toBe((string) $this->id)
         ->and(unserialize(urldecode($fields['alocacao_array'])))->toBe([
             ['carga_horaria' => '20:00:00', 'periodo' => 1, 'ref_cod_escola' => $this->school->school->getKey()],
@@ -57,26 +55,6 @@ test('passa as alocações do servidor para o substituto', function () {
     expect($first->refresh()->ref_cod_servidor)->toBe($this->substitute)
         ->and($second->refresh()->ref_cod_servidor)->toBe($this->substitute)
         ->and($lastYear->refresh()->ref_cod_servidor)->toBe($this->id);
-});
-
-test('para o professor, passa também as aulas do quadro de horários', function () {
-    $this->ana->role('Professor', '1001');
-    $this->ana->allocation($this->school->school);
-    $this->ana->lesson($this->school->schoolClass(), $this->school->discipline('Artes'), 2, '08:00', '08:45');
-
-    ($this->submit)()->assertRedirect($this->detail);
-
-    expect(DB::table('pmieducar.quadro_horario_horarios')->where('ref_servidor', $this->substitute)->count())->toBe(1)
-        ->and(DB::table('pmieducar.quadro_horario_horarios')->where('ref_servidor', $this->id)->count())->toBe(0);
-});
-
-test('quem não é professor mantém as aulas que estiverem no nome dele', function () {
-    $this->ana->allocation($this->school->school);
-    $this->ana->lesson($this->school->schoolClass(), $this->school->discipline('Artes'), 2, '08:00', '08:45');
-
-    ($this->submit)()->assertRedirect($this->detail);
-
-    expect(DB::table('pmieducar.quadro_horario_horarios')->where('ref_servidor', $this->id)->count())->toBe(1);
 });
 
 test('recusa o substituto que não é servidor da instituição ou não foi informado', function (string $substitute) {

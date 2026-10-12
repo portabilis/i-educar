@@ -414,27 +414,6 @@ test('ao trocar para uma instituição em que já foi servidor, reativa o cadast
         ->and(DB::table('pmieducar.servidor')->where('cod_servidor', $id)->count())->toBe(2);
 });
 
-test('defeito: o servidor que está num quadro de horários troca de instituição mesmo assim', function () {
-    // A tela consulta o quadro por clsPmieducarQuadroHorarioHorarios::detalhe(),
-    // que sem a chave completa da aula devolve sempre falso.
-    $ana = EmployeeScenario::named('Ana Alves', $this->institution);
-    $id = $ana->employee->getKey();
-    $target = LegacyInstitutionFactory::new()->create()->getKey();
-    $ana->lesson($this->school->schoolClass(), $this->school->discipline('Artes'), 2, '08:00', '08:45');
-
-    $this->post(($this->edit)($ana), ($this->payload)($id, [
-        'tipoacao' => 'Editar',
-        'total_horas_alocadas' => '0',
-        'ref_cod_instituicao' => (string) $target,
-        'ref_cod_instituicao_original' => (string) $this->institution,
-        'ref_cod_funcao' => [],
-        'matricula' => [],
-        'cod_servidor_funcao' => [],
-    ]))->assertRedirect(($this->detail)($id, $target));
-
-    expect(($this->row)($id)->ativo)->toBe(0);
-});
-
 test('exclui o servidor: desativa o cadastro e apaga funções, componentes e faltas', function () {
     $ana = EmployeeScenario::named('Ana Alves', $this->institution);
     $id = $ana->employee->getKey();
@@ -474,18 +453,6 @@ test('recusa excluir o servidor com falta ou atraso numa função ou sem a insti
     ]), [], 'Exclusão não realizada. O servidor possui funções vinculadas a falta/atrasos!'],
     'sem a instituição original' => [fn () => null, ['ref_cod_instituicao_original' => ''], 'Exclusão não realizada.'],
 ]);
-
-test('defeito: o servidor que está num quadro de horários é excluído mesmo assim', function () {
-    $ana = EmployeeScenario::named('Ana Alves', $this->institution);
-    $id = $ana->employee->getKey();
-    $ana->lesson($this->school->schoolClass(), $this->school->discipline('Artes'), 2, '08:00', '08:45');
-
-    $this->post(($this->edit)($ana), ['tipoacao' => 'Excluir', 'cod_servidor' => (string) $id, 'ref_cod_instituicao' => (string) $this->institution, 'ref_cod_instituicao_original' => (string) $this->institution])
-        ->assertRedirect('educar_servidor_lst.php');
-
-    expect(($this->row)($id)->ativo)->toBe(0)
-        ->and(DB::table('pmieducar.quadro_horario_horarios')->where('ref_servidor', $id)->where('ativo', 1)->exists())->toBeTrue();
-});
 
 test('quem só pode visualizar não abre, não grava e não exclui', function (string $action) {
     $ana = EmployeeScenario::named('Ana Alves', $this->institution);

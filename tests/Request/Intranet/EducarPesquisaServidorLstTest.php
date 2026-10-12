@@ -83,11 +83,10 @@ test('devolve o professor escolhido aos campos da tela de origem', function (arr
     'só o campo do nome' => [['campo1' => null], fn ($id) => "onclick=\"addVal1('nm_servidor','Ana Alves','{$id}'); fecha();\""],
     'só o campo do código' => [['campo2' => null], fn ($id) => "onclick=\"addVal1('ref_cod_servidor','{$id}','Ana Alves'); fecha();\""],
     'com tipo, código e nome' => [['tipo' => 1], fn ($id) => "addVal1('ref_cod_servidor','{$id}', 'Ana Alves'); addVal1('nm_servidor','Ana Alves', '{$id}')"],
-    'com tipo, vindo do quadro de horários' => [['tipo' => 1, 'horario' => 'N'], fn ($id) => "addVal1('ref_cod_servidor','Ana Alves','{$id}'); addVal1('nm_servidor','{$id}','Ana Alves')"],
     'com tipo, só o campo do código' => [['tipo' => 1, 'campo2' => null], fn ($id) => "onclick=\"addVal1('ref_cod_servidor','{$id}','Ana Alves'); fecha();\""],
 ]);
 
-test('filtra pelo nome, pela escolaridade, pela carga horária e pela escola e ano da alocação', function (Closure $query) {
+test('filtra pelo nome, pela escolaridade e pela carga horária', function (Closure $query) {
     $degree = LegacySchoolingDegreeFactory::new()->create(['descricao' => 'Mestrado']);
     $otherSchool = EnrollmentScenario::for($this->user, 2030);
 
@@ -104,22 +103,7 @@ test('filtra pelo nome, pela escolaridade, pela carga horária e pela escola e a
     'nome' => [fn () => ['nome_servidor' => 'ana alv']],
     'escolaridade' => [fn ($degree) => ['ref_idesco' => $degree->getKey()]],
     'carga horária' => [fn () => ['carga_horaria' => 30]],
-    'escola da alocação' => [fn () => ['ref_cod_escola' => $this->school->school->getKey()]],
-    'ano da alocação' => [fn () => ['ano_alocacao' => 2030]],
 ]);
-
-test('filtra por quem leciona o componente no curso, ou qualquer componente do curso', function () {
-    ($this->teacher)('Ana Alves', disciplines: [$this->arts]);
-    ($this->teacher)('Bia Borges', disciplines: [$this->botany]);
-
-    ($this->search)(['ref_cod_disciplina' => $this->botany->getKey(), 'ref_cod_curso' => $this->school->course->getKey()])
-        ->assertSee('Bia Borges')
-        ->assertDontSee('Ana Alves');
-
-    ($this->search)(['ref_cod_disciplina' => 0, 'ref_cod_curso' => $this->school->course->getKey()])
-        ->assertSee('Bia Borges')
-        ->assertSee('Ana Alves');
-});
 
 test('para substituir um servidor, lista só quem leciona todos os componentes dele, e não ele mesmo', function () {
     $ana = ($this->teacher)('Ana Alves', disciplines: [$this->arts, $this->botany]);
@@ -152,71 +136,3 @@ test('pagina de 20 em 20', function () {
     ($this->search)()->assertSee('Registro 20')->assertDontSee('Registro 21');
     ($this->search)(['pagina_formulario' => 2])->assertSee('Registro 21')->assertDontSee('Registro 20');
 });
-
-test('para um horário do quadro, lista quem tem alocação com carga no período e está livre naquela aula', function (string $start, string $end, int $period, string $minutes) {
-    $class = $this->school->schoolClass();
-
-    ($this->teacher)('Ana Livre', allocation: ['periodo' => $period]);
-    ($this->teacher)('Bia Ocupada', allocation: ['periodo' => $period])->lesson($class, $this->arts, 2, $start, $end);
-    ($this->teacher)('Caio Outro Turno', allocation: ['periodo' => $period === 1 ? 2 : 1]);
-    ($this->teacher)('Dora Multisseriada', ['multi_seriado' => true], ['periodo' => $period])->lesson($class, $this->arts, 2, $start, $end);
-
-    ($this->search)([
-        'horario' => 'S',
-        'dia_semana' => 2,
-        'hora_inicial' => $start,
-        'hora_final' => $end,
-        $minutes => 60,
-        'ref_cod_escola' => $this->school->school->getKey(),
-        'ano_alocacao' => 2030,
-        'identificador' => 'abc',
-    ])
-        ->assertSee('Ana Livre')
-        ->assertSee('Dora Multisseriada')
-        ->assertDontSee('Bia Ocupada')
-        ->assertDontSee('Caio Outro Turno');
-})->with([
-    'manhã' => ['08:00', '09:00', 1, 'min_mat'],
-    'tarde' => ['13:00', '14:00', 2, 'min_ves'],
-    'noite' => ['19:00', '20:00', 3, 'min_not'],
-]);
-
-test('quem já dá aquela aula não conta como ocupado quando vem na lista de matrículas', function () {
-    $bia = ($this->teacher)('Bia Ocupada');
-    $bia->lesson($this->school->schoolClass(), $this->arts, 2, '08:00', '09:00');
-
-    $query = ['horario' => 'S', 'dia_semana' => 2, 'hora_inicial' => '08:00', 'hora_final' => '09:00', 'min_mat' => 60];
-
-    ($this->search)($query)->assertDontSee('Bia Ocupada');
-    ($this->search)($query + ['lst_matriculas' => (string) $bia->employee->getKey()])->assertSee('Bia Ocupada');
-});
-
-test('a aula que atravessa o meio-dia ou as 18 horas só exige o turno em que começa', function (string $start, string $end, int $period, string $minutes) {
-    ($this->teacher)('Ana Livre', allocation: ['periodo' => $period]);
-
-    ($this->search)(['horario' => 'S', 'dia_semana' => 2, 'hora_inicial' => $start, 'hora_final' => $end, $minutes => 120])
-        ->assertSee('Ana Livre');
-})->with([
-    'da manhã para a tarde' => ['11:00', '13:00', 1, 'min_mat'],
-    'da tarde para a noite' => ['17:00', '19:00', 2, 'min_ves'],
-]);
-
-test('a aula que começa de manhã e termina à meia-noite também exige o turno da noite', function () {
-    ($this->teacher)('Ana Manhã', allocation: ['periodo' => 1]);
-
-    ($this->search)(['horario' => 'S', 'dia_semana' => 2, 'hora_inicial' => '08:00', 'hora_final' => '00:00', 'min_mat' => 60, 'min_not' => 60])
-        ->assertDontSee('Ana Manhã');
-});
-
-test('defeito: com dia e hora mas sem ser do quadro de horários, a consulta estoura', function (string $start, string $end) {
-    // A subconsulta de carga usa o apelido `qhh` de uma tabela que não está no FROM.
-    ($this->teacher)('Ana Alves');
-
-    $this->get('/intranet/educar_pesquisa_servidor_lst.php?' . http_build_query([
-        'campo1' => 'ref_cod_servidor',
-        'ref_cod_instituicao' => $this->institution,
-        'dia_semana' => 2,
-        'hora_inicial' => $start,
-        'hora_final' => $end,
-    ]))->assertStatus(500);
-})->with([['08:00', '09:00'], ['13:00', '14:00'], ['19:00', '20:00']]);

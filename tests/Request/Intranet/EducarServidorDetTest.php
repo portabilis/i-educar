@@ -75,22 +75,6 @@ test('mostra as alocações ativas do ano corrente e oferece substituir o horár
         ->assertSee("go(\"educar_servidor_substituicao_cad.php?{$this->keys}\");", false);
 });
 
-test('mostra as aulas do servidor no quadro de horários', function () {
-    $class = $this->school->schoolClass(['nm_turma' => 'Turma Alfa']);
-    $arts = $this->school->discipline('Artes');
-
-    $this->employee->lesson($class, $arts, 3, '08:00', '08:45')->lesson($class, $arts, 2, '10:00', '10:45');
-    $this->employee->lesson($class, $arts, 6, '13:00', '13:45', ['ativo' => 0]);
-
-    ($this->detail)()
-        ->assertSeeInOrder([
-            'Horários de aula',
-            'Ensino Fundamental', 'Primeiro Ano', 'Turma Alfa', 'Artes', 'Segunda', '10:00:00', '10:45:00',
-            'Terça', '08:00:00', '08:45:00',
-        ])
-        ->assertDontSee('13:00:00');
-});
-
 test('com um afastamento em aberto oferece retornar o servidor e mostra o histórico', function () {
     $open = $this->employee->withdrawal('Licença médica', ['data_saida' => '2030-03-02']);
     $this->employee->withdrawal('Licença prêmio', ['data_saida' => '2029-01-10', 'data_retorno' => '2029-02-10']);

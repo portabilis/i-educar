@@ -596,89 +596,33 @@ JS;
             }
         } else {
             $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
-            $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                $this->cod_servidor,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                $this->ref_cod_instituicao
-            );
 
-            if ($obj_quadro_horario->detalhe()) {
-                // Inalcançável: a consulta ao quadro de horários não informa a chave da aula, e sem ela `detalhe()` devolve sempre falso.
-                // @codeCoverageIgnoreStart
-                $this->mensagem = 'Edição não realizada. O servidor está vinculado a um quadro de horários.<br>';
+            $editou = $this->editaServidor($this->ref_cod_instituicao_original, 0, $this->camposCenso());
 
-                return false;
-                // @codeCoverageIgnoreEnd
-            } else {
-                $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    $this->cod_servidor,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    1,
-                    null,
-                    $this->ref_cod_instituicao
-                );
+            if ($editou) {
+                $existeNaInstituicao = is_numeric($this->cod_servidor)
+                    && is_numeric($this->ref_cod_instituicao)
+                    && Employee::query()
+                        ->whereEmployee($this->cod_servidor)
+                        ->whereInstitution($this->ref_cod_instituicao)
+                        ->exists();
 
-                if ($obj_quadro_horario->detalhe()) {
-                    // Inalcançável: a consulta ao quadro de horários não informa a chave da aula, e sem ela `detalhe()` devolve sempre falso.
-                    // @codeCoverageIgnoreStart
-                    $this->mensagem = 'Edição não realizada. O servidor está vinculado a um quadro de horários.<br>';
+                $cadastrou = $existeNaInstituicao
+                    ? $this->editaServidor($this->ref_cod_instituicao, 1)
+                    : $this->cadastraServidor($this->ref_cod_instituicao);
 
-                    return false;
-                    // @codeCoverageIgnoreEnd
-                } else {
-                    $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
+                if ($cadastrou) {
+                    $this->cadastraFuncoes();
+                    $this->createOrUpdateInep();
+                    $this->createOrUpdateDeficiencias();
 
-                    $editou = $this->editaServidor($this->ref_cod_instituicao_original, 0, $this->camposCenso());
+                    $this->storeGraduations($this->cod_servidor);
+                    $this->storePosgraduate($this->cod_servidor);
 
-                    if ($editou) {
-                        $existeNaInstituicao = is_numeric($this->cod_servidor)
-                            && is_numeric($this->ref_cod_instituicao)
-                            && Employee::query()
-                                ->whereEmployee($this->cod_servidor)
-                                ->whereInstitution($this->ref_cod_instituicao)
-                                ->exists();
+                    include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
-                        $cadastrou = $existeNaInstituicao
-                            ? $this->editaServidor($this->ref_cod_instituicao, 1)
-                            : $this->cadastraServidor($this->ref_cod_instituicao);
-
-                        if ($cadastrou) {
-                            $this->cadastraFuncoes();
-                            $this->createOrUpdateInep();
-                            $this->createOrUpdateDeficiencias();
-
-                            $this->storeGraduations($this->cod_servidor);
-                            $this->storePosgraduate($this->cod_servidor);
-
-                            include 'educar_limpa_sessao_curso_disciplina_servidor.php';
-
-                            $this->mensagem = 'Edição efetuada com sucesso.<br>';
-                            $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-                        }
-                    }
+                    $this->mensagem = 'Edição efetuada com sucesso.<br>';
+                    $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
                 }
             }
         }
@@ -699,33 +643,6 @@ JS;
             $this->mensagem = 'Exclusão não realizada. O servidor possui funções vinculadas a falta/atrasos!';
 
             return false;
-        }
-
-        $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $this->cod_servidor,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
-
-        if ($obj_quadro_horario->detalhe()) {
-            // Inalcançável: a consulta ao quadro de horários não informa a chave da aula, e sem ela `detalhe()` devolve sempre falso.
-            // @codeCoverageIgnoreStart
-            $this->mensagem = 'Exclusão não realizada. O servidor está vinculado a um quadro de horários.<br>';
-
-            return false;
-            // @codeCoverageIgnoreEnd
         }
 
         if (!is_numeric($this->cod_servidor) || !is_numeric($this->ref_cod_instituicao_original)) {

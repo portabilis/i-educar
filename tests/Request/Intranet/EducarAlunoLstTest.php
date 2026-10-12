@@ -1,7 +1,17 @@
 <?php
 
+use Database\Factories\EmployeeFactory;
+use Database\Factories\LegacyEmployeeFactory;
+use Database\Factories\LegacyEmployeeRoleFactory;
 use Database\Factories\LegacyGeneralConfigurationFactory;
+use Database\Factories\LegacyGradeFactory;
+use Database\Factories\LegacyInstitutionFactory;
+use Database\Factories\LegacyRoleFactory;
+use Database\Factories\LegacySchoolClassFactory;
+use Database\Factories\LegacySchoolClassTeacherFactory;
+use Database\Factories\LegacySchoolGradeFactory;
 use Database\Factories\LegacyUserFactory;
+use Illuminate\Support\Facades\DB;
 use Tests\Request\Support\EnrollmentScenario;
 use Tests\Request\Support\StudentScenario;
 
@@ -159,4 +169,44 @@ test('não oferece o botão Novo a quem só pode visualizar', function () {
     );
 
     ($this->list)(['cod_aluno' => 1])->assertDontSee('go("/module/Cadastro/aluno")', false);
+});
+
+test('lista as séries do vínculo com turma do professor ao filtrar por escola e curso', function () {
+    $institution = LegacyInstitutionFactory::new()->current();
+
+    DB::table('pmieducar.instituicao')
+        ->where('cod_instituicao', $institution->getKey())
+        ->update(['exigir_vinculo_turma_professor' => 1]);
+
+    $schoolClass = LegacySchoolClassFactory::new()->create();
+    $otherGrade = LegacySchoolGradeFactory::new()->create([
+        'ref_cod_escola' => $schoolClass->ref_ref_cod_escola,
+        'ref_cod_serie' => LegacyGradeFactory::new()->create(['ref_cod_curso' => $schoolClass->ref_cod_curso]),
+    ])->grade;
+    $employee = EmployeeFactory::new()->create();
+
+    LegacyEmployeeFactory::new()->create(['ref_cod_pessoa_fj' => $employee->getKey()]);
+    LegacyEmployeeRoleFactory::new()->create([
+        'ref_cod_servidor' => $employee->getKey(),
+        'ref_cod_funcao' => LegacyRoleFactory::new()->create(['professor' => 1]),
+    ]);
+    LegacySchoolClassTeacherFactory::new()->create([
+        'instituicao_id' => $institution->getKey(),
+        'turma_id' => $schoolClass->getKey(),
+        'servidor_id' => $employee->getKey(),
+        'ano' => $schoolClass->ano,
+    ]);
+
+    $this->actingAs(LegacyUserFactory::new()->admin()->create(['cod_usuario' => $employee->getKey()]));
+
+    $this->get('/intranet/educar_aluno_lst.php?' . http_build_query([
+        'ref_cod_instituicao' => $institution->getKey(),
+        'ref_cod_escola' => $schoolClass->ref_ref_cod_escola,
+        'ref_cod_curso' => $schoolClass->ref_cod_curso,
+        'ano' => $schoolClass->ano,
+    ]))
+        ->assertOk()
+        ->assertSee($schoolClass->grade->name)
+        ->assertDontSee($otherGrade->name)
+        ->assertDontSee(mb_strtoupper($otherGrade->name));
 });
