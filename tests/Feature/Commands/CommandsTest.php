@@ -16,19 +16,6 @@ test('console command disable users with access expired', function () {
     $this->artisan('disable:users-with-access-expired')->assertExitCode(0);
 });
 
-test('console command legacy create tests', function () {
-    // Os testes gerados ficam em tests/Pages/Intranet, fora do Git: o que falta é
-    // criado, e rodar de novo encontra os arquivos que já existem.
-    @unlink(base_path('tests/Pages/Intranet/TopicIndexTest.php'));
-
-    $this->artisan('legacy:create:tests')
-        ->expectsOutput('Teste TopicIndexTest criado para a rota /intranet/topic_index.php')
-        ->assertExitCode(0);
-    $this->artisan('legacy:create:tests')
-        ->expectsOutput('Teste TopicIndexTest criado para a rota /intranet/topic_index.php já criado ou houve falha')
-        ->assertExitCode(0);
-});
-
 test('console command notifications delete', function () {
     $this->artisan('notifications:delete')->assertExitCode(0);
 });

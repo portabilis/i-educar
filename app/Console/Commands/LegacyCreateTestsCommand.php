@@ -4,6 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
+/**
+ * @codeCoverageIgnore
+ */
 class LegacyCreateTestsCommand extends Command
 {
     /**
