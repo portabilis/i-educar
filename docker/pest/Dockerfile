@@ -19,7 +19,7 @@
 # Xdebug. Ele só coleta quando um teste pede, então não pesa nas rodadas comuns.
 
 ARG PHP_VERSION=8.5
-ARG COMPOSER_VERSION=2.10
+ARG COMPOSER_VERSION=2.10.3
 ARG PLAYWRIGHT_VERSION=1.62.1
 
 FROM composer:${COMPOSER_VERSION} AS composer
@@ -59,36 +59,36 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && echo "deb [signed-by=/etc/apt/keyrings/ondrej-php.gpg] https://ppa.launchpadcontent.net/ondrej/php/ubuntu noble main" \
         > /etc/apt/sources.list.d/ondrej-php.list \
     && apt-get update && apt-get install -y --no-install-recommends \
-        php${PHP_VERSION}-cli \
-        php${PHP_VERSION}-common \
-        php${PHP_VERSION}-bcmath \
-        php${PHP_VERSION}-curl \
-        php${PHP_VERSION}-gd \
-        php${PHP_VERSION}-intl \
-        php${PHP_VERSION}-mbstring \
-        php${PHP_VERSION}-pcov \
-        php${PHP_VERSION}-pgsql \
-        php${PHP_VERSION}-readline \
-        php${PHP_VERSION}-redis \
-        php${PHP_VERSION}-xdebug \
-        php${PHP_VERSION}-xml \
-        php${PHP_VERSION}-zip \
+        "php${PHP_VERSION}-cli" \
+        "php${PHP_VERSION}-common" \
+        "php${PHP_VERSION}-bcmath" \
+        "php${PHP_VERSION}-curl" \
+        "php${PHP_VERSION}-gd" \
+        "php${PHP_VERSION}-intl" \
+        "php${PHP_VERSION}-mbstring" \
+        "php${PHP_VERSION}-pcov" \
+        "php${PHP_VERSION}-pgsql" \
+        "php${PHP_VERSION}-readline" \
+        "php${PHP_VERSION}-redis" \
+        "php${PHP_VERSION}-xdebug" \
+        "php${PHP_VERSION}-xml" \
+        "php${PHP_VERSION}-zip" \
         unzip \
-    && rm -rf /var/lib/apt/lists/*
-
-# O pacote do Xdebug entra em `develop`, que cobra um pedágio pequeno mas
-# permanente em toda rodada. O arquivo é numerado 99 para ser lido depois do
-# 20-xdebug.ini do pacote, e desliga a extensão por padrão; quem precisa dela
-# passa XDEBUG_MODE na chamada, que tem precedência sobre o ini.
-RUN echo 'xdebug.mode=off' > /etc/php/${PHP_VERSION}/cli/conf.d/99-xdebug-off.ini
-
-# O pcov olha só o código do projeto: sem o diretório explícito, ele adivinha um
-# só (app/, src/ ou lib/) e o TIA não veria o legado em ieducar/.
-RUN printf '%s\n' \
+    && rm -rf /var/lib/apt/lists/* \
+    #
+    # O pacote do Xdebug entra em `develop`, que cobra um pedágio pequeno mas
+    # permanente em toda rodada. O arquivo é numerado 99 para ser lido depois do
+    # 20-xdebug.ini do pacote, e desliga a extensão por padrão; quem precisa dela
+    # passa XDEBUG_MODE na chamada, que tem precedência sobre o ini.
+    && echo 'xdebug.mode=off' > "/etc/php/${PHP_VERSION}/cli/conf.d/99-xdebug-off.ini" \
+    #
+    # O pcov olha só o código do projeto: sem o diretório explícito, ele adivinha
+    # um só (app/, src/ ou lib/) e o TIA não veria o legado em ieducar/.
+    && printf '%s\n' \
         'pcov.enabled=1' \
         'pcov.directory=/var/www/ieducar' \
         'pcov.exclude="~/(vendor|node_modules|storage)/~"' \
-        > /etc/php/${PHP_VERSION}/cli/conf.d/99-pcov.ini
+        > "/etc/php/${PHP_VERSION}/cli/conf.d/99-pcov.ini"
 
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 

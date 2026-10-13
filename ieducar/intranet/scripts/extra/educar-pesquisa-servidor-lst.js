@@ -23,8 +23,8 @@
   }
   function setAll(field,value)
   {
-    var elements = window.parent.document.getElementsByName(field);
-    for (var ct = 0;ct < elements.length; ct++) {
+    const elements = window.parent.document.getElementsByName(field);
+    for (let ct = 0;ct < elements.length; ct++) {
     elements[ct].value = value;
   }
   }
