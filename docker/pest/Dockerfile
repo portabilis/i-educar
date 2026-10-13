@@ -54,7 +54,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         curl \
         gnupg \
     && install -d -m 0755 /etc/apt/keyrings \
-    && curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x${ONDREJ_PHP_KEY}" \
+    && curl --proto "=https" --tlsv1.2 -fsSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x${ONDREJ_PHP_KEY}" \
         | gpg --dearmor -o /etc/apt/keyrings/ondrej-php.gpg \
     && echo "deb [signed-by=/etc/apt/keyrings/ondrej-php.gpg] https://ppa.launchpadcontent.net/ondrej/php/ubuntu noble main" \
         > /etc/apt/sources.list.d/ondrej-php.list \
@@ -105,7 +105,7 @@ COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 # A versão precisa ser >= 1.59.1, exigida pelo plugin, e igual à da imagem, para
 # reaproveitar os browsers já presentes em /ms-playwright.
 RUN PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 \
-    npm install --no-save --prefix /var/www/ieducar "playwright@${PLAYWRIGHT_VERSION}"
+    npm install --no-save --ignore-scripts --prefix /var/www/ieducar "playwright@${PLAYWRIGHT_VERSION}"
 
 WORKDIR /var/www/ieducar
 
