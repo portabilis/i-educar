@@ -1,96 +1,16 @@
-name: TIA baseline
+name: TIA Baseline
 
 on:
   push:
-    branches:
-      - main
-
-  workflow_dispatch:
+    branches: [main]
 
 permissions:
   contents: read
   actions: read
 
 jobs:
-  baseline:
-    name: Record TIA baseline
-
-    runs-on: ubuntu-latest
-
-    env:
-      APP_URL: http://localhost:8000
-      APP_ENV: testing
-      DB_CONNECTION: pgsql
-      DB_HOST: localhost
-      DB_PORT: 5432
-      DB_DATABASE: testing
-      DB_USERNAME: postgres
-      DB_PASSWORD: postgres
-      API_ACCESS_KEY: ieducar-access-key
-      API_SECRET_KEY: ieducar-secret-key
-      BROADCAST_DRIVER: log
-      CACHE_STORE: array
-      REDIS_CLIENT: predis
-      QUEUE_CONNECTION: sync
-      SESSION_DRIVER: array
-      LEGACY_SEED_DATA: false
-      COMPOSER_ALLOW_SUPERUSER: 1
-      NODE_OPTIONS: --max_old_space_size=1024
-      GH_TOKEN: ${{ github.token }}
-
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: testing
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
-
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.5'
-          extensions: bcmath, gd, pdo, pcntl, pdo_pgsql, pgsql, zip
-          coverage: pcov
-        env:
-          update: true
-
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-      - name: Cache composer dependencies
-        uses: actions/cache@v6
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Install Dependencies
-        run: composer new-install
-
-      - name: Prepare tests
-        run: php artisan legacy:create:tests
-
-      - name: Record TIA graph
-        run: vendor/bin/pest --tia --baselined
-
-      - name: Locate TIA storage
-        id: tia
-        run: echo "dir=$(vendor/bin/pest --baseline)" >> $GITHUB_OUTPUT
-
-      - name: Publish TIA baseline
-        uses: actions/upload-artifact@v7
-        with:
-          name: pest-tia-baseline
-          path: |
-            ${{ steps.tia.outputs.dir }}/graph.json
-            ${{ steps.tia.outputs.dir }}/coverage.bin.gz
-          if-no-files-found: error
+  tests:
+    uses: ./.github/workflows/tests.yml
+    with:
+      publish-baseline: true
+    secrets: inherit
