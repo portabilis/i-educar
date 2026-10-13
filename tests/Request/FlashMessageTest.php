@@ -63,5 +63,5 @@ test('no login o erro é um alerta e a confirmação é um status', function () 
     $this->withSession(['status' => 'Enviamos o link para o seu e-mail.'])
         ->get('/login?force=1')
         ->assertOk()
-        ->assertSee('<p class="success" role="status">Enviamos o link para o seu e-mail.</p>', false);
+        ->assertSee('<output class="success">Enviamos o link para o seu e-mail.</output>', false);
 });

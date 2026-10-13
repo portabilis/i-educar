@@ -40,7 +40,7 @@
                 </td>
             </tr>
             <tr id="tr_nm_serie">
-                <td class="formmdtd" valign="top"><span class="form">Serie</span></td>
+                <td class="formmdtd" valign="top"><span class="form">Série</span></td>
                 <td class="formmdtd" valign="top">
                     @include('form.select-grade')
                 </td>

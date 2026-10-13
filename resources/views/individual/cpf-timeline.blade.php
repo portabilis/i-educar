@@ -11,7 +11,7 @@
 <a class="decorated" id="link_cpf_timeline" style="cursor: pointer; margin-left: 10px;">Ver histórico</a>
 
 <div id="cpf_timeline_historico" style="display: none;">
-    <table class="tablelistagem" cellspacing="1" cellpadding="4" border="0" style="width: 100%; padding: 0">
+    <table class="tablelistagem" border="0" style="width: 100%; padding: 0; border-spacing: 1px">
         <tbody>
             <tr>
                 <td class="titulo-tabela-listagem" colspan="3">Alterações do CPF</td>
