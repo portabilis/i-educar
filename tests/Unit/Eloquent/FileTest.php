@@ -1,17 +1,10 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\File;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class FileTest extends EloquentTestCase
-{
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return File::class;
-    }
-}
+uses(EloquentModelTestCase::class);
+
+beforeEach(fn () => $this->eloquent(File::class));
+
+EloquentModelTestCase::registerModelTests();

@@ -1,125 +1,110 @@
 <?php
 
-namespace Tests\Unit\Security;
-
-use clsCampos;
-use Core_Controller_Page_ListController;
-use Core_Controller_Page_ViewController;
-use CoreExt_Entity;
-use CoreExt_View_Helper_UrlHelper;
-use TabelaArredondamento_Model_Tabela;
 use Tests\TestCase;
 
 /**
  * CVE-2025-9720, CVE-2025-9721, CVE-2025-7113 e relacionadas: as listagens e os
  * detalhes genéricos dos módulos exibiam os valores gravados sem escape.
  */
-class CoreExtPageEscapingTest extends TestCase
-{
-    private const MARKER = '<b>CVECANARY</b>';
+uses(TestCase::class);
 
-    private function entry(): TabelaArredondamento_Model_Tabela
-    {
+beforeEach(function () {
+    $this->entry = function (): TabelaArredondamento_Model_Tabela {
         return new TabelaArredondamento_Model_Tabela([
             'id' => 1,
-            'nome' => 'x"\'>' . self::MARKER,
+            'nome' => 'x"\'>' . '<b>CVECANARY</b>',
         ]);
-    }
+    };
+});
 
-    public function test_detalhe_escapa_os_valores_da_entidade()
+test('detalhe escapa os valores da entidade', function () {
+    $entry = ($this->entry)();
+
+    $controller = new class($entry) extends Core_Controller_Page_ViewController
     {
-        $entry = $this->entry();
+        protected $_titulo = 'Teste';
 
-        $controller = new class($entry) extends Core_Controller_Page_ViewController
+        protected $_tableMap = ['Nome' => 'nome'];
+
+        public function __construct(private CoreExt_Entity $fakeEntry) {}
+
+        public function getEntry()
         {
-            protected $_titulo = 'Teste';
+            return $this->fakeEntry;
+        }
 
-            protected $_tableMap = ['Nome' => 'nome'];
+        public function setUrlEditar(CoreExt_Entity $entry) {}
 
-            public function __construct(private CoreExt_Entity $fakeEntry) {}
+        public function setUrlCancelar(CoreExt_Entity $entry) {}
+    };
 
-            public function getEntry()
-            {
-                return $this->fakeEntry;
-            }
+    $controller->Gerar();
 
-            public function setUrlEditar(CoreExt_Entity $entry) {}
+    $this->assertSame(['Nome', e($entry->nome)], $controller->detalhe[0]);
+});
 
-            public function setUrlCancelar(CoreExt_Entity $entry) {}
-        };
+test('listagem escapa os valores da entidade', function () {
+    $entry = ($this->entry)();
 
-        $controller->Gerar();
-
-        $this->assertSame(['Nome', e($entry->nome)], $controller->detalhe[0]);
-    }
-
-    public function test_listagem_escapa_os_valores_da_entidade()
+    $controller = new class($entry) extends Core_Controller_Page_ListController
     {
-        $entry = $this->entry();
+        protected $_titulo = 'Teste';
 
-        $controller = new class($entry) extends Core_Controller_Page_ListController
+        protected $_tableMap = ['Nome' => 'nome'];
+
+        public function __construct(private CoreExt_Entity $fakeEntry) {}
+
+        public $nome = 'teste';
+
+        public function getEntries()
         {
-            protected $_titulo = 'Teste';
+            return [$this->fakeEntry];
+        }
 
-            protected $_tableMap = ['Nome' => 'nome'];
+        public function setAcao() {}
+    };
 
-            public function __construct(private CoreExt_Entity $fakeEntry) {}
+    $_GET = ['pagina_teste' => 1];
 
-            public $nome = 'teste';
+    $controller->Gerar();
 
-            public function getEntries()
-            {
-                return [$this->fakeEntry];
-            }
+    $cell = $controller->linhas[0][0];
 
-            public function setAcao() {}
-        };
+    $this->assertStringNotContainsString('<b>CVECANARY</b>', $cell);
+    $this->assertStringContainsString(e('<b>CVECANARY</b>'), $cell);
+});
 
-        $_GET = ['pagina_teste' => 1];
+test('opcoes de lista escapam o texto', function () {
+    $html = (new clsCampos)->getCampoLista(
+        'campo',
+        'campo',
+        '',
+        [1 => 'x"\'>' . '<b>CVECANARY</b>', 2 => 'optgroup:' . '<b>CVECANARY</b>', 3 => 'Educa&ccedil;&atilde;o'],
+        '',
+        '',
+        false,
+        'geral'
+    );
 
-        $controller->Gerar();
+    $this->assertStringNotContainsString('<b>CVECANARY</b>', $html);
+    $this->assertStringContainsString(e('<b>CVECANARY</b>'), $html);
+    $this->assertStringContainsString('Educa&ccedil;&atilde;o', $html);
+});
 
-        $cell = $controller->linhas[0][0];
+test('link do url helper escapa o texto', function () {
+    $html = CoreExt_View_Helper_UrlHelper::l('x"\'>' . '<b>CVECANARY</b>', 'educar_servidor_det.php', ['query' => ['cod_servidor' => 1]]);
 
-        $this->assertStringNotContainsString(self::MARKER, $cell);
-        $this->assertStringContainsString(e(self::MARKER), $cell);
-    }
+    $this->assertStringNotContainsString('<b>CVECANARY</b>', $html);
+    $this->assertStringContainsString(e('<b>CVECANARY</b>'), $html);
+    $this->assertStringStartsWith('<a href="', $html);
+});
 
-    public function test_opcoes_de_lista_escapam_o_texto()
-    {
-        $html = (new clsCampos)->getCampoLista(
-            'campo',
-            'campo',
-            '',
-            [1 => 'x"\'>' . self::MARKER, 2 => 'optgroup:' . self::MARKER, 3 => 'Educa&ccedil;&atilde;o'],
-            '',
-            '',
-            false,
-            'geral'
-        );
+test('campo de cor escapa o valor', function () {
+    $campos = new clsCampos;
+    $campos->campoCor('color', 'Cor', '"><b>CVECANARY</b>', ['#FFFFFF']);
 
-        $this->assertStringNotContainsString(self::MARKER, $html);
-        $this->assertStringContainsString(e(self::MARKER), $html);
-        $this->assertStringContainsString('Educa&ccedil;&atilde;o', $html);
-    }
+    $html = $campos->MakeCampos();
 
-    public function test_link_do_url_helper_escapa_o_texto()
-    {
-        $html = CoreExt_View_Helper_UrlHelper::l('x"\'>' . self::MARKER, 'educar_servidor_det.php', ['query' => ['cod_servidor' => 1]]);
-
-        $this->assertStringNotContainsString(self::MARKER, $html);
-        $this->assertStringContainsString(e(self::MARKER), $html);
-        $this->assertStringStartsWith('<a href="', $html);
-    }
-
-    public function test_campo_de_cor_escapa_o_valor()
-    {
-        $campos = new clsCampos;
-        $campos->campoCor('color', 'Cor', '"><b>CVECANARY</b>', ['#FFFFFF']);
-
-        $html = $campos->MakeCampos();
-
-        $this->assertStringNotContainsString(self::MARKER, $html);
-        $this->assertStringContainsString(e(self::MARKER), $html);
-    }
-}
+    $this->assertStringNotContainsString('<b>CVECANARY</b>', $html);
+    $this->assertStringContainsString(e('<b>CVECANARY</b>'), $html);
+});

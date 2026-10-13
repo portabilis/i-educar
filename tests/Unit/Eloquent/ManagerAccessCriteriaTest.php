@@ -1,19 +1,13 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\ManagerAccessCriteria;
 use App\Models\SchoolManager;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class ManagerAccessCriteriaTest extends EloquentTestCase
-{
-    protected $relations = [
-        'schoolManagers' => SchoolManager::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return ManagerAccessCriteria::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(ManagerAccessCriteria::class, relations: [
+    'schoolManagers' => SchoolManager::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

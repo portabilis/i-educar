@@ -1,19 +1,13 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyRoundingTable;
 use App\Models\LegacyValueRoundingTable;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyValueRoundingTableTest extends EloquentTestCase
-{
-    protected $relations = [
-        'roundingTable' => LegacyRoundingTable::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    public function getEloquentModelName(): string
-    {
-        return LegacyValueRoundingTable::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyValueRoundingTable::class, relations: [
+    'roundingTable' => LegacyRoundingTable::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

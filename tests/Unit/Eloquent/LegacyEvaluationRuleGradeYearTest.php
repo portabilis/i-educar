@@ -1,23 +1,14 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyEvaluationRuleGradeYear;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyEvaluationRuleGradeYearTest extends EloquentTestCase
-{
-    protected $relations = [
-        'evaluationRule' => LegacyEvaluationRule::class,
-        'differentiatedEvaluationRule' => LegacyEvaluationRule::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyEvaluationRuleGradeYear::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyEvaluationRuleGradeYear::class, relations: [
+    'evaluationRule' => LegacyEvaluationRule::class,
+    'differentiatedEvaluationRule' => LegacyEvaluationRule::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

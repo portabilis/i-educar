@@ -1,11 +1,8 @@
 <?php
 
-namespace Tests\Api;
-
 use App\Models\LegacySchool;
 use App\Models\LegacyUser;
 use App\Process;
-use App_Model_NivelTipoUsuario;
 use Database\Factories\LegacyMenuUserTypeFactory;
 use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacySchoolFactory;
@@ -17,35 +14,10 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
 
-class LegacyRegistrationDetTest extends TestCase
-{
-    use DatabaseTransactions, WithoutMiddleware;
+uses(TestCase::class, DatabaseTransactions::class, WithoutMiddleware::class);
 
-    public const ROUTE = '/intranet/educar_matricula_det.php';
-
-    public function test_school_user_is_redirected_from_registration_of_another_school(): void
-    {
-        $user = $this->createSchoolUser(LegacySchoolFactory::new()->create());
-        $registration = LegacyRegistrationFactory::new()->create();
-
-        $this->actingAs($user)
-            ->get(self::ROUTE . '?cod_matricula=' . $registration->getKey())
-            ->assertRedirectContains('educar_aluno_det.php?cod_aluno=' . $registration->ref_cod_aluno);
-    }
-
-    public function test_school_user_sees_registration_of_own_school(): void
-    {
-        $school = LegacySchoolFactory::new()->create();
-        $user = $this->createSchoolUser($school);
-        $registration = LegacyRegistrationFactory::new()->create(['ref_ref_cod_escola' => $school]);
-
-        $this->actingAs($user)
-            ->get(self::ROUTE . '?cod_matricula=' . $registration->getKey())
-            ->assertOk();
-    }
-
-    private function createSchoolUser(LegacySchool $school): LegacyUser
-    {
+beforeEach(function () {
+    $this->createSchoolUser = function (LegacySchool $school): LegacyUser {
         $userType = LegacyUserTypeFactory::new()->create(['nivel' => App_Model_NivelTipoUsuario::ESCOLA]);
 
         LegacyMenuUserTypeFactory::new()->create([
@@ -64,5 +36,24 @@ class LegacyRegistrationDetTest extends TestCase
         ]);
 
         return $user;
-    }
-}
+    };
+});
+
+test('school user is redirected from registration of another school', function () {
+    $user = ($this->createSchoolUser)(LegacySchoolFactory::new()->create());
+    $registration = LegacyRegistrationFactory::new()->create();
+
+    $this->actingAs($user)
+        ->get('/intranet/educar_matricula_det.php' . '?cod_matricula=' . $registration->getKey())
+        ->assertRedirectContains('educar_aluno_det.php?cod_aluno=' . $registration->ref_cod_aluno);
+});
+
+test('school user sees registration of own school', function () {
+    $school = LegacySchoolFactory::new()->create();
+    $user = ($this->createSchoolUser)($school);
+    $registration = LegacyRegistrationFactory::new()->create(['ref_ref_cod_escola' => $school]);
+
+    $this->actingAs($user)
+        ->get('/intranet/educar_matricula_det.php' . '?cod_matricula=' . $registration->getKey())
+        ->assertOk();
+});

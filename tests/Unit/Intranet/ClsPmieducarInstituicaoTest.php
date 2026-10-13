@@ -1,26 +1,20 @@
 <?php
 
-namespace Tests\Unit\Intranet;
-
-use clsPmieducarInstituicao;
 use Database\Factories\LegacyInstitutionFactory;
 use Database\Factories\LegacyUserFactory;
-use ErrorException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
-use TypeError;
 
 /**
  * O que a classe legada de instituição faz e nenhuma tela alcança: o cadastro
  * (a tela de instituição só edita), a exclusão lógica e os atalhos de consulta.
  */
-class ClsPmieducarInstituicaoTest extends TestCase
-{
-    use DatabaseTransactions;
+uses(TestCase::class, DatabaseTransactions::class);
 
-    /** As colunas booleanas que o cadastro e a edição gravam explicitamente. */
-    private const FLAGS = [
+beforeEach(function () {
+    // As colunas booleanas que o cadastro e a edição gravam explicitamente.
+    $this->flags = [
         'gerar_historico_transferencia',
         'controlar_posicao_historicos',
         'matricula_apenas_bairro_escola',
@@ -46,17 +40,7 @@ class ClsPmieducarInstituicaoTest extends TestCase
         'obrigar_telefone_pessoa',
     ];
 
-    private int $user;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = LegacyUserFactory::new()->admin()->create()->getKey();
-    }
-
-    private function nova(bool $flags): clsPmieducarInstituicao
-    {
+    $this->nova = function (bool $flags): clsPmieducarInstituicao {
         $instituicao = new clsPmieducarInstituicao(
             ref_usuario_exc: $this->user,
             ref_usuario_cad: $this->user,
@@ -102,7 +86,7 @@ class ClsPmieducarInstituicaoTest extends TestCase
         $instituicao->coordenador_transporte = '123 - Coordenador Alfa (CPF)';
         $instituicao->orgao_regional = '00042';
 
-        foreach (self::FLAGS as $flag) {
+        foreach ($this->flags as $flag) {
             $instituicao->{$flag} = $flags;
         }
 
@@ -110,178 +94,164 @@ class ClsPmieducarInstituicaoTest extends TestCase
         $instituicao->exigir_dados_socieconomicos = $flags;
 
         return $instituicao;
-    }
+    };
 
-    private function row(int $id): object
-    {
+    $this->row = function (int $id): object {
         return DB::table('pmieducar.instituicao')->where('cod_instituicao', $id)->first();
+    };
+
+    $this->user = LegacyUserFactory::new()->admin()->create()->getKey();
+});
+
+test('cadastra com todos os campos e as opcoes ligadas', function () {
+    $id = ($this->nova)(flags: true)->cadastra();
+
+    $row = ($this->row)($id);
+
+    $this->assertSame('Instituição Alfa', $row->nm_instituicao);
+    $this->assertSame('Responsável Alfa', $row->nm_responsavel);
+    $this->assertSame('RUA', $row->ref_idtlog);
+    $this->assertSame('ZZ', $row->ref_sigla_uf);
+    $this->assertEquals(88900123, $row->cep);
+    $this->assertEquals(742, $row->numero);
+    $this->assertSame('Sala 2', $row->complemento);
+    $this->assertEquals(48, $row->ddd_telefone);
+    $this->assertEquals(34221000, $row->telefone);
+    $this->assertSame('2026-04-15', $row->data_base_remanejamento);
+    $this->assertSame('2026-04-16', $row->data_base_transferencia);
+    $this->assertSame('2026-04-17', $row->data_expiracao_reserva_vaga);
+    $this->assertSame('2026-02-20', $row->data_base_matricula);
+    $this->assertSame('2026-11-30', $row->data_fechamento);
+    $this->assertSame('2026-05-27', $row->data_educacenso);
+    $this->assertEquals(87.5, $row->percentagem_maxima_ocupacao_salas);
+    $this->assertEquals(3, $row->quantidade_alunos_metro_quadrado);
+    $this->assertSame(' Coordenador Alfa ', $row->coordenador_transporte);
+    $this->assertSame('00042', $row->orgao_regional);
+    $this->assertSame(1, $row->ativo);
+
+    foreach ($this->flags as $flag) {
+        $this->assertTrue($row->{$flag}, "a opção [{$flag}] deveria nascer ligada");
     }
+});
 
-    public function test_cadastra_com_todos_os_campos_e_as_opcoes_ligadas(): void
-    {
-        $id = $this->nova(flags: true)->cadastra();
+test('cadastra com as opcoes desligadas', function () {
+    $row = ($this->row)(($this->nova)(flags: false)->cadastra());
 
-        $row = $this->row($id);
-
-        $this->assertSame('Instituição Alfa', $row->nm_instituicao);
-        $this->assertSame('Responsável Alfa', $row->nm_responsavel);
-        $this->assertSame('RUA', $row->ref_idtlog);
-        $this->assertSame('ZZ', $row->ref_sigla_uf);
-        $this->assertEquals(88900123, $row->cep);
-        $this->assertEquals(742, $row->numero);
-        $this->assertSame('Sala 2', $row->complemento);
-        $this->assertEquals(48, $row->ddd_telefone);
-        $this->assertEquals(34221000, $row->telefone);
-        $this->assertSame('2026-04-15', $row->data_base_remanejamento);
-        $this->assertSame('2026-04-16', $row->data_base_transferencia);
-        $this->assertSame('2026-04-17', $row->data_expiracao_reserva_vaga);
-        $this->assertSame('2026-02-20', $row->data_base_matricula);
-        $this->assertSame('2026-11-30', $row->data_fechamento);
-        $this->assertSame('2026-05-27', $row->data_educacenso);
-        $this->assertEquals(87.5, $row->percentagem_maxima_ocupacao_salas);
-        $this->assertEquals(3, $row->quantidade_alunos_metro_quadrado);
-        $this->assertSame(' Coordenador Alfa ', $row->coordenador_transporte);
-        $this->assertSame('00042', $row->orgao_regional);
-        $this->assertSame(1, $row->ativo);
-
-        foreach (self::FLAGS as $flag) {
-            $this->assertTrue($row->{$flag}, "a opção [{$flag}] deveria nascer ligada");
-        }
+    foreach ($this->flags as $flag) {
+        $this->assertFalse($row->{$flag}, "a opção [{$flag}] deveria nascer desligada");
     }
+});
 
-    public function test_cadastra_com_as_opcoes_desligadas(): void
-    {
-        $row = $this->row($this->nova(flags: false)->cadastra());
+test('nao cadastra sem os campos obrigatorios', function () {
+    $instituicao = new clsPmieducarInstituicao(nm_instituicao: 'Instituição incompleta');
 
-        foreach (self::FLAGS as $flag) {
-            $this->assertFalse($row->{$flag}, "a opção [{$flag}] deveria nascer desligada");
-        }
-    }
+    $this->assertFalse($instituicao->canRegister());
+    $this->assertFalse($instituicao->cadastra());
+    $this->assertDatabaseMissing('pmieducar.instituicao', ['nm_instituicao' => 'Instituição incompleta']);
+});
 
-    public function test_nao_cadastra_sem_os_campos_obrigatorios(): void
-    {
-        $instituicao = new clsPmieducarInstituicao(nm_instituicao: 'Instituição incompleta');
+test('edita os campos que a tela nao envia', function () {
+    $id = LegacyInstitutionFactory::new()->create(['nm_instituicao' => 'Instituição Zeta'])->getKey();
 
-        $this->assertFalse($instituicao->canRegister());
-        $this->assertFalse($instituicao->cadastra());
-        $this->assertDatabaseMissing('pmieducar.instituicao', ['nm_instituicao' => 'Instituição incompleta']);
-    }
+    $instituicao = ($this->nova)(flags: true);
+    $instituicao->cod_instituicao = $id;
+    // Na edição, e só nela, a data do Educacenso é esperada no formato brasileiro.
+    $instituicao->data_educacenso = '27/05/2026';
 
-    public function test_edita_os_campos_que_a_tela_nao_envia(): void
-    {
-        $id = LegacyInstitutionFactory::new()->create(['nm_instituicao' => 'Instituição Zeta'])->getKey();
+    $this->assertTrue($instituicao->edita());
 
-        $instituicao = $this->nova(flags: true);
-        $instituicao->cod_instituicao = $id;
-        // Na edição, e só nela, a data do Educacenso é esperada no formato brasileiro.
-        $instituicao->data_educacenso = '27/05/2026';
+    $row = ($this->row)($id);
 
-        $this->assertTrue($instituicao->edita());
+    $this->assertSame('Instituição Alfa', $row->nm_instituicao);
+    $this->assertSame('RUA', $row->ref_idtlog);
+    $this->assertSame($this->user, $row->ref_usuario_exc);
+    $this->assertSame('2026-05-27', $row->data_educacenso);
+    $this->assertNotNull($row->data_exclusao);
+});
 
-        $row = $this->row($id);
+test('nao edita sem o codigo da instituicao', function () {
+    $this->assertFalse(($this->nova)(flags: true)->edita());
+});
 
-        $this->assertSame('Instituição Alfa', $row->nm_instituicao);
-        $this->assertSame('RUA', $row->ref_idtlog);
-        $this->assertSame($this->user, $row->ref_usuario_exc);
-        $this->assertSame('2026-05-27', $row->data_educacenso);
-        $this->assertNotNull($row->data_exclusao);
-    }
+/**
+ * Defeito conhecido: a exclusão reaproveita a edição, que lê propriedades
+ * que um objeto criado só com o código não tem. Nenhuma tela chama este
+ * método. Quando for corrigido, este teste passa a falhar.
+ */
+test('defeito excluir estoura por propriedade indefinida', function () {
+    $id = LegacyInstitutionFactory::new()->create()->getKey();
 
-    public function test_nao_edita_sem_o_codigo_da_instituicao(): void
-    {
-        $this->assertFalse($this->nova(flags: true)->edita());
-    }
+    $this->expectException(ErrorException::class);
+    $this->expectExceptionMessage('matricula_apenas_bairro_escola');
 
-    /**
-     * Defeito conhecido: a exclusão reaproveita a edição, que lê propriedades
-     * que um objeto criado só com o código não tem. Nenhuma tela chama este
-     * método. Quando for corrigido, este teste passa a falhar.
-     */
-    public function test_defeito_excluir_estoura_por_propriedade_indefinida(): void
-    {
-        $id = LegacyInstitutionFactory::new()->create()->getKey();
+    (new clsPmieducarInstituicao(cod_instituicao: $id))->excluir();
+});
 
-        $this->expectException(ErrorException::class);
-        $this->expectExceptionMessage('matricula_apenas_bairro_escola');
+test('nao exclui sem o codigo da instituicao', function () {
+    $this->assertFalse((new clsPmieducarInstituicao)->excluir());
+});
 
-        (new clsPmieducarInstituicao(cod_instituicao: $id))->excluir();
-    }
+test('diz se a instituicao existe', function () {
+    $id = LegacyInstitutionFactory::new()->create()->getKey();
 
-    public function test_nao_exclui_sem_o_codigo_da_instituicao(): void
-    {
-        $this->assertFalse((new clsPmieducarInstituicao)->excluir());
-    }
+    $this->assertNotEmpty((new clsPmieducarInstituicao(cod_instituicao: $id))->existe());
+    $this->assertEmpty((new clsPmieducarInstituicao(cod_instituicao: 0))->existe());
+    $this->assertFalse((new clsPmieducarInstituicao)->existe());
+});
 
-    public function test_diz_se_a_instituicao_existe(): void
-    {
-        $id = LegacyInstitutionFactory::new()->create()->getKey();
+test('detalhe exige um codigo numerico', function () {
+    $id = LegacyInstitutionFactory::new()->create(['nm_instituicao' => 'Instituição Zeta'])->getKey();
 
-        $this->assertNotEmpty((new clsPmieducarInstituicao(cod_instituicao: $id))->existe());
-        $this->assertEmpty((new clsPmieducarInstituicao(cod_instituicao: 0))->existe());
-        $this->assertFalse((new clsPmieducarInstituicao)->existe());
-    }
+    $this->assertSame('Instituição Zeta', (new clsPmieducarInstituicao(cod_instituicao: $id))->detalhe()['nm_instituicao']);
+    $this->assertFalse((new clsPmieducarInstituicao)->detalhe());
+});
 
-    public function test_detalhe_exige_um_codigo_numerico(): void
-    {
-        $id = LegacyInstitutionFactory::new()->create(['nm_instituicao' => 'Instituição Zeta'])->getKey();
+test('devolve a primeira instituicao ativa', function () {
+    DB::table('pmieducar.instituicao')->update(['ativo' => 0]);
 
-        $this->assertSame('Instituição Zeta', (new clsPmieducarInstituicao(cod_instituicao: $id))->detalhe()['nm_instituicao']);
-        $this->assertFalse((new clsPmieducarInstituicao)->detalhe());
-    }
+    $id = LegacyInstitutionFactory::new()->create()->getKey();
 
-    public function test_devolve_a_primeira_instituicao_ativa(): void
-    {
-        DB::table('pmieducar.instituicao')->update(['ativo' => 0]);
+    $this->assertEquals($id, (new clsPmieducarInstituicao)->primeiraAtiva()['cod_instituicao']);
+});
 
-        $id = LegacyInstitutionFactory::new()->create()->getKey();
+/**
+ * Defeito conhecido: sem instituição ativa a listagem devolve falso e o
+ * método tenta contar esse falso.
+ */
+test('defeito primeira ativa estoura sem instituicao ativa', function () {
+    DB::table('pmieducar.instituicao')->update(['ativo' => 0]);
 
-        $this->assertEquals($id, (new clsPmieducarInstituicao)->primeiraAtiva()['cod_instituicao']);
-    }
+    $this->expectException(TypeError::class);
 
-    /**
-     * Defeito conhecido: sem instituição ativa a listagem devolve falso e o
-     * método tenta contar esse falso.
-     */
-    public function test_defeito_primeira_ativa_estoura_sem_instituicao_ativa(): void
-    {
-        DB::table('pmieducar.instituicao')->update(['ativo' => 0]);
+    (new clsPmieducarInstituicao)->primeiraAtiva();
+});
 
-        $this->expectException(TypeError::class);
+test('lista devolve falso quando nada casa', function () {
+    $this->assertFalse((new clsPmieducarInstituicao)->lista(str_nm_instituicao: 'nome-que-nao-existe'));
+});
 
-        (new clsPmieducarInstituicao)->primeiraAtiva();
-    }
+test('lista as inativas quando pedido', function () {
+    $id = LegacyInstitutionFactory::new()->create(['nm_instituicao' => 'Instituição Zeta', 'ativo' => 0])->getKey();
 
-    public function test_lista_devolve_falso_quando_nada_casa(): void
-    {
-        $this->assertFalse((new clsPmieducarInstituicao)->lista(str_nm_instituicao: 'nome-que-nao-existe'));
-    }
+    $lista = (new clsPmieducarInstituicao)->lista(int_ativo: 0, str_nm_instituicao: 'Zeta');
 
-    public function test_lista_as_inativas_quando_pedido(): void
-    {
-        $id = LegacyInstitutionFactory::new()->create(['nm_instituicao' => 'Instituição Zeta', 'ativo' => 0])->getKey();
+    $this->assertCount(1, $lista);
+    $this->assertEquals($id, $lista[0]['cod_instituicao']);
+    $this->assertEquals(1, $lista[0]['_total']);
+});
 
-        $lista = (new clsPmieducarInstituicao)->lista(int_ativo: 0, str_nm_instituicao: 'Zeta');
+test('lista um campo so devolve os valores soltos', function () {
+    LegacyInstitutionFactory::new()->create(['nm_instituicao' => 'Instituição Zeta']);
 
-        $this->assertCount(1, $lista);
-        $this->assertEquals($id, $lista[0]['cod_instituicao']);
-        $this->assertEquals(1, $lista[0]['_total']);
-    }
+    $instituicao = new clsPmieducarInstituicao;
+    $instituicao->setCamposLista('nm_instituicao');
 
-    public function test_lista_um_campo_so_devolve_os_valores_soltos(): void
-    {
-        LegacyInstitutionFactory::new()->create(['nm_instituicao' => 'Instituição Zeta']);
+    $this->assertSame(['Instituição Zeta'], $instituicao->lista(str_nm_instituicao: 'Zeta'));
+});
 
-        $instituicao = new clsPmieducarInstituicao;
-        $instituicao->setCamposLista('nm_instituicao');
+test('recorta o trecho entre dois marcadores', function () {
+    $instituicao = new clsPmieducarInstituicao;
 
-        $this->assertSame(['Instituição Zeta'], $instituicao->lista(str_nm_instituicao: 'Zeta'));
-    }
-
-    public function test_recorta_o_trecho_entre_dois_marcadores(): void
-    {
-        $instituicao = new clsPmieducarInstituicao;
-
-        $this->assertSame(' Coordenador Alfa ', $instituicao->parteString('123 - Coordenador Alfa (CPF)', '-', '('));
-        $this->assertSame(' Coordenador Alfa (CPF)', $instituicao->parteString('123 - Coordenador Alfa (CPF)', '-', null));
-    }
-}
+    $this->assertSame(' Coordenador Alfa ', $instituicao->parteString('123 - Coordenador Alfa (CPF)', '-', '('));
+    $this->assertSame(' Coordenador Alfa (CPF)', $instituicao->parteString('123 - Coordenador Alfa (CPF)', '-', null));
+});

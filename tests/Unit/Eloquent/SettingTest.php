@@ -1,97 +1,87 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Setting;
 use App\SettingCategory;
 use Database\Factories\SettingFactory;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class SettingTest extends EloquentTestCase
-{
-    protected $relations = [
-        'category' => SettingCategory::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return Setting::class;
-    }
+beforeEach(fn () => $this->eloquent(Setting::class, relations: [
+    'category' => SettingCategory::class,
+]));
 
-    /**
-     * @return void
-     */
-    public function test_boolean()
-    {
-        $settingTrueString = SettingFactory::new()->create([
-            'type' => 'boolean',
-            'value' => 'true',
-        ]);
+EloquentModelTestCase::registerModelTests();
 
-        $settingOneString = SettingFactory::new()->create([
-            'type' => 'boolean',
-            'value' => '1',
-        ]);
+/**
+ * @return void
+ */
+test('boolean', function () {
+    $settingTrueString = SettingFactory::new()->create([
+        'type' => 'boolean',
+        'value' => 'true',
+    ]);
 
-        $settingOne = SettingFactory::new()->create([
-            'type' => 'boolean',
-            'value' => 1,
-        ]);
+    $settingOneString = SettingFactory::new()->create([
+        'type' => 'boolean',
+        'value' => '1',
+    ]);
 
-        $settingTrue = SettingFactory::new()->create([
-            'type' => 'boolean',
-            'value' => true,
-        ]);
+    $settingOne = SettingFactory::new()->create([
+        'type' => 'boolean',
+        'value' => 1,
+    ]);
 
-        $this->assertTrue($settingTrueString->value);
-        $this->assertTrue($settingOneString->value);
-        $this->assertTrue($settingOne->value);
-        $this->assertTrue($settingTrue->value);
+    $settingTrue = SettingFactory::new()->create([
+        'type' => 'boolean',
+        'value' => true,
+    ]);
 
-        $settingFalseString = SettingFactory::new()->create([
-            'type' => 'boolean',
-            'value' => 'false',
-        ]);
+    $this->assertTrue($settingTrueString->value);
+    $this->assertTrue($settingOneString->value);
+    $this->assertTrue($settingOne->value);
+    $this->assertTrue($settingTrue->value);
 
-        $settingFalseZeroString = SettingFactory::new()->create([
-            'type' => 'boolean',
-            'value' => '0',
-        ]);
+    $settingFalseString = SettingFactory::new()->create([
+        'type' => 'boolean',
+        'value' => 'false',
+    ]);
 
-        $settingFalseZero = SettingFactory::new()->create([
-            'type' => 'boolean',
-            'value' => 0,
-        ]);
+    $settingFalseZeroString = SettingFactory::new()->create([
+        'type' => 'boolean',
+        'value' => '0',
+    ]);
 
-        $settingFalse = SettingFactory::new()->create([
-            'type' => 'boolean',
-            'value' => false,
-        ]);
+    $settingFalseZero = SettingFactory::new()->create([
+        'type' => 'boolean',
+        'value' => 0,
+    ]);
 
-        $settingFalseEmptyString = SettingFactory::new()->create([
-            'type' => 'boolean',
-            'value' => '',
-        ]);
+    $settingFalse = SettingFactory::new()->create([
+        'type' => 'boolean',
+        'value' => false,
+    ]);
 
-        $settingFalseNull = SettingFactory::new()->create([
-            'type' => 'boolean',
-            'value' => null,
-        ]);
+    $settingFalseEmptyString = SettingFactory::new()->create([
+        'type' => 'boolean',
+        'value' => '',
+    ]);
 
-        $settingFalseNullString = SettingFactory::new()->create([
-            'type' => 'boolean',
-            'value' => 'null',
-        ]);
+    $settingFalseNull = SettingFactory::new()->create([
+        'type' => 'boolean',
+        'value' => null,
+    ]);
 
-        $this->assertFalse($settingFalseString->value);
-        $this->assertFalse($settingFalseZeroString->value);
-        $this->assertFalse($settingFalseZero->value);
-        $this->assertFalse($settingFalse->value);
-        $this->assertFalse($settingFalseEmptyString->value);
-        $this->assertFalse($settingFalseNull->value);
-        $this->assertFalse($settingFalseNullString->value);
-    }
-}
+    $settingFalseNullString = SettingFactory::new()->create([
+        'type' => 'boolean',
+        'value' => 'null',
+    ]);
+
+    $this->assertFalse($settingFalseString->value);
+    $this->assertFalse($settingFalseZeroString->value);
+    $this->assertFalse($settingFalseZero->value);
+    $this->assertFalse($settingFalse->value);
+    $this->assertFalse($settingFalseEmptyString->value);
+    $this->assertFalse($settingFalseNull->value);
+    $this->assertFalse($settingFalseNullString->value);
+});

@@ -773,6 +773,26 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     }
 
     /**
+     * Configura opções da regra no beforeEach dos testes Pest.
+     *
+     * O beforeEach roda depois do setUp(), então, além de alterar as opções,
+     * refaz as configurações do setUp() que dependem delas: as instâncias de
+     * Avaliacao_Model_FaltaAluno ('tipoPresenca') e de
+     * Avaliacao_Model_ParecerDescritivoAluno ('parecerDescritivo').
+     *
+     * @return $this
+     */
+    public function configuraRegra(array $options)
+    {
+        foreach ($options as $key => $value) {
+            $this->_setRegraOption($key, $value);
+        }
+
+        return $this->_setConfigOptions('faltaAluno', $this->_getFaltaAluno())
+            ->_setConfigOptions('parecerDescritivoAluno', $this->_getParecerDescritivoAluno());
+    }
+
+    /**
      * @return FormulaMedia_Model_Formula
      */
     protected function _setUpFormulaMedia()

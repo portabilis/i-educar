@@ -1,41 +1,31 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyCourse;
 use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
 use App\Models\LegacyGrade;
 use App\Models\LegacyInstitution;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyCourseTest extends EloquentTestCase
-{
-    protected $relations = [
-        'grades' => LegacyGrade::class,
-        'educationType' => LegacyEducationType::class,
-        'educationLevel' => LegacyEducationLevel::class,
-        'institution' => LegacyInstitution::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyCourse::class;
-    }
+beforeEach(fn () => $this->eloquent(LegacyCourse::class, relations: [
+    'grades' => LegacyGrade::class,
+    'educationType' => LegacyEducationType::class,
+    'educationLevel' => LegacyEducationLevel::class,
+    'institution' => LegacyInstitution::class,
+]));
 
-    public function test_attributes()
-    {
-        $this->assertEquals($this->model->id, $this->model->cod_curso);
-        $this->assertEquals($this->model->description, $this->model->descricao);
-        $this->assertEquals($this->model->steps, $this->model->qtd_etapas);
-        $expected = $this->model->nm_curso . ' (' . $this->model->description . ')';
-        $this->assertEquals($expected, $this->model->name);
+EloquentModelTestCase::registerModelTests();
 
-        $this->model->description = null;
-        $this->assertEquals($this->model->name, $this->model->nm_curso);
-        $this->assertEquals($this->model->isStandardCalendar, $this->model->padrao_ano_escolar);
-    }
-}
+test('attributes', function () {
+    $this->assertEquals($this->model->id, $this->model->cod_curso);
+    $this->assertEquals($this->model->description, $this->model->descricao);
+    $this->assertEquals($this->model->steps, $this->model->qtd_etapas);
+    $expected = $this->model->nm_curso . ' (' . $this->model->description . ')';
+    $this->assertEquals($expected, $this->model->name);
+
+    $this->model->description = null;
+    $this->assertEquals($this->model->name, $this->model->nm_curso);
+    $this->assertEquals($this->model->isStandardCalendar, $this->model->padrao_ano_escolar);
+});

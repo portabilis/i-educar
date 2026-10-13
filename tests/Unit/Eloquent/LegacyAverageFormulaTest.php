@@ -1,17 +1,10 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyAverageFormula;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyAverageFormulaTest extends EloquentTestCase
-{
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyAverageFormula::class;
-    }
-}
+uses(EloquentModelTestCase::class);
+
+beforeEach(fn () => $this->eloquent(LegacyAverageFormula::class));
+
+EloquentModelTestCase::registerModelTests();

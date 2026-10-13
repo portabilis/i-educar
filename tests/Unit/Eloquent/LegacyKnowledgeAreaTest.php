@@ -1,19 +1,13 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyInstitution;
 use App\Models\LegacyKnowledgeArea;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyKnowledgeAreaTest extends EloquentTestCase
-{
-    protected $relations = [
-        'institution' => LegacyInstitution::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return LegacyKnowledgeArea::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyKnowledgeArea::class, relations: [
+    'institution' => LegacyInstitution::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

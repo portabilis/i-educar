@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests\Api;
-
 use App\Models\LegacyDisciplineDescriptiveOpinion;
 use App\Models\LegacyGeneralDescriptiveOpinion;
 use Database\Factories\LegacyCourseFactory;
@@ -18,144 +16,139 @@ use Database\Factories\LegacySchoolFactory;
 use Database\Factories\LegacySchoolGradeDisciplineFactory;
 use Database\Factories\LegacySchoolGradeFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use RegraAvaliacao_Model_TipoParecerDescritivo;
+use Tests\Api\DiarioApiRequestTestTrait;
 use Tests\TestCase;
 
-class DiarioPostaPareceresEtapaGeralTest extends TestCase
-{
-    use DatabaseTransactions;
-    use DiarioApiRequestTestTrait;
+uses(TestCase::class, DatabaseTransactions::class, DiarioApiRequestTestTrait::class);
 
-    public function test_posta_pareceres_anual_geral()
-    {
-        $school = LegacySchoolFactory::new()->create();
+test('posta pareceres anual geral', function () {
+    $school = LegacySchoolFactory::new()->create();
 
-        $course = LegacyCourseFactory::new()->standardAcademicYear()->create();
+    $course = LegacyCourseFactory::new()->standardAcademicYear()->create();
 
-        $level = LegacyGradeFactory::new()->create([
-            'ref_cod_curso' => $course,
-            'dias_letivos' => '200',
-        ]);
+    $level = LegacyGradeFactory::new()->create([
+        'ref_cod_curso' => $course,
+        'dias_letivos' => '200',
+    ]);
 
-        $schoolGrade = LegacySchoolGradeFactory::new()->create([
-            'ref_cod_serie' => $level,
-            'ref_cod_escola' => $school,
-        ]);
+    $schoolGrade = LegacySchoolGradeFactory::new()->create([
+        'ref_cod_serie' => $level,
+        'ref_cod_escola' => $school,
+    ]);
 
-        $schoolClass = LegacySchoolClassFactory::new()->create([
-            'ref_ref_cod_escola' => $schoolGrade->school_id,
-            'ref_ref_cod_serie' => $schoolGrade->grade_id,
-            'ref_cod_curso' => $course,
-        ]);
+    $schoolClass = LegacySchoolClassFactory::new()->create([
+        'ref_ref_cod_escola' => $schoolGrade->school_id,
+        'ref_ref_cod_serie' => $schoolGrade->grade_id,
+        'ref_cod_curso' => $course,
+    ]);
 
-        $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
-            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
-        ]);
+    $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
+        'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
+    ]);
 
-        $discipline = LegacyDisciplineFactory::new()->create();
-        LegacyDisciplineSchoolClassFactory::new()->create([
-            'componente_curricular_id' => $discipline,
-            'escola_id' => $school,
-            'turma_id' => $schoolClass,
-        ]);
+    $discipline = LegacyDisciplineFactory::new()->create();
+    LegacyDisciplineSchoolClassFactory::new()->create([
+        'componente_curricular_id' => $discipline,
+        'escola_id' => $school,
+        'turma_id' => $schoolClass,
+    ]);
 
-        LegacyDisciplineAcademicYearFactory::new()->create([
-            'componente_curricular_id' => $discipline,
-            'ano_escolar_id' => $schoolClass->grade_id,
-            'anos_letivos' => $schoolGrade->anos_letivos,
-            'hora_falta' => null,
-        ]);
+    LegacyDisciplineAcademicYearFactory::new()->create([
+        'componente_curricular_id' => $discipline,
+        'ano_escolar_id' => $schoolClass->grade_id,
+        'anos_letivos' => $schoolGrade->anos_letivos,
+        'hora_falta' => null,
+    ]);
 
-        $evaluationRuleGradeYear = LegacyEvaluationRuleGradeYearFactory::new()->create([
-            'regra_avaliacao_id' => $evaluationRule->getKey(),
-            'serie_id' => $level,
-        ]);
+    $evaluationRuleGradeYear = LegacyEvaluationRuleGradeYearFactory::new()->create([
+        'regra_avaliacao_id' => $evaluationRule->getKey(),
+        'serie_id' => $level,
+    ]);
 
-        $registration = LegacyRegistrationFactory::new()->create([
-            'ano' => $evaluationRuleGradeYear->ano_letivo,
-            'ref_ref_cod_serie' => $level,
-            'ref_ref_cod_escola' => $school,
-        ]);
+    $registration = LegacyRegistrationFactory::new()->create([
+        'ano' => $evaluationRuleGradeYear->ano_letivo,
+        'ref_ref_cod_serie' => $level,
+        'ref_ref_cod_escola' => $school,
+    ]);
 
-        $enrollment = LegacyEnrollmentFactory::new()->create([
-            'ref_cod_matricula' => $registration,
-        ]);
+    $enrollment = LegacyEnrollmentFactory::new()->create([
+        'ref_cod_matricula' => $registration,
+    ]);
 
-        $schoolGradeDiscipline = LegacySchoolGradeDisciplineFactory::new()->create([
-            'ref_ref_cod_escola' => $schoolGrade->ref_cod_escola,
-            'ref_ref_cod_serie' => $schoolGrade->ref_cod_serie,
-            'ref_cod_disciplina' => $discipline,
-            'anos_letivos' => $schoolGrade->anos_letivos,
-        ]);
+    $schoolGradeDiscipline = LegacySchoolGradeDisciplineFactory::new()->create([
+        'ref_ref_cod_escola' => $schoolGrade->ref_cod_escola,
+        'ref_ref_cod_serie' => $schoolGrade->ref_cod_serie,
+        'ref_cod_disciplina' => $discipline,
+        'anos_letivos' => $schoolGrade->anos_letivos,
+    ]);
 
-        $data = [
-            'oper' => 'post',
-            'resource' => 'pareceres-por-etapa-geral',
-            'etapa' => 1,
-            'pareceres' => [
-                $enrollment->ref_cod_turma => [
-                    $registration->ref_cod_aluno => [
-                        'valor' => $parecer = 'Desenvolve atividades com autonomia e responsabilidade, demonstrando interesse e iniciativa.',
-                    ],
+    $data = [
+        'oper' => 'post',
+        'resource' => 'pareceres-por-etapa-geral',
+        'etapa' => 1,
+        'pareceres' => [
+            $enrollment->ref_cod_turma => [
+                $registration->ref_cod_aluno => [
+                    'valor' => $parecer = 'Desenvolve atividades com autonomia e responsabilidade, demonstrando interesse e iniciativa.',
                 ],
             ],
-        ];
+        ],
+    ];
 
-        $response = $this->postResource('/module/Api/Diario', $data);
+    $response = $this->postResource('/module/Api/Diario', $data);
 
-        $response->assertSuccessful()
-            ->assertJson(
-                [
-                    'oper' => 'post',
-                    'resource' => 'pareceres-por-etapa-geral',
-                    'msgs' => [
-                        0 => [
-                            'msg' => 'Pareceres postados com sucesso!',
-                            'type' => 'success',
-                        ],
+    $response->assertSuccessful()
+        ->assertJson(
+            [
+                'oper' => 'post',
+                'resource' => 'pareceres-por-etapa-geral',
+                'msgs' => [
+                    0 => [
+                        'msg' => 'Pareceres postados com sucesso!',
+                        'type' => 'success',
                     ],
-                    'any_error_msg' => false,
-                ]
-            );
+                ],
+                'any_error_msg' => false,
+            ]
+        );
 
-        $generalDescriptiveOpinion = LegacyGeneralDescriptiveOpinion::first();
+    $generalDescriptiveOpinion = LegacyGeneralDescriptiveOpinion::first();
 
-        $this->assertDatabaseHas($generalDescriptiveOpinion->studentDescriptiveOpinion->getTable(), [
-            'matricula_id' => $registration->getKey(),
-            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
-        ]);
+    $this->assertDatabaseHas($generalDescriptiveOpinion->studentDescriptiveOpinion->getTable(), [
+        'matricula_id' => $registration->getKey(),
+        'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
+    ]);
 
-        $this->assertDatabaseHas($generalDescriptiveOpinion->getTable(), [
-            'parecer_aluno_id' => $generalDescriptiveOpinion->studentDescriptiveOpinion->getKey(),
-            'parecer' => $parecer,
-            'etapa' => 1,
-        ]);
-        $this->assertDatabaseCount($generalDescriptiveOpinion->studentDescriptiveOpinion->getTable(), 1);
-        $this->assertDatabaseCount($generalDescriptiveOpinion->getTable(), 1);
-        $this->assertDatabaseCount(LegacyDisciplineDescriptiveOpinion::class, 0);
-        // alterando a regra de avaliação da série
-        $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
-            'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
-        ]);
-        $evaluationRuleGradeYear->update(['regra_avaliacao_id' => $evaluationRule->getKey()]);
-        $response = $this->getResource('/module/Api/Diario', $data);
-        $response->assertSuccessful()
-            ->assertJson(
-                [
-                    'error' => [
-                        'code' => 0,
-                        'message' => "A regra da turma {$enrollment->ref_cod_turma} não permite lançamento de pareceres por etapa geral.",
+    $this->assertDatabaseHas($generalDescriptiveOpinion->getTable(), [
+        'parecer_aluno_id' => $generalDescriptiveOpinion->studentDescriptiveOpinion->getKey(),
+        'parecer' => $parecer,
+        'etapa' => 1,
+    ]);
+    $this->assertDatabaseCount($generalDescriptiveOpinion->studentDescriptiveOpinion->getTable(), 1);
+    $this->assertDatabaseCount($generalDescriptiveOpinion->getTable(), 1);
+    $this->assertDatabaseCount(LegacyDisciplineDescriptiveOpinion::class, 0);
+    // alterando a regra de avaliação da série
+    $evaluationRule = LegacyEvaluationRuleFactory::new()->create([
+        'parecer_descritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
+    ]);
+    $evaluationRuleGradeYear->update(['regra_avaliacao_id' => $evaluationRule->getKey()]);
+    $response = $this->getResource('/module/Api/Diario', $data);
+    $response->assertSuccessful()
+        ->assertJson(
+            [
+                'error' => [
+                    'code' => 0,
+                    'message' => "A regra da turma {$enrollment->ref_cod_turma} não permite lançamento de pareceres por etapa geral.",
+                ],
+                'oper' => 'post',
+                'resource' => 'pareceres-por-etapa-geral',
+                'msgs' => [
+                    [
+                        'msg' => "A regra da turma {$enrollment->ref_cod_turma} não permite lançamento de pareceres por etapa geral.",
+                        'type' => 'error',
                     ],
-                    'oper' => 'post',
-                    'resource' => 'pareceres-por-etapa-geral',
-                    'msgs' => [
-                        [
-                            'msg' => "A regra da turma {$enrollment->ref_cod_turma} não permite lançamento de pareceres por etapa geral.",
-                            'type' => 'error',
-                        ],
-                    ],
-                    'any_error_msg' => true,
-                ]
-            );
-    }
-}
+                ],
+                'any_error_msg' => true,
+            ]
+        );
+});

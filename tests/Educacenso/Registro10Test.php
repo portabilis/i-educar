@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests\Educacenso;
-
 use App\Models\Educacenso\Registro10;
 use Database\Factories\LegacySchoolClassFactory;
 use iEducar\Modules\Educacenso\Model\Equipamentos;
@@ -14,80 +12,73 @@ use iEducar\Modules\Educacenso\Validator\School\HasDifferentStepsOfChildEducatio
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class Registro10Test extends TestCase
-{
-    use DatabaseTransactions;
+uses(TestCase::class, DatabaseTransactions::class);
 
-    public function test_nenhum_junto_de_outra_opcao_e_preenchimento_incorreto(): void
-    {
-        $registro = new Registro10;
-        $registro->equipamentos = [Equipamentos::NENHUM_EQUIPAMENTO_LISTADO, 1];
-        $registro->redeLocal = [RedeLocal::NENHUMA, RedeLocal::A_CABO];
-        $registro->instrumentosPedagogicos = [InstrumentosPedagogicos::NENHUM_DOS_INSTRUMENTOS_LISTADOS, 1];
+test('nenhum junto de outra opcao e preenchimento incorreto', function () {
+    $registro = new Registro10;
+    $registro->equipamentos = [Equipamentos::NENHUM_EQUIPAMENTO_LISTADO, 1];
+    $registro->redeLocal = [RedeLocal::NENHUMA, RedeLocal::A_CABO];
+    $registro->instrumentosPedagogicos = [InstrumentosPedagogicos::NENHUM_DOS_INSTRUMENTOS_LISTADOS, 1];
 
-        $this->assertTrue($registro->EquipamentosPreenchidosIncorretamente());
-        $this->assertTrue($registro->redeLocalInexistenteEOutrosCamposPreenchidos());
-        $this->assertTrue($registro->instrumentosPedagogicosPreenchidosIncorretamente());
+    $this->assertTrue($registro->EquipamentosPreenchidosIncorretamente());
+    $this->assertTrue($registro->redeLocalInexistenteEOutrosCamposPreenchidos());
+    $this->assertTrue($registro->instrumentosPedagogicosPreenchidosIncorretamente());
 
-        $registro->equipamentos = [Equipamentos::NENHUM_EQUIPAMENTO_LISTADO];
-        $registro->instrumentosPedagogicos = [1];
+    $registro->equipamentos = [Equipamentos::NENHUM_EQUIPAMENTO_LISTADO];
+    $registro->instrumentosPedagogicos = [1];
 
-        $this->assertFalse($registro->EquipamentosPreenchidosIncorretamente());
-        $this->assertFalse($registro->instrumentosPedagogicosPreenchidosIncorretamente());
-    }
+    $this->assertFalse($registro->EquipamentosPreenchidosIncorretamente());
+    $this->assertFalse($registro->instrumentosPedagogicosPreenchidosIncorretamente());
+});
 
-    public function test_computadores_profissionais_e_equipamentos_contam_quando_algum_foi_informado(): void
-    {
-        $registro = new Registro10;
+test('computadores profissionais e equipamentos contam quando algum foi informado', function () {
+    $registro = new Registro10;
 
-        $this->assertTrue($registro->quantidadeComputadoresAlunosNaoPreenchida());
-        $this->assertFalse($registro->possuiComputadoresDeMesaTabletsEPortateis());
-        $this->assertFalse((bool) $registro->quantidadeProfissionaisPreenchida());
-        $this->assertFalse((bool) $registro->existeEquipamentos());
+    $this->assertTrue($registro->quantidadeComputadoresAlunosNaoPreenchida());
+    $this->assertFalse($registro->possuiComputadoresDeMesaTabletsEPortateis());
+    $this->assertFalse((bool) $registro->quantidadeProfissionaisPreenchida());
+    $this->assertFalse((bool) $registro->existeEquipamentos());
 
-        $registro->quantidadeComputadoresAlunosTablets = 3;
-        $registro->qtdOrientadorComunitario = 1;
-        $registro->impressorasMultifuncionais = 2;
+    $registro->quantidadeComputadoresAlunosTablets = 3;
+    $registro->qtdOrientadorComunitario = 1;
+    $registro->impressorasMultifuncionais = 2;
 
-        $this->assertFalse($registro->quantidadeComputadoresAlunosNaoPreenchida());
-        $this->assertTrue($registro->possuiComputadoresDeMesaTabletsEPortateis());
-        $this->assertTrue((bool) $registro->quantidadeProfissionaisPreenchida());
-        $this->assertTrue((bool) $registro->existeEquipamentos());
-    }
+    $this->assertFalse($registro->quantidadeComputadoresAlunosNaoPreenchida());
+    $this->assertTrue($registro->possuiComputadoresDeMesaTabletsEPortateis());
+    $this->assertTrue((bool) $registro->quantidadeProfissionaisPreenchida());
+    $this->assertTrue((bool) $registro->existeEquipamentos());
+});
 
-    public function test_reconhece_a_organizacao_do_ensino_as_cotas_e_a_lingua_portuguesa(): void
-    {
-        $registro = new Registro10;
-        $registro->organizacaoEnsino = [OrganizacaoEnsino::SERIE_ANO, OrganizacaoEnsino::MODULOS];
-        $registro->reservaVagasCotas = [ReservaVagasCotas::PCD, ReservaVagasCotas::OUTROS];
-        $registro->linguaMinistrada = LinguaMinistrada::INDIGENA_E_PORTUGUESA;
+test('reconhece a organizacao do ensino as cotas e a lingua portuguesa', function () {
+    $registro = new Registro10;
+    $registro->organizacaoEnsino = [OrganizacaoEnsino::SERIE_ANO, OrganizacaoEnsino::MODULOS];
+    $registro->reservaVagasCotas = [ReservaVagasCotas::PCD, ReservaVagasCotas::OUTROS];
+    $registro->linguaMinistrada = LinguaMinistrada::INDIGENA_E_PORTUGUESA;
 
-        $this->assertTrue($registro->organizacaoEnsinoSerieAno());
-        $this->assertFalse($registro->organizacaoEnsinoPeriodosSemestrais());
-        $this->assertFalse($registro->organizacaoEnsinoCliclosEnsinoFundamental());
-        $this->assertFalse($registro->organizacaoEnsinoGruposNaoSeriados());
-        $this->assertTrue($registro->organizacaoEnsinoModulos());
-        $this->assertFalse($registro->reservaVagasCotasNaoPossui());
-        $this->assertFalse($registro->reservaVagasCotasAutodeclaracaoPpi());
-        $this->assertFalse($registro->reservaVagasCotasCondicaoRenda());
-        $this->assertFalse($registro->reservaVagasCotasEscolaPublica());
-        $this->assertTrue($registro->reservaVagasCotasPcd());
-        $this->assertTrue($registro->reservaVagasCotasOutros());
-        $this->assertTrue($registro->linguaMinistradaPortugues());
-    }
+    $this->assertTrue($registro->organizacaoEnsinoSerieAno());
+    $this->assertFalse($registro->organizacaoEnsinoPeriodosSemestrais());
+    $this->assertFalse($registro->organizacaoEnsinoCliclosEnsinoFundamental());
+    $this->assertFalse($registro->organizacaoEnsinoGruposNaoSeriados());
+    $this->assertTrue($registro->organizacaoEnsinoModulos());
+    $this->assertFalse($registro->reservaVagasCotasNaoPossui());
+    $this->assertFalse($registro->reservaVagasCotasAutodeclaracaoPpi());
+    $this->assertFalse($registro->reservaVagasCotasCondicaoRenda());
+    $this->assertFalse($registro->reservaVagasCotasEscolaPublica());
+    $this->assertTrue($registro->reservaVagasCotasPcd());
+    $this->assertTrue($registro->reservaVagasCotasOutros());
+    $this->assertTrue($registro->linguaMinistradaPortugues());
+});
 
-    public function test_a_escola_precisa_de_turma_fora_da_educacao_infantil(): void
-    {
-        $infantil = LegacySchoolClassFactory::new()->create(['etapa_educacenso' => 1]);
+test('a escola precisa de turma fora da educacao infantil', function () {
+    $infantil = LegacySchoolClassFactory::new()->create(['etapa_educacenso' => 1]);
 
-        $registro = new Registro10;
-        $registro->codEscola = $infantil->ref_ref_cod_escola;
+    $registro = new Registro10;
+    $registro->codEscola = $infantil->ref_ref_cod_escola;
 
-        $this->assertFalse($registro->HasDifferentStepsOfChildEducation());
-        $this->assertSame('Não existem turmas diferentes de Educação infantil nesta escola', (new HasDifferentStepsOfChildEducationValidator($registro->codEscola))->getMessage());
+    $this->assertFalse($registro->HasDifferentStepsOfChildEducation());
+    $this->assertSame('Não existem turmas diferentes de Educação infantil nesta escola', (new HasDifferentStepsOfChildEducationValidator($registro->codEscola))->getMessage());
 
-        LegacySchoolClassFactory::new()->create($infantil->only(['ref_ref_cod_escola', 'ref_ref_cod_serie', 'ref_cod_curso', 'ref_cod_instituicao']) + ['etapa_educacenso' => 14]);
+    LegacySchoolClassFactory::new()->create($infantil->only(['ref_ref_cod_escola', 'ref_ref_cod_serie', 'ref_cod_curso', 'ref_cod_instituicao']) + ['etapa_educacenso' => 14]);
 
-        $this->assertTrue($registro->HasDifferentStepsOfChildEducation());
-    }
-}
+    $this->assertTrue($registro->HasDifferentStepsOfChildEducation());
+});

@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests\Feature\Security;
-
 use App\Models\State;
 use Database\Factories\LegacyAcademicYearStageFactory;
 use Database\Factories\LegacyBenefitFactory;
@@ -21,188 +19,151 @@ use Illuminate\Testing\TestResponse;
 use Tests\LoginFirstUser;
 use Tests\TestCase;
 
-/**
- * Garante que valores vindos da requisição ou gravados no banco sejam
- * escapados nas telas legadas apontadas pelas CVEs de XSS.
- */
-class LegacyXssTest extends TestCase
-{
-    use DatabaseTransactions, LoginFirstUser, WithoutMiddleware;
+uses(TestCase::class, DatabaseTransactions::class, LoginFirstUser::class, WithoutMiddleware::class);
 
-    private const MARKER = '<b>CVECANARY</b>';
-
-    private const PAYLOAD = 'x"\'>' . self::MARKER;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->loginWithFirstUser();
-    }
-
-    private function assertEscaped(TestResponse $response): void
-    {
+beforeEach(function () {
+    $this->assertEscaped = function (TestResponse $response): void {
         $response->assertSuccessful();
-        $response->assertDontSee(self::MARKER, false);
-        $response->assertSee(e(self::MARKER), false);
-    }
+        $response->assertDontSee('<b>CVECANARY</b>', false);
+        $response->assertSee(e('<b>CVECANARY</b>'), false);
+    };
 
-    public function test_paginador_escapa_os_parametros_mantidos()
-    {
-        LegacyRaceFactory::new()->create();
+    $this->loginWithFirstUser();
+});
 
-        $response = $this->get('/intranet/educar_raca_lst.php?' . http_build_query(['filtro' => self::PAYLOAD]));
+test('paginador escapa os parametros mantidos', function () {
+    LegacyRaceFactory::new()->create();
 
-        $response->assertSuccessful();
-        $response->assertDontSee(self::MARKER, false);
-        $response->assertSee('filtro=' . urlencode(self::PAYLOAD), false);
-    }
+    $response = $this->get('/intranet/educar_raca_lst.php?' . http_build_query(['filtro' => ('x"\'>' . '<b>CVECANARY</b>')]));
 
-    public function test_listagem_escapa_a_ordenacao_enviada()
-    {
-        LegacyRaceFactory::new()->create();
+    $response->assertSuccessful();
+    $response->assertDontSee('<b>CVECANARY</b>', false);
+    $response->assertSee('filtro=' . urlencode(('x"\'>' . '<b>CVECANARY</b>')), false);
+});
 
-        $this->assertEscaped(
-            $this->post('/intranet/educar_raca_lst.php', ['ordenacao' => self::PAYLOAD])
-        );
-    }
+test('listagem escapa a ordenacao enviada', function () {
+    LegacyRaceFactory::new()->create();
 
-    public function test_campo_cpf_escapa_o_valor_informado()
-    {
-        $this->assertEscaped(
-            $this->get('/intranet/pesquisa_pessoa_lst.php?' . http_build_query(['cpf' => self::PAYLOAD]))
-        );
-    }
+    ($this->assertEscaped)(
+        $this->post('/intranet/educar_raca_lst.php', ['ordenacao' => ('x"\'>' . '<b>CVECANARY</b>')])
+    );
+});
 
-    public function test_cadastro_escapa_o_tipoacao_enviado()
-    {
-        $this->assertEscaped(
-            $this->post('/intranet/educar_funcao_cad.php', ['tipoacao' => self::PAYLOAD])
-        );
-    }
+test('campo cpf escapa o valor informado', function () {
+    ($this->assertEscaped)(
+        $this->get('/intranet/pesquisa_pessoa_lst.php?' . http_build_query(['cpf' => ('x"\'>' . '<b>CVECANARY</b>')]))
+    );
+});
 
-    public function test_listagem_de_matriculas_usa_o_codigo_do_aluno_como_inteiro()
-    {
-        $student = LegacyStudentFactory::new()->create();
+test('cadastro escapa o tipoacao enviado', function () {
+    ($this->assertEscaped)(
+        $this->post('/intranet/educar_funcao_cad.php', ['tipoacao' => ('x"\'>' . '<b>CVECANARY</b>')])
+    );
+});
 
-        $response = $this->get('/intranet/educar_matricula_lst.php?' . http_build_query([
-            'ref_cod_aluno' => $student->getKey() . self::PAYLOAD,
-        ]));
+test('listagem de matriculas usa o codigo do aluno como inteiro', function () {
+    $student = LegacyStudentFactory::new()->create();
 
-        $response->assertSuccessful();
-        $response->assertDontSee('CVECANARY', false);
-    }
+    $response = $this->get('/intranet/educar_matricula_lst.php?' . http_build_query([
+        'ref_cod_aluno' => $student->getKey() . ('x"\'>' . '<b>CVECANARY</b>'),
+    ]));
 
-    public function test_listagem_de_beneficios_escapa_o_nome_gravado()
-    {
-        LegacyBenefitFactory::new()->create(['name' => self::PAYLOAD]);
+    $response->assertSuccessful();
+    $response->assertDontSee('CVECANARY', false);
+});
 
-        $this->assertEscaped($this->get('/intranet/educar_aluno_beneficio_lst.php'));
-    }
+test('listagem de beneficios escapa o nome gravado', function () {
+    LegacyBenefitFactory::new()->create(['name' => ('x"\'>' . '<b>CVECANARY</b>')]);
 
-    public function test_detalhe_do_beneficio_escapa_nome_e_descricao_gravados()
-    {
-        $benefit = LegacyBenefitFactory::new()->create([
-            'name' => self::PAYLOAD,
-            'description' => self::PAYLOAD,
-        ]);
+    ($this->assertEscaped)($this->get('/intranet/educar_aluno_beneficio_lst.php'));
+});
 
-        $this->assertEscaped($this->get('/intranet/educar_aluno_beneficio_det.php?cod_aluno_beneficio=' . $benefit->getKey()));
-    }
+test('detalhe do beneficio escapa nome e descricao gravados', function () {
+    $benefit = LegacyBenefitFactory::new()->create([
+        'name' => ('x"\'>' . '<b>CVECANARY</b>'),
+        'description' => ('x"\'>' . '<b>CVECANARY</b>'),
+    ]);
 
-    public function test_edicao_do_beneficio_escapa_a_descricao_no_textarea()
-    {
-        $benefit = LegacyBenefitFactory::new()->create(['description' => self::PAYLOAD]);
+    ($this->assertEscaped)($this->get('/intranet/educar_aluno_beneficio_det.php?cod_aluno_beneficio=' . $benefit->getKey()));
+});
 
-        $this->assertEscaped($this->get('/intranet/educar_aluno_beneficio_cad.php?cod_aluno_beneficio=' . $benefit->getKey()));
-    }
+test('edicao do beneficio escapa a descricao no textarea', function () {
+    $benefit = LegacyBenefitFactory::new()->create(['description' => ('x"\'>' . '<b>CVECANARY</b>')]);
 
-    public function test_listagem_de_racas_escapa_o_nome_gravado()
-    {
-        LegacyRaceFactory::new()->create(['nm_raca' => self::PAYLOAD]);
+    ($this->assertEscaped)($this->get('/intranet/educar_aluno_beneficio_cad.php?cod_aluno_beneficio=' . $benefit->getKey()));
+});
 
-        $this->assertEscaped($this->get('/intranet/educar_raca_lst.php'));
-    }
+test('listagem de racas escapa o nome gravado', function () {
+    LegacyRaceFactory::new()->create(['nm_raca' => ('x"\'>' . '<b>CVECANARY</b>')]);
 
-    public function test_detalhe_da_raca_escapa_o_nome_gravado()
-    {
-        $race = LegacyRaceFactory::new()->create(['nm_raca' => self::PAYLOAD]);
+    ($this->assertEscaped)($this->get('/intranet/educar_raca_lst.php'));
+});
 
-        $this->assertEscaped($this->get('/intranet/educar_raca_det.php?cod_raca=' . $race->getKey()));
-    }
+test('detalhe da raca escapa o nome gravado', function () {
+    $race = LegacyRaceFactory::new()->create(['nm_raca' => ('x"\'>' . '<b>CVECANARY</b>')]);
 
-    public function test_tipo_de_usuario_escapa_nome_e_descricao_na_listagem()
-    {
-        LegacyUserTypeFactory::new()->create([
-            'nm_tipo' => self::PAYLOAD,
-            'descricao' => self::PAYLOAD,
-        ]);
+    ($this->assertEscaped)($this->get('/intranet/educar_raca_det.php?cod_raca=' . $race->getKey()));
+});
 
-        $this->assertEscaped($this->get('/intranet/educar_tipo_usuario_lst.php'));
-    }
+test('tipo de usuario escapa nome e descricao na listagem', function () {
+    LegacyUserTypeFactory::new()->create([
+        'nm_tipo' => ('x"\'>' . '<b>CVECANARY</b>'),
+        'descricao' => ('x"\'>' . '<b>CVECANARY</b>'),
+    ]);
 
-    public function test_uf_escapa_o_nome_gravado()
-    {
-        /** @var State $state */
-        $state = StateFactory::new()->create(['name' => self::PAYLOAD]);
+    ($this->assertEscaped)($this->get('/intranet/educar_tipo_usuario_lst.php'));
+});
 
-        $this->assertEscaped($this->get('/intranet/public_uf_det.php?id=' . $state->getKey()));
-    }
+test('uf escapa o nome gravado', function () {
+    /** @var State $state */
+    $state = StateFactory::new()->create(['name' => ('x"\'>' . '<b>CVECANARY</b>')]);
 
-    // CVE-2025-8370
+    ($this->assertEscaped)($this->get('/intranet/public_uf_det.php?id=' . $state->getKey()));
+});
 
-    public function test_listagem_de_escolaridade_escapa_a_descricao_gravada()
-    {
-        LegacySchoolingDegreeFactory::new()->create(['descricao' => self::PAYLOAD]);
+test('listagem de escolaridade escapa a descricao gravada', function () {
+    LegacySchoolingDegreeFactory::new()->create(['descricao' => ('x"\'>' . '<b>CVECANARY</b>')]);
 
-        $this->assertEscaped($this->get('/intranet/educar_escolaridade_lst.php?descricao=CVECANARY'));
-    }
+    ($this->assertEscaped)($this->get('/intranet/educar_escolaridade_lst.php?descricao=CVECANARY'));
+});
 
-    public function test_detalhe_de_escolaridade_escapa_a_descricao_gravada()
-    {
-        $schoolingDegree = LegacySchoolingDegreeFactory::new()->create(['descricao' => self::PAYLOAD]);
+test('detalhe de escolaridade escapa a descricao gravada', function () {
+    $schoolingDegree = LegacySchoolingDegreeFactory::new()->create(['descricao' => ('x"\'>' . '<b>CVECANARY</b>')]);
 
-        $this->assertEscaped($this->get('/intranet/educar_escolaridade_det.php?idesco=' . $schoolingDegree->getKey()));
-    }
+    ($this->assertEscaped)($this->get('/intranet/educar_escolaridade_det.php?idesco=' . $schoolingDegree->getKey()));
+});
 
-    // CVE-2025-8366 e CVE-2025-8509
+test('listagem de servidores escapa a matricula gravada', function () {
+    LegacyEmployeeRoleFactory::new()->create(['matricula' => ('x"\'>' . '<b>CVECANARY</b>')]);
 
-    public function test_listagem_de_servidores_escapa_a_matricula_gravada()
-    {
-        LegacyEmployeeRoleFactory::new()->create(['matricula' => self::PAYLOAD]);
+    ($this->assertEscaped)($this->get('/intranet/educar_servidor_lst.php?matricula_servidor=CVECANARY'));
+});
 
-        $this->assertEscaped($this->get('/intranet/educar_servidor_lst.php?matricula_servidor=CVECANARY'));
-    }
-
-    // CVE-2025-7868
-
-    public function test_calendario_escapa_motivo_e_descricao_do_dia()
-    {
-        $schoolAcademicYear = LegacySchoolAcademicYearFactory::new()->create(['ano' => now()->year]);
-        LegacyAcademicYearStageFactory::new()->create(['escola_ano_letivo_id' => $schoolAcademicYear->getKey()]);
-        $calendarYear = LegacyCalendarYearFactory::new()->create([
+test('calendario escapa motivo e descricao do dia', function () {
+    $schoolAcademicYear = LegacySchoolAcademicYearFactory::new()->create(['ano' => now()->year]);
+    LegacyAcademicYearStageFactory::new()->create(['escola_ano_letivo_id' => $schoolAcademicYear->getKey()]);
+    $calendarYear = LegacyCalendarYearFactory::new()->create([
+        'ref_cod_escola' => $schoolAcademicYear->ref_cod_escola,
+        'ano' => now()->year,
+    ]);
+    LegacyCalendarDayFactory::new()->create([
+        'ref_cod_calendario_ano_letivo' => $calendarYear->getKey(),
+        'mes' => now()->month,
+        'dia' => now()->day,
+        'descricao' => ('x"\'>' . '<b>CVECANARY</b>'),
+        'ref_cod_calendario_dia_motivo' => LegacyCalendarDayReasonFactory::new()->create([
             'ref_cod_escola' => $schoolAcademicYear->ref_cod_escola,
-            'ano' => now()->year,
-        ]);
-        LegacyCalendarDayFactory::new()->create([
-            'ref_cod_calendario_ano_letivo' => $calendarYear->getKey(),
-            'mes' => now()->month,
-            'dia' => now()->day,
-            'descricao' => self::PAYLOAD,
-            'ref_cod_calendario_dia_motivo' => LegacyCalendarDayReasonFactory::new()->create([
-                'ref_cod_escola' => $schoolAcademicYear->ref_cod_escola,
-                'nm_motivo' => self::PAYLOAD,
-            ]),
-        ]);
+            'nm_motivo' => ('x"\'>' . '<b>CVECANARY</b>'),
+        ]),
+    ]);
 
-        $response = $this->post('/intranet/educar_calendario_ano_letivo_lst.php', [
-            'ref_cod_instituicao' => $schoolAcademicYear->school->ref_cod_instituicao,
-            'ref_cod_escola' => $schoolAcademicYear->ref_cod_escola,
-            'ano' => now()->year,
-            'mes' => now()->month,
-        ]);
+    $response = $this->post('/intranet/educar_calendario_ano_letivo_lst.php', [
+        'ref_cod_instituicao' => $schoolAcademicYear->school->ref_cod_instituicao,
+        'ref_cod_escola' => $schoolAcademicYear->ref_cod_escola,
+        'ano' => now()->year,
+        'mes' => now()->month,
+    ]);
 
-        $this->assertEscaped($response);
-        $this->assertSame(2, substr_count($response->getContent(), e(self::MARKER)));
-    }
-}
+    ($this->assertEscaped)($response);
+    $this->assertSame(2, substr_count($response->getContent(), e('<b>CVECANARY</b>')));
+});

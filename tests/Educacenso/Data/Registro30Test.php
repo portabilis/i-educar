@@ -1,32 +1,27 @@
 <?php
 
-namespace Tests\Educacenso\Data;
-
 use App\Models\Educacenso\Registro30;
 use App\Repositories\EducacensoRepository;
 use iEducar\Modules\Educacenso\Data\Registro30 as Registro30Data;
-use stdClass;
 use Tests\TestCase;
 
-class Registro30Test extends TestCase
-{
-    public function test_escola_sem_gestores_docentes_e_alunos_nao_tem_pessoas_no_registro_30(): void
-    {
-        $data = new Registro30Data(new EducacensoRepository, new Registro30);
+uses(TestCase::class);
 
-        // Itens que não são pessoas do registro 30 são ignorados.
-        $data->setArrayDataByType([new stdClass], Registro30::TIPO_MANAGER);
+test('escola sem gestores docentes e alunos nao tem pessoas no registro 30', function () {
+    $data = new Registro30Data(new EducacensoRepository, new Registro30);
 
-        // A exportação roda na tela legada, sem avisos do PHP: sem pessoas, a lista
-        // interna nunca é criada e o laço final percorre um valor nulo.
-        $level = error_reporting(0);
+    // Itens que não são pessoas do registro 30 são ignorados.
+    $data->setArrayDataByType([new stdClass], Registro30::TIPO_MANAGER);
 
-        try {
-            $pessoas = $data->getData(1);
-        } finally {
-            error_reporting($level);
-        }
+    // A exportação roda na tela legada, sem avisos do PHP: sem pessoas, a lista
+    // interna nunca é criada e o laço final percorre um valor nulo.
+    $level = error_reporting(0);
 
-        $this->assertEmpty($pessoas);
+    try {
+        $pessoas = $data->getData(1);
+    } finally {
+        error_reporting($level);
     }
-}
+
+    $this->assertEmpty($pessoas);
+});

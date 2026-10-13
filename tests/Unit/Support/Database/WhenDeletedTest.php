@@ -1,58 +1,46 @@
 <?php
 
-namespace Tests\Unit\Support\Database;
-
 use App\Support\Database\WhenDeleted;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class WhenDeletedTest extends TestCase
-{
-    /**
-     * @var WhenDeleted
-     */
-    private $instance;
+uses(TestCase::class);
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
+beforeEach(function () {
+    $this->instance = new class
     {
-        parent::setUp();
-
-        $this->instance = new class
-        {
-            use WhenDeleted;
-        };
-    }
+        use WhenDeleted;
+    };
 
     /**
      * @return void
      */
-    public function test_trait()
-    {
-        $from = 'schema.table';
-        $columns = ['id', 'name'];
+    $this->getDropTriggerSql = function () {
+        $expected = 'DROP TRIGGER IF EXISTS trigger_when_deleted_public_table on public.table;';
 
-        $expectedFunctionName = 'when_deleted_schema_table';
-        $this->assertEquals($expectedFunctionName, $this->instance->getFunctionName($from));
+        $this->assertEquals($expected, $this->instance->getTriggerName('public.table'));
+    };
+});
 
-        $expectedTriggerName = 'trigger_when_deleted_schema_table';
-        $this->assertEquals($expectedTriggerName, $this->instance->getTriggerName($from));
+test('trait', function () {
+    $from = 'schema.table';
+    $columns = ['id', 'name'];
 
-        $expectedColumns = 'id, name, updated_at, deleted_at';
-        $this->assertEquals($expectedColumns, $this->instance->getColumns($columns));
+    $expectedFunctionName = 'when_deleted_schema_table';
+    $this->assertEquals($expectedFunctionName, $this->instance->getFunctionName($from));
 
-        $expectedValueS = 'OLD.id, OLD.name, NOW(), NOW()';
-        $this->assertEquals($expectedValueS, $this->instance->getColumnsValues($columns));
-    }
+    $expectedTriggerName = 'trigger_when_deleted_schema_table';
+    $this->assertEquals($expectedTriggerName, $this->instance->getTriggerName($from));
 
-    /**
-     * @return void
-     */
-    public function test_create_function_sql()
-    {
-        $expected = '
+    $expectedColumns = 'id, name, updated_at, deleted_at';
+    $this->assertEquals($expectedColumns, $this->instance->getColumns($columns));
+
+    $expectedValueS = 'OLD.id, OLD.name, NOW(), NOW()';
+    $this->assertEquals($expectedValueS, $this->instance->getColumnsValues($columns));
+});
+
+test('create function sql', function () {
+    $expected = '
             CREATE FUNCTION when_deleted_some_table() 
             RETURNS TRIGGER 
             LANGUAGE plpgsql AS
@@ -64,52 +52,30 @@ class WhenDeletedTest extends TestCase
             $$;
         ';
 
-        $this->assertEquals(
-            $expected,
-            $this->instance->getCreateFunctionSql('some_table', 'some_other_table', ['id', 'name'])
-        );
-    }
+    $this->assertEquals(
+        $expected,
+        $this->instance->getCreateFunctionSql('some_table', 'some_other_table', ['id', 'name'])
+    );
+});
 
-    /**
-     * @return void
-     */
-    public function test_drop_function_sql()
-    {
-        $expected = 'DROP FUNCTION IF EXISTS when_deleted_other_table();';
+test('drop function sql', function () {
+    $expected = 'DROP FUNCTION IF EXISTS when_deleted_other_table();';
 
-        $this->assertEquals($expected, $this->instance->getDropFunctionSql('other_table'));
-    }
+    $this->assertEquals($expected, $this->instance->getDropFunctionSql('other_table'));
+});
 
-    /**
-     * @return void
-     */
-    public function test_create_trigger_sql()
-    {
-        $expected = '
+test('create trigger sql', function () {
+    $expected = '
             CREATE TRIGGER trigger_when_deleted_table AFTER DELETE
             ON table FOR EACH ROW
             EXECUTE PROCEDURE when_deleted_table();
         ';
 
-        $this->assertEquals($expected, $this->instance->getCreateTriggerSql('table'));
-    }
+    $this->assertEquals($expected, $this->instance->getCreateTriggerSql('table'));
+});
 
-    /**
-     * @return void
-     */
-    public function getDropTriggerSql()
-    {
-        $expected = 'DROP TRIGGER IF EXISTS trigger_when_deleted_public_table on public.table;';
-
-        $this->assertEquals($expected, $this->instance->getTriggerName('public.table'));
-    }
-
-    /**
-     * @return void
-     */
-    public function test_create()
-    {
-        $expectedFunction = '
+test('create', function () {
+    $expectedFunction = '
             CREATE FUNCTION when_deleted_some_table() 
             RETURNS TRIGGER 
             LANGUAGE plpgsql AS
@@ -121,39 +87,34 @@ class WhenDeletedTest extends TestCase
             $$;
         ';
 
-        $expectedTrigger = '
+    $expectedTrigger = '
             CREATE TRIGGER trigger_when_deleted_some_table AFTER DELETE
             ON some_table FOR EACH ROW
             EXECUTE PROCEDURE when_deleted_some_table();
         ';
 
-        DB::shouldReceive('unprepared')
-            ->once()
-            ->with($expectedFunction);
+    DB::shouldReceive('unprepared')
+        ->once()
+        ->with($expectedFunction);
 
-        DB::shouldReceive('unprepared')
-            ->once()
-            ->with($expectedTrigger);
+    DB::shouldReceive('unprepared')
+        ->once()
+        ->with($expectedTrigger);
 
-        $this->instance->whenDeletedMoveTo('some_table', 'other_table', ['id', 'name']);
-    }
+    $this->instance->whenDeletedMoveTo('some_table', 'other_table', ['id', 'name']);
+});
 
-    /**
-     * @return void
-     */
-    public function test_drop()
-    {
-        $expectedTrigger = 'DROP TRIGGER IF EXISTS trigger_when_deleted_some_table on some_table;';
-        $expectedFunction = 'DROP FUNCTION IF EXISTS when_deleted_some_table();';
+test('drop', function () {
+    $expectedTrigger = 'DROP TRIGGER IF EXISTS trigger_when_deleted_some_table on some_table;';
+    $expectedFunction = 'DROP FUNCTION IF EXISTS when_deleted_some_table();';
 
-        DB::shouldReceive('unprepared')
-            ->once()
-            ->with($expectedTrigger);
+    DB::shouldReceive('unprepared')
+        ->once()
+        ->with($expectedTrigger);
 
-        DB::shouldReceive('unprepared')
-            ->once()
-            ->with($expectedFunction);
+    DB::shouldReceive('unprepared')
+        ->once()
+        ->with($expectedFunction);
 
-        $this->instance->dropTriggerWhenDeleted('some_table');
-    }
-}
+    $this->instance->dropTriggerWhenDeleted('some_table');
+});

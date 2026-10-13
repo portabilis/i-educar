@@ -1,14 +1,10 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\DocumentAbsenceReason;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class DocumentAbsenceReasonTest extends EloquentTestCase
-{
-    protected function getEloquentModelName(): string
-    {
-        return DocumentAbsenceReason::class;
-    }
-}
+uses(EloquentModelTestCase::class);
+
+beforeEach(fn () => $this->eloquent(DocumentAbsenceReason::class));
+
+EloquentModelTestCase::registerModelTests();

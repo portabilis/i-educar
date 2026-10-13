@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\LoginFirstUser;
 use Tests\TestCase;
 
 /*
@@ -31,6 +33,13 @@ uses(
     TestCase::class,
     DatabaseTransactions::class,
 )->in('Request');
+
+uses(
+    TestCase::class,
+    DatabaseTransactions::class,
+    LoginFirstUser::class,
+    WithoutMiddleware::class,
+)->in('Pages');
 
 /*
 |--------------------------------------------------------------------------
