@@ -2,10 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Models\LegacySchoolAcademicYear;
+use App\Models\LegacySchoolClass;
 use Database\Factories\EmployeeFactory;
 use Database\Factories\LegacyEmployeeRoleFactory;
 use Database\Factories\LegacyRoleFactory;
+use Database\Factories\LegacySchoolAcademicYearFactory;
 use Database\Factories\LegacySchoolClassFactory;
+use Database\Factories\LegacySchoolClassTeacherFactory;
 use Database\Factories\LegacyUserFactory;
 use DOMDocument;
 use DOMXPath;
@@ -173,5 +177,115 @@ class ServerClassAssignmentPermissionTest extends TestCase
             'ano' => $schoolClass->ano,
             'funcao_exercida' => FuncaoExercida::INTERPRETE_LIBRAS,
         ]);
+    }
+
+    public function test_cannot_create_teacher_class_assignment_for_finalized_academic_year(): void
+    {
+        $employee = EmployeeFactory::new()->create();
+        $schoolClass = $this->createClassWithFinalizedAcademicYear();
+        $query = http_build_query([
+            'ref_cod_servidor' => $employee->getKey(),
+            'ref_cod_instituicao' => $schoolClass->ref_cod_instituicao,
+        ]);
+
+        $this->assertForbiddenPost('/intranet/educar_servidor_vinculo_turma_cad.php?' . $query, [
+            'tipoacao' => 'Novo',
+            'servidor_id' => $employee->getKey(),
+            'ref_cod_instituicao' => $schoolClass->ref_cod_instituicao,
+            'ref_cod_escola' => $schoolClass->ref_ref_cod_escola,
+            'ref_cod_turma' => $schoolClass->getKey(),
+            'ano' => $schoolClass->ano,
+        ]);
+
+        $this->assertDatabaseMissing('modules.professor_turma', [
+            'servidor_id' => $employee->getKey(),
+            'turma_id' => $schoolClass->getKey(),
+        ]);
+    }
+
+    public function test_cannot_edit_teacher_class_assignment_for_finalized_academic_year(): void
+    {
+        $schoolClass = $this->createClassWithFinalizedAcademicYear();
+        $assignment = LegacySchoolClassTeacherFactory::new()->create([
+            'ano' => $schoolClass->ano,
+            'instituicao_id' => $schoolClass->ref_cod_instituicao,
+            'turma_id' => $schoolClass->getKey(),
+        ]);
+        $query = http_build_query([
+            'id' => $assignment->getKey(),
+            'ref_cod_servidor' => $assignment->servidor_id,
+            'ref_cod_instituicao' => $schoolClass->ref_cod_instituicao,
+        ]);
+
+        $this->assertForbiddenPost('/intranet/educar_servidor_vinculo_turma_cad.php?' . $query, [
+            'tipoacao' => 'Editar',
+            'id' => $assignment->getKey(),
+            'servidor_id' => $assignment->servidor_id,
+            'ref_cod_instituicao' => $schoolClass->ref_cod_instituicao,
+            'ref_cod_escola' => $schoolClass->ref_ref_cod_escola,
+            'ref_cod_turma' => $schoolClass->getKey(),
+            'ano' => $schoolClass->ano,
+            'tipo_vinculo' => 1,
+        ]);
+
+        $this->assertDatabaseHas('modules.professor_turma', [
+            'id' => $assignment->getKey(),
+            'tipo_vinculo' => $assignment->tipo_vinculo,
+        ]);
+    }
+
+    public function test_cannot_delete_teacher_class_assignment_for_finalized_academic_year(): void
+    {
+        $schoolClass = $this->createClassWithFinalizedAcademicYear();
+        $assignment = LegacySchoolClassTeacherFactory::new()->create([
+            'ano' => $schoolClass->ano,
+            'instituicao_id' => $schoolClass->ref_cod_instituicao,
+            'turma_id' => $schoolClass->getKey(),
+        ]);
+        $query = http_build_query([
+            'id' => $assignment->getKey(),
+            'ref_cod_servidor' => $assignment->servidor_id,
+            'ref_cod_instituicao' => $schoolClass->ref_cod_instituicao,
+        ]);
+
+        $this->assertForbiddenPost('/intranet/educar_servidor_vinculo_turma_cad.php?' . $query, [
+            'tipoacao' => 'Excluir',
+            'id' => $assignment->getKey(),
+            'servidor_id' => $assignment->servidor_id,
+            'ref_cod_instituicao' => $schoolClass->ref_cod_instituicao,
+        ]);
+
+        $this->assertDatabaseHas('modules.professor_turma', [
+            'id' => $assignment->getKey(),
+        ]);
+    }
+
+    private function createClassWithFinalizedAcademicYear(): LegacySchoolClass
+    {
+        $schoolClass = LegacySchoolClassFactory::new()->create([
+            'ano' => 2024,
+        ]);
+
+        LegacySchoolAcademicYearFactory::new()->create([
+            'ref_cod_escola' => $schoolClass->ref_ref_cod_escola,
+            'ano' => $schoolClass->ano,
+            'andamento' => LegacySchoolAcademicYear::FINALIZED,
+            'ativo' => 1,
+        ]);
+
+        return $schoolClass;
+    }
+
+    private function assertForbiddenPost(string $uri, array $payload): void
+    {
+        $initialOutputBufferLevel = ob_get_level();
+
+        try {
+            $this->post($uri, $payload)->assertForbidden();
+        } finally {
+            while (ob_get_level() > $initialOutputBufferLevel) {
+                ob_end_clean();
+            }
+        }
     }
 }
