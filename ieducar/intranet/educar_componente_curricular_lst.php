@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\LegacyDiscipline;
+use App\Process;
+use App\Rules\CanDeleteDiscipline;
 
 return new class extends clsListagem
 {
@@ -39,6 +41,11 @@ return new class extends clsListagem
 
         $obj_permissoes = new clsPermissoes;
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $permiteExcluir = $obj_permissoes->permissao_excluir(int_processo_ap: Process::DISCIPLINES, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3);
+
+        if ($permiteExcluir) {
+            $lista_busca[] = 'Ações';
+        }
 
         $this->addCabecalhos($lista_busca);
 
@@ -125,6 +132,10 @@ return new class extends clsListagem
         $disciplinas = $result->items();
         $total = $result->total();
 
+        $vinculos = $permiteExcluir
+            ? CanDeleteDiscipline::linksByDiscipline(array_map(fn ($disciplina) => $disciplina->getKey(), $disciplinas))
+            : [];
+
         foreach ($disciplinas as $disciplina) {
             $lista_busca = [
                 '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $disciplina->nome . '</a>',
@@ -132,6 +143,10 @@ return new class extends clsListagem
                 '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $tipos[$disciplina->tipo_base] . '</a>',
                 '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $disciplina->area_conhecimento . '</a>',
             ];
+
+            if ($permiteExcluir) {
+                $lista_busca[] = $this->acaoExcluir(disciplina: $disciplina, vinculos: $vinculos[$disciplina->getKey()] ?? []);
+            }
 
             $this->addLinhas($lista_busca);
         }
@@ -153,6 +168,22 @@ return new class extends clsListagem
         $this->breadcrumb(currentPage: 'Listagem de componentes curriculares', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+    }
+
+    private function acaoExcluir(LegacyDiscipline $disciplina, array $vinculos): string
+    {
+        if ($vinculos) {
+            $mensagem = e(CanDeleteDiscipline::messageFor($vinculos));
+
+            return '<span data-toggle="tooltip" title="' . $mensagem . '" aria-label="' . $mensagem . '" role="img" tabindex="0" style="display: inline-block; padding: 0 8px;"><i class="fa fa-trash" aria-hidden="true" style="color: #ccc; cursor: not-allowed;"></i></span>';
+        }
+
+        return '<a href="#" class="js-excluir-componente" data-id="' . $disciplina->getKey() . '" data-nome="' . e($disciplina->nome) . '" title="Excluir" aria-label="Excluir ' . e($disciplina->nome) . '"><i class="fa fa-trash" style="color: #c0392b;"></i></a>';
+    }
+
+    public function makeExtra()
+    {
+        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-componente-curricular-lst.js');
     }
 
     public function Formular()

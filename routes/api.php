@@ -71,7 +71,7 @@ Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'Api'], static func
     Route::resource('registration', RegistrationController::class)->only(['index']);
     Route::resource('situation', SituationController::class)->only(['index']);
     Route::resource('period', PeriodController::class)->only(['index']);
-    Route::resource('discipline', DisciplineController::class)->only(['index']);
+    Route::resource('discipline', DisciplineController::class)->only(['index', 'destroy']);
     Route::resource('stage', StageController::class)->only(['index']);
     Route::resource('active-looking-messages', ActiveLookingMessageController::class);
     Route::resource('messages', MessageController::class);
