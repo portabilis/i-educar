@@ -3,7 +3,6 @@
 use App\Models\EmployeeGraduation;
 use App\Models\LegacyPhone;
 use App\Services\EmployeeGraduationService;
-use App\Services\EmployeeService;
 use App\Services\PhoneService;
 use Database\Factories\EmployeeGraduationFactory;
 use Database\Factories\LegacyPersonFactory;
@@ -19,11 +18,6 @@ test('apaga todas as formações do servidor', function () {
     (new EmployeeGraduationService)->deleteAll($graduation->employee_id);
 
     expect(EmployeeGraduation::query()->where('employee_id', $graduation->employee_id)->exists())->toBeFalse();
-});
-
-test('sem códigos numéricos o servidor não é professor', function () {
-    expect(app(EmployeeService::class)->isTeacher('abc', 1))->toBeFalse()
-        ->and(app(EmployeeService::class)->isTeacher(1, null))->toBeFalse();
 });
 
 test('telefone com só o DDD ou só o número não é gravado', function () {

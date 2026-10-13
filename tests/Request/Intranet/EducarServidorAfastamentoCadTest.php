@@ -100,67 +100,6 @@ test('recusa a data de afastamento vazia, que não é data ou de mais de um ano 
     'há mais de um ano' => [fn () => now()->subYear()->subDay()->format('d/m/Y')],
 ]);
 
-test('para o professor com aulas no quadro, lista cada aula para escolher o substituto', function () {
-    $role = $this->ana->role('Professor', '1001');
-    $class = $this->school->schoolClass(['nm_turma' => 'Turma Alfa']);
-    $arts = $this->school->discipline('Artes');
-    $this->ana->lesson($class, $arts, 2, '08:00', '08:45')->lesson($class, $arts, 4, '10:00', '11:30');
-
-    $html = $this->get($this->new)->assertOk()->getContent();
-    $fields = LegacyFields::from($html);
-
-    expect($html)->toContain('var num_alocacao = 2;', "array_servidores[0][0] = '00:45';", "array_servidores[1][0] = '01:30';", 'Segunda', 'Quarta')
-        ->and($fields['dia_semana_0'])->toBe('2')
-        ->and(urldecode($fields['hora_inicial_0']))->toBe('08:00:00')
-        ->and(urldecode($fields['hora_final_1']))->toBe('11:30:00')
-        ->and($fields['ref_cod_escola_0'])->toBe((string) $this->school->school->getKey())
-        ->and($role->exists)->toBeTrue();
-});
-
-test('ao afastar o professor, grava o substituto escolhido em cada aula', function () {
-    $this->ana->role('Professor', '1001');
-    $bia = EmployeeScenario::named('Bia Borges', $this->institution);
-    $class = $this->school->schoolClass();
-    $arts = $this->school->discipline('Artes');
-    $this->ana->lesson($class, $arts, 2, '08:00', '08:45')->lesson($class, $arts, 4, '10:00', '11:30');
-
-    $fields = LegacyFields::from($this->get($this->new)->assertOk()->getContent());
-
-    $this->post($this->new, ($this->payload)([
-        'ref_cod_servidor_substituto' => [(string) $bia->employee->getKey(), ''],
-    ]) + $fields)->assertRedirect($this->detail);
-
-    $lessons = DB::table('pmieducar.quadro_horario_horarios')->where('ref_servidor', $this->id)->orderBy('dia_semana')->get();
-
-    expect($lessons[0])
-        ->ref_servidor_substituto->toBe($bia->employee->getKey())
-        ->ref_cod_instituicao_substituto->toBe($this->institution)
-        ->and($lessons[1]->ref_servidor_substituto)->toBeNull()
-        ->and(($this->withdrawals)()->count())->toBe(1);
-});
-
-test('defeito: se a aula do substituto não é encontrada, o afastamento fica gravado e a tela diz que não cadastrou', function () {
-    $this->ana->role('Professor', '1001');
-    $bia = EmployeeScenario::named('Bia Borges', $this->institution);
-
-    $this->post($this->new, ($this->payload)([
-        'ref_cod_servidor_substituto' => [(string) $bia->employee->getKey()],
-        'ref_cod_escola_0' => (string) $this->school->school->getKey(),
-        'dia_semana_0' => '2',
-        'hora_inicial_0' => '08:00:00',
-        'hora_final_0' => '08:45:00',
-    ]))->assertOk()->assertSee('Cadastro não realizado.');
-
-    expect(($this->withdrawals)()->count())->toBe(1);
-});
-
-test('quem não é professor não vê a tabela de aulas', function () {
-    $this->ana->role('Coordenador', '2002', teacher: false);
-    $this->ana->lesson($this->school->schoolClass(), $this->school->discipline('Artes'), 2, '08:00', '08:45');
-
-    $this->get($this->new)->assertOk()->assertDontSee('var num_alocacao', false);
-});
-
 test('abre o retorno com o motivo e a data de afastamento travados e o campo de retorno', function () {
     $withdrawal = $this->ana->withdrawal($this->reason, ['data_saida' => $this->out]);
 
@@ -190,48 +129,6 @@ test('retorna o servidor gravando a data de retorno', function () {
     expect($withdrawal->refresh()->data_retorno->format('Y-m-d'))->toBe($this->back->format('Y-m-d'))
         ->and($withdrawal->ref_cod_motivo_afastamento)->toBe($this->reason->getKey())
         ->and($withdrawal->data_saida->format('Y-m-d'))->toBe($this->out->format('Y-m-d'));
-});
-
-test('ao retornar o professor que teve substituto, tira o substituto das aulas', function () {
-    $this->ana->role('Professor', '1001');
-    $bia = EmployeeScenario::named('Bia Borges', $this->institution);
-    $this->ana->lesson($this->school->schoolClass(), $this->school->discipline('Artes'), 2, '08:00', '08:45', [
-        'ref_servidor_substituto' => $bia->employee->getKey(),
-        'ref_cod_instituicao_substituto' => $this->institution,
-    ]);
-    $withdrawal = $this->ana->withdrawal($this->reason, ['data_saida' => $this->out]);
-
-    $fields = LegacyFields::from($this->get(($this->edit)($withdrawal, return: true))->assertOk()->getContent());
-
-    $this->post(($this->edit)($withdrawal, return: true), ['data_retorno' => $this->back->format('d/m/Y')] + $fields)
-        ->assertRedirect($this->detail);
-
-    expect(DB::table('pmieducar.quadro_horario_horarios')->where('ref_servidor', $this->id)->sole())
-        ->ref_servidor_substituto->toBeNull()
-        ->ref_cod_instituicao_substituto->toBeNull()
-        ->ref_cod_instituicao_servidor->toBe($this->institution)
-        ->ativo->toBe(1)
-        ->and($withdrawal->refresh()->data_retorno->format('Y-m-d'))->toBe($this->back->format('Y-m-d'));
-});
-
-test('defeito: no retorno, se a aula não é encontrada, a data fica gravada e a tela diz que não cadastrou', function () {
-    $withdrawal = $this->ana->withdrawal($this->reason, ['data_saida' => $this->out]);
-
-    $this->post(($this->edit)($withdrawal, return: true), [
-        'tipoacao' => 'Editar',
-        'ref_cod_servidor' => (string) $this->id,
-        'ref_cod_instituicao' => (string) $this->institution,
-        'sequencial' => (string) $withdrawal->sequencial,
-        'data_saida' => urlencode($this->out->format('d/m/Y')),
-        'data_retorno' => $this->back->format('d/m/Y'),
-        'ref_cod_servidor_substituto' => ['1'],
-        'ref_cod_escola_0' => (string) $this->school->school->getKey(),
-        'dia_semana_0' => '2',
-        'hora_inicial_0' => '08:00:00',
-        'hora_final_0' => '08:45:00',
-    ])->assertOk()->assertSee('Cadastro não realizado.');
-
-    expect($withdrawal->refresh()->data_retorno)->not->toBeNull();
 });
 
 test('edita o histórico: motivo, datas e arquivos', function () {

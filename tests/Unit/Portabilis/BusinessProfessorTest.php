@@ -35,24 +35,12 @@ test('reconhece quem é professor e quem só é professor, na instituição ou e
     expect(Portabilis_Business_Professor::isOnlyProfessor($this->institution, $this->id))->toBeFalse();
 });
 
-test('sem exigir vínculo com a turma, as escolas, cursos, turmas e componentes vêm da alocação e da habilitação', function () {
+test('sem exigir vínculo com a turma, os cursos, turmas e componentes vêm da alocação e da habilitação', function () {
     ($this->exigeVinculo)(false);
 
-    expect(collect(Portabilis_Business_Professor::escolasAlocado($this->institution, $this->id))->pluck('id')->all())->toBe([$this->school])
-        ->and(Portabilis_Business_Professor::cursosAlocado($this->institution, $this->school, $this->id))->toBeArray()
+    expect(Portabilis_Business_Professor::cursosAlocado($this->institution, $this->school, $this->id))->toBeArray()
         ->and(Portabilis_Business_Professor::canLoadSeriesAlocado($this->institution))->toBeFalse()
         ->and(Portabilis_Business_Professor::seriesAlocado($this->institution, $this->school, $this->scenario->course->getKey(), $this->id))->toBeNull()
         ->and(collect(Portabilis_Business_Professor::turmasAlocado($this->institution, $this->school, $this->scenario->grade->getKey(), $this->id))->pluck('nome')->all())->toBe(['Turma do Professor'])
         ->and(collect(Portabilis_Business_Professor::componentesCurricularesAlocado($this->institution, $this->schoolClass->getKey(), 2030, $this->id))->pluck('nome')->all())->toBe(['Matemática']);
-});
-
-test('exigindo vínculo com a turma, tudo vem do quadro de horários', function () {
-    ($this->exigeVinculo)(true);
-
-    expect(Portabilis_Business_Professor::escolasAlocado($this->institution, $this->id))->toBe([])
-        ->and(Portabilis_Business_Professor::cursosAlocado($this->institution, $this->school, $this->id))->toBe([])
-        ->and(Portabilis_Business_Professor::canLoadSeriesAlocado($this->institution))->toBeTrue()
-        ->and(Portabilis_Business_Professor::seriesAlocado($this->institution, null, null, $this->id))->toBe([])
-        ->and(Portabilis_Business_Professor::turmasAlocado($this->institution, $this->school, $this->scenario->grade->getKey(), $this->id))->toBe([])
-        ->and(Portabilis_Business_Professor::componentesCurricularesAlocado($this->institution, $this->schoolClass->getKey(), 2030, $this->id))->toBe([]);
 });

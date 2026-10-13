@@ -28,25 +28,4 @@
     elements[ct].value = value;
   }
   }
-  function clearAll()
-  {
-    var elements = window.parent.document.getElementsByName('ref_cod_servidor_substituto');
-    for (var ct = 0;ct < elements.length;ct++) {
-    elements[ct].value = '';
-  }
-    for (var ct =0;ct < num_alocacao;ct++) {
-    var elements = window.parent.document.getElementById('ref_cod_servidor_substituto_' + ct).value='';
-  }
-  }
-  function getArrayHora(hora)
-  {
-    var array_h;
-    if(hora) {
-    array_h = hora.split(':');
-  }
-    else {
-    array_h = new Array(0,0);
-  }
-    return array_h;
-  }
 

@@ -46,6 +46,11 @@ class DiarioControllerService
         });
     }
 
+    public function getMatricula(int $matriculaId): array
+    {
+        return \App_Model_IedFinder::getMatricula($matriculaId);
+    }
+
     public function getRegraAvaliacaoPorMatricula(int $matriculaId)
     {
         return \App_Model_IedFinder::getRegraAvaliacaoPorMatricula($matriculaId);

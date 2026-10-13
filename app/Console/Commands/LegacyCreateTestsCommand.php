@@ -312,7 +312,6 @@ class LegacyCreateTestsCommand extends Command
             'EducarPagamentoMultaDet',
             'EducarPreRequisitoDet',
             'EducarProjetoDet',
-            'EducarQuadroHorarioHorariosCad',
             'EducarRacaDet',
             'EducarReligiaoDet',
             'EducarReservaVagaDet',
