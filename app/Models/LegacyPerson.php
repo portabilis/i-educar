@@ -213,4 +213,28 @@ class LegacyPerson extends LegacyModel
     {
         return $this->hasOne(LegacyStudent::class, 'ref_idpes', 'idpes');
     }
+
+    /**
+     * @return HasMany<LegacyIndividual, $this>
+     */
+    public function childrenAsMother(): HasMany
+    {
+        return $this->hasMany(LegacyIndividual::class, 'idpes_mae', 'idpes');
+    }
+
+    /**
+     * @return HasMany<LegacyIndividual, $this>
+     */
+    public function childrenAsFather(): HasMany
+    {
+        return $this->hasMany(LegacyIndividual::class, 'idpes_pai', 'idpes');
+    }
+
+    /**
+     * @return HasMany<LegacyIndividual, $this>
+     */
+    public function dependentsAsResponsible(): HasMany
+    {
+        return $this->hasMany(LegacyIndividual::class, 'idpes_responsavel', 'idpes');
+    }
 }

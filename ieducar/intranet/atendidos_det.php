@@ -1,12 +1,11 @@
 <?php
 
-use App\Models\Employee;
+use App\Models\Enums\PersonLinkType;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyIndividualPicture;
 use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use App\Models\LegacyRace;
-use App\Models\LegacyStudent;
 use App\Models\PersonHasPlace;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
@@ -109,39 +108,44 @@ return new class extends clsDetalhe
         }
 
         $vinculos = collect();
-        if ($aluno = LegacyStudent::active()->where('ref_idpes', $cod_pessoa)->first(['cod_aluno'])) {
+        if ($aluno = $pessoa->student()->active()->first(['cod_aluno'])) {
             $vinculos->push(sprintf(
-                '<a target="_blank" href="/intranet/educar_aluno_det.php?cod_aluno=%s">Aluno</a>',
-                $aluno->getKey()
+                '<a target="_blank" href="/intranet/educar_aluno_det.php?cod_aluno=%s">%s</a>',
+                $aluno->getKey(),
+                PersonLinkType::STUDENT->name(),
             ));
         }
 
-        if ($servidor = Employee::active()->find($cod_pessoa, ['cod_servidor', 'ref_cod_instituicao'])) {
+        if ($servidor = $pessoa->employee()->active()->first(['cod_servidor', 'ref_cod_instituicao'])) {
             $vinculos->push(sprintf(
-                '<a target="_blank" href="/intranet/educar_servidor_det.php?cod_servidor=%s&ref_cod_instituicao=%s">Servidor</a>',
+                '<a target="_blank" href="/intranet/educar_servidor_det.php?cod_servidor=%s&ref_cod_instituicao=%s">%s</a>',
                 $servidor->getKey(),
-                $servidor->ref_cod_instituicao
+                $servidor->ref_cod_instituicao,
+                PersonLinkType::EMPLOYEE->name(),
             ));
         }
 
-        if ($mother = LegacyIndividual::query()->where('idpes_mae', $cod_pessoa)->first()) {
+        if ($mother = $pessoa->childrenAsMother()->first()) {
             $vinculos->push(sprintf(
-                '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">Mãe da Pessoa Física</a>',
+                '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">%s</a>',
                 $mother->getKey(),
+                PersonLinkType::MOTHER->name(),
             ));
         }
 
-        if ($father = LegacyIndividual::query()->where('idpes_pai', $cod_pessoa)->first()) {
+        if ($father = $pessoa->childrenAsFather()->first()) {
             $vinculos->push(sprintf(
-                '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">Pai da Pessoa Física</a>',
+                '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">%s</a>',
                 $father->getKey(),
+                PersonLinkType::FATHER->name(),
             ));
         }
 
-        if ($responsible = LegacyIndividual::query()->where('idpes_responsavel', $cod_pessoa)->first()) {
+        if ($responsible = $pessoa->dependentsAsResponsible()->first()) {
             $vinculos->push(sprintf(
-                '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">Responsável da Pessoa Física</a>',
+                '<a target="_blank" href="/intranet/atendidos_det.php?cod_pessoa=%s">%s</a>',
                 $responsible->getKey(),
+                PersonLinkType::RESPONSIBLE->name(),
             ));
         }
 
