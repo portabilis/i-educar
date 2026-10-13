@@ -195,3 +195,17 @@ test('unexpected failure answers 500 with the reason', function () {
     $response->assertStatus(500);
     expect($response->json('message'))->toEndWith('(falha inesperada)');
 });
+
+test('rejects registration whose enrollment is in an inactive school class', function () {
+    $data = $this->createAbsenceData();
+    $data['school_class']->update(['ativo' => 0]);
+
+    $this->withHeaders(['token' => 'valid-token'])
+        ->postJson('/api/v2/falta-geral', $this->generalAbsencePayload($data))
+        ->assertStatus(422)
+        ->assertJsonValidationErrors([
+            'aluno_id' => 'Aluno não enturmado.',
+        ]);
+
+    $this->assertDatabaseCount(LegacyGeneralAbsence::class, 0);
+});
