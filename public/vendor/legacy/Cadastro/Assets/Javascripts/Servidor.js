@@ -498,7 +498,17 @@ function validateGraduations() {
 }
 
 function validaCargaHoraria() {
-  if ($j('#carga_horaria').val() < $j('#total_horas_alocadas_').val()) {
+  const cargaHoraria = $j('#carga_horaria').val();
+
+  if (!/^\d{1,2}:[0-5]\d$/.test(cargaHoraria)) {
+    messageUtils.error('Carga horária inválida. Informe um valor entre 00:00 e 99:59.');
+    return false;
+  }
+
+  const [horas, minutos] = cargaHoraria.split(':').map(Number);
+  const [horasAlocadas, minutosAlocados] = ($j('#total_horas_alocadas_').val() || '00:00').split(':').map(Number);
+
+  if (horas * 60 + minutos < horasAlocadas * 60 + minutosAlocados) {
     messageUtils.error('A Carga horária total deve ser maior ou igual a quantidade de horas alocadas para o servidor.<br>');
     return false;
   }
