@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Enums\PersonLinkType;
 use App\Models\LegacyPerson;
 
 return new class extends clsListagem
@@ -10,6 +11,7 @@ return new class extends clsListagem
 
         $par_nome = str_replace(['[', ']', '{', '}', '(', ')', '\\', '/'], '', $this->getQueryString(name: 'nm_pessoa')) ?: false;
         $par_id_federal = idFederal2Int(str: $this->getQueryString(name: 'id_federal')) ?: false;
+        $par_link_type = $this->getQueryString(name: 'link_type');
 
         $this->addCabecalhos(
             coluna: [
@@ -31,6 +33,14 @@ return new class extends clsListagem
             valor: $par_id_federal
         );
 
+        $this->campoLista(
+            nome: 'link_type',
+            campo: 'Vínculo',
+            valor: ['' => 'Todos'] + PersonLinkType::getDescriptiveValues()->all(),
+            default: $par_link_type,
+            obrigatorio: false
+        );
+
         // Paginador
         $limite = 10;
         $iniciolimit = ($this->getQueryString(name: "pagina_{$this->nome}")) ? $this->getQueryString(name: "pagina_{$this->nome}") * $limite - $limite : 0;
@@ -38,6 +48,7 @@ return new class extends clsListagem
         $lista = LegacyPerson::query()->filter([
             'name' => $par_nome,
             'cpf' => is_numeric($par_id_federal) ? $par_id_federal : null,
+            'link_type' => $par_link_type,
         ])->select([
             'idpes',
             'nome',
