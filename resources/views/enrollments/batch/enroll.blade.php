@@ -69,13 +69,13 @@
 
         <div class="form-row">
             <div class="form-col">
-                <label for="">
+                <label for="date">
                     <div>Data da enturmação<span class="campo_obrigatorio">*</span></div>
                     <div><small class="text-muted">dd/mm/aaaa</small></div>
                 </label>
             </div>
             <div class="form-col">
-                <input name="date" value="{{ old('date') }}" onkeypress="formataData(this, event);" class="form-input {{ $errors->has('date') ? 'error' : '' }}" type="text" maxlength="10" placeholder="Data da enturmação">
+                <input name="date" id="date" value="{{ old('date') }}" onkeypress="formataData(this, event);" class="form-input {{ $errors->has('date') ? 'error' : '' }}" type="text" maxlength="10" placeholder="Data da enturmação">
             </div>
             <div class="form-col">
             </div>
@@ -84,7 +84,7 @@
         <table class="table-default">
             <thead>
             <tr>
-                <th width="25"><input class="registration-check-master" type="checkbox" /></th>
+                <th width="25"><input class="registration-check-master" type="checkbox" aria-label="Selecionar todas as matrículas" /></th>
                 <th width="100">Matrícula</th>
                 <th>Nome</th>
                 <th>Data de saída</th>

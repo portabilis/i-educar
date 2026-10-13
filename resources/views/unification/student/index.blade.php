@@ -25,7 +25,7 @@
             </tr>
             <tr>
                 <td class="formmdtd" valign="top">
-                    <span class="form">Nome do aluno:</span>
+                    <span class="form"><label for="name">Nome do aluno:</label></span>
                 </td>
                 <td class="formmdtd" valign="top">
                     <span class="form">

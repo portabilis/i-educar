@@ -1,6 +1,6 @@
 @inject('service', 'App\Services\SchoolGradeDisciplineService')
 <span class="form">
-    <select class="geral" name="ref_cod_componente_curricular" id="ref_cod_componente_curricular" style="width: 308px;">
+    <select class="geral" name="ref_cod_componente_curricular" id="ref_cod_componente_curricular" aria-label="Componente curricular" style="width: 308px;">
         <option value="">Selecione um componente curricular</option>
         @if(Request::get('ref_cod_escola') && Request::get('ref_cod_serie'))
             {{-- todo: mover para service --}}

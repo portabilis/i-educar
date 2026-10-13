@@ -1,5 +1,5 @@
 <span class="form">
-    <select name="tipo_usuario[]" id="tipo_usuario" multiple="multiple" style="width: 308px;">
+    <select name="tipo_usuario[]" id="tipo_usuario" aria-label="Tipos de usuário" multiple="multiple" style="width: 308px;">
         @foreach(App_Model_IedFinder::getTiposUsuario() as $id => $name)
             <option value="{{ $id }}">{{ $name }}</option>
         @endforeach

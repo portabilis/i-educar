@@ -72,7 +72,7 @@
             </tr>
             <tr id="tr_bloquear_enturmacao">
                 <td class="formmdtd" valign="top">
-                    <span class="form">Bloquear enturmacão após atingir limite de vagas</span>
+                    <span class="form"><label for="bloquear_enturmacao_sem_vagas">Bloquear enturmacão após atingir limite de vagas</label></span>
                 </td>
                 <td class="formmdtd" valign="top">
                         <span class="form">
@@ -82,7 +82,7 @@
             </tr>
             <tr id="tr_bloquear_cadastro">
                 <td class="formmdtd" valign="top">
-                    <span class="form">Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)</span>
+                    <span class="form"><label for="bloquear_cadastro_turma">Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)</label></span>
                 </td>
                 <td class="formmdtd" valign="top">
                         <span class="form">
@@ -107,7 +107,7 @@
                         <tr class="formmdtd dd">
                             <td>
                                 <span class="form">
-                                    <select name="escola_serie[1][escolas]" id="escola" multiple="multiple" style="width: 100%;">
+                                    <select name="escola_serie[1][escolas]" id="escola" aria-label="Escolas" multiple="multiple" style="width: 100%;">
                                         @php
                                             $permissoes = new clsPermissoes;
                                             $instituicaoId = $permissoes->getInstituicao(Auth::id());
@@ -121,7 +121,7 @@
                             </td>
                             <td>
                                 <span class="form">
-                                    <select name="escola_serie[1][series]" id="series" multiple="multiple" style="width: 100%;">
+                                    <select name="escola_serie[1][series]" id="series" aria-label="Séries" multiple="multiple" style="width: 100%;">
                                         @php
                                             $series = App_Model_IedFinder::getSeriesWithCourse(null);
                                         @endphp
