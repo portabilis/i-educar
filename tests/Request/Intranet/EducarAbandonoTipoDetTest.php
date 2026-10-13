@@ -20,7 +20,7 @@ beforeEach(function () {
 test('mostra os dados do motivo de abandono, a instituição e o link de edição', function () {
     $this->get($this->url)
         ->assertOk()
-        ->assertSee($this->user->institution->nm_instituicao, false)
+        ->assertSee($this->user->institution->nm_instituicao)
         ->assertSee('Mudança de cidade')
         ->assertSee('educar_abandono_tipo_cad.php?cod_abandono_tipo=' . $this->type->getKey(), false);
 });

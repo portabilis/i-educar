@@ -1,4 +1,4 @@
-<select name="school">
+<select name="school" aria-label="Escola">
     <option value="">Selecione uma escola</option>
     @foreach($schools as $school)
         <option value="{{ $school->getKey() }}" @if(old('school', request('school')) == $school->getKey()) selected @endif>

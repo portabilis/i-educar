@@ -22,7 +22,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="formmdtd" valign="top"><span class="form">Exportar dados de:</span></td>
+                <td class="formmdtd" valign="top"><span class="form"><label for="status">Exportar dados de:</label></span></td>
                 <td class="formmdtd" valign="top">
             <span class="form">
               <select class="geral" name="status" id="status" style="width: 308px;">

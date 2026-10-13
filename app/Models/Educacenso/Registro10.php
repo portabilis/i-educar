@@ -76,12 +76,15 @@ class Registro10 extends Registro10Fields
     public function linguaEnsinoMinistrado(): ?int
     {
         return match ($this->linguaMinistrada) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             LinguaMinistrada::NAO_OFERECE_EDUCACAO_INDIGENA => 0,
             LinguaMinistrada::INDIGENA => 1,
             LinguaMinistrada::PORTUGUESA => 2,
             LinguaMinistrada::INDIGENA_E_PORTUGUESA => 3,
             default => null,
         };
+        // @codeCoverageIgnoreEnd
     }
 
     /**

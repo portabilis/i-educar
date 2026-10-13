@@ -1,6 +1,9 @@
 <?php
 
+use Database\Factories\LegacyGradeFactory;
+use Database\Factories\LegacyRegistrationFactory;
 use Database\Factories\LegacyUserFactory;
+use Illuminate\Support\Arr;
 use Tests\Api\DiarioApiFakeDataTestTrait;
 
 uses(DiarioApiFakeDataTestTrait::class);
@@ -28,6 +31,24 @@ test('lista as matrículas da turma para processar o histórico', function () {
     $this->get('/module/HistoricoEscolar/processamentoApi?' . http_build_query(['oper' => 'get', 'att' => 'matriculas'] + $this->params))
         ->assertOk()
         ->assertJsonPath('att', 'matriculas');
+});
+
+test('lista a série de cada matrícula, inclusive em turma multisseriada', function () {
+    $multigradeRegistration = LegacyRegistrationFactory::new()->withEnrollment($this->schoolClass)->create([
+        'ano' => $this->schoolClass->ano,
+        'ref_ref_cod_serie' => LegacyGradeFactory::new()->create([
+            'ref_cod_curso' => $this->schoolClass->ref_cod_curso,
+        ]),
+    ]);
+
+    $response = $this->get('/module/HistoricoEscolar/processamentoApi?' . http_build_query(['oper' => 'get', 'att' => 'matriculas'] + Arr::except($this->params, 'serie_id')))
+        ->assertOk();
+
+    $series = collect($response->json('matriculas'))->pluck('serie_id', 'matricula_id');
+
+    expect($series[$this->registration->getKey()])->toBe($this->registration->ref_ref_cod_serie)
+        ->and($series[$multigradeRegistration->getKey()])->toBe($multigradeRegistration->ref_ref_cod_serie)
+        ->and($multigradeRegistration->ref_ref_cod_serie)->not->toBe($this->registration->ref_ref_cod_serie);
 });
 
 test('processa o histórico da matrícula a partir do boletim', function () {

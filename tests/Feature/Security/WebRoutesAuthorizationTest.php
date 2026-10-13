@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests\Feature\Security;
-
 use App\Listeners\LoginLegacySession;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
@@ -19,22 +17,27 @@ use Database\Factories\LegacyUserSchoolFactory;
 use Database\Factories\LegacyUserTypeFactory;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\Feature\Security\ActivatesSystem;
 use Tests\TestCase;
 
-class WebRoutesAuthorizationTest extends TestCase
-{
-    use ActivatesSystem, DatabaseTransactions;
+uses(TestCase::class, ActivatesSystem::class, DatabaseTransactions::class);
 
-    protected function setUp(): void
-    {
-        parent::setUp();
+$routes = [
+    'CVE-2025-10013 exportação para o SEB' => ['/exportacao-para-o-seb', Process::SEB_EXPORT],
+    'CVE-2025-11048 consulta de dispensas' => ['/consulta-dispensas', Process::EXEMPTION_LIST],
+    'CVE-2025-11049 unificação de alunos' => ['/unificacao-aluno', Process::STUDENT_UNIFICATION],
+    'CVE-2025-11050 período de lançamento' => ['/periodo-lancamento', Process::RELEASE_PERIOD],
+    'CVE-2025-9609 consulta do Educacenso' => ['/educacenso/consulta', Process::EDUCACENSO_CONSULT],
+    'CVE-2025-11554 cadastro de tipo de usuário' => ['/usuarios/tipos/novo', Process::USER_TYPES],
+];
 
-        $this->activateSystem();
-    }
+$schoolClassRoutes = [
+    'CVE-2025-10070 enturmação em lote' => ['/enturmacao-em-lote/%d'],
+    'CVE-2025-10071 desenturmação em lote' => ['/cancelar-enturmacao-em-lote/%d'],
+];
 
-    private function schoolUser(?int $process = null, ?LegacySchool $school = null): User
-    {
+beforeEach(function () {
+    $this->schoolUser = function (?int $process = null, ?LegacySchool $school = null): User {
         $factory = LegacyUserFactory::new();
 
         if ($process) {
@@ -54,10 +57,9 @@ class WebRoutesAuthorizationTest extends TestCase
         $user->employee->update(['data_troca_senha' => now(), 'force_reset_password' => false]);
 
         return $user;
-    }
+    };
 
-    private function schoolClass(): LegacySchoolClass
-    {
+    $this->schoolClass = function (): LegacySchoolClass {
         /** @var LegacySchoolClass $schoolClass */
         $schoolClass = LegacySchoolClassFactory::new()->create();
 
@@ -69,126 +71,93 @@ class WebRoutesAuthorizationTest extends TestCase
         ]);
 
         return $schoolClass;
-    }
+    };
 
     /**
      * O middleware `can` do projeto nega o acesso redirecionando de volta
      * com a mensagem de erro de permissão.
      */
-    private function assertDenied($response): void
-    {
+    $this->assertDenied = function ($response): void {
         $response->assertRedirect();
         $response->assertSessionHasErrors(['Error' => 'Você não tem permissão para acessar este recurso']);
-    }
+    };
 
     /**
      * Autentica o usuário e registra na sessão os dados que o login real
      * grava, usados pelo layout das telas.
      */
-    private function login(User $user): static
-    {
+    $this->login = function (User $user): static {
         $this->actingAs($user);
 
         app(LoginLegacySession::class)->handle(new Login('web', $user, false));
 
         return $this;
-    }
+    };
 
-    public static function routes(): array
-    {
-        return [
-            'CVE-2025-10013 exportação para o SEB' => ['/exportacao-para-o-seb', Process::SEB_EXPORT],
-            'CVE-2025-11048 consulta de dispensas' => ['/consulta-dispensas', Process::EXEMPTION_LIST],
-            'CVE-2025-11049 unificação de alunos' => ['/unificacao-aluno', Process::STUDENT_UNIFICATION],
-            'CVE-2025-11050 período de lançamento' => ['/periodo-lancamento', Process::RELEASE_PERIOD],
-            'CVE-2025-9609 consulta do Educacenso' => ['/educacenso/consulta', Process::EDUCACENSO_CONSULT],
-            'CVE-2025-11554 cadastro de tipo de usuário' => ['/usuarios/tipos/novo', Process::USER_TYPES],
-        ];
-    }
+    $this->activateSystem();
+});
 
-    #[DataProvider('routes')]
-    public function test_rota_bloqueia_usuario_sem_permissao(string $uri, int $process)
-    {
-        $this->assertDenied(
-            $this->login($this->schoolUser())->get($uri)
-        );
-    }
+test('rota bloqueia usuario sem permissao', function (string $uri, int $process) {
+    ($this->assertDenied)(
+        ($this->login)(($this->schoolUser)())->get($uri)
+    );
+})->with($routes);
 
-    #[DataProvider('routes')]
-    public function test_rota_permite_usuario_com_permissao(string $uri, int $process)
-    {
-        $this->login($this->schoolUser($process))
-            ->get($uri)
-            ->assertSuccessful();
-    }
+test('rota permite usuario com permissao', function (string $uri, int $process) {
+    ($this->login)(($this->schoolUser)($process))
+        ->get($uri)
+        ->assertSuccessful();
+})->with($routes);
 
-    public static function schoolClassRoutes(): array
-    {
-        return [
-            'CVE-2025-10070 enturmação em lote' => ['/enturmacao-em-lote/%d'],
-            'CVE-2025-10071 desenturmação em lote' => ['/cancelar-enturmacao-em-lote/%d'],
-        ];
-    }
+test('lote bloqueia usuario sem permissao', function (string $uri) {
+    $schoolClass = ($this->schoolClass)();
 
-    #[DataProvider('schoolClassRoutes')]
-    public function test_lote_bloqueia_usuario_sem_permissao(string $uri)
-    {
-        $schoolClass = $this->schoolClass();
-
-        $this->assertDenied(
-            $this->login($this->schoolUser(school: $schoolClass->school))
-                ->get(sprintf($uri, $schoolClass->getKey()))
-        );
-    }
-
-    #[DataProvider('schoolClassRoutes')]
-    public function test_lote_bloqueia_turma_de_outra_escola(string $uri)
-    {
-        $schoolClass = $this->schoolClass();
-
-        $this->login($this->schoolUser(Process::BATCH_ENROLLMENT))
+    ($this->assertDenied)(
+        ($this->login)(($this->schoolUser)(school: $schoolClass->school))
             ->get(sprintf($uri, $schoolClass->getKey()))
-            ->assertForbidden();
-    }
+    );
+})->with($schoolClassRoutes);
 
-    #[DataProvider('schoolClassRoutes')]
-    public function test_lote_permite_turma_da_propria_escola(string $uri)
-    {
-        $schoolClass = $this->schoolClass();
+test('lote bloqueia turma de outra escola', function (string $uri) {
+    $schoolClass = ($this->schoolClass)();
 
-        $this->login($this->schoolUser(Process::BATCH_ENROLLMENT, $schoolClass->school))
-            ->get(sprintf($uri, $schoolClass->getKey()))
-            ->assertSuccessful();
-    }
+    ($this->login)(($this->schoolUser)(Process::BATCH_ENROLLMENT))
+        ->get(sprintf($uri, $schoolClass->getKey()))
+        ->assertForbidden();
+})->with($schoolClassRoutes);
 
-    public function test_historico_de_enturmacoes_bloqueia_usuario_sem_permissao()
-    {
-        /** @var LegacyRegistration $registration */
-        $registration = LegacyRegistrationFactory::new()->create();
+test('lote permite turma da propria escola', function (string $uri) {
+    $schoolClass = ($this->schoolClass)();
 
-        $this->assertDenied(
-            $this->login($this->schoolUser(school: $registration->school))
-                ->get('/enrollment-history/' . $registration->getKey())
-        );
-    }
+    ($this->login)(($this->schoolUser)(Process::BATCH_ENROLLMENT, $schoolClass->school))
+        ->get(sprintf($uri, $schoolClass->getKey()))
+        ->assertSuccessful();
+})->with($schoolClassRoutes);
 
-    public function test_historico_de_enturmacoes_bloqueia_matricula_de_outra_escola()
-    {
-        /** @var LegacyRegistration $registration */
-        $registration = LegacyRegistrationFactory::new()->create();
+test('historico de enturmacoes bloqueia usuario sem permissao', function () {
+    /** @var LegacyRegistration $registration */
+    $registration = LegacyRegistrationFactory::new()->create();
 
-        $this->login($this->schoolUser(Process::ENROLLMENT_HISTORY))
+    ($this->assertDenied)(
+        ($this->login)(($this->schoolUser)(school: $registration->school))
             ->get('/enrollment-history/' . $registration->getKey())
-            ->assertForbidden();
-    }
+    );
+});
 
-    public function test_historico_de_enturmacoes_permite_matricula_da_propria_escola()
-    {
-        /** @var LegacyRegistration $registration */
-        $registration = LegacyRegistrationFactory::new()->create();
+test('historico de enturmacoes bloqueia matricula de outra escola', function () {
+    /** @var LegacyRegistration $registration */
+    $registration = LegacyRegistrationFactory::new()->create();
 
-        $this->login($this->schoolUser(Process::ENROLLMENT_HISTORY, $registration->school))
-            ->get('/enrollment-history/' . $registration->getKey())
-            ->assertSuccessful();
-    }
-}
+    ($this->login)(($this->schoolUser)(Process::ENROLLMENT_HISTORY))
+        ->get('/enrollment-history/' . $registration->getKey())
+        ->assertForbidden();
+});
+
+test('historico de enturmacoes permite matricula da propria escola', function () {
+    /** @var LegacyRegistration $registration */
+    $registration = LegacyRegistrationFactory::new()->create();
+
+    ($this->login)(($this->schoolUser)(Process::ENROLLMENT_HISTORY, $registration->school))
+        ->get('/enrollment-history/' . $registration->getKey())
+        ->assertSuccessful();
+});

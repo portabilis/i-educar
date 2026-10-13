@@ -1,22 +1,15 @@
 <?php
 
-namespace Tests\Unit\Enum;
-
 use App\Models\Gender;
-use Tests\EnumTestCase;
+use Tests\TestCase;
 
-class GenderTest extends EnumTestCase
-{
-    public function getDescriptiveValues(): array
-    {
-        return [
-            1 => 'Masculino',
-            2 => 'Feminino',
-        ];
-    }
+uses(TestCase::class);
 
-    protected function getEnumName(): string
-    {
-        return Gender::class;
-    }
-}
+test('descriptive values', function () {
+    $values = (new Gender)->getDescriptiveValues();
+    $this->assertIsArray($values);
+    $this->assertJsonStringEqualsJsonString(collect([
+        1 => 'Masculino',
+        2 => 'Feminino',
+    ]), collect($values));
+});

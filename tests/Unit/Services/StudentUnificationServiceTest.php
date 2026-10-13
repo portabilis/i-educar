@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests\Unit\Services;
-
 use App\Exceptions\Unification\InactiveMainUnification;
 use App\Exceptions\Unification\UndoInactiveUnification;
 use App\Exceptions\Unification\WithoutPermission;
@@ -23,119 +21,110 @@ use Tests\TestCase;
  * Desfazer uma unificação de alunos: o que volta ao banco, o que marca o log
  * e quem pode desfazer o que outro usuário fez.
  */
-class StudentUnificationServiceTest extends TestCase
-{
-    use DatabaseTransactions;
+uses(TestCase::class, DatabaseTransactions::class);
 
-    private function service(Factory $factory): StudentUnificationService
-    {
+beforeEach(function () {
+    $this->service = function (Factory $factory): StudentUnificationService {
         return new StudentUnificationService(User::query()->findOrFail($factory->create()->getKey()));
-    }
+    };
 
-    private function unification(array $attributes = []): LogUnification
-    {
+    $this->unification = function (array $attributes = []): LogUnification {
         return LogUnificationFactory::new()->create($attributes + [
             'type' => Student::class,
             'main_id' => LegacyStudentFactory::new()->create(),
             'duplicates_id' => '[]',
             'active' => true,
         ]);
-    }
+    };
+});
 
-    public function test_undo_restores_the_logged_rows_and_closes_the_unification(): void
-    {
-        $service = $this->service(LegacyUserFactory::new()->admin());
-        $duplicate = LegacyStudentFactory::new()->create(['ativo' => 0]);
-        $unification = $this->unification(['duplicates_id' => json_encode([$duplicate->getKey()])]);
+test('undo restores the logged rows and closes the unification', function () {
+    $service = ($this->service)(LegacyUserFactory::new()->admin());
+    $duplicate = LegacyStudentFactory::new()->create(['ativo' => 0]);
+    $unification = ($this->unification)(['duplicates_id' => json_encode([$duplicate->getKey()])]);
 
-        $old = new LogUnificationOldData;
-        $old->unification_id = $unification->getKey();
-        $old->table = 'pmieducar.aluno';
-        $old->keys = json_encode([['cod_aluno' => $duplicate->getKey()]]);
-        $old->old_data = json_encode(['ativo' => 1, 'codigo_sistema' => 'EXT-1']);
-        $old->save();
+    $old = new LogUnificationOldData;
+    $old->unification_id = $unification->getKey();
+    $old->table = 'pmieducar.aluno';
+    $old->keys = json_encode([['cod_aluno' => $duplicate->getKey()]]);
+    $old->old_data = json_encode(['ativo' => 1, 'codigo_sistema' => 'EXT-1']);
+    $old->save();
 
-        $service->undo($unification);
+    $service->undo($unification);
 
-        $row = DB::table('pmieducar.aluno')->where('cod_aluno', $duplicate->getKey())->first();
+    $row = DB::table('pmieducar.aluno')->where('cod_aluno', $duplicate->getKey())->first();
 
-        $this->assertSame(1, $row->ativo);
-        $this->assertSame('EXT-1', $row->codigo_sistema);
+    $this->assertSame(1, $row->ativo);
+    $this->assertSame('EXT-1', $row->codigo_sistema);
 
-        $unification->refresh();
+    $unification->refresh();
 
-        $this->assertFalse($unification->active);
-        $this->assertSame($unification->updatedBy?->getKey(), $unification->updated_by);
-    }
+    $this->assertFalse($unification->active);
+    $this->assertSame($unification->updatedBy?->getKey(), $unification->updated_by);
+});
 
-    public function test_cannot_undo_twice(): void
-    {
-        $this->expectException(UndoInactiveUnification::class);
-        $this->expectExceptionMessage('A unificação já foi desfeita anteriormente.');
+test('cannot undo twice', function () {
+    $this->expectException(UndoInactiveUnification::class);
+    $this->expectExceptionMessage('A unificação já foi desfeita anteriormente.');
 
-        $this->service(LegacyUserFactory::new()->admin())->canUndo($this->unification(['active' => false]));
-    }
+    ($this->service)(LegacyUserFactory::new()->admin())->canUndo(($this->unification)(['active' => false]));
+});
 
-    public function test_cannot_undo_when_the_main_student_is_gone(): void
-    {
-        $this->expectException(InactiveMainUnification::class);
-        $this->expectExceptionMessage('O aluno está inativo ou foi unificado com outro aluno.');
+test('cannot undo when the main student is gone', function () {
+    $this->expectException(InactiveMainUnification::class);
+    $this->expectExceptionMessage('O aluno está inativo ou foi unificado com outro aluno.');
 
-        $this->service(LegacyUserFactory::new()->admin())->canUndo($this->unification([
-            'main_id' => LegacyStudentFactory::new()->create(['ativo' => 0, 'data_exclusao' => now()]),
-        ]));
-    }
+    ($this->service)(LegacyUserFactory::new()->admin())->canUndo(($this->unification)([
+        'main_id' => LegacyStudentFactory::new()->create(['ativo' => 0, 'data_exclusao' => now()]),
+    ]));
+});
 
-    public function test_school_user_undoes_only_what_a_user_of_the_same_school_did(): void
-    {
-        $school = LegacySchoolFactory::new()->create();
-        $service = $this->service(LegacyUserFactory::new()->school()->withSchool($school));
-        $colleague = LegacyUserFactory::new()->school()->withSchool($school)->create();
-        $stranger = LegacyUserFactory::new()->school()->withSchool(LegacySchoolFactory::new()->create())->create();
+test('school user undoes only what a user of the same school did', function () {
+    $school = LegacySchoolFactory::new()->create();
+    $service = ($this->service)(LegacyUserFactory::new()->school()->withSchool($school));
+    $colleague = LegacyUserFactory::new()->school()->withSchool($school)->create();
+    $stranger = LegacyUserFactory::new()->school()->withSchool(LegacySchoolFactory::new()->create())->create();
 
-        $unification = $this->unification(['created_by' => $colleague->getKey()]);
+    $unification = ($this->unification)(['created_by' => $colleague->getKey()]);
+    $service->undo($unification);
+
+    $this->assertFalse($unification->refresh()->active);
+
+    $this->expectException(WithoutPermission::class);
+    $this->expectExceptionMessage('Você não tem permissão para desfazer essa unificação.');
+
+    $service->canUndo(($this->unification)(['created_by' => $stranger->getKey()]));
+});
+
+test('institutional user undoes what institutional or school users did', function () {
+    $service = ($this->service)(LegacyUserFactory::new()->institutional());
+    $institutional = LegacyUserFactory::new()->institutional()->create();
+    $schooling = LegacyUserFactory::new()->school()->create();
+    $admin = LegacyUserFactory::new()->admin()->create();
+
+    foreach ([$institutional, $schooling] as $owner) {
+        $unification = ($this->unification)(['created_by' => $owner->getKey()]);
         $service->undo($unification);
 
         $this->assertFalse($unification->refresh()->active);
-
-        $this->expectException(WithoutPermission::class);
-        $this->expectExceptionMessage('Você não tem permissão para desfazer essa unificação.');
-
-        $service->canUndo($this->unification(['created_by' => $stranger->getKey()]));
     }
 
-    public function test_institutional_user_undoes_what_institutional_or_school_users_did(): void
-    {
-        $service = $this->service(LegacyUserFactory::new()->institutional());
-        $institutional = LegacyUserFactory::new()->institutional()->create();
-        $schooling = LegacyUserFactory::new()->school()->create();
-        $admin = LegacyUserFactory::new()->admin()->create();
+    $this->expectException(WithoutPermission::class);
 
-        foreach ([$institutional, $schooling] as $owner) {
-            $unification = $this->unification(['created_by' => $owner->getKey()]);
-            $service->undo($unification);
+    $service->canUndo(($this->unification)(['created_by' => $admin->getKey()]));
+});
 
-            $this->assertFalse($unification->refresh()->active);
-        }
+test('admin and unifications without an owner have no permission check', function () {
+    $admin = ($this->service)(LegacyUserFactory::new()->admin());
+    $byAdmin = ($this->unification)(['created_by' => LegacyUserFactory::new()->admin()->create()->getKey()]);
+    $admin->undo($byAdmin);
 
-        $this->expectException(WithoutPermission::class);
+    $this->assertFalse($byAdmin->refresh()->active);
 
-        $service->canUndo($this->unification(['created_by' => $admin->getKey()]));
-    }
+    // O log aponta para uma pessoa que não é usuário: ninguém é dono.
+    $school = ($this->service)(LegacyUserFactory::new()->school()->withSchool(LegacySchoolFactory::new()->create()));
+    $orphan = ($this->unification)();
+    $school->undo($orphan);
 
-    public function test_admin_and_unifications_without_an_owner_have_no_permission_check(): void
-    {
-        $admin = $this->service(LegacyUserFactory::new()->admin());
-        $byAdmin = $this->unification(['created_by' => LegacyUserFactory::new()->admin()->create()->getKey()]);
-        $admin->undo($byAdmin);
-
-        $this->assertFalse($byAdmin->refresh()->active);
-
-        // O log aponta para uma pessoa que não é usuário: ninguém é dono.
-        $school = $this->service(LegacyUserFactory::new()->school()->withSchool(LegacySchoolFactory::new()->create()));
-        $orphan = $this->unification();
-        $school->undo($orphan);
-
-        $this->assertFalse($orphan->refresh()->active);
-    }
-}
+    $this->assertFalse($orphan->refresh()->active);
+});

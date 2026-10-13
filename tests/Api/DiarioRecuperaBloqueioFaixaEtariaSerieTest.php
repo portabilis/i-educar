@@ -1,40 +1,34 @@
 <?php
 
-namespace Tests\Api;
-
 use Database\Factories\LegacyGradeFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\Api\DiarioApiRequestTestTrait;
 use Tests\TestCase;
 
-class DiarioRecuperaBloqueioFaixaEtariaSerieTest extends TestCase
-{
-    use DatabaseTransactions;
-    use DiarioApiRequestTestTrait;
+uses(TestCase::class, DatabaseTransactions::class, DiarioApiRequestTestTrait::class);
 
-    public function test_recupera_bloqueio_faixa_etaria_serie()
-    {
-        $grade = LegacyGradeFactory::new()->create();
+test('recupera bloqueio faixa etaria serie', function () {
+    $grade = LegacyGradeFactory::new()->create();
 
-        $data = [
-            'oper' => 'get',
-            'resource' => 'bloqueio-faixa-etaria',
-            'instituicao_id' => $grade->course->ref_cod_instituicao,
-            'serie_id' => $grade->getKey(),
-            'data_nascimento' => now()->subYears($grade->idade_inicial)->format('Y-m-d'),
-        ];
+    $data = [
+        'oper' => 'get',
+        'resource' => 'bloqueio-faixa-etaria',
+        'instituicao_id' => $grade->course->ref_cod_instituicao,
+        'serie_id' => $grade->getKey(),
+        'data_nascimento' => now()->subYears($grade->idade_inicial)->format('Y-m-d'),
+    ];
 
-        $response = $this->getResource('/module/Api/Serie', $data);
+    $response = $this->getResource('/module/Api/Serie', $data);
 
-        $response->assertSuccessful()
-            ->assertJson(
-                [
-                    'bloqueado' => false,
-                    'mensagem_bloqueio' => '',
-                    'oper' => 'get',
-                    'resource' => 'bloqueio-faixa-etaria',
-                    'msgs' => [],
-                    'any_error_msg' => false,
-                ]
-            );
-    }
-}
+    $response->assertSuccessful()
+        ->assertJson(
+            [
+                'bloqueado' => false,
+                'mensagem_bloqueio' => '',
+                'oper' => 'get',
+                'resource' => 'bloqueio-faixa-etaria',
+                'msgs' => [],
+                'any_error_msg' => false,
+            ]
+        );
+});

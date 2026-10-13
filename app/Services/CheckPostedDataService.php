@@ -26,8 +26,9 @@ class CheckPostedDataService
 
         $schoolClass = $schoolClassQuery->get();
 
+        // Inalcançável: get() devolve uma coleção, que nunca é `empty()`.
         if (empty($schoolClass)) {
-            return false;
+            return false; // @codeCoverageIgnore
         }
 
         return

@@ -51,7 +51,11 @@ return new class extends clsDetalhe
         $curso = LegacyCourse::query()->find($cod_curso);
 
         if (!$curso) {
-            $this->simpleRedirect('educar_curso_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_curso_lst.php',
+                registro: 'curso',
+                codigo: $cod_curso,
+            );
         }
 
         $registro = $curso->getAttributes();

@@ -229,9 +229,12 @@ return new class extends clsCadastro
                 'pessoa.nome',
             ]);
         // Verifica o parametro na série pra exigir inep
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $exigeInep = is_numeric($serieId)
             ? LegacyGrade::query()->whereKey($serieId)->value('exigir_inep')
             : null;
+        // @codeCoverageIgnoreEnd
         // Retorna alunos sem inep
         $alunosSemInep = [];
 

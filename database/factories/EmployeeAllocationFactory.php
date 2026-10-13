@@ -21,7 +21,7 @@ class EmployeeAllocationFactory extends Factory
     {
         return [
             'carga_horaria' => $this->faker->randomNumber(3),
-            'periodo' => fn () => LegacyPeriodFactory::new()->create(),
+            'periodo' => fn () => LegacyPeriodFactory::new()->morning(),
             'hora_inicial' => '07:45',
             'hora_final' => '11:45',
             'dia_semana' => $this->faker->numberBetween(0, 7),

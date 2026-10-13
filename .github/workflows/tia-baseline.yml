@@ -1,0 +1,16 @@
+name: TIA Baseline
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+    with:
+      publish-baseline: true
+    secrets: inherit

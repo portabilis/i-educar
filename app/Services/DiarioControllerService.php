@@ -7,6 +7,7 @@ use App\Models\LegacySchoolClass;
 use App\Models\RegistrationStatus;
 use App\Models\View\Discipline;
 use App_Model_MatriculaSituacao;
+use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -43,6 +44,11 @@ class DiarioControllerService
                     'ano',
                 ]);
         });
+    }
+
+    public function getMatricula(int $matriculaId): array
+    {
+        return \App_Model_IedFinder::getMatricula($matriculaId);
     }
 
     public function getRegraAvaliacaoPorMatricula(int $matriculaId)
@@ -95,6 +101,73 @@ class DiarioControllerService
         return in_array($componenteCurricularId, \CoreExt_Entity::entityFilterAttr($componentes, 'id', 'id'));
     }
 
+    /**
+     * A dispensa é por etapa: o componente dispensado numa etapa continua na matrícula nas demais.
+     * O exame (Rc) não tem etapa própria e vale enquanto o componente estiver na matrícula em alguma
+     * das etapas que cursa: as específicas do componente ou, sem elas, as do calendário.
+     */
+    public function validateComponenteMatriculaEtapa(int $componenteCurricularId, int $matriculaId, int $turmaId, string $etapa, int $quantidadeEtapas): bool
+    {
+        if (is_numeric($etapa)) {
+            return $this->isComponenteNaMatriculaNaEtapa($componenteCurricularId, $matriculaId, $turmaId, (int) $etapa);
+        }
+
+        foreach ($this->getEtapasCursadas($componenteCurricularId, $turmaId, $quantidadeEtapas) as $etapaComponente) {
+            if ($this->isComponenteNaMatriculaNaEtapa($componenteCurricularId, $matriculaId, $turmaId, (int) $etapaComponente)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Na etapa numérica, a etapa está entre as dispensadas; no exame (Rc), todas as etapas que o componente cursa estão.
+     */
+    public function isAlunoDispensadoNaEtapa(int $componenteCurricularId, LegacyRegistration $registration, int $turmaId, string $etapa, int $quantidadeEtapas): bool
+    {
+        $etapasDispensadas = \App_Model_IedFinder::validaDispensaPorMatricula(
+            $registration->getKey(),
+            $registration->ref_ref_cod_serie,
+            $registration->ref_ref_cod_escola,
+            $componenteCurricularId
+        );
+
+        if (is_numeric($etapa)) {
+            return in_array((int) $etapa, $etapasDispensadas);
+        }
+
+        $etapasCursadas = $this->getEtapasCursadas($componenteCurricularId, $turmaId, $quantidadeEtapas);
+
+        return $etapasCursadas && !array_diff($etapasCursadas, $etapasDispensadas);
+    }
+
+    /**
+     * Etapas específicas do componente ou, sem elas, as do calendário.
+     */
+    private function getEtapasCursadas(int $componenteCurricularId, int $turmaId, int $quantidadeEtapas): array
+    {
+        return \App_Model_IedFinder::getEtapasComponente($turmaId, $componenteCurricularId)
+            ?: ($quantidadeEtapas > 0 ? range(1, $quantidadeEtapas) : []);
+    }
+
+    private function isComponenteNaMatriculaNaEtapa(int $componenteCurricularId, int $matriculaId, int $turmaId, int $etapa): bool
+    {
+        try {
+            $componentes = \App_Model_IedFinder::getComponentesPorMatricula(
+                codMatricula: $matriculaId,
+                componenteCurricularId: $componenteCurricularId,
+                etapa: $etapa,
+                turma: $turmaId,
+            );
+        } catch (DisciplineNotLinkedToRegistrationException) {
+            // Sem vínculo na turma, a série só devolve o componente nas etapas específicas dele.
+            return false;
+        }
+
+        return array_key_exists($componenteCurricularId, $componentes);
+    }
+
     public function getServiceBoletim(int $turmaId, int $alunoId, ?LegacyRegistration $registration): \Avaliacao_Service_Boletim
     {
         if (is_null($registration)) {
@@ -107,8 +180,11 @@ class DiarioControllerService
 
         $boletim = new \Avaliacao_Service_Boletim($params);
 
+        // Inalcançável: `new` nunca devolve nulo.
         if (is_null($boletim)) {
+            // @codeCoverageIgnoreStart
             throw new \CoreExt_Exception("Não foi possível instanciar o serviço boletim para a matrícula {$registration->getKey()}.");
+            // @codeCoverageIgnoreEnd
         }
 
         return $boletim;

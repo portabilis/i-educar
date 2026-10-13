@@ -1103,6 +1103,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     $matricula['aluno_id'] = $aluno['ref_cod_aluno'];
                     $matricula['nome'] = $this->toUtf8($aluno['nome_aluno']);
                     $matricula['nome_curso'] = $this->toUtf8($aluno['nm_curso']);
+                    $matricula['serie_id'] = $aluno['ref_ref_cod_serie'];
                     $matricula['nome_serie'] = $this->toUtf8($this->getNomeSerie($aluno['ref_ref_cod_serie']));
                     $matricula['nome_turma'] = $this->toUtf8($aluno['nm_turma']);
                     $matricula['situacao_historico'] = $this->getSituacaoHistorico(

@@ -1,9 +1,6 @@
 <?php
 
-namespace Tests\Unit\Services;
-
 use App\Jobs\DatabaseToCsvExporter;
-use App\Models\Exporter\Export;
 use App\Services\Exporter\ExportService;
 use Database\Factories\Exporter\ExportFactory;
 use Database\Factories\LegacyCourseFactory;
@@ -26,102 +23,102 @@ use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class ExportServiceTest extends TestCase
-{
-    use DatabaseTransactions;
+uses(TestCase::class, DatabaseTransactions::class);
 
-    private Export $export;
-
-    private int $registrationId;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->export = ExportFactory::new()->create();
-
-        $count = DB::table('relatorio.situacao_matricula')->count();
-        if ($count === 0) {
-            $seed = new DefaultRelatorioSituacaoMatriculaTableSeeder;
-            $seed->run();
-        }
-        $institution = LegacyInstitutionFactory::new()->create();
-        $school = LegacySchoolFactory::new()->create([
-            'ref_cod_instituicao' => $institution->id,
-        ]);
-        $person = LegacyPersonFactory::new()->create();
-        LegacyIndividualFactory::new()->create([
-            'idpes' => $person->idpes,
-            'ativo' => 1,
-        ]);
-        $student = LegacyStudentFactory::new()->create([
-            'ref_idpes' => $person->idpes,
-            'ativo' => 1,
-        ]);
-        $course = LegacyCourseFactory::new()->create([
-            'ref_cod_instituicao' => $institution->id,
-        ]);
-        $grade = LegacyGradeFactory::new()->create([
-            'ref_cod_curso' => $course->id,
-        ]);
-        LegacySchoolCourseFactory::new()->create([
-            'ref_cod_escola' => $school->id,
-            'ref_cod_curso' => $course->id,
-        ]);
-        LegacySchoolGradeFactory::new()->create([
-            'ref_cod_escola' => $school->id,
-            'ref_cod_serie' => $grade->id,
-        ]);
-        $registration = LegacyRegistrationFactory::new()->create([
-            'ref_cod_aluno' => $student->cod_aluno,
-            'ref_ref_cod_serie' => $grade->id,
-            'ref_cod_curso' => $course->id,
-            'ref_ref_cod_escola' => $school->id,
-            'ativo' => 1,
-        ]);
-        $this->registrationId = $registration->getKey();
-        LegacyEvaluationRuleGradeYearFactory::new()->create([
-            'serie_id' => $grade->id,
-            'ano_letivo' => now()->year,
-        ]);
-        $schoolClass = LegacySchoolClassFactory::new()->create([
-            'ref_ref_cod_serie' => $grade->id,
-            'ref_cod_curso' => $course->id,
-            'ref_ref_cod_escola' => $school->id,
-            'ref_cod_instituicao' => $institution->id,
-        ]);
-        LegacyEnrollmentFactory::new()->active()->create([
-            'ref_cod_matricula' => $registration->id,
-            'ref_cod_turma' => $schoolClass->id,
-        ]);
-    }
-
-    public function test_export_service(): void
-    {
-        Queue::fake();
-        Queue::assertNothingPushed();
-        Queue::assertNotPushed(DatabaseToCsvExporter::class);
-        DatabaseToCsvExporter::dispatch($this->export);
-        Queue::assertPushed(DatabaseToCsvExporter::class, 1);
-
-        Storage::fake('s3');
-        $this->assertFalse(Storage::disk('s3')->exists($this->getFilename()));
-        $service = new ExportService($this->export, 's3');
-        $service->execute();
-        $this->assertTrue(Storage::disk('s3')->exists($this->getFilename()));
-
-        $content = Storage::disk('s3')->get($this->getFilename());
-
-        $this->assertStringContainsString('ID Matrícula', $content);
-        $this->assertStringContainsString((string) $this->registrationId, $content);
-    }
-
-    private function getFilename(): string
-    {
+beforeEach(function () {
+    $this->getFilename = function (): string {
         return sprintf(
             '%s/csv/%s/%s',
             $this->export->getConnectionName(),
             $this->export->hash,
             $this->export->filename
         );
+    };
+
+    $this->export = ExportFactory::new()->create();
+
+    $count = DB::table('relatorio.situacao_matricula')->count();
+    if ($count === 0) {
+        $seed = new DefaultRelatorioSituacaoMatriculaTableSeeder;
+        $seed->run();
     }
-}
+    $institution = LegacyInstitutionFactory::new()->create();
+    $school = LegacySchoolFactory::new()->create([
+        'ref_cod_instituicao' => $institution->id,
+    ]);
+    $person = LegacyPersonFactory::new()->create();
+    LegacyIndividualFactory::new()->create([
+        'idpes' => $person->idpes,
+        'ativo' => 1,
+    ]);
+    $student = LegacyStudentFactory::new()->create([
+        'ref_idpes' => $person->idpes,
+        'ativo' => 1,
+    ]);
+    $course = LegacyCourseFactory::new()->create([
+        'ref_cod_instituicao' => $institution->id,
+    ]);
+    $grade = LegacyGradeFactory::new()->create([
+        'ref_cod_curso' => $course->id,
+    ]);
+    LegacySchoolCourseFactory::new()->create([
+        'ref_cod_escola' => $school->id,
+        'ref_cod_curso' => $course->id,
+    ]);
+    LegacySchoolGradeFactory::new()->create([
+        'ref_cod_escola' => $school->id,
+        'ref_cod_serie' => $grade->id,
+    ]);
+    $registration = LegacyRegistrationFactory::new()->create([
+        'ref_cod_aluno' => $student->cod_aluno,
+        'ref_ref_cod_serie' => $grade->id,
+        'ref_cod_curso' => $course->id,
+        'ref_ref_cod_escola' => $school->id,
+        'ativo' => 1,
+    ]);
+    $this->registrationId = $registration->getKey();
+    LegacyEvaluationRuleGradeYearFactory::new()->create([
+        'serie_id' => $grade->id,
+        'ano_letivo' => now()->year,
+    ]);
+    $schoolClass = LegacySchoolClassFactory::new()->create([
+        'ref_ref_cod_serie' => $grade->id,
+        'ref_cod_curso' => $course->id,
+        'ref_ref_cod_escola' => $school->id,
+        'ref_cod_instituicao' => $institution->id,
+    ]);
+    LegacyEnrollmentFactory::new()->active()->create([
+        'ref_cod_matricula' => $registration->id,
+        'ref_cod_turma' => $schoolClass->id,
+    ]);
+});
+
+test('export service', function () {
+    Queue::fake();
+    Queue::assertNothingPushed();
+    Queue::assertNotPushed(DatabaseToCsvExporter::class);
+    DatabaseToCsvExporter::dispatch($this->export);
+    Queue::assertPushed(DatabaseToCsvExporter::class, 1);
+
+    Storage::fake('s3');
+    $this->assertFalse(Storage::disk('s3')->exists(($this->getFilename)()));
+    $service = new ExportService($this->export, 's3');
+    $service->execute();
+    $this->assertTrue(Storage::disk('s3')->exists(($this->getFilename)()));
+
+    $content = Storage::disk('s3')->get(($this->getFilename)());
+
+    $this->assertStringContainsString('ID Matrícula', $content);
+    $this->assertStringContainsString((string) $this->registrationId, $content);
+});
+
+test('o job roda a exportacao no disco padrao', function () {
+    Storage::fake(config('filesystems.default'));
+    $job = new DatabaseToCsvExporter($this->export);
+
+    $job->handle();
+
+    $this->assertTrue(Storage::disk(config('filesystems.default'))->exists(($this->getFilename)()));
+    $this->assertNotNull($this->export->refresh()->url);
+    $this->assertSame([$this->export->getConnectionName(), 'csv-export'], $job->tags());
+});

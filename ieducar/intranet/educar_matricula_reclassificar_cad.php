@@ -85,7 +85,13 @@ return new class extends clsCadastro
         $det_matricula = $obj_matricula->detalhe();
 
         if (!$det_matricula || $det_matricula['aprovado'] != 3) {
-            $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->redirectNotFound(
+                url: "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}",
+                registro: 'matrícula',
+                feminino: true,
+                motivo: 'A matrícula não existe, foi excluída ou não está em andamento.',
+                dica: 'Acesse a matrícula pela ficha do aluno.',
+            );
         }
 
         foreach ($det_matricula as $key => $value) {
@@ -256,7 +262,13 @@ return new class extends clsCadastro
         }
 
         if (!$det_matricula || $det_matricula['aprovado'] != 3) {
-            $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->redirectNotFound(
+                url: "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}",
+                registro: 'matrícula',
+                feminino: true,
+                motivo: 'A matrícula não existe, foi excluída ou não está em andamento.',
+                dica: 'Acesse a matrícula pela ficha do aluno.',
+            );
         }
         // Não testável: a reclassificação termina em `exit`, que encerraria a suíte de testes.
         // @codeCoverageIgnoreStart

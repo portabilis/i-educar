@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyGeneralDescriptiveOpinion;
+use App\Services\DiarioControllerService;
 use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Feature\Api\V2\CreatesScoreData;
@@ -167,4 +168,16 @@ test('stores opinion in stages above four when the school calendar has them', fu
         'etapa' => '6',
         'parecer' => 'Parecer da etapa 6',
     ]);
+});
+
+test('unexpected failure answers 500 with the reason', function () {
+    $data = $this->createScoreData(stageGeneralOpinionRule());
+    $service = Mockery::mock(DiarioControllerService::class)->makePartial();
+    $service->shouldReceive('getServiceBoletim')->andThrow(new Exception('falha inesperada'));
+    app()->instance(DiarioControllerService::class, $service);
+
+    $response = $this->postStageGeneralOpinion($data, ['parecer' => 'Bom']);
+
+    $response->assertStatus(500);
+    expect($response->json('message'))->toEndWith('(falha inesperada)');
 });

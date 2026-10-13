@@ -39,7 +39,7 @@
                 </td>
             </tr>
             <tr id="tr_nm_curso">
-                <td class="formlttd" valign="top"><span class="form">Curso</span></td>
+                <td class="formlttd" valign="top"><span class="form"><label for="ref_cod_curso">Curso</label></span></td>
                 <td class="formlttd" valign="top">
                     <span class="form">
                         <select class="geral" name="ref_cod_curso" id="ref_cod_curso" style="width: 308px;">
@@ -67,7 +67,7 @@
             </tr>
             <tr id="tr_nm_data" class="field-transfer">
                 <td class="formlttd" valign="top">
-                    <span class="form">Bloquear enturmação após atingir limite de vagas</span>
+                    <span class="form"><label for="bloquear_enturmacao_sem_vagas">Bloquear enturmação após atingir limite de vagas</label></span>
                 </td>
                 <td class="formlttd" valign="top">
                    <span class="form">

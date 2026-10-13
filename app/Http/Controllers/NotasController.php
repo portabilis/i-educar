@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostNotasRequest;
+use iEducar\Modules\Enrollments\Exceptions\StudentExemptedFromDisciplineStage;
+use iEducar\Modules\EvaluationRules\Exceptions\DisciplineNotExistsForRegistrationStage;
 use iEducar\Modules\EvaluationRules\Exceptions\DisciplineNotExistsForSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\ExamScoreGreaterThanMaxAllowed;
 use iEducar\Modules\EvaluationRules\Exceptions\ScoreGreaterThanMaxAllowed;
@@ -30,7 +32,28 @@ class NotasController extends DiarioController
             $boletim = $this->service->getServiceBoletim($turmaId, $alunoId, $matricula);
 
             $etapa = $request->input('etapa');
-            $this->validateStageBySchoolCalendar($etapa, $turmaId, (int) $boletim->getOption('etapas'));
+            $quantidadeEtapas = (int) $boletim->getOption('etapas');
+            $this->validateStageBySchoolCalendar($etapa, $turmaId, $quantidadeEtapas);
+
+            if (!$this->service->validateComponenteMatriculaEtapa(
+                componenteCurricularId: $componenteCurricularId,
+                matriculaId: $matricula->getKey(),
+                turmaId: $turmaId,
+                etapa: $etapa,
+                quantidadeEtapas: $quantidadeEtapas,
+            )) {
+                if ($this->service->isAlunoDispensadoNaEtapa(
+                    componenteCurricularId: $componenteCurricularId,
+                    registration: $matricula,
+                    turmaId: $turmaId,
+                    etapa: $etapa,
+                    quantidadeEtapas: $quantidadeEtapas,
+                )) {
+                    throw new StudentExemptedFromDisciplineStage($componenteCurricularId, $matricula->getKey(), $etapa);
+                }
+
+                throw new DisciplineNotExistsForRegistrationStage($componenteCurricularId, $matricula->getKey(), $etapa);
+            }
 
             $nota = $request->input('nota');
             $notaRecuperacao = $request->input('recuperacao');
@@ -79,7 +102,7 @@ class NotasController extends DiarioController
             }
 
             $this->service->atualizaNotaNecessariaExame($turmaId, $alunoId, $componenteCurricularId, $matricula);
-        } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException|DisciplineNotExistsForSchoolClass|MissingStagesException|StageNotExistsForSchoolClass|ScoreGreaterThanMaxAllowed|ScoreLesserThanMinAllowed|ExamScoreGreaterThanMaxAllowed $exception) {
+        } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException|DisciplineNotExistsForSchoolClass|DisciplineNotExistsForRegistrationStage|StudentExemptedFromDisciplineStage|MissingStagesException|StageNotExistsForSchoolClass|ScoreGreaterThanMaxAllowed|ScoreLesserThanMinAllowed|ExamScoreGreaterThanMaxAllowed $exception) {
             return $this->unprocessableResponse($exception);
         } catch (\Exception $exception) {
             return response()->json([

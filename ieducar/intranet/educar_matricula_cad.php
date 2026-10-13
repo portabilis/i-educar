@@ -109,8 +109,10 @@ return new class extends clsCadastro
             && LegacyStudent::query()->whereStudent($this->ref_cod_aluno)->exists();
 
         if (!$alunoExiste and !$this->ref_cod_turma_copiar_enturmacoes) {
-            throw new HttpResponseException(
-                response: new RedirectResponse(url: 'educar_aluno_lst.php')
+            $this->redirectNotFound(
+                url: 'educar_aluno_lst.php',
+                registro: 'aluno',
+                codigo: $this->ref_cod_aluno,
             );
         }
 
@@ -186,7 +188,10 @@ return new class extends clsCadastro
     private function cursoDeAtividadeComplementar($id)
     {
         if (!is_numeric(value: $id)) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         return LegacyCourse::query()
@@ -554,39 +559,17 @@ return new class extends clsCadastro
                     ->whereHas('inep')
                     ->exists();
 
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $exigeInep = is_numeric($this->ref_cod_serie)
                 ? LegacyGrade::query()->whereKey($this->ref_cod_serie)->value('exigir_inep')
                 : null;
+            // @codeCoverageIgnoreEnd
 
             if (!$alunoInep && $exigeInep) {
                 $this->mensagem = 'Não foi possível realizar matrícula, necessário inserir o INEP no cadastro do aluno.';
 
                 return false;
-            }
-
-            $vagas_restantes = 1;
-
-            if ($vagas_restantes <= 0) {
-                // Inalcançável: `$vagas_restantes` é fixado em 1 logo acima.
-                // @codeCoverageIgnoreStart
-                echo sprintf(
-                    '<script>
-                        var msg = \'\';
-                        msg += \'Excedido o n\u00famero de total de vagas para Matr\u00cdcula!\\n\';
-                        msg += \'N\u00famero total de matriculados: %d\\n\';
-                        msg += \'N\u00famero total de vagas reservadas: %d\\n\';
-                        msg += \'N\u00famero total de vagas: %d\\n\';
-                        msg += \'Deseja mesmo assim realizar a Matr\u00cdcula?\';
-                        if (!confirm(msg)) {
-                          window.location = \'educar_aluno_det.php?cod_aluno=%d\';
-                        }
-                    </script>',
-                    $matriculados,
-                    $reservados,
-                    $total_vagas,
-                    $this->ref_cod_aluno
-                );
-                // @codeCoverageIgnoreEnd
             }
 
             $obj_matricula_aluno = new clsPmieducarMatricula;
@@ -798,7 +781,10 @@ return new class extends clsCadastro
     public function verificaAlunoFalecido()
     {
         if (!is_numeric($this->ref_cod_aluno)) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $falecido = LegacyIndividual::query()

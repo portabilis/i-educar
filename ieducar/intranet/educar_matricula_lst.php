@@ -66,6 +66,8 @@ return new class extends clsListagem
         $this->ref_cod_escola = request()->integer('ref_cod_escola') ?: null;
 
         if (!$this->ref_cod_aluno) {
+            // Repassa a mensagem de quem redirecionou para cá, senão ela se perde no segundo redirecionamento
+            session()->reflash();
             $this->simpleRedirect(url: 'educar_aluno_lst.php');
         }
 

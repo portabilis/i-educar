@@ -62,7 +62,7 @@ test('fora do nível de administrador não mostra a instituição nem os botões
     $this->get($this->url)
         ->assertOk()
         ->assertSee('Curso Alfa')
-        ->assertDontSee($this->course->institution->nm_instituicao, false)
+        ->assertDontSee($this->course->institution->nm_instituicao)
         ->assertDontSee('educar_curso_cad.php?cod_curso=' . $this->course->getKey(), false);
 });
 

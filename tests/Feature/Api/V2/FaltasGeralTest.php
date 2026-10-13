@@ -2,6 +2,7 @@
 
 use App\Models\LegacyDisciplineAbsence;
 use App\Models\LegacyGeneralAbsence;
+use App\Services\DiarioControllerService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Feature\Api\V2\CreatesAbsenceData;
 use Tests\TestCase;
@@ -181,4 +182,30 @@ test('stores absence in stages above four when the school calendar has them', fu
         'quantidade' => 2,
         'etapa' => 6,
     ]);
+});
+
+test('unexpected failure answers 500 with the reason', function () {
+    $data = $this->createAbsenceData();
+    $service = Mockery::mock(DiarioControllerService::class)->makePartial();
+    $service->shouldReceive('getServiceBoletim')->andThrow(new Exception('falha inesperada'));
+    app()->instance(DiarioControllerService::class, $service);
+
+    $response = $this->withHeaders(['token' => 'valid-token'])->postJson('/api/v2/falta-geral', $this->generalAbsencePayload($data));
+
+    $response->assertStatus(500);
+    expect($response->json('message'))->toEndWith('(falha inesperada)');
+});
+
+test('rejects registration whose enrollment is in an inactive school class', function () {
+    $data = $this->createAbsenceData();
+    $data['school_class']->update(['ativo' => 0]);
+
+    $this->withHeaders(['token' => 'valid-token'])
+        ->postJson('/api/v2/falta-geral', $this->generalAbsencePayload($data))
+        ->assertStatus(422)
+        ->assertJsonValidationErrors([
+            'aluno_id' => 'Aluno não enturmado.',
+        ]);
+
+    $this->assertDatabaseCount(LegacyGeneralAbsence::class, 0);
 });

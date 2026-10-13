@@ -1,22 +1,20 @@
 <?php
 
-class App_Model_MatriculaTest extends UnitBaseTest
-{
-    public function test_atualiza_matricula()
-    {
-        $matricula = $this->getCleanMock('clsPmieducarMatricula');
-        $matricula->expects($this->once())
-            ->method('edita')
-            ->willReturn(true);
+uses(UnitBaseTest::class);
 
-        // Guarda no repositório estático de classes
-        CoreExt_Entity::addClassToStorage(
-            'clsPmieducarMatricula',
-            $matricula,
-            null,
-            true
-        );
+test('atualiza matricula', function () {
+    $matricula = $this->getCleanMock('clsPmieducarMatricula');
+    $matricula->expects($this->once())
+        ->method('edita')
+        ->willReturn(true);
 
-        App_Model_Matricula::atualizaMatricula(1, 1, true);
-    }
-}
+    // Guarda no repositório estático de classes
+    CoreExt_Entity::addClassToStorage(
+        'clsPmieducarMatricula',
+        $matricula,
+        null,
+        true
+    );
+
+    App_Model_Matricula::atualizaMatricula(1, 1, true);
+});

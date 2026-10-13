@@ -1,21 +1,15 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacySchoolHistory;
 use App\Models\LegacySchoolHistoryDiscipline;
 use App\Models\LegacyStudent;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacySchoolHistoryDisciplineTest extends EloquentTestCase
-{
-    protected $relations = [
-        'student' => LegacyStudent::class,
-        'schoolHistory' => LegacySchoolHistory::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return LegacySchoolHistoryDiscipline::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacySchoolHistoryDiscipline::class, relations: [
+    'student' => LegacyStudent::class,
+    'schoolHistory' => LegacySchoolHistory::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

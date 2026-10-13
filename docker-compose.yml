@@ -91,6 +91,8 @@ services:
     volumes:
       - ./:/var/www/ieducar
       - pest_node_modules:/var/www/ieducar/node_modules
+      # Grafo do `pest --tia`, que sobrevive à recriação do container.
+      - pest_tia:/root/.pest
     depends_on:
       postgres:
         condition: service_started
@@ -106,3 +108,4 @@ services:
 volumes:
     postgres:
     pest_node_modules:
+    pest_tia:

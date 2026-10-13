@@ -503,27 +503,24 @@ return new class extends clsCadastro
         );
 
         try {
-            app(AcademicYearService::class)->deleteAcademicYear(
+            $excluiu = app(AcademicYearService::class)->deleteAcademicYear(
                 schoolId: $this->ref_ref_cod_escola,
                 year: $this->ref_ano,
                 userId: $this->pessoa_logada
             );
 
             if ($excluiu) {
-                // Inalcançável: `$excluiu` nunca é definida.
-                // @codeCoverageIgnoreStart
                 $this->mensagem = 'Exclusão efetuada com sucesso.<br />';
                 $this->simpleRedirect(url: 'educar_escola_lst.php');
 
                 return true;
-                // @codeCoverageIgnoreEnd
             }
 
+            // Inalcançável: `deleteAcademicYear()` sempre retorna true e nunca lança `AcademicYearServiceException`.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Exclusão não realizada.<br />';
 
             return false;
-            // Inalcançável: `deleteAcademicYear()` nunca lança `AcademicYearServiceException`.
-            // @codeCoverageIgnoreStart
         } catch (AcademicYearServiceException $e) {
             $this->mensagem = 'Erro na exclusão: ' . $e->getMessage();
 

@@ -195,7 +195,7 @@ button.submit:disabled {
   margin-left: 335px;
   color: #188ad1;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
   #eye {
     margin-top: 17px !important;
     margin-left: -25px !important;

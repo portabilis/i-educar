@@ -1,26 +1,21 @@
 <?php
 
-namespace Tests\Api;
-
 use App\Models\LegacyIndividual;
-use App\Models\LegacyMaritalStatus;
 use App\Models\LegacyStudent;
 use Database\Factories\LegacyIndividualFactory;
 use Database\Factories\LegacyMaritalStatusFactory;
 use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Event;
+use Tests\Api\DiarioApiRequestTestTrait;
 use Tests\TestCase;
 
-class AlunoEndpointTest extends TestCase
-{
-    use DatabaseTransactions;
-    use DiarioApiRequestTestTrait;
+uses(TestCase::class, DatabaseTransactions::class, DiarioApiRequestTestTrait::class);
 
-    private ?LegacyMaritalStatus $maritalStatus = null;
+beforeEach(function () {
+    $this->maritalStatus = null;
 
-    private function createIndividual(): LegacyIndividual
-    {
+    $this->createIndividual = function (): LegacyIndividual {
         $this->maritalStatus ??= LegacyMaritalStatusFactory::new()->create([
             'ideciv' => 1,
             'descricao' => 'Solteiro',
@@ -29,10 +24,9 @@ class AlunoEndpointTest extends TestCase
         return LegacyIndividualFactory::new()->create([
             'ideciv' => $this->maritalStatus,
         ]);
-    }
+    };
 
-    private function putData(LegacyStudent $student, array $params): array
-    {
+    $this->putData = function (LegacyStudent $student, array $params): array {
         return array_merge([
             'oper' => 'put',
             'resource' => 'aluno',
@@ -45,111 +39,107 @@ class AlunoEndpointTest extends TestCase
             'deficiencias' => [],
             'transtornos' => [],
         ], $params);
-    }
+    };
+});
 
-    public function test_put_com_pessoa_id_vazia_nao_grava_pai_e_mae(): void
-    {
-        Event::fake();
+test('put com pessoa id vazia nao grava pai e mae', function () {
+    Event::fake();
 
-        $mae = $this->createIndividual();
-        $student = LegacyStudentFactory::new()->create();
+    $mae = ($this->createIndividual)();
+    $student = LegacyStudentFactory::new()->create();
 
-        LegacyIndividual::query()->whereKey($student->ref_idpes)->update([
-            'idpes_mae' => $mae->getKey(),
-        ]);
+    LegacyIndividual::query()->whereKey($student->ref_idpes)->update([
+        'idpes_mae' => $mae->getKey(),
+    ]);
 
-        $response = $this->getResource('/module/Api/Aluno', $this->putData($student, [
-            'pessoa_id' => '',
-            'mae_id' => '',
-            'pai_id' => '',
-        ]));
+    $response = $this->getResource('/module/Api/Aluno', ($this->putData)($student, [
+        'pessoa_id' => '',
+        'mae_id' => '',
+        'pai_id' => '',
+    ]));
 
-        $response->assertStatus(200);
-        $this->assertTrue($response->json('any_error_msg'));
+    $response->assertStatus(200);
+    $this->assertTrue($response->json('any_error_msg'));
 
-        $this->assertEquals(
-            $mae->getKey(),
-            LegacyIndividual::query()->whereKey($student->ref_idpes)->value('idpes_mae')
-        );
-    }
+    $this->assertEquals(
+        $mae->getKey(),
+        LegacyIndividual::query()->whereKey($student->ref_idpes)->value('idpes_mae')
+    );
+});
 
-    public function test_put_reprovado_nao_grava_pai_e_mae(): void
-    {
-        Event::fake();
+test('put reprovado nao grava pai e mae', function () {
+    Event::fake();
 
-        $maeAtual = $this->createIndividual();
-        $maeNova = $this->createIndividual();
-        $student = LegacyStudentFactory::new()->create();
+    $maeAtual = ($this->createIndividual)();
+    $maeNova = ($this->createIndividual)();
+    $student = LegacyStudentFactory::new()->create();
 
-        LegacyIndividual::query()->whereKey($student->ref_idpes)->update([
-            'idpes_mae' => $maeAtual->getKey(),
-        ]);
+    LegacyIndividual::query()->whereKey($student->ref_idpes)->update([
+        'idpes_mae' => $maeAtual->getKey(),
+    ]);
 
-        $response = $this->getResource('/module/Api/Aluno', $this->putData($student, [
-            'mae_id' => $maeNova->getKey(),
-            'tipo_transporte' => 'invalido',
-        ]));
+    $response = $this->getResource('/module/Api/Aluno', ($this->putData)($student, [
+        'mae_id' => $maeNova->getKey(),
+        'tipo_transporte' => 'invalido',
+    ]));
 
-        $response->assertStatus(200);
-        $this->assertTrue($response->json('any_error_msg'));
+    $response->assertStatus(200);
+    $this->assertTrue($response->json('any_error_msg'));
 
-        $this->assertEquals(
-            $maeAtual->getKey(),
-            LegacyIndividual::query()->whereKey($student->ref_idpes)->value('idpes_mae')
-        );
-    }
+    $this->assertEquals(
+        $maeAtual->getKey(),
+        LegacyIndividual::query()->whereKey($student->ref_idpes)->value('idpes_mae')
+    );
+});
 
-    public function test_put_com_pai_e_mae_vazios_limpa_os_vinculos(): void
-    {
-        Event::fake();
+test('put com pai e mae vazios limpa os vinculos', function () {
+    Event::fake();
 
-        $mae = $this->createIndividual();
-        $student = LegacyStudentFactory::new()->create();
+    $mae = ($this->createIndividual)();
+    $student = LegacyStudentFactory::new()->create();
 
-        LegacyIndividual::query()->whereKey($student->ref_idpes)->update([
-            'idpes_mae' => $mae->getKey(),
-        ]);
+    LegacyIndividual::query()->whereKey($student->ref_idpes)->update([
+        'idpes_mae' => $mae->getKey(),
+    ]);
 
-        $response = $this->getResource('/module/Api/Aluno', $this->putData($student, [
-            'mae_id' => '',
-            'pai_id' => '',
-        ]));
+    $response = $this->getResource('/module/Api/Aluno', ($this->putData)($student, [
+        'mae_id' => '',
+        'pai_id' => '',
+    ]));
 
-        $response->assertStatus(200);
-        $this->assertFalse($response->json('any_error_msg'));
+    $response->assertStatus(200);
+    $this->assertFalse($response->json('any_error_msg'));
 
-        $this->assertNull(
-            LegacyIndividual::query()->whereKey($student->ref_idpes)->value('idpes_mae')
-        );
-    }
+    $this->assertNull(
+        LegacyIndividual::query()->whereKey($student->ref_idpes)->value('idpes_mae')
+    );
+});
 
-    public function test_post_reprovado_nao_devolve_identificador_nem_cria_aluno(): void
-    {
-        Event::fake();
+test('post reprovado nao devolve identificador nem cria aluno', function () {
+    Event::fake();
 
-        $individual = $this->createIndividual();
-        $responsavel = $this->createIndividual();
+    $individual = ($this->createIndividual)();
+    $responsavel = ($this->createIndividual)();
 
-        $response = $this->getResource('/module/Api/Aluno', [
-            'oper' => 'post',
-            'resource' => 'aluno',
-            'pessoa_id' => $individual->getKey(),
-            'mae_id' => $responsavel->getKey(),
-            'pai_id' => $responsavel->getKey(),
-            'tipo_responsavel' => 'mae',
-            'alfabetizado' => 'checked',
-            'material' => 'A',
-            'tipo_transporte' => 'nenhum',
-            'deficiencias' => [],
-            'transtornos' => [],
-        ]);
+    $response = $this->getResource('/module/Api/Aluno', [
+        'oper' => 'post',
+        'resource' => 'aluno',
+        'pessoa_id' => $individual->getKey(),
+        'mae_id' => $responsavel->getKey(),
+        'pai_id' => $responsavel->getKey(),
+        'tipo_responsavel' => 'mae',
+        'alfabetizado' => 'checked',
+        'material' => 'A',
+        'tipo_transporte' => 'nenhum',
+        'deficiencias' => [],
+        'transtornos' => [],
+    ]);
 
-        $response->assertStatus(200);
-        $this->assertTrue($response->json('any_error_msg'));
-        $this->assertNull($response->json('id'));
+    $response->assertStatus(200);
+    $this->assertTrue($response->json('any_error_msg'));
+    $this->assertNull($response->json('id'));
 
-        $this->assertFalse(
-            LegacyStudent::query()->where('ref_idpes', $individual->getKey())->exists()
-        );
-    }
-}
+    $this->assertFalse(
+        LegacyStudent::query()->where('ref_idpes', $individual->getKey())->exists()
+    );
+});

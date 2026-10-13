@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests\Feature\Security;
-
 use App\Menu;
 use App\Models\LegacyUserType;
 use App\Process;
@@ -11,25 +9,13 @@ use Database\Factories\LegacyUserFactory;
 use Database\Factories\LegacyUserTypeFactory;
 use Database\Factories\MenuFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\Feature\Security\ActivatesSystem;
 use Tests\TestCase;
 
-/**
- * CVE-2025-11554: o cadastro de tipos de usuário permitia conceder nível de
- * acesso e permissões acima dos que o próprio usuário possui.
- */
-class UserTypePrivilegeEscalationTest extends TestCase
-{
-    use ActivatesSystem, DatabaseTransactions;
+uses(TestCase::class, ActivatesSystem::class, DatabaseTransactions::class);
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->activateSystem();
-    }
-
-    private function schoolUserManagingUserTypes(): User
-    {
+beforeEach(function () {
+    $this->schoolUserManagingUserTypes = function (): User {
         $user = LegacyUserFactory::new()
             ->withAccess(Process::USER_TYPES)
             ->create([
@@ -40,113 +26,110 @@ class UserTypePrivilegeEscalationTest extends TestCase
         $user->employee->update(['data_troca_senha' => now(), 'force_reset_password' => false]);
 
         return $user;
-    }
+    };
 
-    public function test_nao_permite_elevar_o_nivel_do_proprio_tipo()
-    {
-        $user = $this->schoolUserManagingUserTypes();
-        $userType = $user->type;
+    $this->activateSystem();
+});
 
-        $this->actingAs($user)
-            ->put('/usuarios/tipos/' . $userType->getKey(), [
-                'name' => $userType->nm_tipo,
-                'level' => LegacyUserType::LEVEL_ADMIN,
-            ])
-            ->assertForbidden();
+test('nao permite elevar o nivel do proprio tipo', function () {
+    $user = ($this->schoolUserManagingUserTypes)();
+    $userType = $user->type;
 
-        $this->assertSame(LegacyUserType::LEVEL_SCHOOLING, $userType->refresh()->nivel);
-    }
+    $this->actingAs($user)
+        ->put('/usuarios/tipos/' . $userType->getKey(), [
+            'name' => $userType->nm_tipo,
+            'level' => LegacyUserType::LEVEL_ADMIN,
+        ])
+        ->assertForbidden();
 
-    public function test_nao_permite_criar_tipo_com_nivel_superior()
-    {
-        $user = $this->schoolUserManagingUserTypes();
+    $this->assertSame(LegacyUserType::LEVEL_SCHOOLING, $userType->refresh()->nivel);
+});
 
-        $this->actingAs($user)
-            ->post('/usuarios/tipos', [
-                'name' => 'Tipo com nível superior',
-                'level' => LegacyUserType::LEVEL_INSTITUTIONAL,
-            ])
-            ->assertForbidden();
+test('nao permite criar tipo com nivel superior', function () {
+    $user = ($this->schoolUserManagingUserTypes)();
 
-        $this->assertDatabaseMissing(LegacyUserType::class, ['nm_tipo' => 'Tipo com nível superior']);
-    }
+    $this->actingAs($user)
+        ->post('/usuarios/tipos', [
+            'name' => 'Tipo com nível superior',
+            'level' => LegacyUserType::LEVEL_INSTITUTIONAL,
+        ])
+        ->assertForbidden();
 
-    public function test_nao_permite_editar_tipo_de_nivel_superior()
-    {
-        $user = $this->schoolUserManagingUserTypes();
-        $adminType = LegacyUserTypeFactory::new()->create(['nivel' => LegacyUserType::LEVEL_ADMIN]);
+    $this->assertDatabaseMissing(LegacyUserType::class, ['nm_tipo' => 'Tipo com nível superior']);
+});
 
-        $this->actingAs($user)
-            ->put('/usuarios/tipos/' . $adminType->getKey(), [
-                'name' => $adminType->nm_tipo,
-                'level' => LegacyUserType::LEVEL_SCHOOLING,
-            ])
-            ->assertForbidden();
+test('nao permite editar tipo de nivel superior', function () {
+    $user = ($this->schoolUserManagingUserTypes)();
+    $adminType = LegacyUserTypeFactory::new()->create(['nivel' => LegacyUserType::LEVEL_ADMIN]);
 
-        $this->assertSame(LegacyUserType::LEVEL_ADMIN, $adminType->refresh()->nivel);
-    }
+    $this->actingAs($user)
+        ->put('/usuarios/tipos/' . $adminType->getKey(), [
+            'name' => $adminType->nm_tipo,
+            'level' => LegacyUserType::LEVEL_SCHOOLING,
+        ])
+        ->assertForbidden();
 
-    public function test_limita_as_permissoes_concedidas_as_do_proprio_usuario()
-    {
-        $user = $this->schoolUserManagingUserTypes();
+    $this->assertSame(LegacyUserType::LEVEL_ADMIN, $adminType->refresh()->nivel);
+});
 
-        /** @var Menu $viewOnlyMenu */
-        $viewOnlyMenu = MenuFactory::new()->create();
-        LegacyMenuUserTypeFactory::new()->create([
-            'menu_id' => $viewOnlyMenu,
-            'ref_cod_tipo_usuario' => $user->type,
-            'visualiza' => 1,
-            'cadastra' => 0,
-            'exclui' => 0,
-        ]);
+test('limita as permissoes concedidas as do proprio usuario', function () {
+    $user = ($this->schoolUserManagingUserTypes)();
 
-        /** @var Menu $foreignMenu */
-        $foreignMenu = MenuFactory::new()->create();
+    /** @var Menu $viewOnlyMenu */
+    $viewOnlyMenu = MenuFactory::new()->create();
+    LegacyMenuUserTypeFactory::new()->create([
+        'menu_id' => $viewOnlyMenu,
+        'ref_cod_tipo_usuario' => $user->type,
+        'visualiza' => 1,
+        'cadastra' => 0,
+        'exclui' => 0,
+    ]);
 
-        $this->actingAs($user)
-            ->post('/usuarios/tipos', [
-                'name' => 'Tipo de nível escola',
-                'level' => LegacyUserType::LEVEL_SCHOOLING,
-                'processes' => [
-                    $viewOnlyMenu->getKey() => LegacyUserType::CAN_REMOVE,
-                    $foreignMenu->getKey() => LegacyUserType::CAN_REMOVE,
-                ],
-            ])
-            ->assertRedirect();
+    /** @var Menu $foreignMenu */
+    $foreignMenu = MenuFactory::new()->create();
 
-        $created = LegacyUserType::query()->where('nm_tipo', 'Tipo de nível escola')->firstOrFail();
+    $this->actingAs($user)
+        ->post('/usuarios/tipos', [
+            'name' => 'Tipo de nível escola',
+            'level' => LegacyUserType::LEVEL_SCHOOLING,
+            'processes' => [
+                $viewOnlyMenu->getKey() => LegacyUserType::CAN_REMOVE,
+                $foreignMenu->getKey() => LegacyUserType::CAN_REMOVE,
+            ],
+        ])
+        ->assertRedirect();
 
-        $this->assertDatabaseHas('pmieducar.menu_tipo_usuario', [
-            'ref_cod_tipo_usuario' => $created->getKey(),
-            'menu_id' => $viewOnlyMenu->getKey(),
-            'visualiza' => 1,
-            'cadastra' => 0,
-            'exclui' => 0,
-        ]);
+    $created = LegacyUserType::query()->where('nm_tipo', 'Tipo de nível escola')->firstOrFail();
 
-        $this->assertDatabaseHas('pmieducar.menu_tipo_usuario', [
-            'ref_cod_tipo_usuario' => $created->getKey(),
-            'menu_id' => $foreignMenu->getKey(),
-            'visualiza' => 0,
-            'cadastra' => 0,
-            'exclui' => 0,
-        ]);
-    }
+    $this->assertDatabaseHas('pmieducar.menu_tipo_usuario', [
+        'ref_cod_tipo_usuario' => $created->getKey(),
+        'menu_id' => $viewOnlyMenu->getKey(),
+        'visualiza' => 1,
+        'cadastra' => 0,
+        'exclui' => 0,
+    ]);
 
-    public function test_permite_administrador_criar_tipo_de_qualquer_nivel()
-    {
-        $admin = User::query()->findOrFail(LegacyUserFactory::new()->admin()->create()->getKey());
+    $this->assertDatabaseHas('pmieducar.menu_tipo_usuario', [
+        'ref_cod_tipo_usuario' => $created->getKey(),
+        'menu_id' => $foreignMenu->getKey(),
+        'visualiza' => 0,
+        'cadastra' => 0,
+        'exclui' => 0,
+    ]);
+});
 
-        $this->actingAs($admin)
-            ->post('/usuarios/tipos', [
-                'name' => 'Tipo poli-institucional',
-                'level' => LegacyUserType::LEVEL_ADMIN,
-            ])
-            ->assertRedirect(route('usertype.index'));
+test('permite administrador criar tipo de qualquer nivel', function () {
+    $admin = User::query()->findOrFail(LegacyUserFactory::new()->admin()->create()->getKey());
 
-        $this->assertDatabaseHas(LegacyUserType::class, [
-            'nm_tipo' => 'Tipo poli-institucional',
-            'nivel' => LegacyUserType::LEVEL_ADMIN,
-        ]);
-    }
-}
+    $this->actingAs($admin)
+        ->post('/usuarios/tipos', [
+            'name' => 'Tipo poli-institucional',
+            'level' => LegacyUserType::LEVEL_ADMIN,
+        ])
+        ->assertRedirect(route('usertype.index'));
+
+    $this->assertDatabaseHas(LegacyUserType::class, [
+        'nm_tipo' => 'Tipo poli-institucional',
+        'nivel' => LegacyUserType::LEVEL_ADMIN,
+    ]);
+});

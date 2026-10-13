@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests\Unit\Services;
-
 use App\Models\LegacyRegistration;
 use App\Services\RegistrationEvaluationRuleService;
 use Database\Factories\LegacyDeficiencyFactory;
@@ -12,12 +10,10 @@ use Database\Factories\LegacySchoolFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class RegistrationEvaluationRuleServiceTest extends TestCase
-{
-    use DatabaseTransactions;
+uses(TestCase::class, DatabaseTransactions::class);
 
-    private function registration(bool $differentiatedSchool = false): array
-    {
+beforeEach(function () {
+    $this->registration = function (bool $differentiatedSchool = false): array {
         $rule = LegacyEvaluationRuleFactory::new()->create();
         $differentiated = LegacyEvaluationRuleFactory::new()->create();
         $forDeficiency = LegacyEvaluationRuleFactory::new()->create();
@@ -36,27 +32,24 @@ class RegistrationEvaluationRuleServiceTest extends TestCase
         ]);
 
         return [LegacyRegistration::query()->findOrFail($registration->getKey()), $rule, $differentiated, $forDeficiency];
-    }
+    };
+});
 
-    public function test_uses_the_grade_rule_of_the_registration_year(): void
-    {
-        [$registration, $rule] = $this->registration();
+test('uses the grade rule of the registration year', function () {
+    [$registration, $rule] = ($this->registration)();
 
-        $this->assertSame($rule->getKey(), (new RegistrationEvaluationRuleService)->getEvaluationRule($registration)->getKey());
-    }
+    $this->assertSame($rule->getKey(), (new RegistrationEvaluationRuleService)->getEvaluationRule($registration)->getKey());
+});
 
-    public function test_uses_the_differentiated_rule_when_the_school_asks_for_it(): void
-    {
-        [$registration, , $differentiated] = $this->registration(differentiatedSchool: true);
+test('uses the differentiated rule when the school asks for it', function () {
+    [$registration, , $differentiated] = ($this->registration)(differentiatedSchool: true);
 
-        $this->assertSame($differentiated->getKey(), (new RegistrationEvaluationRuleService)->getEvaluationRule($registration)->getKey());
-    }
+    $this->assertSame($differentiated->getKey(), (new RegistrationEvaluationRuleService)->getEvaluationRule($registration)->getKey());
+});
 
-    public function test_uses_the_rule_for_students_with_a_considerable_deficiency(): void
-    {
-        [$registration, , , $forDeficiency] = $this->registration();
-        $registration->student->person->deficiencies()->attach(LegacyDeficiencyFactory::new()->create());
+test('uses the rule for students with a considerable deficiency', function () {
+    [$registration, , , $forDeficiency] = ($this->registration)();
+    $registration->student->person->deficiencies()->attach(LegacyDeficiencyFactory::new()->create());
 
-        $this->assertSame($forDeficiency->getKey(), (new RegistrationEvaluationRuleService)->getEvaluationRule($registration)->getKey());
-    }
-}
+    $this->assertSame($forDeficiency->getKey(), (new RegistrationEvaluationRuleService)->getEvaluationRule($registration)->getKey());
+});

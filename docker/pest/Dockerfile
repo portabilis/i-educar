@@ -13,6 +13,10 @@
 # um teste de browser. Ele mede o legado porque o servidor HTTP do Pest é
 # in-process: o `ieducar/` carregado para atender o browser roda no mesmo
 # processo do teste.
+#
+# O pcov fica ligado para o `pest --tia`: o TIA usa um driver de cobertura para
+# saber quais arquivos cada teste executa e prefere o pcov, bem mais leve que o
+# Xdebug. Ele só coleta quando um teste pede, então não pesa nas rodadas comuns.
 
 ARG PHP_VERSION=8.5
 ARG COMPOSER_VERSION=2.10
@@ -62,6 +66,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         php${PHP_VERSION}-gd \
         php${PHP_VERSION}-intl \
         php${PHP_VERSION}-mbstring \
+        php${PHP_VERSION}-pcov \
         php${PHP_VERSION}-pgsql \
         php${PHP_VERSION}-readline \
         php${PHP_VERSION}-redis \
@@ -76,6 +81,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # 20-xdebug.ini do pacote, e desliga a extensão por padrão; quem precisa dela
 # passa XDEBUG_MODE na chamada, que tem precedência sobre o ini.
 RUN echo 'xdebug.mode=off' > /etc/php/${PHP_VERSION}/cli/conf.d/99-xdebug-off.ini
+
+# O pcov olha só o código do projeto: sem o diretório explícito, ele adivinha um
+# só (app/, src/ ou lib/) e o TIA não veria o legado em ieducar/.
+RUN printf '%s\n' \
+        'pcov.enabled=1' \
+        'pcov.directory=/var/www/ieducar' \
+        'pcov.exclude="~/(vendor|node_modules|storage)/~"' \
+        > /etc/php/${PHP_VERSION}/cli/conf.d/99-pcov.ini
 
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 

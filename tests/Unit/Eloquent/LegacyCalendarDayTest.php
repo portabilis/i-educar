@@ -1,23 +1,14 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyCalendarDay;
 use App\Models\LegacyUser;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyCalendarDayTest extends EloquentTestCase
-{
-    protected $relations = [
-        'createdByUser' => LegacyUser::class,
-        'deletedByUser' => LegacyUser::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyCalendarDay::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyCalendarDay::class, relations: [
+    'createdByUser' => LegacyUser::class,
+    'deletedByUser' => LegacyUser::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

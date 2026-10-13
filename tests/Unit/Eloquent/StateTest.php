@@ -1,59 +1,37 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\City;
 use App\Models\Country;
 use App\Models\State;
-use OpenApiGenerator\Attributes\Property;
-use OpenApiGenerator\Attributes\Schema;
-use OpenApiGenerator\Type;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-#[
-    Schema(name: 'State'),
-    Property(Type::INT, 'id', 'State ID', 1),
-    Property(Type::INT, 'country_id', 'Country ID', 1),
-    Property(Type::STRING, 'name', 'State name', 'Paraná'),
-    Property(Type::STRING, 'abbreviation', 'Name Abbreviation', 'PR'),
-    Property(Type::STRING, 'ibge_code', 'IBGE code', 12345),
-    Property(Type::STRING, 'created_at', 'Creation date', '2022-01-01 00:00:00'),
-    Property(Type::STRING, 'updated_at', 'Update date', '2022-01-01 00:00:00'),
-]
-class StateTest extends EloquentTestCase
-{
-    protected $relations = [
-        'country' => Country::class,
-        'cities' => City::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return State::class;
-    }
+beforeEach(fn () => $this->eloquent(State::class, relations: [
+    'country' => Country::class,
+    'cities' => City::class,
+]));
 
-    public function test_find_by_abbreviation(): void
-    {
-        $stateReturn = State::findByAbbreviation($this->model->abbreviation);
-        $this->assertInstanceOf(State::class, $stateReturn);
-        $this->assertArrayHasKey('abbreviation', $stateReturn->toArray());
-        $this->assertEquals($stateReturn->abbreviation, $this->model->abbreviation);
-    }
+EloquentModelTestCase::registerModelTests();
 
-    public function test_get_list_key_abbreviation(): void
-    {
-        $list = State::getListKeyAbbreviation();
+test('find by abbreviation', function () {
+    $stateReturn = State::findByAbbreviation($this->model->abbreviation);
+    $this->assertInstanceOf(State::class, $stateReturn);
+    $this->assertArrayHasKey('abbreviation', $stateReturn->toArray());
+    $this->assertEquals($stateReturn->abbreviation, $this->model->abbreviation);
+});
 
-        $except = State::orderBy('name')->pluck('name', 'abbreviation');
+test('get list key abbreviation', function () {
+    $list = State::getListKeyAbbreviation();
 
-        $this->assertJsonStringEqualsJsonString($except, $list);
-    }
+    $except = State::orderBy('name')->pluck('name', 'abbreviation');
 
-    public function test_get_name_by_abbreviation(): void
-    {
-        $name = State::getNameByAbbreviation($this->model->abbreviation);
-        $expect = $this->model->name;
+    $this->assertJsonStringEqualsJsonString($except, $list);
+});
 
-        $this->assertEquals($expect, $name);
-    }
-}
+test('get name by abbreviation', function () {
+    $name = State::getNameByAbbreviation($this->model->abbreviation);
+    $expect = $this->model->name;
+
+    $this->assertEquals($expect, $name);
+});

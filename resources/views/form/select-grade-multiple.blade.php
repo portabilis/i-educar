@@ -1,5 +1,5 @@
 <span class="form">
-    <select name="ref_cod_serie[]" id="ref_cod_serie" multiple="multiple" style="width: 308px;">
+    <select name="ref_cod_serie[]" id="ref_cod_serie" aria-label="Séries" multiple="multiple" style="width: 308px;">
         @foreach(App_Model_IedFinder::getSeries(null, Request::get('ref_cod_escola'), Request::get('ref_cod_curso')) as $id => $name)
             <option value="{{$id}}">{{$name}}</option>
         @endforeach

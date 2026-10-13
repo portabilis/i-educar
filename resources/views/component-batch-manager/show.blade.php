@@ -97,7 +97,7 @@
     @endif
 
     @if($isProcessing || $isFailed)
-    <form id="formcadastro">
+    <form class="formcadastro">
     <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0" role="presentation">
         <tbody>
 

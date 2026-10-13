@@ -1,81 +1,66 @@
 <?php
 
-namespace Tests\Unit\Support\Database;
-
 use App\Support\Database\MappedAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Tests\TestCase;
 
-class MappedAttributesTest extends TestCase
-{
-    /**
-     * @var Model
-     */
-    private $abstract;
+uses(TestCase::class);
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function setUp(): void
+beforeEach(function () {
+    $this->abstract = new class extends Model
     {
-        $this->abstract = new class extends Model
+        use MappedAttributes;
+
+        protected $fillable = [
+            'cod',
+            'nome',
+        ];
+
+        public function getMappedAttributes()
         {
-            use MappedAttributes;
-
-            protected $fillable = [
-                'cod',
-                'nome',
+            return [
+                'cod' => 'id',
+                'nome' => 'name',
             ];
+        }
+    };
+});
 
-            public function getMappedAttributes()
-            {
-                return [
-                    'cod' => 'id',
-                    'nome' => 'name',
-                ];
-            }
-        };
-    }
+test('get mapped attribute', function () {
+    $model = new $this->abstract([
+        'cod' => 1,
+        'nome' => 'Mapped',
+    ]);
 
-    /**
-     * @return void
-     */
-    public function test_get_mapped_attribute()
+    $this->assertEquals(1, $model->id);
+    $this->assertEquals('Mapped', $model->name);
+});
+
+test('set mapped attribute', function () {
+    $model = new $this->abstract([
+        'cod' => 1,
+        'nome' => 'Mapped',
+    ]);
+
+    $model->id = 2;
+    $model->name = 'Attribute';
+
+    $this->assertEquals(2, $model->id);
+    $this->assertEquals('Attribute', $model->name);
+});
+
+test('get translate mapped attribute method', function () {
+    $model = new $this->abstract;
+
+    $this->assertEquals('id', $model->getTranslateMappedAttribute('cod'));
+    $this->assertEquals('name', $model->getTranslateMappedAttribute('nome'));
+});
+
+test('sem mapa definido nao ha atributos mapeados', function () {
+    $model = new class extends Model
     {
-        $model = new $this->abstract([
-            'cod' => 1,
-            'nome' => 'Mapped',
-        ]);
+        use MappedAttributes;
+    };
 
-        $this->assertEquals(1, $model->id);
-        $this->assertEquals('Mapped', $model->name);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_set_mapped_attribute()
-    {
-        $model = new $this->abstract([
-            'cod' => 1,
-            'nome' => 'Mapped',
-        ]);
-
-        $model->id = 2;
-        $model->name = 'Attribute';
-
-        $this->assertEquals(2, $model->id);
-        $this->assertEquals('Attribute', $model->name);
-    }
-
-    /**
-     * @return void
-     */
-    public function test_get_translate_mapped_attribute_method()
-    {
-        $model = new $this->abstract;
-
-        $this->assertEquals('id', $model->getTranslateMappedAttribute('cod'));
-        $this->assertEquals('name', $model->getTranslateMappedAttribute('nome'));
-    }
-}
+    $this->assertSame([], $model->getMappedAttributes());
+});
