@@ -108,7 +108,7 @@ return new class extends clsCadastro
         $alunoExiste = is_numeric($this->ref_cod_aluno)
             && LegacyStudent::query()->whereStudent($this->ref_cod_aluno)->exists();
 
-        if (!$alunoExiste and !$this->ref_cod_turma_copiar_enturmacoes) {
+        if (!$alunoExiste && !$this->ref_cod_turma_copiar_enturmacoes) {
             $this->redirectNotFound(
                 url: 'educar_aluno_lst.php',
                 registro: 'aluno',

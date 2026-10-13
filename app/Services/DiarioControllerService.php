@@ -147,8 +147,13 @@ class DiarioControllerService
      */
     private function getEtapasCursadas(int $componenteCurricularId, int $turmaId, int $quantidadeEtapas): array
     {
-        return \App_Model_IedFinder::getEtapasComponente($turmaId, $componenteCurricularId)
-            ?: ($quantidadeEtapas > 0 ? range(1, $quantidadeEtapas) : []);
+        $etapasComponente = \App_Model_IedFinder::getEtapasComponente($turmaId, $componenteCurricularId);
+
+        if ($etapasComponente) {
+            return $etapasComponente;
+        }
+
+        return $quantidadeEtapas > 0 ? range(1, $quantidadeEtapas) : [];
     }
 
     private function isComponenteNaMatriculaNaEtapa(int $componenteCurricularId, int $matriculaId, int $turmaId, int $etapa): bool

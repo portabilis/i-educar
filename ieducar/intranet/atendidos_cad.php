@@ -1370,7 +1370,7 @@ return new class extends clsCadastro
             $obrigarDocumentoPessoa = LegacyInstitution::query()
                 ->find($user->ref_cod_instituicao, ['obrigar_documento_pessoa'])?->obrigar_documento_pessoa;
         } else {
-            // Inalcançável: todo usuário que chega aqui tem instituição.
+            // Inalcançável: qualquer usuário que chega aqui tem instituição.
             // @codeCoverageIgnoreStart
             $obrigarDocumentoPessoa = LegacyInstitution::query()
                 ->first(['obrigar_documento_pessoa'])?->obrigar_documento_pessoa;
@@ -1388,7 +1388,7 @@ return new class extends clsCadastro
             $obrigarCpf = LegacyInstitution::query()
                 ->find($user->ref_cod_instituicao, ['obrigar_cpf'])?->obrigar_cpf;
         } else {
-            // Inalcançável: todo usuário que chega aqui tem instituição.
+            // Inalcançável: qualquer usuário que chega aqui tem instituição.
             // @codeCoverageIgnoreStart
             $obrigarCpf = LegacyInstitution::query()
                 ->first(['obrigar_cpf'])?->obrigar_cpf;
@@ -1701,7 +1701,9 @@ return new class extends clsCadastro
         $dados['cpf'] = is_numeric($cpfInt) ? $cpfInt : null;
 
         $dados['document_absence_reason_id'] = is_numeric($this->document_absence_reason_id) ? $this->document_absence_reason_id : null;
-        $dados['document_absence_observation'] = $dados['document_absence_reason_id'] ? ($this->document_absence_observation ?: null) : null;
+        $dados['document_absence_observation'] = $dados['document_absence_reason_id'] && $this->document_absence_observation
+            ? $this->document_absence_observation
+            : null;
 
         $sus = trim(string: (string) $this->sus);
         $dados['sus'] = !empty($sus) ? $sus : null;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostPareceresAnualGeralRequest;
 use App\Services\RemoveHtmlTagsStringService;
+use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowDescriptiveOpinion;
 use Illuminate\Http\Response;
 
 class PareceresAnualGeralController extends DiarioController
@@ -19,7 +20,7 @@ class PareceresAnualGeralController extends DiarioController
 
         try {
             if ($regra->get('parecerDescritivo') != \RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL) {
-                throw new \RuntimeException("A regra da turma {$turmaId} não permite lançamento de pareceres anual geral.");
+                throw new EvaluationRuleNotAllowDescriptiveOpinion($turmaId, 'anual geral');
             }
 
             // Sem etapa, o boletim grava o parecer como anual.
@@ -35,7 +36,7 @@ class PareceresAnualGeralController extends DiarioController
             } catch (\CoreExt_Service_Exception) {
                 // Evita Exception ao não promover matrículas, pois não houve mudança de situação
             }
-        } catch (\RuntimeException $exception) {
+        } catch (\RuntimeException|EvaluationRuleNotAllowDescriptiveOpinion $exception) {
             return $this->unprocessableResponse($exception);
         } catch (\Exception $exception) {
             return response()->json([

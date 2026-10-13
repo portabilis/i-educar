@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostPareceresAnualPorComponenteRequest;
 use App\Services\RemoveHtmlTagsStringService;
+use iEducar\Modules\EvaluationRules\Exceptions\DisciplineNotExistsForRegistration;
+use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowDescriptiveOpinion;
 use Illuminate\Http\Response;
 
 class PareceresAnualPorComponenteController extends DiarioController
@@ -20,11 +22,11 @@ class PareceresAnualPorComponenteController extends DiarioController
 
         try {
             if ($regra->get('parecerDescritivo') != \RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
-                throw new \RuntimeException("A regra da turma {$turmaId} não permite lançamento de pareceres anual por componente.");
+                throw new EvaluationRuleNotAllowDescriptiveOpinion($turmaId, 'anual por componente');
             }
 
             if (!$this->service->validateComponenteMatricula($componenteCurricularId, $matricula->getKey())) {
-                throw new \RuntimeException("Componente curricular de código {$componenteCurricularId} não existe para essa turma/matrícula.");
+                throw new DisciplineNotExistsForRegistration($componenteCurricularId, $matricula->getKey());
             }
 
             // Sem etapa, o boletim grava o parecer como anual.
@@ -41,7 +43,7 @@ class PareceresAnualPorComponenteController extends DiarioController
             } catch (\CoreExt_Service_Exception) {
                 // Evita Exception ao não promover matrículas, pois não houve mudança de situação
             }
-        } catch (\RuntimeException $exception) {
+        } catch (\RuntimeException|EvaluationRuleNotAllowDescriptiveOpinion|DisciplineNotExistsForRegistration $exception) {
             return $this->unprocessableResponse($exception);
         } catch (\Exception $exception) {
             return response()->json([
