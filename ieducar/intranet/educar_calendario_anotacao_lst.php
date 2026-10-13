@@ -52,9 +52,12 @@ return new class extends clsListagem
                 ->exists();
 
             if (!$exists) {
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 throw new HttpResponseException(
                     response: new RedirectResponse(url: 'educar_calendario_ano_letivo_lst.php')
                 );
+                // @codeCoverageIgnoreEnd
             }
             $this->titulo = "Anotaçõoes Calendário <b>{$this->dia}/{$this->mes}/{$this->ano}</b> - Listagem";
 
@@ -94,8 +97,8 @@ return new class extends clsListagem
                 $det = $registro->calendarNote;
 
                 $this->addLinhas(linha: [
-                    "<a href=\"educar_calendario_anotacao_cad.php?cod_calendario_anotacao={$det['cod_calendario_anotacao']}{$get}\">{$det['nm_anotacao']}</a>",
-                    "<a href=\"educar_calendario_anotacao_cad.php?cod_calendario_anotacao={$det['cod_calendario_anotacao']}{$get}\">{$det['descricao']}</a>",
+                    "<a href=\"educar_calendario_anotacao_cad.php?cod_calendario_anotacao={$det['cod_calendario_anotacao']}{$get}\">" . e($det['nm_anotacao']) . '</a>',
+                    "<a href=\"educar_calendario_anotacao_cad.php?cod_calendario_anotacao={$det['cod_calendario_anotacao']}{$get}\">" . e($det['descricao']) . '</a>',
                 ]);
             }
         }

@@ -1,14 +1,18 @@
 <?php
 
 use App\Models\LegacyAcademicYearStage;
+use App\Models\LegacyCourse;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyDisciplineDependence;
+use App\Models\LegacyDisciplineExemption;
+use App\Models\LegacyGrade;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
 use App\Models\LegacySchoolCourse;
+use App\Models\LegacySchoolGradeDiscipline;
 use App\Models\LegacyStageType;
 use App\Models\LegacyUserType;
 use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
@@ -152,20 +156,11 @@ class App_Model_IedFinder extends CoreExt_Entity
      * Retorna um nome de curso, procurando pelo seu código.
      *
      * @param int $id
-     * @return string|false
+     * @return string|null
      */
     public static function getCurso($id)
     {
-        $curso = self::addClassToStorage(
-            'clsPmieducarCurso',
-            null,
-            'include/pmieducar/clsPmieducarCurso.inc.php'
-        );
-
-        $curso->cod_curso = $id;
-        $curso = $curso->detalhe();
-
-        return empty($curso['descricao']) ? $curso['nm_curso'] : "{$curso['nm_curso']} ({$curso['descricao']})";
+        return LegacyCourse::query()->find($id)?->name;
     }
 
     /**
@@ -218,27 +213,18 @@ class App_Model_IedFinder extends CoreExt_Entity
     }
 
     /**
-     * Retorna um array com as informações da série a partir de seu código.
+     * Retorna a série a partir de seu código.
      *
      * @param int $codSerie
-     * @return array
+     * @return LegacyGrade
      *
      * @throws App_Model_Exception
      */
     public static function getSerie($codSerie)
     {
-        // Recupera clsPmieducarSerie do storage de classe estático
-        $serie = self::addClassToStorage(
-            'clsPmieducarSerie',
-            null,
-            'include/pmieducar/clsPmieducarSerie.inc.php'
-        );
+        $serie = is_numeric($codSerie) ? LegacyGrade::query()->find($codSerie) : null;
 
-        // Usa o atributo público para depois chamar o método detalhe()
-        $serie->cod_serie = $codSerie;
-        $serie = $serie->detalhe();
-
-        if ($serie === false) {
+        if ($serie === null) {
             throw new App_Model_Exception(
                 sprintf('Série com o código "%d" não existe.', $codSerie)
             );
@@ -259,37 +245,25 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getSeries($instituicaoId = null, $escolaId = null, $cursoId = null, $ano = null)
     {
-        $orderBy = ' nm_serie ASC, ref_cod_curso ASC, cod_serie ASC, etapa_curso ASC';
-        $series = app(clsPmieducarSerie::class);
-        $series->setOrderby($orderBy);
-
-        $series = $series->lista(
-            null,
-            null,
-            null,
-            $cursoId,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $instituicaoId,
-            null,
-            null,
-            $escolaId,
-            null,
-            null,
-            $ano
-        );
+        $series = LegacyGrade::query()
+            ->active()
+            ->when(is_numeric($cursoId), fn ($q) => $q->whereCourse($cursoId))
+            ->when(is_numeric($instituicaoId), fn ($q) => $q->whereInstitution($instituicaoId))
+            ->when(isset($escolaId), fn ($q) => $q->whereSchool($escolaId, $ano))
+            ->when(!isset($escolaId) && isset($ano), fn ($q) => $q->whereAcademicYear($ano))
+            ->orderBy('nm_serie')
+            ->orderBy('ref_cod_curso')
+            ->orderBy('cod_serie')
+            ->orderBy('etapa_curso')
+            ->get([
+                'cod_serie',
+                'nm_serie',
+                'descricao',
+            ]);
 
         $result = [];
         foreach ($series as $serie) {
-            $nomeSerie = empty($serie['descricao']) ? $serie['nm_serie'] : "{$serie['nm_serie']} ({$serie['descricao']})";
-            $result[$serie['cod_serie']] = mb_strtoupper($nomeSerie, 'UTF-8');
+            $result[$serie->cod_serie] = mb_strtoupper($serie->name, 'UTF-8');
         }
 
         return $result;
@@ -540,22 +514,20 @@ class App_Model_IedFinder extends CoreExt_Entity
         $key = json_encode(compact('serieId', 'escolaId', 'disciplinaId', 'etapa', 'ano'));
 
         $disciplinas = Cache::store('array')->remember("getEscolaSerieDisciplina:{$key}", now()->addMinute(), function () use ($serieId, $escolaId, $disciplinaId, $etapa, $ano) {
-            $escolaSerieDisciplina = self::addClassToStorage(
-                'clsPmieducarEscolaSerieDisciplina',
-                null,
-                'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php'
-            );
-
-            $disciplinas = $escolaSerieDisciplina->lista($serieId, $escolaId, $disciplinaId, 1, false, $etapa, $ano);
-
-            if ($disciplinas === false) {
-                return [];
-            }
-
-            return $disciplinas;
+            return LegacySchoolGradeDiscipline::query()
+                ->when(is_numeric($serieId), fn ($query) => $query->whereGrade($serieId))
+                ->when(is_numeric($escolaId), fn ($query) => $query->whereSchool($escolaId))
+                ->when(is_numeric($disciplinaId), fn ($query) => $query->whereDiscipline($disciplinaId))
+                ->when(is_numeric($etapa), fn ($query) => $query->whereRaw(
+                    'case when etapas_especificas = 1 then ? = ANY (string_to_array(etapas_utilizadas, \',\')::int[]) else true end',
+                    [$etapa]
+                ))
+                ->when(is_numeric($ano), fn ($query) => $query->whereYearEq($ano))
+                ->active()
+                ->get(['ref_cod_disciplina', 'carga_horaria']);
         });
 
-        if (empty($disciplinas)) {
+        if ($disciplinas->isEmpty()) {
             throw new DisciplineNotLinkedToRegistrationException($escolaId, $disciplinaId, $ano, $serieId);
         }
 
@@ -1074,19 +1046,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $key = json_encode(compact('codMatricula', 'codSerie', 'codEscola', 'etapa', 'ignorarDispensasParciais'));
 
         $dispensas = Cache::store('array')->remember("getDisciplinasDispensadasPorMatricula:{$key}", now()->addMinute(), function () use ($codMatricula, $codSerie, $codEscola, $etapa, $ignorarDispensasParciais) {
-            $dispensas = self::addClassToStorage(
-                'clsPmieducarDispensaDisciplina',
-                null,
-                'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php'
-            );
-
-            $dispensas = $dispensas->disciplinaDispensadaEtapa($codMatricula, $codSerie, $codEscola, $etapa, $ignorarDispensasParciais);
-
-            if ($dispensas === false) {
-                return [];
-            }
-
-            return $dispensas;
+            return self::getDispensasComEtapa($codMatricula, $codSerie, $codEscola, $etapa, $ignorarDispensasParciais);
         });
 
         $disciplinasDispensa = [];
@@ -1096,6 +1056,64 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $disciplinasDispensa;
+    }
+
+    /**
+     * @param int $codMatricula
+     * @param int $codSerie
+     * @param int $codEscola
+     * @param int $etapa
+     * @param bool $ignorarDispensasParciais
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    private static function getDispensasComEtapa(
+        $codMatricula,
+        $codSerie,
+        $codEscola,
+        $etapa = null,
+        $ignorarDispensasParciais = false
+    ) {
+        return LegacyDisciplineExemption::query()
+            ->withTrashed()
+            ->join('pmieducar.dispensa_etapa', 'pmieducar.dispensa_etapa.ref_cod_dispensa', 'pmieducar.dispensa_disciplina.cod_dispensa')
+            ->when(is_numeric($codMatricula), fn ($query) => $query->whereRegistration($codMatricula))
+            ->when(is_numeric($codSerie), fn ($query) => $query->whereGrade($codSerie))
+            ->when(is_numeric($codEscola), fn ($query) => $query->whereSchool($codEscola))
+            ->when(is_numeric($etapa), fn ($query) => $query->where('pmieducar.dispensa_etapa.etapa', $etapa))
+            ->when($ignorarDispensasParciais, fn ($query) => $query->whereRaw('(
+            SELECT COALESCE((
+                SELECT count(1)
+                FROM pmieducar.curso
+                INNER JOIN pmieducar.ano_letivo_modulo
+                ON ano_letivo_modulo.ref_ref_cod_escola = matricula.ref_ref_cod_escola
+                AND ano_letivo_modulo.ref_ano = matricula.ano
+                WHERE curso.padrao_ano_escolar = 1
+                AND matricula.ref_cod_curso = curso.cod_curso
+            ), 0) +
+            COALESCE((
+                SELECT count(1)
+                FROM pmieducar.turma
+                INNER JOIN pmieducar.curso
+                ON turma.ref_cod_curso = curso.cod_curso
+                INNER JOIN pmieducar.turma_modulo
+                ON turma_modulo.ref_cod_turma = turma.cod_turma
+                WHERE curso.padrao_ano_escolar = 0
+                AND turma.cod_turma = (
+                    SELECT matricula_turma.ref_cod_turma
+                    FROM pmieducar.matricula_turma
+                    WHERE matricula_turma.ref_cod_matricula = matricula.cod_matricula
+                    ORDER BY ativo DESC, data_enturmacao DESC
+                    LIMIT 1
+                )
+            ), 0)
+            FROM pmieducar.matricula
+            WHERE cod_matricula = ref_cod_matricula
+        ) = (
+            SELECT count(1)
+            FROM pmieducar.dispensa_etapa AS etapa_dispensada
+            WHERE etapa_dispensada.ref_cod_dispensa = dispensa_disciplina.cod_dispensa
+        )'))
+            ->get(['ref_cod_disciplina', 'etapa']);
     }
 
     public static function disciplinaDispensadaDaTurma($codTurma)
@@ -1126,17 +1144,11 @@ class App_Model_IedFinder extends CoreExt_Entity
         $disciplina
     ) {
         return Cache::remember('ie_finder_etapa_dispensada_' . $codMatricula . '_' . $codSerie . '_' . $codEscola . '_' . $disciplina, now()->addMinute(), function () use ($codMatricula, $codSerie, $codEscola, $disciplina) {
-            $dispensas = self::addClassToStorage(
-                'clsPmieducarDispensaDisciplina',
-                null,
-                'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php'
-            );
-
-            $dispensas = $dispensas->disciplinaDispensadaEtapa($codMatricula, $codSerie, $codEscola);
+            $dispensas = self::getDispensasComEtapa($codMatricula, $codSerie, $codEscola);
 
             $etapaDispensada = [];
 
-            if (!$dispensas) {
+            if ($dispensas->isEmpty()) {
                 return [];
             }
 
@@ -1232,6 +1244,8 @@ class App_Model_IedFinder extends CoreExt_Entity
             );
         }
 
+        // Sem o pacote da biblioteca a classe acima não existe e o método para aqui.
+        // @codeCoverageIgnoreStart
         $biblioteca = self::addClassToStorage(
             'clsPmieducarBiblioteca',
             null,
@@ -1248,6 +1262,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $biblioteca;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -1265,6 +1280,8 @@ class App_Model_IedFinder extends CoreExt_Entity
             return [];
         }
 
+        // Sem o pacote da biblioteca a classe acima não existe e o método para aqui.
+        // @codeCoverageIgnoreStart
         $_bibliotecas = self::addClassToStorage(
             'clsPmieducarBiblioteca',
             null,
@@ -1278,6 +1295,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $bibliotecas;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -1295,6 +1313,8 @@ class App_Model_IedFinder extends CoreExt_Entity
             return [];
         }
 
+        // Sem o pacote da biblioteca a classe acima não existe e o método para aqui.
+        // @codeCoverageIgnoreStart
         $_situacoes = self::addClassToStorage(
             'clsPmieducarSituacao',
             null,
@@ -1308,6 +1328,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $situacoes;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -1325,6 +1346,8 @@ class App_Model_IedFinder extends CoreExt_Entity
             return [];
         }
 
+        // Sem o pacote da biblioteca a classe acima não existe e o método para aqui.
+        // @codeCoverageIgnoreStart
         $_fontes = self::addClassToStorage(
             'clsPmieducarFonte',
             null,
@@ -1338,6 +1361,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $fontes;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -1359,6 +1383,8 @@ class App_Model_IedFinder extends CoreExt_Entity
             );
         }
 
+        // Sem o pacote da biblioteca a classe acima não existe e o método para aqui.
+        // @codeCoverageIgnoreStart
         $obra = self::addClassToStorage(
             'clsPmieducarAcervo',
             null,
@@ -1376,34 +1402,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $obra;
-    }
-
-    /**
-     * Retorna um aluno cadastrado para uma escola na tabela pmieducar.aluno, selecionando
-     * obrigatóriamente pelo código da escola e opcionalmente pelo código do aluno.
-     *
-     * @param int $id
-     * @return array
-     *
-     * @throws App_Model_Exception
-     */
-    public static function getAluno($escolaId, $id)
-    {
-        $aluno = self::addClassToStorage(
-            'clsPmieducarAluno',
-            null,
-            'include/pmieducar/clsPmieducarAluno.inc.php'
-        );
-
-        $aluno = $aluno->lista($id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $escolaId);
-
-        if ($aluno === false) {
-            throw new App_Model_Exception(
-                sprintf('Aluno com o código "%d" não existe.', $id)
-            );
-        }
-
-        return $aluno[0];
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -1421,6 +1420,8 @@ class App_Model_IedFinder extends CoreExt_Entity
             return [];
         }
 
+        // Sem o pacote da biblioteca a classe acima não existe e o método para aqui.
+        // @codeCoverageIgnoreStart
         $resources = self::addClassToStorage(
             'clsPmieducarClienteTipo',
             null,
@@ -1434,6 +1435,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $filtered_resources;
+        // @codeCoverageIgnoreEnd
     }
 
     /**

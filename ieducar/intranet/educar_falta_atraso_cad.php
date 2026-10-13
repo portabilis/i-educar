@@ -2,6 +2,7 @@
 
 use App\Models\Enums\AbsenceDelayType;
 use App\Models\LegacyAbsenceDelay;
+use App\Models\LegacyPerson;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 use Illuminate\Support\Facades\DB;
@@ -82,10 +83,11 @@ return new class extends clsCadastro
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-
-        $this->breadcrumb(currentPage: $nomeMenu . ' falta/atraso do servidor', breadcrumbs: [
-            url('intranet/educar_servidores_index.php') => 'Servidores',
+        // Início > Servidores > Nome > Faltas e atrasos > Nova (ou Editar)
+        $this->breadcrumb(currentPage: $retorno == 'Editar' ? 'Editar' : 'Nova', breadcrumbs: [
+            url('intranet/educar_servidor_lst.php') => 'Servidores',
+            url("intranet/educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}") => LegacyPerson::whereKey($this->ref_cod_servidor)->value('nome'),
+            url("intranet/{$this->url_cancelar}") => 'Faltas e atrasos',
         ]);
 
         return $retorno;
@@ -225,9 +227,12 @@ return new class extends clsCadastro
             ));
         }
 
+        // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Cadastro não realizado.<br />';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
@@ -301,9 +306,12 @@ return new class extends clsCadastro
             ));
         }
 
+        // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br />';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()
@@ -344,7 +352,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Servidores - Falta Atraso';
+        $this->title = 'Servidores - Falta/atraso';
         $this->processoAp = 635;
     }
 };

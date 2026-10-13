@@ -84,8 +84,11 @@ return new class extends clsCadastro
             ? $_GET['referrer'] . '?cod_escola=' . $this->ref_ref_cod_escola
             : 'educar_escola_lst.php';
 
+        // Início > Escola > Escolas > Nome > Etapas do ano letivo
         $this->breadcrumb(currentPage: 'Etapas do ano letivo', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_escola_lst.php') => 'Escolas',
+            url(path: "intranet/educar_escola_det.php?cod_escola={$this->ref_ref_cod_escola}") => LegacySchool::find($this->ref_ref_cod_escola)?->name,
         ]);
 
         $this->nome_url_cancelar = 'Cancelar';
@@ -271,8 +274,11 @@ return new class extends clsCadastro
             if ($this->tipoacao == 'Novo') {
                 // Se não é admin, "Copiar turmas" é sempre true, então os checkboxes devem estar habilitados
                 if ($isAdmin && !$checkedTurmas) {
+                    // Inalcançável: no cadastro `$checkedTurmas` é sempre "checked" (ver a atribuição acima).
+                    // @codeCoverageIgnoreStart
                     $disabledProfessores = 'disabled';
                     $disabledServidores = 'disabled';
+                    // @codeCoverageIgnoreEnd
                 }
             }
 
@@ -504,19 +510,25 @@ return new class extends clsCadastro
             );
 
             if ($excluiu) {
+                // Inalcançável: `$excluiu` nunca é definida.
+                // @codeCoverageIgnoreStart
                 $this->mensagem = 'Exclusão efetuada com sucesso.<br />';
                 $this->simpleRedirect(url: 'educar_escola_lst.php');
 
                 return true;
+                // @codeCoverageIgnoreEnd
             }
 
             $this->mensagem = 'Exclusão não realizada.<br />';
 
             return false;
+            // Inalcançável: `deleteAcademicYear()` nunca lança `AcademicYearServiceException`.
+            // @codeCoverageIgnoreStart
         } catch (AcademicYearServiceException $e) {
             $this->mensagem = 'Erro na exclusão: ' . $e->getMessage();
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 

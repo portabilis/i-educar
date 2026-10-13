@@ -1,25 +1,16 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\Employee;
 use App\Models\LegacyUser;
 use App\Models\PerformanceEvaluation;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class PerformanceEvaluationTest extends EloquentTestCase
-{
-    public $relations = [
-        'deletedByUser' => LegacyUser::class,
-        'createdByUser' => LegacyUser::class,
-        'employee' => Employee::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return PerformanceEvaluation::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(PerformanceEvaluation::class, relations: [
+    'deletedByUser' => LegacyUser::class,
+    'createdByUser' => LegacyUser::class,
+    'employee' => Employee::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

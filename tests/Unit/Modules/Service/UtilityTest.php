@@ -1,148 +1,138 @@
 <?php
 
-class Avaliacao_Service_UtilityTest extends Avaliacao_Service_TestCommon
-{
-    public function test_arredonda_nota_lanca_excecao_se_parametro_nao_for_numerico()
-    {
-        $service = $this->_getServiceInstance();
+uses(Avaliacao_Service_TestCommon::class);
 
-        $this->expectException('CoreExt_Exception_InvalidArgumentException');
-        $this->expectExceptionMessage('O parâmetro $nota ("") não é um valor numérico.');
-        $service->arredondaNota(new Avaliacao_Model_NotaComponente);
-    }
+test('arredonda nota lanca excecao se parametro nao for numerico', function () {
+    $service = $this->_getServiceInstance();
 
-    public function test_arredonda_nota_numerica()
-    {
-        $service = $this->_getServiceInstance();
+    $this->expectException('CoreExt_Exception_InvalidArgumentException');
+    $this->expectExceptionMessage('O parâmetro $nota ("") não é um valor numérico.');
+    $service->arredondaNota(new Avaliacao_Model_NotaComponente);
+});
 
-        $nota = new Avaliacao_Model_NotaComponente([
-            'nota' => 5.85,
-        ]);
-        $this->assertEquals(5.8, $service->arredondaNota($nota));
-    }
+test('arredonda nota numerica', function () {
+    $service = $this->_getServiceInstance();
 
-    public function test_arredonda_nota_conceitual()
-    {
-        // Valores padrão dos atributos de TabelaArredondamento_Model_TabelaValor
-        $data = [
-            'tabelaArredondamento' => 1,
-            'nome' => null,
-            'descricao' => null,
-            'valorMinimo' => -1,
-            'valorMaximo' => 0,
-        ];
+    $nota = new Avaliacao_Model_NotaComponente([
+        'nota' => 5.85,
+    ]);
+    $this->assertEquals(5.8, $service->arredondaNota($nota));
+});
 
-        $tabelaValores = [];
+test('arredonda nota conceitual', function () {
+    // Valores padrão dos atributos de TabelaArredondamento_Model_TabelaValor
+    $data = [
+        'tabelaArredondamento' => 1,
+        'nome' => null,
+        'descricao' => null,
+        'valorMinimo' => -1,
+        'valorMaximo' => 0,
+    ];
 
-        // I
-        $tabelaValores[0] = new TabelaArredondamento_Model_TabelaValor($data);
-        $tabelaValores[0]->nome = 'I';
-        $tabelaValores[0]->descricao = 'Incompleto';
-        $tabelaValores[0]->valorMinimo = 0;
-        $tabelaValores[0]->valorMaximo = 5.50;
+    $tabelaValores = [];
 
-        // S
-        $tabelaValores[1] = new TabelaArredondamento_Model_TabelaValor($data);
-        $tabelaValores[1]->nome = 'S';
-        $tabelaValores[1]->descricao = 'Suficiente';
-        $tabelaValores[1]->valorMinimo = 5.51;
-        $tabelaValores[1]->valorMaximo = 8;
+    // I
+    $tabelaValores[0] = new TabelaArredondamento_Model_TabelaValor($data);
+    $tabelaValores[0]->nome = 'I';
+    $tabelaValores[0]->descricao = 'Incompleto';
+    $tabelaValores[0]->valorMinimo = 0;
+    $tabelaValores[0]->valorMaximo = 5.50;
 
-        // O
-        $tabelaValores[2] = new TabelaArredondamento_Model_TabelaValor($data);
-        $tabelaValores[2]->nome = 'O';
-        $tabelaValores[2]->descricao = 'Ótimo';
-        $tabelaValores[2]->valorMinimo = 8.01;
-        $tabelaValores[2]->valorMaximo = 10.0;
+    // S
+    $tabelaValores[1] = new TabelaArredondamento_Model_TabelaValor($data);
+    $tabelaValores[1]->nome = 'S';
+    $tabelaValores[1]->descricao = 'Suficiente';
+    $tabelaValores[1]->valorMinimo = 5.51;
+    $tabelaValores[1]->valorMaximo = 8;
 
-        $mock = $this->getCleanMock('TabelaArredondamento_Model_TabelaValorDataMapper');
-        $mock->expects($this->any())
-            ->method('findAll')
-            ->willReturn($tabelaValores);
+    // O
+    $tabelaValores[2] = new TabelaArredondamento_Model_TabelaValor($data);
+    $tabelaValores[2]->nome = 'O';
+    $tabelaValores[2]->descricao = 'Ótimo';
+    $tabelaValores[2]->valorMinimo = 8.01;
+    $tabelaValores[2]->valorMaximo = 10.0;
 
-        $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper;
-        $tabelaDataMapper->setTabelaValorDataMapper($mock);
+    $mock = $this->getCleanMock('TabelaArredondamento_Model_TabelaValorDataMapper');
+    $mock->expects($this->any())
+        ->method('findAll')
+        ->willReturn($tabelaValores);
 
-        $tabela = new TabelaArredondamento_Model_Tabela([
-            'nome' => 'Conceituais',
-            'tipoNota' => RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL,
-        ]);
-        $tabela->setDataMapper($tabelaDataMapper);
+    $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper;
+    $tabelaDataMapper->setTabelaValorDataMapper($mock);
 
-        $this->_setRegraOption('tabelaArredondamentoConceitual', $tabela);
+    $tabela = new TabelaArredondamento_Model_Tabela([
+        'nome' => 'Conceituais',
+        'tipoNota' => RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL,
+    ]);
+    $tabela->setDataMapper($tabelaDataMapper);
 
-        $this->_setRegraOption('tipoNota', RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL);
-        $service = $this->_getServiceInstance();
-        $nota = new Avaliacao_Model_NotaComponente([
-            'nota' => 5.49,
-        ]);
-        $nota->componenteCurricular = RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL;
-        $this->mockDbPreparedQuery([['tipo_nota' => ComponenteSerie_Model_TipoNota::CONCEITUAL]]);
-        $this->assertEquals('I', $service->arredondaNota($nota));
+    $this->_setRegraOption('tabelaArredondamentoConceitual', $tabela);
 
-        $nota = new Avaliacao_Model_NotaComponente([
-            'nota' => 6.50,
-        ]);
-        $nota->componenteCurricular = RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL;
-        $this->mockDbPreparedQuery([['tipo_nota' => ComponenteSerie_Model_TipoNota::CONCEITUAL]]);
-        $this->assertEquals('S', $service->arredondaNota($nota));
+    $this->_setRegraOption('tipoNota', RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL);
+    $service = $this->_getServiceInstance();
+    $nota = new Avaliacao_Model_NotaComponente([
+        'nota' => 5.49,
+    ]);
+    $nota->componenteCurricular = RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL;
+    $this->mockDbPreparedQuery([['tipo_nota' => ComponenteSerie_Model_TipoNota::CONCEITUAL]]);
+    $this->assertEquals('I', $service->arredondaNota($nota));
 
-        $nota = new Avaliacao_Model_NotaComponente([
-            'nota' => 9.15,
-        ]);
-        $nota->componenteCurricular = RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL;
-        $this->mockDbPreparedQuery([['tipo_nota' => ComponenteSerie_Model_TipoNota::CONCEITUAL]]);
-        $this->assertEquals('O', $service->arredondaNota($nota));
-    }
+    $nota = new Avaliacao_Model_NotaComponente([
+        'nota' => 6.50,
+    ]);
+    $nota->componenteCurricular = RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL;
+    $this->mockDbPreparedQuery([['tipo_nota' => ComponenteSerie_Model_TipoNota::CONCEITUAL]]);
+    $this->assertEquals('S', $service->arredondaNota($nota));
 
-    public function test_prever_nota_para_recuperacao()
-    {
-        $this->markTestSkipped();
+    $nota = new Avaliacao_Model_NotaComponente([
+        'nota' => 9.15,
+    ]);
+    $nota->componenteCurricular = RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL;
+    $this->mockDbPreparedQuery([['tipo_nota' => ComponenteSerie_Model_TipoNota::CONCEITUAL]]);
+    $this->assertEquals('O', $service->arredondaNota($nota));
+});
 
-        // Define as notas do aluno
-        $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
+test('prever nota para recuperacao', function () {
+    $this->markTestSkipped();
 
-        $notas = [
-            new Avaliacao_Model_NotaComponente([
-                'componenteCurricular' => 1,
-                'nota' => 4,
-                'etapa' => 1,
-            ]),
-            new Avaliacao_Model_NotaComponente([
-                'componenteCurricular' => 1,
-                'nota' => 4,
-                'etapa' => 2,
-            ]),
-            new Avaliacao_Model_NotaComponente([
-                'componenteCurricular' => 1,
-                'nota' => 4,
-                'etapa' => 3,
-            ]),
-            new Avaliacao_Model_NotaComponente([
-                'componenteCurricular' => 1,
-                'nota' => 4,
-                'etapa' => 4,
-            ]),
-        ];
+    // Define as notas do aluno
+    $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
 
-        // Configura mock para Avaliacao_Model_NotaComponenteDataMapper
-        $mock = $this->getCleanMock('Avaliacao_Model_NotaComponenteDataMapper');
+    $notas = [
+        new Avaliacao_Model_NotaComponente([
+            'componenteCurricular' => 1,
+            'nota' => 4,
+            'etapa' => 1,
+        ]),
+        new Avaliacao_Model_NotaComponente([
+            'componenteCurricular' => 1,
+            'nota' => 4,
+            'etapa' => 2,
+        ]),
+        new Avaliacao_Model_NotaComponente([
+            'componenteCurricular' => 1,
+            'nota' => 4,
+            'etapa' => 3,
+        ]),
+        new Avaliacao_Model_NotaComponente([
+            'componenteCurricular' => 1,
+            'nota' => 4,
+            'etapa' => 4,
+        ]),
+    ];
 
-        $mock->expects($this->at(0))
-            ->method('findAll')
-            ->with([], ['notaAluno' => $notaAluno->id], ['etapa' => 'ASC'])
-            ->willReturn($notas);
+    // Configura mock para Avaliacao_Model_NotaComponenteDataMapper
+    $mock = $this->getCleanMock('Avaliacao_Model_NotaComponenteDataMapper');
 
-        $this->_setNotaComponenteDataMapperMock($mock);
+    $mock->expects($this->at(0))
+        ->method('findAll')
+        ->with([], ['notaAluno' => $notaAluno->id], ['etapa' => 'ASC'])
+        ->willReturn($notas);
 
-        $service = $this->_getServiceInstance();
+    $this->_setNotaComponenteDataMapperMock($mock);
 
-        $ret = $service->preverNotaRecuperacao(1);
-        $this->assertEquals(4.0, $ret);
-    }
+    $service = $this->_getServiceInstance();
 
-    protected function tearDown(): void
-    {
-        Portabilis_Utils_Database::$_db = null;
-    }
-}
+    $ret = $service->preverNotaRecuperacao(1);
+    $this->assertEquals(4.0, $ret);
+});

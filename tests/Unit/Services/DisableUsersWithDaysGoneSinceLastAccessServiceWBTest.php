@@ -1,27 +1,23 @@
 <?php
 
-namespace Tests\Unit\Services;
-
 use App\Services\DisableUsersWithDaysGoneSinceLastAccessService;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Config\Repository;
-use Mockery;
 use Tests\TestCase;
 
-class DisableUsersWithDaysGoneSinceLastAccessServiceWBTest extends TestCase
-{
-    protected function createService($expirationPeriod)
-    {
+uses(TestCase::class);
+
+beforeEach(function () {
+    $this->createService = function ($expirationPeriod) {
         $config = Mockery::mock(Repository::class);
 
         $config->shouldReceive('get')
             ->andReturn($expirationPeriod);
 
         return new DisableUsersWithDaysGoneSinceLastAccessService($config);
-    }
+    };
 
-    protected function createUser(bool $isAdmin, int $daysGone)
-    {
+    $this->createUser = function (bool $isAdmin, int $daysGone) {
         $user = Mockery::mock(Authenticatable::class);
 
         $user->disabled = false;
@@ -38,78 +34,69 @@ class DisableUsersWithDaysGoneSinceLastAccessServiceWBTest extends TestCase
             });
 
         return $user;
-    }
+    };
+});
 
-    // CT01 - expirationPeriod vazio
-    public function test_nao_desabilita_quando_expiration_period_esta_vazio()
-    {
-        $service = $this->createService(0);
-        $user = $this->createUser(false, 100);
+afterEach(function () {
+    Mockery::close();
+});
 
-        $service->execute($user);
+// CT01 - expirationPeriod vazio
+test('nao desabilita quando expiration period esta vazio', function () {
+    $service = ($this->createService)(0);
+    $user = ($this->createUser)(false, 100);
 
-        $this->assertFalse($user->disabled);
-    }
+    $service->execute($user);
 
-    // CT02 - expirationPeriod > daysGone
-    public function test_nao_desabilita_quando_days_gone_e_menor_que_expiration_period()
-    {
-        $service = $this->createService(10);
-        $user = $this->createUser(false, 1);
+    $this->assertFalse($user->disabled);
+});
 
-        $service->execute($user);
+// CT02 - expirationPeriod > daysGone
+test('nao desabilita quando days gone e menor que expiration period', function () {
+    $service = ($this->createService)(10);
+    $user = ($this->createUser)(false, 1);
 
-        $this->assertFalse($user->disabled);
-    }
+    $service->execute($user);
 
-    // CT03 - expirationPeriod < daysGone
-    public function test_desabilita_quando_days_gone_e_maior_que_expiration_period()
-    {
-        $service = $this->createService(10);
-        $user = $this->createUser(false, 11);
+    $this->assertFalse($user->disabled);
+});
 
-        $service->execute($user);
+// CT03 - expirationPeriod < daysGone
+test('desabilita quando days gone e maior que expiration period', function () {
+    $service = ($this->createService)(10);
+    $user = ($this->createUser)(false, 11);
 
-        $this->assertTrue($user->disabled);
-    }
+    $service->execute($user);
 
-    // CT04 - expirationPeriod == daysGone
-    public function test_desabilita_quando_days_gone_e_igual_ao_expiration_period()
-    {
-        $service = $this->createService(10);
-        $user = $this->createUser(false, 10);
+    $this->assertTrue($user->disabled);
+});
 
-        $service->execute($user);
+// CT04 - expirationPeriod == daysGone
+test('desabilita quando days gone e igual ao expiration period', function () {
+    $service = ($this->createService)(10);
+    $user = ($this->createUser)(false, 10);
 
-        $this->assertTrue($user->disabled);
-    }
+    $service->execute($user);
 
-    // CT05 - administrador
-    public function test_nao_desabilita_usuario_administrador_ativo()
-    {
-        $service = $this->createService(30);
-        $user = $this->createUser(true, 10);
+    $this->assertTrue($user->disabled);
+});
 
-        $service->execute($user);
+// CT05 - administrador
+test('nao desabilita usuario administrador ativo', function () {
+    $service = ($this->createService)(30);
+    $user = ($this->createUser)(true, 10);
 
-        $this->assertFalse($user->disabled);
-    }
+    $service->execute($user);
 
-    // CT06 - administrador com muitos dias sem acesso
-    public function test_nao_desabilita_usuario_administrador_inativo()
-    {
-        $service = $this->createService(30);
-        $user = $this->createUser(true, 45);
+    $this->assertFalse($user->disabled);
+});
 
-        $service->execute($user);
+// CT06 - administrador com muitos dias sem acesso
+test('nao desabilita usuario administrador inativo', function () {
+    $service = ($this->createService)(30);
+    $user = ($this->createUser)(true, 45);
 
-        $this->assertFalse($user->disabled);
-    }
+    $service->execute($user);
 
-    protected function tearDown(): void
-    {
-        Mockery::close();
-
-        parent::tearDown();
-    }
-}
+    $this->assertFalse($user->disabled);
+});

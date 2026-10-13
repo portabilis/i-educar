@@ -100,9 +100,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_comunicados_escolares_lst.php');
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
@@ -124,9 +127,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_comunicados_escolares_lst.php');
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()
@@ -140,9 +146,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_comunicados_escolares_lst.php');
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Formular()

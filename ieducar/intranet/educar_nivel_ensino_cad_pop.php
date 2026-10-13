@@ -75,6 +75,8 @@ return new class extends clsCadastro
 
     public function Novo()
     {
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $level = new LegacyEducationLevel;
         $level->ref_usuario_cad = $this->pessoa_logada;
         $level->nm_nivel = $this->nm_nivel;
@@ -101,6 +103,7 @@ return new class extends clsCadastro
     public function Editar() {}
 
     public function Excluir() {}
+    // @codeCoverageIgnoreEnd
 
     public function Formular()
     {

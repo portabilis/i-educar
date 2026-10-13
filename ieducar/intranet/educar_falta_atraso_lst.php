@@ -17,7 +17,7 @@ return new class extends clsListagem
 
     public $ref_cod_escola;
 
-    public $ref_ref_cod_instituicao;
+    public $ref_cod_instituicao;
 
     public $ref_usuario_exc;
 
@@ -177,7 +177,7 @@ return new class extends clsListagem
             $this->array_botao_url[] = sprintf(
                 'educar_falta_atraso_cad.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
                 $this->ref_cod_servidor,
-                $this->ref_ref_cod_instituicao
+                $this->ref_cod_instituicao
             );
         }
 
@@ -191,14 +191,17 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Registro das faltas e atrasos do servidor', breadcrumbs: [
-            url('intranet/educar_servidores_index.php') => 'Servidores',
+        // As faltas são do servidor, então ele é um nível do caminho:
+        // Início > Servidores > Nome > Faltas e atrasos
+        $this->breadcrumb(currentPage: 'Faltas e atrasos', breadcrumbs: [
+            url('intranet/educar_servidor_lst.php') => 'Servidores',
+            url("intranet/educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}") => $nome,
         ]);
     }
 
     public function Formular()
     {
-        $this->titulo = 'Servidores - Falta Atraso';
+        $this->title = 'Faltas e atrasos';
         $this->processoAp = 635;
     }
 };

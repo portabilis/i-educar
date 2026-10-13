@@ -2,6 +2,7 @@
 
 use App\Models\Employee;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyPerson;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassTeacher;
 use App\Models\LegacySchoolClassTeacherDiscipline;
@@ -117,8 +118,11 @@ return new class extends clsCadastro
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb(currentPage: 'Vínculo do servidor à turma', breadcrumbs: [
-            'educar_servidores_index.php' => 'Servidores',
+        // Início > Servidores > Nome > Vínculos com turmas > Novo (ou Editar)
+        $this->breadcrumb(currentPage: $retorno == 'Editar' ? 'Editar' : 'Novo', breadcrumbs: [
+            url(path: 'intranet/educar_servidor_lst.php') => 'Servidores',
+            url(path: "intranet/educar_servidor_det.php?cod_servidor={$this->servidor_id}&ref_cod_instituicao={$this->ref_cod_instituicao}") => LegacyPerson::whereKey($this->servidor_id)->value('nome'),
+            url(path: "intranet/{$backUrl}") => 'Vínculos com turmas',
         ]);
 
         return $retorno;
@@ -427,12 +431,15 @@ return new class extends clsCadastro
             $this->gravaComponentesProfessorTurma($this->id, $this->componentecurricular);
 
             DB::commit();
+            // Não testável: só roda se o banco falhar no meio da transação.
+            // @codeCoverageIgnoreStart
         } catch (Exception $exception) {
             DB::rollBack();
 
             $this->mensagem = $exception->getMessage();
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $this->mensagem = 'Edição efetuada com sucesso.<br>';
@@ -461,12 +468,15 @@ return new class extends clsCadastro
             LegacySchoolClassTeacher::whereKey($this->id)->delete();
 
             DB::commit();
+            // Não testável: só roda se o banco falhar no meio da transação.
+            // @codeCoverageIgnoreStart
         } catch (Exception $exception) {
             DB::rollBack();
 
             $this->mensagem = $exception->getMessage();
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
@@ -659,7 +669,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Servidores - Servidor vínculo turma';
+        $this->title = 'Servidores - Vínculo com turma';
         $this->processoAp = 635;
     }
 

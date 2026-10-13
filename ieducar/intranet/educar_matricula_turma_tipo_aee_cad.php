@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\LegacyEnrollment;
+use App\Models\LegacyRegistration;
+use App\Models\LegacyStudent;
+use App\Services\EnrollmentService;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoAluno;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 
@@ -20,7 +24,10 @@ return new class extends clsCadastro
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -43,16 +50,24 @@ return new class extends clsCadastro
         $this->nome_url_cancelar = 'Voltar';
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
-        $this->breadcrumb(currentPage: 'Tipo do AEE do aluno', breadcrumbs: [
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'Início',
-            'educar_index.php' => 'Escola',
+        // Início > Escola > Alunos > Nome > Matrícula > Tipo do AEE
+        $registration = LegacyRegistration::find($this->cod_matricula);
+        $this->breadcrumb(currentPage: 'Tipo do AEE', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_aluno_lst.php') => 'Alunos',
+            url(path: "intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url(path: "intranet/educar_matricula_det.php?cod_matricula={$this->cod_matricula}") => 'Matrícula',
         ]);
 
-        $obj_aluno = new clsPmieducarAluno;
-        $lst_aluno = $obj_aluno->lista(int_cod_aluno: $this->ref_cod_aluno, int_ativo: 1);
-        if (is_array(value: $lst_aluno)) {
-            $det_aluno = array_shift(array: $lst_aluno);
-            $this->nm_aluno = $det_aluno['nome_aluno'];
+        if (is_numeric($this->ref_cod_aluno)) {
+            $this->nm_aluno = LegacyStudent::query()
+                ->active()
+                ->whereStudent($this->ref_cod_aluno)
+                ->joinPerson()
+                ->value('pessoa.nome');
+        }
+
+        if ($this->nm_aluno) {
             $this->campoRotulo(nome: 'nm_aluno', campo: 'Aluno', valor: $this->nm_aluno);
         }
 
@@ -63,7 +78,7 @@ return new class extends clsCadastro
 
             $helperOptions = ['objectName' => "{$enturmacao['ref_cod_turma']}_{$enturmacao['sequencial']}_tipoatendimento"];
             $options = [
-                'label' => "Tipo de atendimento educacional especializado do aluno na turma {$enturmacao['nm_turma']}: ",
+                'label' => "Tipo de atendimento educacional especializado do aluno na turma {$enturmacao->schoolClass->nm_turma}: ",
                 'options' => [
                     'values' => $tipoAtendimento,
                     'all_values' => TipoAtendimentoAluno::getDescriptiveValues(),
@@ -91,11 +106,12 @@ return new class extends clsCadastro
         }
 
         foreach ($arrayTipoAtendimento as $data) {
-            $obj = new clsPmieducarMatriculaTurma(ref_cod_matricula: $this->cod_matricula, ref_cod_turma: $data['turma'], ref_usuario_exc: $this->pessoa_logada);
             $tipoAtendimento = $data['value'] ? implode(separator: ',', array: $data['value']) : null;
-            $obj->sequencial = $data['sequencial'];
-            $obj->tipo_atendimento = $tipoAtendimento;
-            $obj->edita();
+
+            app(EnrollmentService::class)->updateFromScreen($this->cod_matricula, $data['turma'], $data['sequencial'], [
+                'ref_usuario_exc' => $this->pessoa_logada,
+                'tipo_atendimento' => $tipoAtendimento,
+            ]);
         }
 
         $this->mensagem = 'Tipo do AEE do aluno atualizado com sucesso.<br>';
@@ -114,29 +130,32 @@ return new class extends clsCadastro
         $det_matricula = $obj_matricula->detalhe();
 
         if (!$det_matricula) {
-            $this->simpleRedirect(url: "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->redirectNotFound(
+                url: "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}",
+                registro: 'matrícula',
+                feminino: true,
+                codigo: $this->cod_matricula,
+                dica: 'Acesse a matrícula pela ficha do aluno.',
+            );
         }
     }
 
     private function getEnturmacoesAee()
     {
-        $enturmacoes = new clsPmieducarMatriculaTurma;
-        $enturmacoes = $enturmacoes->lista(
-            int_ref_cod_matricula: $this->cod_matricula,
-        );
-
-        $arrayEnturmacoes = [];
-        foreach ($enturmacoes as $enturmacao) {
-            $turma = new clsPmieducarTurma(cod_turma: $enturmacao['ref_cod_turma']);
-            $turma = $turma->detalhe();
-            $tipoAtendimento = transformStringFromDBInArray(string: $turma['tipo_atendimento']);
-
-            if (is_array($tipoAtendimento) && in_array(TipoAtendimentoTurma::AEE, $tipoAtendimento)) {
-                $arrayEnturmacoes[] = $enturmacao;
-            }
-        }
-
-        return $arrayEnturmacoes;
+        return LegacyEnrollment::query()
+            ->when(is_numeric($this->cod_matricula), fn ($q) => $q->whereRegistration($this->cod_matricula))
+            ->whereHas('registration', function ($q) {
+                $q->whereHas('student', fn ($q) => $q->active());
+            })
+            ->whereHas('schoolClass', function ($q) {
+                $q->whereRaw('? = ANY(tipo_atendimento)', [TipoAtendimentoTurma::AEE]);
+            })
+            ->with('schoolClass:cod_turma,nm_turma')
+            ->get([
+                'ref_cod_turma',
+                'sequencial',
+                'tipo_atendimento',
+            ]);
     }
 
     public function Formular()

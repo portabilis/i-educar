@@ -22,7 +22,11 @@ return new class extends clsDetalhe
         $registro = LegacyDeficiency::find($this->cod_deficiencia);
 
         if (!$registro) {
-            $this->simpleRedirect('educar_deficiencia_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_deficiencia_lst.php',
+                registro: 'deficiência ou transtorno',
+                codigo: $this->cod_deficiencia,
+            );
         }
 
         $deficiencies = Deficiencias::getDescriptiveValues();
@@ -30,7 +34,7 @@ return new class extends clsDetalhe
         $types = DeficiencyType::getDescriptiveValues();
 
         if ($registro['nm_deficiencia']) {
-            $this->addDetalhe(['Descrição', "{$registro['nm_deficiencia']}"]);
+            $this->addDetalhe(['Descrição', e($registro['nm_deficiencia'])]);
         }
 
         if ($registro['deficiency_type_id']) {

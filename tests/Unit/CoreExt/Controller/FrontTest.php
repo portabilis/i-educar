@@ -1,37 +1,24 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+beforeEach(function () {
+    $this->_path = realpath(dirname(__FILE__) . '/_stub');
+    $this->_frontController = CoreExt_Controller_Front::getInstance();
+    $this->_frontController->resetOptions();
+});
 
-class CoreExt_Controller_FrontTest extends TestCase
-{
-    protected $_frontController = null;
+test('opcao de configuracao nao existente lanca excecao', function () {
+    $this->expectException(InvalidArgumentException::class);
+    $this->_frontController->setOptions(['foo' => 'bar']);
+});
 
-    protected $_path = null;
+test('controller tem objetos request dispatcher e view padroes', function () {
+    $this->assertInstanceOf('CoreExt_Controller_Request', $this->_frontController->getRequest());
+    $this->assertInstanceOf('CoreExt_Controller_Dispatcher_Interface', $this->_frontController->getDispatcher());
+    $this->assertInstanceOf('CoreExt_View', $this->_frontController->getView());
+});
 
-    protected function setUp(): void
-    {
-        $this->_path = realpath(dirname(__FILE__) . '/_stub');
-        $this->_frontController = CoreExt_Controller_Front::getInstance();
-        $this->_frontController->resetOptions();
-    }
-
-    public function test_opcao_de_configuracao_nao_existente_lanca_excecao()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->_frontController->setOptions(['foo' => 'bar']);
-    }
-
-    public function test_controller_tem_objetos_request_dispatcher_e_view_padroes()
-    {
-        $this->assertInstanceOf('CoreExt_Controller_Request', $this->_frontController->getRequest());
-        $this->assertInstanceOf('CoreExt_Controller_Dispatcher_Interface', $this->_frontController->getDispatcher());
-        $this->assertInstanceOf('CoreExt_View', $this->_frontController->getView());
-    }
-
-    public function test_request_customizado_e_registrado_em_controller()
-    {
-        $request = new CoreExt_Controller_Request;
-        $this->_frontController->setRequest($request);
-        $this->assertSame($request, $this->_frontController->getRequest());
-    }
-}
+test('request customizado e registrado em controller', function () {
+    $request = new CoreExt_Controller_Request;
+    $this->_frontController->setRequest($request);
+    $this->assertSame($request, $this->_frontController->getRequest());
+});

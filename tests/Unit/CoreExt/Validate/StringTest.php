@@ -1,39 +1,27 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+beforeEach(function () {
+    $this->_validator = new CoreExt_Validate_String;
+});
 
-class CoreExt_Validate_StringTest extends TestCase
-{
-    protected $_validator = null;
+test('string somente espaco lanca excecao por ser obrigatorio', function () {
+    $this->expectException(Exception::class);
+    // São três espaços ascii 20.
+    $this->assertTrue($this->_validator->isValid('   '));
+});
 
-    protected function setUp(): void
-    {
-        $this->_validator = new CoreExt_Validate_String;
-    }
+test('string sem alterar configuracao basica', function () {
+    $this->assertTrue($this->_validator->isValid('abc'));
+});
 
-    public function test_string_somente_espaco_lanca_excecao_por_ser_obrigatorio()
-    {
-        $this->expectException(Exception::class);
-        // São três espaços ascii 20.
-        $this->assertTrue($this->_validator->isValid('   '));
-    }
+test('string menor que o tamanho minimo lanca excecao', function () {
+    $this->expectException(Exception::class);
+    $this->_validator->setOptions(['min' => 5]);
+    $this->assertTrue($this->_validator->isValid('Foo'));
+});
 
-    public function test_string_sem_alterar_configuracao_basica()
-    {
-        $this->assertTrue($this->_validator->isValid('abc'));
-    }
-
-    public function test_string_menor_que_o_tamanho_minimo_lanca_excecao()
-    {
-        $this->expectException(Exception::class);
-        $this->_validator->setOptions(['min' => 5]);
-        $this->assertTrue($this->_validator->isValid('Foo'));
-    }
-
-    public function test_alfa_string_que_o_tamanho_maximo_lanca_excecao()
-    {
-        $this->expectException(Exception::class);
-        $this->_validator->setOptions(['max' => 2]);
-        $this->assertTrue($this->_validator->isValid('Foo'));
-    }
-}
+test('alfa string que o tamanho maximo lanca excecao', function () {
+    $this->expectException(Exception::class);
+    $this->_validator->setOptions(['max' => 2]);
+    $this->assertTrue($this->_validator->isValid('Foo'));
+});

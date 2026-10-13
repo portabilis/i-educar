@@ -37,17 +37,22 @@ return new class extends clsDetalhe
 
         $registro = LegacyRole::find(request()->integer('cod_funcao'))?->getAttributes();
         if (!$registro) {
-            $this->simpleRedirect('educar_funcao_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_funcao_lst.php',
+                registro: 'função',
+                feminino: true,
+                codigo: request()->integer('cod_funcao'),
+            );
         }
 
         if ($registro['cod_funcao']) {
-            $this->addDetalhe(['Funcão', "{$registro['cod_funcao']}"]);
+            $this->addDetalhe(['Funcão', e($registro['cod_funcao'])]);
         }
         if ($registro['nm_funcao']) {
-            $this->addDetalhe(['Nome Funcão', "{$registro['nm_funcao']}"]);
+            $this->addDetalhe(['Nome Funcão', e($registro['nm_funcao'])]);
         }
         if ($registro['abreviatura']) {
-            $this->addDetalhe(['Abreviatura', "{$registro['abreviatura']}"]);
+            $this->addDetalhe(['Abreviatura', e($registro['abreviatura'])]);
         }
 
         $opcoes = ['1' => 'Sim',

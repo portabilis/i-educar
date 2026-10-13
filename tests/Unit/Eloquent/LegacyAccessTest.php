@@ -1,25 +1,17 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyAccess;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyAccessTest extends EloquentTestCase
-{
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyAccess::class;
-    }
+uses(EloquentModelTestCase::class);
 
-    public function test_get_last_access()
-    {
-        $query = $this->model->getLastAccess();
+beforeEach(fn () => $this->eloquent(LegacyAccess::class));
 
-        $this->assertNotNull($query);
-        $this->assertInstanceOf(LegacyAccess::class, $query);
-    }
-}
+EloquentModelTestCase::registerModelTests();
+
+test('get last access', function () {
+    $query = $this->model->getLastAccess();
+
+    $this->assertNotNull($query);
+    $this->assertInstanceOf(LegacyAccess::class, $query);
+});

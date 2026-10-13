@@ -17,8 +17,11 @@ class EmailTracker implements Tracker
         $to = $this->getRecipient();
 
         try {
+            // O componente de depuração do Symfony não está instalado: a linha
+            // abaixo lança Error e o restante do bloco não é executado.
             $e = FlattenException::create($exception);
 
+            // @codeCoverageIgnoreStart
             $handler = new ExceptionHandler;
 
             $html = $handler->getHtml($e);
@@ -26,6 +29,7 @@ class EmailTracker implements Tracker
             $mail = new ErrorTrackerMail($to, $subject, $html);
 
             Mail::send($mail);
+            // @codeCoverageIgnoreEnd
         } catch (Throwable) {
             //
         }

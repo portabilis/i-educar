@@ -39,7 +39,12 @@ return new class extends clsDetalhe
             ->find($this->id);
 
         if (!$registro) {
-            $this->simpleRedirect('educar_sequencia_serie_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_sequencia_serie_lst.php',
+                registro: 'sequência de enturmação',
+                feminino: true,
+                codigo: $this->id,
+            );
         }
         $obj_permissoes = new clsPermissoes;
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacySchoolHistory;
+use App\Models\LegacyStudent;
 use App\Models\LegacyUserSchool;
 use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 
@@ -60,17 +61,20 @@ return new class extends clsDetalhe
         $historicoModel = LegacySchoolHistory::forStudentSequential($this->ref_cod_aluno, $this->sequencial)->first();
 
         if (!$historicoModel) {
-            $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->redirectNotFound(
+                url: "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}",
+                registro: 'histórico escolar',
+                dica: 'Confira os registros listados abaixo.',
+            );
         }
 
         $registro = $historicoModel->getAttributes();
 
-        $obj_aluno = new clsPmieducarAluno;
-        $lst_aluno = $obj_aluno->lista(int_cod_aluno: $registro['ref_cod_aluno'], int_ativo: 1);
-        if (is_array($lst_aluno)) {
-            $det_aluno = array_shift($lst_aluno);
-            $nm_aluno = $det_aluno['nome_aluno'];
-        }
+        $nm_aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($registro['ref_cod_aluno'])
+            ->joinPerson()
+            ->value('pessoa.nome');
 
         if ($nm_aluno) {
             $this->addDetalhe(['Aluno', "{$nm_aluno}"]);
@@ -279,8 +283,12 @@ return new class extends clsDetalhe
         $this->url_cancelar = "educar_historico_escolar_lst.php?ref_cod_aluno={$registro['ref_cod_aluno']}";
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Atualização de históricos escolares', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Históricos escolares > Histórico escolar
+        $this->breadcrumb(currentPage: 'Histórico escolar', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$registro['ref_cod_aluno']}") => LegacyStudent::find($registro['ref_cod_aluno'])?->real_name,
+            url("intranet/educar_historico_escolar_lst.php?ref_cod_aluno={$registro['ref_cod_aluno']}") => 'Históricos escolares',
         ]);
     }
 

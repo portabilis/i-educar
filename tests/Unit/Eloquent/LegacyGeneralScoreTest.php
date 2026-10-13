@@ -1,22 +1,13 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyGeneralScore;
 use App\Models\LegacyStudentScore;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyGeneralScoreTest extends EloquentTestCase
-{
-    protected $relations = [
-        'studentScore' => LegacyStudentScore::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyGeneralScore::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyGeneralScore::class, relations: [
+    'studentScore' => LegacyStudentScore::class,
+]));
+
+EloquentModelTestCase::registerModelTests();
