@@ -12,7 +12,7 @@
     <form id="formcadastro" action="{{ route('component-batch-manager.preview') }}" method="post">
         @csrf
 
-        <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
+        <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0" role="presentation">
             <tbody>
             <tr>
                 <td class="formdktd" colspan="2" height="24"><b>Nova Operação em Lote</b></td>

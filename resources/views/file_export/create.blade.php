@@ -66,7 +66,7 @@
                 </td>
             </tr>
 
-            <tr id="tr_nm_turma">
+            <tr id="tr_matricula">
                 <td class="formlttd" valign="top">
                     <span class="form">Matrícula</span>
                 </td>

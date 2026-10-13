@@ -572,31 +572,6 @@ return new class extends clsCadastro
                 return false;
             }
 
-            $vagas_restantes = 1;
-
-            if ($vagas_restantes <= 0) {
-                // Inalcançável: `$vagas_restantes` é fixado em 1 logo acima.
-                // @codeCoverageIgnoreStart
-                echo sprintf(
-                    '<script>
-                        var msg = \'\';
-                        msg += \'Excedido o n\u00famero de total de vagas para Matr\u00cdcula!\\n\';
-                        msg += \'N\u00famero total de matriculados: %d\\n\';
-                        msg += \'N\u00famero total de vagas reservadas: %d\\n\';
-                        msg += \'N\u00famero total de vagas: %d\\n\';
-                        msg += \'Deseja mesmo assim realizar a Matr\u00cdcula?\';
-                        if (!confirm(msg)) {
-                          window.location = \'educar_aluno_det.php?cod_aluno=%d\';
-                        }
-                    </script>',
-                    $matriculados,
-                    $reservados,
-                    $total_vagas,
-                    $this->ref_cod_aluno
-                );
-                // @codeCoverageIgnoreEnd
-            }
-
             $obj_matricula_aluno = new clsPmieducarMatricula;
 
             $obj_matricula_aluno->lista(ref_cod_aluno: $this->ref_cod_aluno);

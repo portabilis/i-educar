@@ -9,7 +9,7 @@
                     <b>Publicação de avisos</b>
                 </td>
             </tr>
-            <tr id="tr_description">
+            <tr id="tr_name">
                 <td class="formmdtd" valign="top" nowrap>
                     <span class="form">Nome</span>
                     <span class="campo_obrigatorio">*</span>

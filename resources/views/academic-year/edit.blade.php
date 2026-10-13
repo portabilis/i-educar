@@ -45,7 +45,7 @@
 @section('content')
     <form id="formcadastro" method="post">
         @csrf
-        <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
+        <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0" role="presentation">
             <tbody>
             <tr>
                 <td class="formdktd" colspan="2" height="24"><b>Ano Letivo em Lote</b></td>
@@ -113,9 +113,9 @@
                             <td colspan="3">Etapas do ano letivo</td>
                         </tr>
                         <tr style="font-weight:bold; text-align: center;" id="tr_modulos_ano_letivo_cab">
-                            <td class="formmdtd" id="td_data_inicial" style="text-align: center"><span class="form">Data inicial</span><span class="campo_obrigatorio">*</span></td>
-                            <td class="formmdtd" id="td_data_final" style="text-align: center"><span class="form">Data final</span><span class="campo_obrigatorio">*</span></td>
-                            <td class="formmdtd" id="td_dias_letivos" style="text-align: center"><span class="form">Dias Letivos</span></td>
+                            <th scope="col" class="formmdtd" id="td_data_inicial" style="text-align: center"><span class="form">Data inicial</span><span class="campo_obrigatorio">*</span></th>
+                            <th scope="col" class="formmdtd" id="td_data_final" style="text-align: center"><span class="form">Data final</span><span class="campo_obrigatorio">*</span></th>
+                            <th scope="col" class="formmdtd" id="td_dias_letivos" style="text-align: center"><span class="form">Dias Letivos</span></th>
                         </tr>
                         <tr id="tr_modulos_ano_letivo[1]" name="tr_modulos_ano_letivo[1]" class="formmdtd dd tr_modulos_ano_letivo">
                             <td class="formmdtd dd data_inicio" id="td_data_inicio[1]" style="vertical-align: top">

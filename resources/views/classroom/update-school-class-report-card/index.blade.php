@@ -101,7 +101,7 @@
                 </td>
             </tr>
 
-            <tr id="tr_nm_tipo_boletim">
+            <tr id="tr_new_report_card">
                 <th scope="row" class="formmdtd" valign="top">
                     <span class="form">Novo modelo de boletim</span>
                     <br>
@@ -130,7 +130,7 @@
                 </td>
             </tr>
 
-            <tr id="tr_nm_tipo_boletim">
+            <tr id="tr_new_alternative_report_card">
                 <th scope="row" class="formlttd" valign="top">
                     <span class="form">Novo modelo de boletim (diferenciado)</span>
                     <br>
