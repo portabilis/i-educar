@@ -73,9 +73,9 @@ return new class extends clsListagem
         }
 
         $query = SchoolNotice::query()
-            ->with(['institution', 'school'])
+            ->with(['institution'])
             ->when($usuarioEscolar, function ($query, $usuarioEscolar) {
-                $query->whereHas('school.schoolUsers', function ($q) use ($usuarioEscolar) {
+                $query->whereHas('schools.schoolUsers', function ($q) use ($usuarioEscolar) {
                     $q->where('ref_cod_usuario', $usuarioEscolar);
                 });
             })
@@ -90,7 +90,7 @@ return new class extends clsListagem
         }
 
         if (is_numeric(value: $this->ref_cod_escola)) {
-            $query->where(column: 'school_id', operator: $this->ref_cod_escola);
+            $query->whereHas('schools', fn ($q) => $q->whereKey($this->ref_cod_escola));
         }
 
         $result = $query->paginate(perPage: $this->limite, pageName: 'pagina_');
