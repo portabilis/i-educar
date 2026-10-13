@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\Api;
 
+use App\Process;
 use Database\Factories\LegacyDisciplineAcademicYearFactory;
 use Database\Factories\LegacyDisciplineFactory;
 use Database\Factories\LegacyDisciplineSchoolClassFactory;
@@ -14,8 +15,11 @@ use Database\Factories\LegacySchoolGradeFactory;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use OpenApiGenerator\Attributes\Controller;
+use OpenApiGenerator\Attributes\DELETE;
 use OpenApiGenerator\Attributes\GET;
+use OpenApiGenerator\Attributes\PathParameter;
 use OpenApiGenerator\Attributes\Response;
+use OpenApiGenerator\Type;
 use OpenApiGenerator\Types\SchemaType;
 use Tests\TestCase;
 
@@ -98,5 +102,100 @@ class DisciplineControllerTest extends TestCase
                 ],
             ],
         ]);
+    }
+
+    #[
+        DELETE('/api/discipline/{id}', ['Discipline'], 'Delete discipline with ID'),
+        PathParameter('id', Type::INT, required: true, example: 1),
+        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'Discipline'),
+    ]
+    public function test_destroy(): void
+    {
+        $discipline = LegacyDisciplineFactory::new()->create();
+
+        $response = $this->delete('api/discipline/' . $discipline->getKey());
+
+        $response->assertOk();
+        $this->assertDatabaseMissing($discipline->getTable(), ['id' => $discipline->getKey()]);
+    }
+
+    public function test_fail_destroy_discipline_linked_to_grade(): void
+    {
+        $response = $this->delete('api/discipline/' . $this->discipline->getKey());
+
+        $response->assertStatus(422);
+        $response->assertJson([
+            'message' => 'Este componente está vinculado a uma ou mais séries e não pode ser excluído para preservar o histórico.',
+        ]);
+        $this->assertDatabaseHas($this->discipline->getTable(), ['id' => $this->discipline->getKey()]);
+    }
+
+    public function test_fail_destroy_discipline_without_permission(): void
+    {
+        $this->actingAs(LegacyUserFactory::new()->institutional()->create());
+
+        $discipline = LegacyDisciplineFactory::new()->create();
+
+        $response = $this->delete('api/discipline/' . $discipline->getKey());
+
+        $response->assertStatus(403);
+        $this->assertDatabaseHas($discipline->getTable(), ['id' => $discipline->getKey()]);
+    }
+
+    public function test_destroy_discipline_with_permission(): void
+    {
+        $this->actingAs(LegacyUserFactory::new()->institutional()->withAccess(Process::DISCIPLINES)->create());
+
+        $discipline = LegacyDisciplineFactory::new()->create();
+
+        $response = $this->delete('api/discipline/' . $discipline->getKey());
+
+        $response->assertOk();
+        $this->assertDatabaseMissing($discipline->getTable(), ['id' => $discipline->getKey()]);
+    }
+
+    public function test_fail_destroy_discipline_not_found(): void
+    {
+        $response = $this->delete('api/discipline/0');
+
+        $response->assertNotFound();
+    }
+
+    public function test_fail_destroy_discipline_twice(): void
+    {
+        $discipline = LegacyDisciplineFactory::new()->create();
+
+        $this->delete('api/discipline/' . $discipline->getKey())->assertOk();
+
+        $this->delete('api/discipline/' . $discipline->getKey())->assertNotFound();
+    }
+
+    public function test_fail_destroy_discipline_with_restricted_foreign_key(): void
+    {
+        $discipline = LegacyDisciplineFactory::new()->create();
+        LegacyDisciplineSchoolClassFactory::new()->create([
+            'componente_curricular_id' => $discipline,
+        ]);
+
+        $response = $this->delete('api/discipline/' . $discipline->getKey());
+
+        $response->assertStatus(422);
+        $response->assertJson([
+            'message' => 'Este componente está vinculado a uma ou mais séries e não pode ser excluído para preservar o histórico.',
+        ]);
+        $this->assertDatabaseHas($discipline->getTable(), ['id' => $discipline->getKey()]);
+    }
+
+    public function test_fail_destroy_discipline_dispensed_in_school_class(): void
+    {
+        $discipline = LegacyDisciplineFactory::new()->create();
+        LegacySchoolClassFactory::new()->create([
+            'ref_cod_disciplina_dispensada' => $discipline,
+        ]);
+
+        $response = $this->delete('api/discipline/' . $discipline->getKey());
+
+        $response->assertStatus(422);
+        $this->assertDatabaseHas($discipline->getTable(), ['id' => $discipline->getKey()]);
     }
 }
