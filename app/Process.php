@@ -103,4 +103,6 @@ class Process
     public const COMPONENT_BATCH_MANAGER = 9999121;
 
     public const DOCUMENT_ABSENCE_REASON = 5842;
+
+    public const DISCIPLINES = 946;
 }

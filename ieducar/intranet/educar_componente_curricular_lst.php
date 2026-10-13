@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\LegacyDiscipline;
+use App\Models\LegacyDisciplineAcademicYear;
+use App\Process;
+use App\Rules\CanDeleteDiscipline;
 
 return new class extends clsListagem
 {
@@ -39,6 +42,11 @@ return new class extends clsListagem
 
         $obj_permissoes = new clsPermissoes;
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $permiteExcluir = $obj_permissoes->permissao_excluir(int_processo_ap: Process::DISCIPLINES, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3);
+
+        if ($permiteExcluir) {
+            $lista_busca[] = 'Ações';
+        }
 
         $this->addCabecalhos($lista_busca);
 
@@ -119,6 +127,14 @@ return new class extends clsListagem
         $disciplinas = $result->items();
         $total = $result->total();
 
+        $disciplinasVinculadas = $permiteExcluir
+            ? LegacyDisciplineAcademicYear::query()
+                ->whereIn('componente_curricular_id', array_map(fn ($disciplina) => $disciplina->getKey(), $disciplinas))
+                ->distinct()
+                ->pluck('componente_curricular_id')
+                ->all()
+            : [];
+
         foreach ($disciplinas as $disciplina) {
             $lista_busca = [
                 '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $disciplina->nome . '</a>',
@@ -126,6 +142,10 @@ return new class extends clsListagem
                 '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $tipos[$disciplina->tipo_base] . '</a>',
                 '<a href="/module/ComponenteCurricular/view?id=' . $disciplina->getKey() . '">' .  $disciplina->area_conhecimento . '</a>',
             ];
+
+            if ($permiteExcluir) {
+                $lista_busca[] = $this->acaoExcluir(disciplina: $disciplina, vinculada: in_array($disciplina->getKey(), $disciplinasVinculadas));
+            }
 
             $this->addLinhas($lista_busca);
         }
@@ -147,6 +167,20 @@ return new class extends clsListagem
         $this->breadcrumb(currentPage: 'Listagem de componentes curriculares', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+    }
+
+    private function acaoExcluir(LegacyDiscipline $disciplina, bool $vinculada): string
+    {
+        if ($vinculada) {
+            return '<span data-toggle="tooltip" title="' . e((new CanDeleteDiscipline)->message()) . '" style="display: inline-block; padding: 0 8px;"><i class="fa fa-trash" aria-disabled="true" style="color: #ccc; cursor: not-allowed;"></i></span>';
+        }
+
+        return '<a href="#" class="js-excluir-componente" data-id="' . $disciplina->getKey() . '" data-nome="' . e($disciplina->nome) . '" title="Excluir"><i class="fa fa-trash" style="color: #c0392b;"></i></a>';
+    }
+
+    public function makeExtra()
+    {
+        return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-componente-curricular-lst.js');
     }
 
     public function Formular()
