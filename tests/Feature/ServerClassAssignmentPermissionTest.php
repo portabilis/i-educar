@@ -21,6 +21,7 @@ use Tests\TestCase;
 class ServerClassAssignmentPermissionTest extends TestCase
 {
     use DatabaseTransactions;
+    private const SERVER_CLASS_ASSIGNMENT_URL = '/intranet/educar_servidor_vinculo_turma_cad.php?';
 
     protected function setUp(): void
     {
@@ -160,7 +161,7 @@ class ServerClassAssignmentPermissionTest extends TestCase
             'ref_cod_instituicao' => $employee->ref_cod_instituicao,
         ]);
 
-        $this->post('/intranet/educar_servidor_vinculo_turma_cad.php?' . $query, [
+        $this->post(self::SERVER_CLASS_ASSIGNMENT_URL. $query, [
             'tipoacao' => 'Novo',
             'servidor_id' => $employee->getKey(),
             'ref_cod_instituicao' => $employee->ref_cod_instituicao,
@@ -181,14 +182,12 @@ class ServerClassAssignmentPermissionTest extends TestCase
 
     public function test_cannot_create_teacher_class_assignment_for_finalized_academic_year(): void
     {
-        $employee = EmployeeFactory::new()->create();
-        $schoolClass = $this->createClassWithFinalizedAcademicYear();
-        $query = http_build_query([
+        $employee = EmployeeFactory::new()->create();$schoolClass = $this->createClassWithFinalizedAcademicYear();$query = http_build_query([
             'ref_cod_servidor' => $employee->getKey(),
             'ref_cod_instituicao' => $schoolClass->ref_cod_instituicao,
         ]);
 
-        $this->assertForbiddenPost('/intranet/educar_servidor_vinculo_turma_cad.php?' . $query, [
+        $this->assertForbiddenPost(self::SERVER_CLASS_ASSIGNMENT_URL .$query, [
             'tipoacao' => 'Novo',
             'servidor_id' => $employee->getKey(),
             'ref_cod_instituicao' => $schoolClass->ref_cod_instituicao,
@@ -205,19 +204,13 @@ class ServerClassAssignmentPermissionTest extends TestCase
 
     public function test_cannot_edit_teacher_class_assignment_for_finalized_academic_year(): void
     {
-        $schoolClass = $this->createClassWithFinalizedAcademicYear();
-        $assignment = LegacySchoolClassTeacherFactory::new()->create([
-            'ano' => $schoolClass->ano,
-            'instituicao_id' => $schoolClass->ref_cod_instituicao,
-            'turma_id' => $schoolClass->getKey(),
-        ]);
-        $query = http_build_query([
-            'id' => $assignment->getKey(),
-            'ref_cod_servidor' => $assignment->servidor_id,
-            'ref_cod_instituicao' => $schoolClass->ref_cod_instituicao,
-        ]);
+        [
+            'schoolClass' => $schoolClass,
+            'assignment' => $assignment,
+            'query' => $query,
+        ] = $this->createAssignmentWithFinalizedAcademicYear();
 
-        $this->assertForbiddenPost('/intranet/educar_servidor_vinculo_turma_cad.php?' . $query, [
+        $this->assertForbiddenPost(self::SERVER_CLASS_ASSIGNMENT_URL .$query, [
             'tipoacao' => 'Editar',
             'id' => $assignment->getKey(),
             'servidor_id' => $assignment->servidor_id,
@@ -236,19 +229,13 @@ class ServerClassAssignmentPermissionTest extends TestCase
 
     public function test_cannot_delete_teacher_class_assignment_for_finalized_academic_year(): void
     {
-        $schoolClass = $this->createClassWithFinalizedAcademicYear();
-        $assignment = LegacySchoolClassTeacherFactory::new()->create([
-            'ano' => $schoolClass->ano,
-            'instituicao_id' => $schoolClass->ref_cod_instituicao,
-            'turma_id' => $schoolClass->getKey(),
-        ]);
-        $query = http_build_query([
-            'id' => $assignment->getKey(),
-            'ref_cod_servidor' => $assignment->servidor_id,
-            'ref_cod_instituicao' => $schoolClass->ref_cod_instituicao,
-        ]);
+        [
+            'schoolClass' => $schoolClass,
+            'assignment' => $assignment,
+            'query' => $query,
+        ] = $this->createAssignmentWithFinalizedAcademicYear();
 
-        $this->assertForbiddenPost('/intranet/educar_servidor_vinculo_turma_cad.php?' . $query, [
+        $this->assertForbiddenPost(self::SERVER_CLASS_ASSIGNMENT_URL .$query, [
             'tipoacao' => 'Excluir',
             'id' => $assignment->getKey(),
             'servidor_id' => $assignment->servidor_id,
@@ -258,6 +245,29 @@ class ServerClassAssignmentPermissionTest extends TestCase
         $this->assertDatabaseHas('modules.professor_turma', [
             'id' => $assignment->getKey(),
         ]);
+    }
+    
+    private function createAssignmentWithFinalizedAcademicYear(): array
+    {
+        $schoolClass = $this->createClassWithFinalizedAcademicYear();
+        
+        $assignment = LegacySchoolClassTeacherFactory::new()->create([
+            'ano' => $schoolClass->ano,
+            'instituicao_id' => $schoolClass->ref_cod_instituicao,
+            'turma_id' => $schoolClass->getKey(),
+        ]);
+
+        $query = http_build_query([
+            'id' => $assignment->getKey(),
+            'ref_cod_servidor' => $assignment->servidor_id,
+            'ref_cod_instituicao' => $schoolClass->ref_cod_instituicao,
+        ]);
+
+        return [
+            'schoolClass' => $schoolClass,
+            'assignment' => $assignment,
+            'query' => $query,
+        ];
     }
 
     private function createClassWithFinalizedAcademicYear(): LegacySchoolClass
@@ -279,7 +289,6 @@ class ServerClassAssignmentPermissionTest extends TestCase
     private function assertForbiddenPost(string $uri, array $payload): void
     {
         $initialOutputBufferLevel = ob_get_level();
-
         try {
             $this->post($uri, $payload)->assertForbidden();
         } finally {
