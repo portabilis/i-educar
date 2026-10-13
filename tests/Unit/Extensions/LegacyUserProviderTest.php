@@ -31,7 +31,8 @@ test('acha o usuário pelo id e pelo token de lembrar', function () {
 });
 
 test('aceita a senha antiga em md5 e já troca pelo hash atual', function () {
-    LegacyEmployee::query()->whereKey($this->user->getKey())->update(['senha' => md5('antiga')]);
+    // O md5 é o formato das senhas antigas do legado, que o provider precisa reconhecer.
+    LegacyEmployee::query()->whereKey($this->user->getKey())->update(['senha' => md5('antiga')]); // NOSONAR
     $user = User::query()->findOrFail($this->user->getKey());
 
     expect($this->provider->validateLegacyCredentials($user, ['password' => 'antiga']))->toBeTrue()

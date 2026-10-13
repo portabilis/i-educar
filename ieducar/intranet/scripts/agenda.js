@@ -5,11 +5,11 @@ var oldBotoes = '';
 function agenda_escape( texto )
 {
 	return String( texto )
-		.replace( /&/g, '&amp;' )
-		.replace( /</g, '&lt;' )
-		.replace( />/g, '&gt;' )
-		.replace( /"/g, '&quot;' )
-		.replace( /'/g, '&#039;' );
+		.replaceAll( '&', '&amp;' )
+		.replaceAll( '<', '&lt;' )
+		.replaceAll( '>', '&gt;' )
+		.replaceAll( '"', '&quot;' )
+		.replaceAll( "'", '&#039;' );
 }
 
 function form2text()
@@ -49,7 +49,7 @@ function form2text()
 	}
 
 	divTitle.innerHTML = titulo;
-	divConteudo.innerHTML = agenda_escape( inputConteudo.value ).split( "\n" ).join( "<br>\n" );
+	divConteudo.innerHTML = agenda_escape( inputConteudo.value ).replaceAll( "\n", "<br>\n" );
 
 	divBotoes.innerHTML = oldBotoes;
 	if( document.getElementById( "aberto_" + compId ).value == 0 )
@@ -169,7 +169,7 @@ function agenda_expandir( compId )
 
 	divExpandir.innerHTML = '<div id="agenda_expandir_' + compId + '"><a href="javascript:agenda_retrair( ' + compId + ' );"><img src="imagens/agenda_icon_extendido.gif" border="0" alt="Retrair" title="Retrair este compromisso"></a></div>';
 
-	divConteudo.innerHTML = agenda_escape( inputConteudo.value ).split( '\n' ).join( '<br>' );
+	divConteudo.innerHTML = agenda_escape( inputConteudo.value ).replaceAll( '\n', '<br>' );
 	document.getElementById( "aberto_" + compId ).value = 1;
 }
 

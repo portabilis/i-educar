@@ -1251,33 +1251,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                                 $retorno .= $this->getCampoTextoPesquisa("{$nome}[{$key2}]", "{$nome}[{$key2}]", $valor[$key], $class, $campo_[4], $campo_[5], $campo_[10], $campo_[8], $campo_[9], $campo_[7], $campo_[12], $campo_[11]);
                                 break;
 
-                                // Inalcançável: estes rótulos repetem os de cima, que o switch já atende.
-                                // @codeCoverageIgnoreStart
-                            case 'check':
-                                $retorno .= $this->getCampoCheck("{$nome}[{$key2}]", "{$nome}[{$key2}]", $campo_[3] ? $campo_[3] : $valor[$key], $campo_[4], $campo_[5], $campo_[6]);
-                                break;
-
-                            case 'cnpj':
-                                $retorno .= $this->getCampoCNPJ("{$nome}[{$key2}]", "{$nome}[{$key2}]", $valor[$key], $class, $campo_[4], $campo_[5]);
-                                break;
-
-                            case 'cpf':
-                                $retorno .= $this->getCampoCPF("{$nome}[{$key2}]", "{$nome}[{$key2}]", $valor[$key], $class, $campo_[4], $campo_[5], $campo_[8], $campo_[9]);
-                                break;
-
-                            case 'idfederal':
-                                $retorno .= $this->getCampoIdFederal("{$nome}[{$key2}]", "{$nome}[{$key2}]", $valor[$key], $class, $campo_[4], $campo_[5], $campo_[8]);
-                                break;
-
-                            case 'data':
-                                $retorno .= $this->getCampoData("{$nome}[{$key2}]", "{$nome}[{$key2}]", $valor[$key], $class, $campo_[4], $campo_[5], $campo_[9]);
-                                break;
-
-                            case 'textopesquisa':
-                                $retorno .= $this->getCampoTextoPesquisa("{$nome}[{$key2}]", "{$nome}[{$key2}]", $valor[$key], $class, $campo_[4], $campo_[5], $campo_[10], $campo_[8], $campo_[9], $campo_[7], $campo_[12], $campo_[11]);
-                                break;
-                                // @codeCoverageIgnoreEnd
-
                             case 'cep':
                                 $retorno .= $this->getCampoCep("{$nome}[{$key2}]", "{$nome}[{$key2}]", $valor[$key], $class, $campo_[4], $campo_[5], $campo_[8], $campo_[7]);
                                 break;

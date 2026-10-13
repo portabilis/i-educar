@@ -49,7 +49,8 @@ test('recusa a matrícula que já é de outro usuário e a senha fraca', functio
 // Nos testes o LegacyController monta $_FILES com os objetos de upload do
 // Laravel, e a tela espera o array cru do PHP; a validação é chamada direto.
 test('recusa a foto num formato que não é imagem antes de gravar qualquer coisa e aceita um PNG', function () {
-    $page = require base_path('ieducar/intranet/meusdados.php');
+    // O arquivo devolve a tela a cada inclusão; com require_once a segunda chamada receberia true.
+    $page = require base_path('ieducar/intranet/meusdados.php'); // NOSONAR
     $arquivo = tempnam(sys_get_temp_dir(), 'foto');
     file_put_contents($arquivo, 'não é imagem');
     $_FILES = ['file' => ['name' => 'FOTO.TXT', 'type' => 'text/plain', 'tmp_name' => $arquivo, 'error' => 0, 'size' => 12]];
@@ -73,7 +74,7 @@ test('recusa a foto num formato que não é imagem antes de gravar qualquer cois
 // A gravação da foto roda antes do exit() do sucesso; aqui ela é chamada direto
 // na tela, que o arquivo devolve pronta para uso.
 test('grava a foto enviada, avisa quando o envio falha e apaga a foto quando pedido', function () {
-    $page = require base_path('ieducar/intranet/meusdados.php');
+    $page = require base_path('ieducar/intranet/meusdados.php'); // NOSONAR
     $id = $this->user->getKey();
     $envio = fn (string $caminho) => new class($caminho)
     {
