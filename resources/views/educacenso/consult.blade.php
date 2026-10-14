@@ -39,7 +39,7 @@
                 <tr>
                     <td><label for="record">Registro</label><span class="campo_obrigatorio">*</span></td>
                     <td>
-                        @include('layout.select.educacenso-records', ['records' => [20, 40, 50, 60]])
+                        @include('layout.select.educacenso-records', ['records' => [20, 40, 50, 60], 'selectId' => 'record'])
                     </td>
                 </tr>
                 <tr>
