@@ -24,7 +24,7 @@
             </tr>
             <tr id="tr_nm_instituicao">
                 <th scope="row" class="formlttd" valign="top">
-                    <span class="form">Instituição</span>
+                    <span class="form"><label for="ref_cod_instituicao">Instituição</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </th>
                 <td class="formlttd" valign="top">
@@ -32,7 +32,7 @@
                 </td>
             </tr>
             <tr id="tr_nm_escola">
-                <th scope="row" class="formmdtd" valign="top"><span class="form">Escola</span></th>
+                <th scope="row" class="formmdtd" valign="top"><span class="form"><label for="ref_cod_escola">Escola</label></span></th>
                 <td class="formmdtd" valign="top">
                     @include('form.select-school')
                 </td>
@@ -66,7 +66,7 @@
                 </td>
             </tr>
             <tr id="tr_nm_serie">
-                <th scope="row" class="formmdtd" valign="top"><span class="form">Série</span></th>
+                <th scope="row" class="formmdtd" valign="top"><span class="form"><label for="ref_cod_serie">Série</label></span></th>
                 <td class="formmdtd" valign="top">
                     @include('form.select-grade-multiple')
                 </td>

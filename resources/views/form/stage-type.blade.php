@@ -1,5 +1,5 @@
 <span class="form">
-    <select class="geral" name="stage_type" id="stage_type" aria-label="Tipo de etapa" style="width: 308px;">
+    <select class="geral" name="stage_type" id="stage_type" style="width: 308px;">
         <option value="">Selecione um tipo</option>
             @foreach(\App\Models\LegacyStageType::active()->get() as $stageType)
             <option value="{{$stageType->getKey()}}">{{$stageType->name}}</option>

@@ -59,9 +59,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && echo "deb [signed-by=/etc/apt/keyrings/ondrej-php.gpg] https://ppa.launchpadcontent.net/ondrej/php/ubuntu noble main" \
         > /etc/apt/sources.list.d/ondrej-php.list \
     && apt-get update && apt-get install -y --no-install-recommends \
+        "php${PHP_VERSION}-bcmath" \
         "php${PHP_VERSION}-cli" \
         "php${PHP_VERSION}-common" \
-        "php${PHP_VERSION}-bcmath" \
         "php${PHP_VERSION}-curl" \
         "php${PHP_VERSION}-gd" \
         "php${PHP_VERSION}-intl" \

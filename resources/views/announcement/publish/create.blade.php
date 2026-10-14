@@ -75,7 +75,7 @@
                 </td>
             </tr>
             <tr id="tr_tipo_usuario">
-                <td class="formmdtd" valign="top"><span class="form">Tipos de usuários que serão notificados</span></td>
+                <td class="formmdtd" valign="top"><span class="form"><label for="tipo_usuario">Tipos de usuários que serão notificados</label></span></td>
                 <td class="formmdtd" valign="top">
                     @include('form.select-user-type-multiple')
                 </td>
