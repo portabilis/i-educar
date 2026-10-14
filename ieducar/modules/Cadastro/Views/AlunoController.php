@@ -330,7 +330,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $cod_aluno = request()->integer('id');
         $person = request()->integer('person');
 
-        if ($cod_aluno or $person) {
+        if ($cod_aluno || $person) {
             if ($person) {
                 $this->cod_pessoa_fj = $person;
                 $this->inputsHelper()->hidden('person', ['value' => $this->cod_pessoa_fj]);

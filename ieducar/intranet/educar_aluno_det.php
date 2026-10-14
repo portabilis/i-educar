@@ -1172,9 +1172,12 @@ return new class extends clsDetalhe
             return "<span class='cpf-situacao cpf-situacao-com'>{$situacao['cpf']}</span>";
         }
 
-        $detalhe = $situacao['type'] === 'justified_absence'
-            ? $situacao['reason'] . ($situacao['user'] ? " · {$situacao['user']}, {$situacao['date']}" : '')
-            : 'Sem justificativa registrada';
+        $detalhe = 'Sem justificativa registrada';
+
+        if ($situacao['type'] === 'justified_absence') {
+            $autoria = $situacao['user'] ? " · {$situacao['user']}, {$situacao['date']}" : '';
+            $detalhe = $situacao['reason'] . $autoria;
+        }
 
         return sprintf("<span class='cpf-situacao cpf-situacao-sem' title='%s'>Sem CPF</span>", e($detalhe));
     }
