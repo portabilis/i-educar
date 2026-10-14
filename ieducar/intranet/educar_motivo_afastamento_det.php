@@ -1,8 +1,6 @@
 <?php
 
 use App\Models\WithdrawalReason;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\RedirectResponse;
 
 return new class extends clsDetalhe
 {
@@ -41,8 +39,10 @@ return new class extends clsDetalhe
         $registro = WithdrawalReason::find($this->cod_motivo_afastamento)?->getAttributes();
 
         if (!$registro) {
-            throw new HttpResponseException(
-                response: new RedirectResponse(url: 'educar_motivo_afastamento_lst.php')
+            $this->redirectNotFound(
+                url: 'educar_motivo_afastamento_lst.php',
+                registro: 'motivo de afastamento',
+                codigo: $this->cod_motivo_afastamento,
             );
         }
 
@@ -53,14 +53,14 @@ return new class extends clsDetalhe
         $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($det_ref_cod_instituicao['nm_instituicao']) {
-                $this->addDetalhe(detalhe: ['Instituição', "{$det_ref_cod_instituicao['nm_instituicao']}"]);
+                $this->addDetalhe(detalhe: ['Instituição', e($det_ref_cod_instituicao['nm_instituicao'])]);
             }
         }
         if ($registro['nm_motivo']) {
-            $this->addDetalhe(detalhe: ['Motivo de Afastamento', "{$registro['nm_motivo']}"]);
+            $this->addDetalhe(detalhe: ['Motivo de Afastamento', e($registro['nm_motivo'])]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe(detalhe: ['Descrição', "{$registro['descricao']}"]);
+            $this->addDetalhe(detalhe: ['Descrição', e($registro['descricao'])]);
         }
 
         $obj_permissoes = new clsPermissoes;

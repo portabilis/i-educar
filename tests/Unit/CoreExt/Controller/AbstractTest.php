@@ -1,23 +1,13 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+beforeEach(function () {
+    $this->_controller = new CoreExt_Controller_AbstractStub;
+});
 
-class CoreExt_Controller_AbstractTest extends TestCase
-{
-    protected $_controller = null;
+test('controller instancia dispatcher standard por padrao', function () {
+    $this->assertInstanceOf('CoreExt_Controller_Dispatcher_Standard', $this->_controller->getDispatcher());
+});
 
-    protected function setUp(): void
-    {
-        $this->_controller = new CoreExt_Controller_AbstractStub;
-    }
-
-    public function test_controller_instancia_dispatcher_standard_por_padrao()
-    {
-        $this->assertInstanceOf('CoreExt_Controller_Dispatcher_Standard', $this->_controller->getDispatcher());
-    }
-
-    public function test_instancia_tem_core_ext_session_por_padrao()
-    {
-        $this->assertInstanceOf('CoreExt_Session', $this->_controller->getSession());
-    }
-}
+test('instancia tem core ext session por padrao', function () {
+    $this->assertInstanceOf('CoreExt_Session', $this->_controller->getSession());
+});

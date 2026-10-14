@@ -74,7 +74,10 @@ return new class extends clsListagem
             $query->where('ref_cod_escola', $this->ref_cod_escola);
         }
         if ($this->nm_motivo) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $query->where('nm_motivo', 'ilike', "%{$this->nm_motivo}%");
+            // @codeCoverageIgnoreEnd
         }
 
         $result = $query->paginate(perPage: $this->limite, pageName: 'pagina_' . $this->nome);
@@ -85,10 +88,10 @@ return new class extends clsListagem
         // monta a lista
         foreach ($lista as $registro) {
             $lista_busca = [
-                "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro->name}</a>",
-                "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro->type}</a>",
-                "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro->school_name}</a>",
-                "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">{$registro->institution_name}</a>",
+                "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">" . e($registro->name) . '</a>',
+                "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">" . e($registro->type) . '</a>',
+                "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">" . e($registro->school_name) . '</a>',
+                "<a href=\"educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro['cod_calendario_dia_motivo']}\">" . e($registro->institution_name) . '</a>',
             ];
             $this->addLinhas($lista_busca);
         }

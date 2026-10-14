@@ -1,10 +1,7 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
-
-class CoreExt_View_TableHelperTest extends TestCase
-{
-    protected $_headerExpected = '
+beforeEach(function () {
+    $this->_headerExpected = '
 <thead>
   <tr>
     <td>Title</td>
@@ -20,7 +17,7 @@ class CoreExt_View_TableHelperTest extends TestCase
   </tr>
 </thead>';
 
-    protected $_bodyExpected = '
+    $this->_bodyExpected = '
 <tbody>
   <tr>
     <td>Label 1</td>
@@ -38,7 +35,7 @@ class CoreExt_View_TableHelperTest extends TestCase
   </tr>
 </tbody>';
 
-    protected $_footerExpected = '
+    $this->_footerExpected = '
 <tfooter>
   <tr>
     <td colspan="3">&nbsp;</td>
@@ -46,7 +43,7 @@ class CoreExt_View_TableHelperTest extends TestCase
   </tr>
 </tfooter>';
 
-    protected $_tableExpected = '
+    $this->_tableExpected = '
 <table>
   <tbody>
     <tr>
@@ -56,7 +53,7 @@ class CoreExt_View_TableHelperTest extends TestCase
 </table>
 ';
 
-    protected $_tableRowAttributesExpected = '
+    $this->_tableRowAttributesExpected = '
 <table>
   <tbody>
     <tr class="trr">
@@ -65,89 +62,90 @@ class CoreExt_View_TableHelperTest extends TestCase
   </tbody>
 </table>
 ';
+});
 
-    protected function setUp(): void {}
+test('create header', function () {
+    $table = CoreExt_View_Helper_TableHelper::getInstance();
 
-    public function test_create_header()
-    {
-        $table = CoreExt_View_Helper_TableHelper::getInstance();
+    $cols = [
+        ['data' => 'Title'],
+        ['data' => 'Item A', 'colspan' => 2],
+        ['data' => 'Item B', 'colspan' => 2],
+    ];
 
-        $cols = [
-            ['data' => 'Title'],
-            ['data' => 'Item A', 'colspan' => 2],
-            ['data' => 'Item B', 'colspan' => 2],
-        ];
+    $cols2 = [
+        [],
+        ['data' => 'Subitem A1'],
+        ['data' => 'Subitem A2'],
+        ['data' => 'Subitem B1'],
+        ['data' => 'Subitem B2'],
+    ];
 
-        $cols2 = [
-            [],
-            ['data' => 'Subitem A1'],
-            ['data' => 'Subitem A2'],
-            ['data' => 'Subitem B1'],
-            ['data' => 'Subitem B2'],
-        ];
+    $table->addHeaderRow($cols);
+    $table->addHeaderRow($cols2);
 
-        $table->addHeaderRow($cols);
-        $table->addHeaderRow($cols2);
+    $header = $table->createHeader();
+    $this->assertEquals(trim($this->_headerExpected), $header);
+});
 
-        $header = $table->createHeader();
-        $this->assertEquals(trim($this->_headerExpected), $header);
-    }
+test('create body', function () {
+    $table = CoreExt_View_Helper_TableHelper::getInstance();
 
-    public function test_create_body()
-    {
-        $table = CoreExt_View_Helper_TableHelper::getInstance();
+    $cols = [
+        ['data' => 'Label 1'],
+        ['data' => '1'],
+        ['data' => '2'],
+        ['data' => '3'],
+        ['data' => '4'],
+    ];
 
-        $cols = [
-            ['data' => 'Label 1'],
-            ['data' => '1'],
-            ['data' => '2'],
-            ['data' => '3'],
-            ['data' => '4'],
-        ];
+    $cols2 = [
+        ['data' => 'Label 2'],
+        ['data' => '1'],
+        ['data' => '2'],
+        ['data' => '3'],
+        ['data' => '4'],
+    ];
 
-        $cols2 = [
-            ['data' => 'Label 2'],
-            ['data' => '1'],
-            ['data' => '2'],
-            ['data' => '3'],
-            ['data' => '4'],
-        ];
+    $table->addBodyRow($cols);
+    $table->addBodyRow($cols2);
 
-        $table->addBodyRow($cols);
-        $table->addBodyRow($cols2);
+    $body = $table->createBody();
+    $this->assertEquals(trim($this->_bodyExpected), $body);
+});
 
-        $body = $table->createBody();
-        $this->assertEquals(trim($this->_bodyExpected), $body);
-    }
+test('create footer', function () {
+    $table = CoreExt_View_Helper_TableHelper::getInstance();
 
-    public function test_create_footer()
-    {
-        $table = CoreExt_View_Helper_TableHelper::getInstance();
+    $cols = [
+        ['colspan' => 3],
+        ['data' => '1', 'colspan' => 2, 'attributes' => ['class' => 'tdd']],
+    ];
 
-        $cols = [
-            ['colspan' => 3],
-            ['data' => '1', 'colspan' => 2, 'attributes' => ['class' => 'tdd']],
-        ];
+    $table->addFooterRow($cols);
 
-        $table->addFooterRow($cols);
+    $footer = $table->createFooter();
+    $this->assertEquals(trim($this->_footerExpected), $footer);
+});
 
-        $footer = $table->createFooter();
-        $this->assertEquals(trim($this->_footerExpected), $footer);
-    }
+test('create table', function () {
+    $table = CoreExt_View_Helper_TableHelper::getInstance();
+    $table->addBodyRow([['data' => 'Example data']]);
+    $table = $table->createTable();
+    $this->assertEquals(trim($this->_tableExpected), $table);
+});
 
-    public function test_create_table()
-    {
-        $table = CoreExt_View_Helper_TableHelper::getInstance();
-        $table->addBodyRow([['data' => 'Example data']]);
-        $table = $table->createTable();
-        $this->assertEquals(trim($this->_tableExpected), $table);
-    }
+test('row attributes', function () {
+    $table = CoreExt_View_Helper_TableHelper::getInstance();
+    $table->addBodyRow([['data' => 'Example data']], ['class' => 'trr']);
+    $table = $table->createTable();
+    $this->assertEquals(trim($this->_tableRowAttributesExpected), $table);
+});
 
-    public function test_row_attributes()
-    {
-        $table = CoreExt_View_Helper_TableHelper::getInstance();
-        $table->addBodyRow([['data' => 'Example data']], ['class' => 'trr']);
-        $table = $table->createTable();
-        $this->assertEquals(trim($this->_tableRowAttributesExpected), $table);
-    }
-}
+test('a tabela vira texto com o html montado', function () {
+    $table = CoreExt_View_Helper_TableHelper::getInstance();
+    $table->resetTable();
+    $table->addBodyRow([['data' => 'Ana']]);
+
+    $this->assertSame($table->createTable(), (string) $table);
+});

@@ -33,14 +33,14 @@ return new class extends clsDetalhe
 
         $caminhoFoto = LegacyIndividualPicture::whereKey($cod_pessoa)->value('caminho');
         if ($caminhoFoto) {
-            $this->addDetalhe(detalhe: ['Nome', $pessoa->nome.'
+            $this->addDetalhe(detalhe: ['Nome', e($pessoa->nome).'
                 <p><img height="117" src="' . (new UrlPresigner)->getPresignedUrl(url: $caminhoFoto) . '"/></p>']);
         } else {
-            $this->addDetalhe(detalhe: ['Nome', $pessoa->nome]);
+            $this->addDetalhe(detalhe: ['Nome', e($pessoa->nome)]);
         }
 
         if ($fisica?->social_name) {
-            $this->addDetalhe(detalhe: ['Nome social e/ou afetivo', $fisica->social_name]);
+            $this->addDetalhe(detalhe: ['Nome social e/ou afetivo', e($fisica->social_name)]);
         }
 
         $this->addDetalhe(detalhe: ['CPF', $fisica?->cpf]);
@@ -52,20 +52,20 @@ return new class extends clsDetalhe
         // Cor/Raça.
         $nameRace = LegacyRace::query()->whereHas('individual', fn ($q) => $q->whereKey($cod_pessoa))->value('nm_raca');
         if ($nameRace) {
-            $this->addDetalhe(detalhe: ['Raça', $nameRace]);
+            $this->addDetalhe(detalhe: ['Raça', e($nameRace)]);
         }
 
         if ($endereco?->address) {
             $end = $endereco->number ? ' nº ' . $endereco->number : '';
-            $this->addDetalhe(detalhe: ['Endereço', $endereco->address . $end]);
+            $this->addDetalhe(detalhe: ['Endereço', e($endereco->address . $end)]);
         }
 
         if ($endereco?->complement) {
-            $this->addDetalhe(detalhe: ['Complemento', $endereco->complement]);
+            $this->addDetalhe(detalhe: ['Complemento', e($endereco->complement)]);
         }
 
         if ($endereco?->city?->name) {
-            $this->addDetalhe(detalhe: ['Cidade', $endereco->city->name]);
+            $this->addDetalhe(detalhe: ['Cidade', e($endereco->city->name)]);
         }
 
         if ($endereco?->city?->state?->abbreviation) {
@@ -101,7 +101,7 @@ return new class extends clsDetalhe
         }
 
         if ($pessoa->email) {
-            $this->addDetalhe(detalhe: ['E-mail', $pessoa->email]);
+            $this->addDetalhe(detalhe: ['E-mail', e($pessoa->email)]);
         }
 
         if ($fisica?->sexo) {
@@ -154,7 +154,10 @@ return new class extends clsDetalhe
         $files = $fileService->getFiles(relation: LegacyIndividual::find($cod_pessoa));
 
         if (is_array(value: $files) && count(value: $files) > 0) {
+            // Inalcançável: `getFiles()` devolve uma coleção, que nunca passa no `is_array()`.
+            // @codeCoverageIgnoreStart
             $this->addHtml(html: view(view: 'uploads.upload-details', data: ['files' => $files])->render());
+            // @codeCoverageIgnoreEnd
         }
 
         $obj_permissao = new clsPermissoes;

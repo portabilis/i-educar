@@ -11,6 +11,8 @@ use App\Models\LegacyIssuingBody;
 use App\Models\LegacyRace;
 use App\Models\LegacyStudent;
 use App\Services\FileService;
+use App\Services\IndividualCpfStateService;
+use App\Services\IndividualCpfTimelineService;
 use App\Services\UrlPresigner;
 use App\User;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
@@ -325,15 +327,15 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             $this->inputsHelper()->hidden('justificativa_falta_documentacao_obrigatorio');
         }
 
-        $cod_aluno = $_GET['id'];
+        $cod_aluno = request()->integer('id');
+        $person = request()->integer('person');
 
-        if ($cod_aluno or $_GET['person']) {
-            if ($_GET['person']) {
-                $this->cod_pessoa_fj = $_GET['person'];
+        if ($cod_aluno || $person) {
+            if ($person) {
+                $this->cod_pessoa_fj = $person;
                 $this->inputsHelper()->hidden('person', ['value' => $this->cod_pessoa_fj]);
             } else {
-                $db = new clsBanco;
-                $this->cod_pessoa_fj = $db->CampoUnico("select ref_idpes from pmieducar.aluno where cod_aluno = '$cod_aluno'");
+                $this->cod_pessoa_fj = LegacyStudent::query()->whereKey($cod_aluno)->value('ref_idpes');
             }
 
             $documentos = is_numeric($this->cod_pessoa_fj)
@@ -457,11 +459,17 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->uf($options, $helperOptions);
 
         $nisPisPasep = '';
+        $possuiCpf = 1;
+        $motivoAusenciaCpf = null;
+        $observacaoAusenciaCpf = null;
 
         if (is_numeric($this->cod_pessoa_fj)) {
-            $fisica = LegacyIndividual::find($this->cod_pessoa_fj, ['cpf', 'nis_pis_pasep']);
+            $fisica = LegacyIndividual::find($this->cod_pessoa_fj, ['cpf', 'nis_pis_pasep', 'document_absence_reason_id', 'document_absence_observation']);
             $valorCpf = is_numeric($fisica?->getRawOriginal('cpf')) ? int2CPF($fisica->getRawOriginal('cpf')) : '';
             $nisPisPasep = int2Nis($fisica?->nis_pis_pasep);
+            $possuiCpf = (int) ($fisica?->possui_cpf ?? true);
+            $motivoAusenciaCpf = $fisica?->document_absence_reason_id;
+            $observacaoAusenciaCpf = $fisica?->document_absence_observation;
         }
 
         /** @var User $user */
@@ -480,7 +488,36 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->campoOculto('pai_restricao_judicial_value', (int) $this->pai_restricao_judicial);
         $this->campoOculto('mae_restricao_judicial_value', (int) $this->mae_restricao_judicial);
         $this->campoOculto('responsavel_restricao_judicial_value', (int) $this->responsavel_restricao_judicial);
-        $this->campoCpf('id_federal', 'CPF', $valorCpf);
+        $this->campoRadio(
+            nome: 'possui_cpf',
+            campo: 'CPF',
+            valor: [1 => 'Possui CPF', 0 => 'Não possui / não informado'],
+            default: $possuiCpf
+        );
+
+        $this->campoCpf('id_federal', 'Número do CPF', $valorCpf);
+
+        $this->campoLista(
+            nome: 'document_absence_reason_id',
+            campo: 'Motivo',
+            valor: collect((new IndividualCpfStateService)->reasonOptions($motivoAusenciaCpf))
+                ->map(fn ($name) => htmlspecialchars($name, ENT_QUOTES, 'UTF-8'))
+                ->toArray(),
+            default: $motivoAusenciaCpf,
+            descricao: 'Justificativa da ausência de CPF',
+            obrigatorio: false
+        );
+
+        $this->campoTexto(
+            nome: 'document_absence_observation',
+            campo: 'Observações',
+            valor: $observacaoAusenciaCpf,
+            tamanhovisivel: 50,
+            tamanhomaximo: 255,
+            obrigatorio: false
+        );
+
+        $this->campoTrilhaCpf();
 
         $options = [
             'required' => false,
@@ -862,8 +899,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->hidden('url_documento');
 
         $fileService = new FileService(urlPresigner: new UrlPresigner);
-        $idAluno = request()->exists('id') ? request('id') : null;
-        $files = $idAluno && is_numeric($idAluno) ? $fileService->getFiles(relation: LegacyStudent::find($idAluno), type: FileRelation::TYPE_MEDICAL_REPORT) : [];
+        // is_numeric aceita "123." e "1e3", que o PostgreSQL recusa como integer
+        $idAluno = filter_var(request('id'), FILTER_VALIDATE_INT);
+        $files = $idAluno ? $fileService->getFiles(relation: LegacyStudent::find($idAluno), type: FileRelation::TYPE_MEDICAL_REPORT) : [];
         $this->addHtml(html: view(view: 'uploads.upload', data: ['files' => $files, 'label' => 'Laudo Médico'])->render());
 
         $options = ['label' => $this->_getLabel('observacao_aluno'), 'required' => false, 'size' => 50, 'max_length' => 255, 'value' => $this->observacao];
@@ -1232,6 +1270,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             '/vendor/legacy/Cadastro/Assets/Javascripts/Addresses.js',
         ]);
 
+        $motivosExigemObservacao = (new IndividualCpfStateService)->reasonsRequiringObservation();
+        $motivosInativos = (new IndividualCpfStateService)->inactiveReasons();
+        $motivosSistema = (new IndividualCpfStateService)->systemReasons();
+
+        Portabilis_View_Helper_Application::embedJavascript($this, 'var motivosExigemObservacao = ' . json_encode($motivosExigemObservacao) . '; var motivosInativos = ' . json_encode($motivosInativos) . '; var motivosSistema = ' . json_encode($motivosSistema) . ';');
+
         $this->loadResourceAssets($this->getDispatcher());
 
         $clsInstituicao = new clsPmieducarInstituicao;
@@ -1327,6 +1371,25 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'hiddenInputOptions' => $hiddenInputOptions,
         ];
         $this->inputsHelper()->simpleSearchPaisSemBrasil('nome', $options, $helperOptions);
+    }
+
+    protected function campoTrilhaCpf()
+    {
+        if (!is_numeric($this->cod_pessoa_fj)) {
+            return;
+        }
+
+        $historico = (new IndividualCpfTimelineService)->history((int) $this->cod_pessoa_fj);
+
+        if ($historico->isEmpty()) {
+            return;
+        }
+
+        $this->campoRotulo(
+            nome: 'cpf_timeline',
+            campo: 'Última alteração do CPF',
+            valor: view(view: 'individual.cpf-timeline', data: ['historico' => $historico])->render()
+        );
     }
 
     protected function inputPai()

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyCourse;
+use App\Models\LegacyGrade;
 use App\Models\LegacySchoolGrade;
 use App\Services\SchoolGradeDisciplineService;
 
@@ -42,8 +44,11 @@ return new class extends clsDetalhe
             ->first();
 
         if (!$registro) {
-            $this->mensagem .= 'Registro não localizado.<br>';
-            $this->simpleRedirect('educar_escola_serie_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_escola_serie_lst.php',
+                registro: 'série da escola',
+                feminino: true,
+            );
         }
 
         $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
@@ -54,13 +59,9 @@ return new class extends clsDetalhe
         $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
         $nm_escola = $det_ref_cod_escola['nome'];
 
-        $obj_ref_cod_serie = new clsPmieducarSerie($registro['ref_cod_serie']);
-        $det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
-        $nm_serie = $det_ref_cod_serie['nm_serie'];
+        $nm_serie = LegacyGrade::query()->whereKey($registro['ref_cod_serie'])->value('nm_serie');
 
-        $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
-        $det_curso = $obj_curso->detalhe();
-        $registro['ref_cod_curso'] = $det_curso['nm_curso'];
+        $registro['ref_cod_curso'] = LegacyCourse::query()->whereKey($registro['ref_cod_curso'])->value('nm_curso');
 
         $obj_permissao = new clsPermissoes;
         $obj_permissao->nivel_acesso($this->pessoa_logada);

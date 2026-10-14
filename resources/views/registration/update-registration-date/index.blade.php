@@ -25,7 +25,7 @@
             </tr>
             <tr id="tr_nm_instituicao">
                 <td class="formlttd" valign="top">
-                    <span class="form">Instituição</span>
+                    <span class="form"><label for="ref_cod_instituicao">Instituição</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
@@ -33,13 +33,13 @@
                 </td>
             </tr>
             <tr id="tr_nm_escola">
-                <td class="formmdtd" valign="top"><span class="form">Escola</span></td>
+                <td class="formmdtd" valign="top"><span class="form"><label for="ref_cod_escola">Escola</label></span></td>
                 <td class="formmdtd" valign="top">
                     @include('form.select-school')
                 </td>
             </tr>
             <tr id="tr_nm_curso">
-                <td class="formlttd" valign="top"><span class="form">Curso</span></td>
+                <td class="formlttd" valign="top"><span class="form"><label for="ref_cod_curso">Curso</label></span></td>
                 <td class="formlttd" valign="top">
                     <span class="form">
                         <select class="geral" name="ref_cod_curso" id="ref_cod_curso" style="width: 308px;">
@@ -67,7 +67,7 @@
                 </td>
             </tr>
             <tr id="tr_nm_serie">
-                <td class="formmdtd" valign="top"><span class="form">Série</span></td>
+                <td class="formmdtd" valign="top"><span class="form"><label for="ref_cod_serie">Série</label></span></td>
                 <td class="formmdtd" valign="top">
                     <span class="form">
                         <select class="geral" name="ref_cod_serie" id="ref_cod_serie" style="width: 308px;">
@@ -95,14 +95,14 @@
                 </td>
             </tr>
             <tr id="tr_nm_turma">
-                <td class="formlttd" valign="top"><span class="form">Turma</span></td>
+                <td class="formlttd" valign="top"><span class="form"><label for="ref_cod_turma">Turma</label></span></td>
                 <td class="formlttd" valign="top">
                     @include('form.select-school-class')
                 </td>
             </tr>
-            <tr id="tr_nm_serie">
+            <tr id="tr_situacao">
                 <td class="formmdtd" valign="top">
-                    <span class="form">Situação</span>
+                    <span class="form"><label for="situacao">Situação</label></span>
                 </td>
                 <td class="formmdtd" valign="top">
                    <span class="form">
@@ -120,9 +120,9 @@
                 </td>
             </tr>
 
-            <tr id="tr_nm_data" class="field-transfer">
+            <tr id="tr_data_entrada_antiga" class="field-transfer">
                 <td class="formlttd" valign="top">
-                    <span class="form">Data de entrada antiga</span>
+                    <span class="form"><label for="data_entrada_antiga">Data de entrada antiga</label></span>
                 </td>
                 <td class="formlttd" valign="top">
                    <span class="form">
@@ -130,9 +130,9 @@
                     </span>
                 </td>
             </tr>
-            <tr id="tr_nm_data" class="field-transfer">
+            <tr id="tr_data_enturmacao_antiga" class="field-transfer">
                 <td class="formlttd" valign="top">
-                    <span class="form">Data de enturmação antiga</span>
+                    <span class="form"><label for="data_enturmacao_antiga">Data de enturmação antiga</label></span>
                 </td>
                 <td class="formlttd" valign="top">
                    <span class="form">
@@ -141,9 +141,9 @@
                 </td>
             </tr>
 
-            <tr id="tr_nm_data" class="field-transfer">
+            <tr id="tr_nova_data_entrada" class="field-transfer">
                 <td class="formlttd" valign="top">
-                    <span class="form">Nova data de entrada</span>
+                    <span class="form"><label for="nova_data_entrada">Nova data de entrada</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
@@ -153,9 +153,9 @@
                 </td>
             </tr>
 
-            <tr id="tr_nm_data" class="field-transfer">
+            <tr id="tr_nova_data_enturmacao" class="field-transfer">
                 <td class="formlttd" valign="top">
-                    <span class="form">Nova data de enturmação</span>
+                    <span class="form"><label for="nova_data_enturmacao">Nova data de enturmação</label></span>
                 </td>
                 <td class="formlttd" valign="top">
                    <span class="form">
@@ -164,9 +164,9 @@
                 </td>
             </tr>
 
-            <tr id="tr_nm_data" class="field-transfer">
+            <tr id="tr_remanejadas" class="field-transfer">
                 <td class="formlttd" valign="top">
-                    <span class="form">Aplicar também em enturmações remanejadas</span>
+                    <span class="form"><label for="remanejadas">Aplicar também em enturmações remanejadas</label></span>
                 </td>
                 <td class="formlttd" valign="top">
                    <span class="form">

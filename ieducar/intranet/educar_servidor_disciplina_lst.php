@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Employee;
+use App\Models\LegacyCourse;
 use App\Models\LegacyDiscipline;
 use Illuminate\Support\Facades\Session;
 
@@ -84,20 +85,15 @@ return new class extends clsCadastro
     public function Gerar()
     {
         $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
-        $opcoes = $opcoes_curso = ['' => 'Selecione'];
+        $opcoes = ['' => 'Selecione'];
 
-        $obj_cursos = new clsPmieducarCurso;
-        $obj_cursos->setOrderby(strNomeCampo: 'nm_curso');
-        $lst_cursos = $obj_cursos->lista(
-            int_ativo: 1,
-            int_ref_cod_instituicao: $this->ref_cod_instituicao
-        );
+        $cursos = LegacyCourse::query()
+            ->active()
+            ->when(is_numeric($this->ref_cod_instituicao), fn ($query) => $query->whereInstitution((int) $this->ref_cod_instituicao))
+            ->orderByName()
+            ->pluck('nm_curso', 'cod_curso');
 
-        if ($lst_cursos) {
-            foreach ($lst_cursos as $curso) {
-                $opcoes_curso[$curso['cod_curso']] = $curso['nm_curso'];
-            }
-        }
+        $opcoes_curso = ['' => 'Selecione'] + $cursos->all();
 
         $lst_opcoes = [];
         $arr_valores = [];
@@ -107,7 +103,10 @@ return new class extends clsCadastro
                 if ($disciplinas) {
                     foreach ($disciplinas as $disciplina => $funcao) {
                         if ($funcao != $this->ref_cod_funcao) {
+                            // Inalcançável: a lista é montada acima só com a função que veio na URL.
+                            // @codeCoverageIgnoreStart
                             continue;
+                            // @codeCoverageIgnoreEnd
                         }
                         $arr_valores[] = [$curso, $disciplina];
                     }
@@ -170,6 +169,8 @@ return new class extends clsCadastro
 
     public function Novo()
     {
+        // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+        // @codeCoverageIgnoreStart
         $cod_servidor = $this->getQueryString(name: 'ref_cod_servidor');
         $cod_funcao = $this->getQueryString(name: 'cod_funcao');
 
@@ -196,13 +197,17 @@ return new class extends clsCadastro
         Session::save();
         Session::start();
 
-        echo "<script>parent.fechaExpansivel('{$_GET['div']}');</script>";
+        echo '<script>parent.fechaExpansivel(' . json_encode((string) request('div'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ');</script>';
         exit;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
     {
+        // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+        // @codeCoverageIgnoreStart
         $this->Novo();
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()

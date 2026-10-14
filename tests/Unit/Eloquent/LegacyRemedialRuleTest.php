@@ -1,30 +1,22 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyRemedialRule;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyRemedialRuleTest extends EloquentTestCase
-{
-    protected $relations = [
-        'evaluationRule' => LegacyEvaluationRule::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return LegacyRemedialRule::class;
-    }
+beforeEach(fn () => $this->eloquent(LegacyRemedialRule::class, relations: [
+    'evaluationRule' => LegacyEvaluationRule::class,
+]));
 
-    public function test_get_stages(): void
-    {
-        $expected = explode(';', $this->model->etapas_recuperadas);
-        $this->assertEquals($expected, $this->model->getStages());
-    }
+EloquentModelTestCase::registerModelTests();
 
-    public function test_get_last_stage(): void
-    {
-        $this->assertEquals(max($this->model->getStages()), $this->model->getLastStage());
-    }
-}
+test('get stages', function () {
+    $expected = explode(';', $this->model->etapas_recuperadas);
+    $this->assertEquals($expected, $this->model->getStages());
+});
+
+test('get last stage', function () {
+    $this->assertEquals(max($this->model->getStages()), $this->model->getLastStage());
+});

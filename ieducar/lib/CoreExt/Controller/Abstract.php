@@ -1,5 +1,6 @@
 <?php
 
+use App\Support\View\NotFoundMessage;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
@@ -212,12 +213,34 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
             $code = 302;
         }
 
-        ob_end_flush();
-        ob_get_clean();
-
+        // Buffer de saída não se mexe aqui: quem abre é o LegacyController, e é
+        // ele quem fecha, ao desempilhar esta exceção. Fechar daqui derrubaria um
+        // buffer que este método não abriu, e com ele o de quem chamou. O
+        // conteúdo já produzido é descartado junto, que é o certo num
+        // redirecionamento.
         throw new HttpResponseException(
             new RedirectResponse($url, $code)
         );
+    }
+
+    /**
+     * Redireciona avisando que o registro procurado não foi encontrado.
+     *
+     * @see NotFoundMessage::make() para os demais parâmetros
+     *
+     * @throws HttpResponseException
+     */
+    public function redirectNotFound(
+        string $url,
+        string $registro,
+        bool $feminino = false,
+        int|string|null $codigo = null,
+        ?string $motivo = null,
+        ?string $dica = null
+    ): never {
+        session()->flash('error', NotFoundMessage::make($registro, $feminino, $codigo, $motivo, $dica));
+
+        $this->simpleRedirect($url);
     }
 
     /**

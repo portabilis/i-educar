@@ -2,6 +2,7 @@
 
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyDisciplineScore;
+use App\Models\LegacyDisciplineScoreAverage;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGrade;
 use App\Models\LegacyInstitution;
@@ -1566,7 +1567,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             if ($this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia()) {
                 $situacaoFalta = App_Model_MatriculaSituacao::APROVADO;
             } elseif ($tipoFaltaPorComponente) {
-                $situacaoFalta = $situacaoFaltas->componentesCurriculares[$ccId]->situacao;
+                $situacaoFalta = ($situacaoFaltas->componentesCurriculares[$ccId] ?? null)?->situacao;
             } else {
                 $situacaoFalta = $situacaoFaltas->situacao;
             }
@@ -1579,6 +1580,19 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         return $situacao;
+    }
+
+    /**
+     * Situação do componente na matrícula. A lista de situações só traz os
+     * componentes da matrícula, sem os dispensados e, em dependência, só os da
+     * dependência; componente com nota fora dela não tem situação.
+     *
+     * @param int $id
+     * @return int|null
+     */
+    protected function getCurricularComponentSituation($id)
+    {
+        return ($this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id] ?? null)?->situacao;
     }
 
     /**
@@ -2471,7 +2485,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $countEtapasRecuperacao = 0;
 
                 foreach ($_regraRecuperacao->getEtapas() as $__etapa) {
-                    $somaEtapasRecuperacao += $data['E' . $__etapa];
+                    // Etapa da regra ainda sem nota lançada entra como zero na soma
+                    $somaEtapasRecuperacao += $data['E' . $__etapa] ?? 0;
                     $countEtapasRecuperacao++;
                 }
 
@@ -2504,7 +2519,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $countEtapasRecuperacao = 0;
 
                 foreach ($_regraRecuperacao->getEtapas() as $__etapa) {
-                    $somaEtapasRecuperacao += $data['E' . $__etapa];
+                    // Etapa da regra ainda sem nota lançada entra como zero na soma
+                    $somaEtapasRecuperacao += $data['E' . $__etapa] ?? 0;
                     $countEtapasRecuperacao++;
                 }
 
@@ -2976,11 +2992,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     $etapasNotas = $this->calculaEtapaNotasAglutinada($id, $this->getNotasComponentes());
 
                     $qtdeEtapas = $this->getOption('etapas');
+                    // Etapas que o componente cursa: as do calendário ou, com etapas específicas, as definidas para o componente.
+                    $etapasComponente = $qtdeEtapas > 0 ? range(1, $qtdeEtapas) : [];
 
                     if ($this->getRegraAvaliacaoDefinirComponentePorEtapa() == '1') {
-                        $qtdeEtapaEspecifica = App_Model_IedFinder::getQtdeEtapasComponente($turmaId, $id, $infosMatricula['ref_cod_aluno']);
+                        $etapasEspecificas = App_Model_IedFinder::getEtapasComponente($turmaId, $id);
 
-                        $qtdeEtapas = ($qtdeEtapaEspecifica ? $qtdeEtapaEspecifica : $qtdeEtapas);
+                        if ($etapasEspecificas) {
+                            $etapasComponente = $etapasEspecificas;
+                            $qtdeEtapas = count($etapasEspecificas);
+                        }
                     }
 
                     $verificaDispensa = App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $id);
@@ -2994,8 +3015,18 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                         }
                     }
 
-                    if ($verificaDispensa) {
-                        $qtdeEtapas = $qtdeEtapas - count($verificaDispensa);
+                    // A dispensa pode ter etapas que o componente não cursa; só as que ele cursa saem do divisor.
+                    $qtdeEtapas -= count(array_intersect($etapasComponente, $verificaDispensa));
+
+                    // Componente dispensado em todas as etapas que cursa não tem média; a bloqueada é mantida.
+                    if ($qtdeEtapas <= 0) {
+                        LegacyDisciplineScoreAverage::query()
+                            ->where('nota_aluno_id', $notaAlunoId)
+                            ->where('componente_curricular_id', $id)
+                            ->where('bloqueada', false)
+                            ->delete();
+
+                        continue;
                     }
 
                     $notas = array_merge(['Se' => 0, 'Et' => $qtdeEtapas], $consideraEtapas);
@@ -3071,7 +3102,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
                     // Atualiza a situação de acordo com o que foi inserido na média anteriormente
                     $notaComponenteCurricularMedia->markOld();
-                    $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id]->situacao;
+                    $notaComponenteCurricularMedia->situacao = $this->getCurricularComponentSituation($id);
 
                     $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
                 }
@@ -3214,7 +3245,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         $secretarioDeveLancarNota = false;
-
         for ($etapa = 1; $etapa <= $etapaId; $etapa++) {
 
             // Etapas com dispensa não terão notas, então não devem ser
@@ -3329,7 +3359,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     public function getNotaAtual($etapa, $componenteCurricularId)
     {
         // FIXME não entendi o motivo deste urldecode
-        $nota = urldecode($this->getNotaComponente($componenteCurricularId, $etapa)->nota);
+        $nota = urldecode($this->getNotaComponente($componenteCurricularId, $etapa)?->nota ?? '');
 
         return str_replace(',', '.', $nota);
     }

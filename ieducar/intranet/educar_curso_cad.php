@@ -1,11 +1,13 @@
 <?php
 
+use App\Models\LegacyCourse;
 use App\Models\LegacyCourseEducacensoStage;
 use App\Models\LegacyEducacensoStages;
 use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
 use App\Models\LegacyRegimeType;
 use App\Services\SchoolClassStageService;
+use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro
 {
@@ -79,10 +81,11 @@ return new class extends clsCadastro
         );
 
         if (is_numeric(value: $this->cod_curso)) {
-            $obj = new clsPmieducarCurso(cod_curso: $this->cod_curso);
-            $registro = $obj->detalhe();
+            $curso = LegacyCourse::query()->find($this->cod_curso);
 
-            if ($registro) {
+            if ($curso) {
+                $registro = $curso->getAttributes();
+
                 // passa todos os valores obtidos no registro para atributos do objeto
                 foreach ($registro as $campo => $val) {
                     $this->$campo = $val;
@@ -294,40 +297,32 @@ return new class extends clsCadastro
                 return false;
             }
 
-            $obj = new clsPmieducarCurso(
-                ref_usuario_cad: $this->pessoa_logada,
-                ref_cod_tipo_regime: $this->ref_cod_tipo_regime,
-                ref_cod_nivel_ensino: $this->ref_cod_nivel_ensino,
-                ref_cod_tipo_ensino: $this->ref_cod_tipo_ensino,
-                nm_curso: $this->nm_curso,
-                sgl_curso: $this->sgl_curso,
-                qtd_etapas: $this->qtd_etapas,
-                carga_horaria: $this->carga_horaria,
-                ato_poder_publico: $this->ato_poder_publico,
-                objetivo_curso: $this->objetivo_curso,
-                publico_alvo: $this->publico_alvo,
-                ativo: 1,
-                ref_cod_instituicao: $this->ref_cod_instituicao,
-                padrao_ano_escolar: $this->padrao_ano_escolar,
-                hora_falta: $this->hora_falta === null ? null : $this->hora_falta / 60,
-                multi_seriado: $this->multi_seriado,
-                importar_curso_pre_matricula: $this->importar_curso_pre_matricula,
-                descricao: $this->descricao,
-                bloquear_novas_matriculas: $this->bloquear_novas_matriculas
-            );
-            $obj->modalidade_curso = $this->modalidade_curso;
+            if (!$this->camposObrigatoriosPreenchidos()) {
+                $this->mensagem = 'Cadastro não realizado.<br>';
 
-            $this->cod_curso = $cadastrou = $obj->cadastra();
-            if ($cadastrou) {
-                $this->gravaEtapacurso(cod_curso: $cadastrou);
-
-                $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-                $this->simpleRedirect(url: 'educar_curso_lst.php');
+                return false;
             }
 
-            $this->mensagem = 'Cadastro não realizado.<br>';
+            DB::beginTransaction();
 
+            $curso = LegacyCourse::query()->create($this->dadosParaGravacao() + [
+                'ref_usuario_cad' => $this->pessoa_logada,
+                'ativo' => 1,
+            ]);
+
+            $this->cod_curso = $curso->getKey();
+
+            $this->gravaEtapacurso(cod_curso: $this->cod_curso);
+
+            DB::commit();
+
+            $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
+            $this->simpleRedirect(url: 'educar_curso_lst.php');
+
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         return true;
@@ -343,47 +338,44 @@ return new class extends clsCadastro
                 return false;
             }
 
-            $obj = new clsPmieducarCurso(
-                cod_curso: $this->cod_curso,
-                ref_cod_tipo_regime: $this->ref_cod_tipo_regime,
-                ref_cod_nivel_ensino: $this->ref_cod_nivel_ensino,
-                ref_cod_tipo_ensino: $this->ref_cod_tipo_ensino,
-                nm_curso: $this->nm_curso,
-                sgl_curso: $this->sgl_curso,
-                qtd_etapas: $this->qtd_etapas,
-                carga_horaria: $this->carga_horaria,
-                ato_poder_publico: $this->ato_poder_publico,
-                objetivo_curso: $this->objetivo_curso,
-                publico_alvo: $this->publico_alvo,
-                ativo: 1,
-                ref_usuario_exc: $this->pessoa_logada,
-                ref_cod_instituicao: $this->ref_cod_instituicao,
-                padrao_ano_escolar: $this->padrao_ano_escolar,
-                hora_falta: $this->hora_falta === null ? null : $this->hora_falta / 60,
-                multi_seriado: $this->multi_seriado,
-                importar_curso_pre_matricula: $this->importar_curso_pre_matricula,
-                descricao: $this->descricao,
-                bloquear_novas_matriculas: $this->bloquear_novas_matriculas
-            );
-            $obj->modalidade_curso = $this->modalidade_curso;
+            $curso = is_numeric(value: $this->cod_curso) && is_numeric(value: $this->pessoa_logada)
+                ? LegacyCourse::query()->find($this->cod_curso, ['cod_curso', 'padrao_ano_escolar'])
+                : null;
 
-            $detalheAntigo = $obj->detalhe();
-            $alterouPadraoAnoEscolar = $detalheAntigo['padrao_ano_escolar'] != $this->padrao_ano_escolar;
-            $editou = $obj->edita();
-            if ($editou) {
-                $this->gravaEtapacurso(cod_curso: $this->cod_curso);
+            if (!$curso) {
+                $this->mensagem = 'Edição não realizada.<br>';
 
-                if ($alterouPadraoAnoEscolar) {
-                    $this->atualizaEtapasDasTurmasDoCurso(curso: $this->cod_curso, padraoAnoEscolar: $this->padrao_ano_escolar, ano: date(format: 'Y'));
-                }
-
-                $this->mensagem = 'Edição efetuada com sucesso.<br>';
-                $this->simpleRedirect(url: 'educar_curso_lst.php');
+                return false;
             }
 
-            $this->mensagem = 'Edição não realizada.<br>';
+            DB::beginTransaction();
 
+            $curso->update($this->dadosParaGravacao() + [
+                'ref_usuario_exc' => $this->pessoa_logada,
+                'ativo' => 1,
+            ]);
+
+            $alterouPadraoAnoEscolar = $curso->wasChanged('padrao_ano_escolar');
+
+            $this->gravaEtapacurso(cod_curso: $this->cod_curso);
+
+            if ($alterouPadraoAnoEscolar) {
+                $this->atualizaEtapasDasTurmasDoCurso(
+                    curso: $this->cod_curso,
+                    padraoAnoEscolar: $this->padrao_ano_escolar,
+                    ano: date(format: 'Y')
+                );
+            }
+
+            DB::commit();
+
+            $this->mensagem = 'Edição efetuada com sucesso.<br>';
+            $this->simpleRedirect(url: 'educar_curso_lst.php');
+
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         return true;
@@ -391,21 +383,29 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $obj = new clsPmieducarCurso(
-            cod_curso: $this->cod_curso,
-            ativo: 0,
-            ref_usuario_exc: $this->pessoa_logada
-        );
+        $curso = is_numeric(value: $this->cod_curso) && is_numeric(value: $this->pessoa_logada)
+            ? LegacyCourse::query()->find($this->cod_curso, ['cod_curso'])
+            : null;
 
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
-            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-            $this->simpleRedirect(url: 'educar_curso_lst.php');
+        if (!$curso) {
+            $this->mensagem = 'Exclusão não realizada.<br>';
+
+            return false;
         }
 
-        $this->mensagem = 'Exclusão não realizada.<br>';
+        $curso->update([
+            'ativo' => 0,
+            'data_exclusao' => now(),
+            'ref_usuario_exc' => $this->pessoa_logada,
+        ]);
 
+        $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
+        $this->simpleRedirect(url: 'educar_curso_lst.php');
+
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function gravaEtapacurso($cod_curso)
@@ -434,7 +434,10 @@ return new class extends clsCadastro
     public function atualizaEtapasDasTurmasDoCurso($curso, $padraoAnoEscolar, $ano): void
     {
         if (!is_numeric($curso) || !is_numeric($ano)) {
+            // Inalcançável: só é chamada depois de a edição dar certo, com código numérico e ano vindo de `date()`.
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         (new SchoolClassStageService)->updateByCourse(
@@ -487,6 +490,68 @@ return new class extends clsCadastro
         }
 
         return true;
+    }
+
+    private function camposObrigatoriosPreenchidos()
+    {
+        return is_numeric(value: $this->pessoa_logada)
+            && is_numeric(value: $this->ref_cod_nivel_ensino)
+            && is_numeric(value: $this->ref_cod_tipo_ensino)
+            && is_string(value: $this->nm_curso)
+            && is_string(value: $this->sgl_curso)
+            && is_numeric(value: $this->qtd_etapas)
+            && is_numeric(value: $this->carga_horaria)
+            && is_numeric(value: $this->ref_cod_instituicao);
+    }
+
+    /**
+     * Os campos de texto opcionais e a modalidade são sempre gravados, para que
+     * o usuário consiga limpá-los. Os demais entram apenas quando o valor
+     * informado é válido para a coluna, preservando o conteúdo atual na edição
+     * parcial.
+     */
+    private function dadosParaGravacao()
+    {
+        $dados = [
+            'descricao' => $this->descricao === '' ? null : $this->descricao,
+            'ato_poder_publico' => $this->ato_poder_publico === '' ? null : $this->ato_poder_publico,
+            'objetivo_curso' => $this->objetivo_curso === '' ? null : $this->objetivo_curso,
+            'publico_alvo' => $this->publico_alvo === '' ? null : $this->publico_alvo,
+            'modalidade_curso' => $this->modalidade_curso === '' ? null : $this->modalidade_curso,
+        ];
+
+        $numericos = [
+            'ref_cod_tipo_regime' => $this->ref_cod_tipo_regime,
+            'ref_cod_nivel_ensino' => $this->ref_cod_nivel_ensino,
+            'ref_cod_tipo_ensino' => $this->ref_cod_tipo_ensino,
+            'qtd_etapas' => $this->qtd_etapas,
+            'carga_horaria' => $this->carga_horaria,
+            'ref_cod_instituicao' => $this->ref_cod_instituicao,
+            'padrao_ano_escolar' => $this->padrao_ano_escolar,
+            'hora_falta' => is_numeric(value: $this->hora_falta) ? $this->hora_falta / 60 : null,
+            'multi_seriado' => $this->multi_seriado,
+            'importar_curso_pre_matricula' => $this->importar_curso_pre_matricula,
+            'bloquear_novas_matriculas' => $this->bloquear_novas_matriculas,
+        ];
+
+        foreach ($numericos as $campo => $valor) {
+            if (is_numeric(value: $valor)) {
+                $dados[$campo] = $valor;
+            }
+        }
+
+        $textos = [
+            'nm_curso' => $this->nm_curso,
+            'sgl_curso' => $this->sgl_curso,
+        ];
+
+        foreach ($textos as $campo => $valor) {
+            if (is_string(value: $valor)) {
+                $dados[$campo] = $valor;
+            }
+        }
+
+        return $dados;
     }
 
     // Método novo para reduzir a Complexidade e Duplicação

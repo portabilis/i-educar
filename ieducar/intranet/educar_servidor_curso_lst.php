@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Employee;
+use App\Models\LegacyCourse;
 use Illuminate\Support\Facades\Session;
 
 return new class extends clsCadastro
@@ -68,20 +69,13 @@ return new class extends clsCadastro
         $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         $this->campoOculto('ref_cod_servidor_funcao', $this->ref_cod_servidor_funcao);
 
-        $obj_cursos = new clsPmieducarCurso;
-        $obj_cursos->setOrderby('nm_curso');
+        $cursos = LegacyCourse::query()
+            ->active()
+            ->when(is_numeric($this->ref_cod_instituicao), fn ($query) => $query->whereInstitution((int) $this->ref_cod_instituicao))
+            ->orderByName()
+            ->pluck('nm_curso', 'cod_curso');
 
-        $lst_cursos = $obj_cursos->lista(
-            int_ativo: 1,
-            int_ref_cod_instituicao: $this->ref_cod_instituicao
-        );
-
-        $opcoes_curso = ['' => 'Selecione'];
-        if ($lst_cursos) {
-            foreach ($lst_cursos as $curso) {
-                $opcoes_curso[$curso['cod_curso']] = $curso['nm_curso'];
-            }
-        }
+        $opcoes_curso = ['' => 'Selecione'] + $cursos->all();
 
         $arr_valores = [];
 
@@ -115,6 +109,8 @@ return new class extends clsCadastro
 
     public function Novo()
     {
+        // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+        // @codeCoverageIgnoreStart
         $curso_servidor = [];
         if ($this->ref_cod_curso) {
             foreach ($this->ref_cod_curso as $curso) {
@@ -133,13 +129,17 @@ return new class extends clsCadastro
         Session::save();
         Session::start();
 
-        echo "<script>parent.fechaExpansivel( '{$_GET['div']}');</script>";
+        echo '<script>parent.fechaExpansivel(' . json_encode((string) request('div'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ');</script>';
         exit();
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
     {
+        // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+        // @codeCoverageIgnoreStart
         $this->Novo();
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()

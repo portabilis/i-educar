@@ -1,31 +1,25 @@
 <?php
 
-namespace Tests\Educacenso\Validator;
-
 use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
 use Tests\TestCase;
 
-class BirthDateValidatorTest extends TestCase
-{
-    public function test_birth_date_after_today()
-    {
-        $validator = new BirthDateValidator(date('Y-m-d', strtotime('+1 day')));
+uses(TestCase::class);
 
-        $this->assertFalse($validator->isValid());
-        $this->assertStringContainsString('Informe uma data de nascimento menor que o dia de hoje.', $validator->getMessage());
-    }
+test('birth date after today', function () {
+    $validator = new BirthDateValidator(date('Y-m-d', strtotime('+1 day')));
 
-    public function test_birth_date_before_today()
-    {
-        $validator = new BirthDateValidator(date('Y-m-d', strtotime('-1 day')));
+    $this->assertFalse($validator->isValid());
+    $this->assertStringContainsString('Informe uma data de nascimento menor que o dia de hoje.', $validator->getMessage());
+});
 
-        $this->assertTrue($validator->isValid());
-    }
+test('birth date before today', function () {
+    $validator = new BirthDateValidator(date('Y-m-d', strtotime('-1 day')));
 
-    public function test_birth_date_is_today()
-    {
-        $validator = new BirthDateValidator(date('Y-m-d'));
+    $this->assertTrue($validator->isValid());
+});
 
-        $this->assertTrue($validator->isValid());
-    }
-}
+test('birth date is today', function () {
+    $validator = new BirthDateValidator(date('Y-m-d'));
+
+    $this->assertTrue($validator->isValid());
+});

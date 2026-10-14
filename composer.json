@@ -17,7 +17,7 @@
     ],
     "homepage": "https://github.com/portabilis/i-educar",
     "require": {
-        "php": ">=8.3",
+        "php": "^8.5",
         "ext-gd": "*",
         "ext-json": "*",
         "ext-pdo": "*",
@@ -26,7 +26,7 @@
         "aws/aws-sdk-php-laravel": "^3.11",
         "composer/semver": "^3.2",
         "dex/composer-plug-and-play": "^0.26",
-        "dex/frontier": "^0.18.0",
+        "dex/frontier": "^0.19.0",
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^7.15.2",
         "honeybadger-io/honeybadger-laravel": "^5.0",
@@ -42,7 +42,6 @@
         "league/flysystem-ftp": "^3.0",
         "league/flysystem-sftp-v3": "^3.0",
         "maatwebsite/excel": "^4.0",
-        "phpoffice/phpspreadsheet": "^5.8",
         "predis/predis": "^2.3",
         "psr/simple-cache": "^3.0",
         "socialiteproviders/laravelpassport": "^4.3",
@@ -57,11 +56,9 @@
         "laravel/sail": "^1.41",
         "laravel/telescope": "^5.18",
         "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.6",
-        "pestphp/pest": "^4.0",
-        "roave/security-advisories": "dev-latest",
-        "spatie/laravel-ignition": "^2.0",
-        "symfony/yaml": "^7.0"
+        "pestphp/pest": "^5.0",
+        "pestphp/pest-plugin-browser": "^5.0",
+        "phpunit/phpcov": "^13.1"
     },
     "autoload": {
         "classmap": [
@@ -107,6 +104,18 @@
     },
     "scripts": {
         "format": "vendor/bin/pint",
+        "test:browser": "ASSETS_SECURE=false vendor/bin/pest tests/Browser",
+        "test:browser:parallel": "ASSETS_SECURE=false LARAVEL_PARALLEL_TESTING_WITHOUT_DATABASES=1 vendor/bin/pest --parallel --processes=4 tests/Browser",
+        "test:browser:coverage": "ASSETS_SECURE=false XDEBUG_MODE=coverage vendor/bin/pest tests/Browser --coverage-html coverage",
+        "test:request": "vendor/bin/pest --testsuite=Request",
+        "test:request:coverage": "XDEBUG_MODE=coverage vendor/bin/pest --testsuite=Request --coverage-html coverage",
+        "coverage": [
+            "Composer\\Config::disableProcessTimeout",
+            "rm -rf coverage",
+            "for suite in Diario Feature Pages Request Educacenso Unit; do XDEBUG_MODE=off php -d extension=pcov -d pcov.enabled=1 -d pcov.directory=$PWD vendor/bin/pest --compact --testsuite=$suite --coverage-php=coverage/cov/$suite.cov || exit 1; done",
+            "php -d memory_limit=-1 vendor/bin/phpcov merge coverage/cov --html coverage/html --text coverage/coverage.txt",
+            "sed -n '/Summary:/,/Lines:/p' coverage/coverage.txt"
+        ],
         "openapi": "vendor/uderline/openapi-php-attributes/opag tests public/openapi.json",
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
         "new-install": [
@@ -145,7 +154,6 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
-        "platform-check": false,
         "allow-plugins": {
             "dex/composer-plug-and-play": true,
             "pestphp/pest-plugin": true,
