@@ -1,5 +1,5 @@
 <span class="form">
-    <select class="geral" name="ref_cod_serie" id="ref_cod_serie" aria-label="Série" style="width: 308px;">
+    <select class="geral" name="ref_cod_serie" id="ref_cod_serie" style="width: 308px;">
         <option value="">Selecione um serie</option>
         @if(old('ref_cod_escola', Request::get('ref_cod_escola')) && old('ref_cod_curso',  Request::get('ref_cod_curso')))
             @foreach(App_Model_IedFinder::getSeries(null, old('ref_cod_escola', Request::get('ref_cod_escola')), old('ref_cod_curso',  Request::get('ref_cod_curso'))) as $id => $name)

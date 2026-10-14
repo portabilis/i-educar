@@ -24,7 +24,7 @@
             </tr>
             <tr id="tr_nm_instituicao">
                 <td class="formlttd" valign="top">
-                    <span class="form">Instituição</span>
+                    <span class="form"><label for="ref_cod_instituicao">Instituição</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
@@ -33,7 +33,7 @@
             </tr>
             <tr id="tr_nm_escola">
                 <td class="formmdtd" valign="top">
-                    <span class="form">Escola</span>
+                    <span class="form"><label for="ref_cod_escola">Escola</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formmdtd" valign="top">
@@ -89,7 +89,7 @@
                 </td>
             </tr>
             <tr id="tr_nm_turma">
-                <td class="formlttd" valign="top"><span class="form">Turma</span></td>
+                <td class="formlttd" valign="top"><span class="form"><label for="ref_cod_turma">Turma</label></span></td>
                 <td class="formlttd" valign="top">
                     @include('form.select-school-class')
                 </td>
@@ -152,7 +152,7 @@
             </tr>
             <tr>
                 <td class="formlttd" valign="top">
-                    <span class="form">Tipo de etapa</span>
+                    <span class="form"><label for="stage_type">Tipo de etapa</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
