@@ -28,7 +28,7 @@
                 </tr>
                 <tr id="tr_nm_instituicao">
                     <td class="formlttd" valign="top">
-                        <span class="form">Instituição</span>
+                        <span class="form"><label for="ref_cod_instituicao">Instituição</label></span>
                         <span class="campo_obrigatorio">*</span>
                     </td>
                     <td class="formlttd" valign="top">
@@ -37,7 +37,7 @@
                 </tr>
                 <tr>
                     <td class="formmdtd" valign="top">
-                        <span class="form">Escola</span>
+                        <span class="form"><label for="escola">Escola</label></span>
                         <span class="campo_obrigatorio">*</span>
                     </td>
                     <td class="formmdtd" valign="top">
@@ -47,7 +47,7 @@
                 </tr>
                 <tr>
                     <td class="formlttd" valign="top">
-                        <span class="form">Tipo de etapa</span>
+                        <span class="form"><label for="stage_type">Tipo de etapa</label></span>
                         <span class="campo_obrigatorio">*</span>
                     </td>
                     <td class="formlttd" valign="top">

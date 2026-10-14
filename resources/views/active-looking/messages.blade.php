@@ -44,13 +44,13 @@
         <span class="form">Histórico de Observações</span>
     </td>
     <td class="formmdtd" valign="top" style="vertical-align: top !important;">
-        <div class="messages" role="region" aria-label="Lista de observações">
+        <section class="messages" aria-label="Lista de observações">
             @forelse($messages as $message)
                 @php
                     $canEdit = $isInstitucional || $message->user_id === Auth::id();
                 @endphp
 
-                <article class="message-item" id="message-{{ $message->id }}" role="article">
+                <article class="message-item" id="message-{{ $message->id }}">
                     <div class="message-content-wrapper">
                         <div class="message-content" id="message-content-{{ $message->id }}">
                             {!! nl2br(htmlspecialchars($message->description)) !!}
@@ -104,7 +104,7 @@
                     <p>Nenhuma observação registrada.</p>
                 </div>
             @endforelse
-        </div>
+        </section>
     </td>
 </tr>
 @endif
@@ -333,7 +333,7 @@
                 '<button type="button" class="delete-message-modal" data-message-id="' + message.id + '" title="Excluir observação" aria-label="Excluir observação">Excluir</button>' +
                 '</div>';
 
-            return '<article class="message-item" id="message-' + message.id + '" role="article">' +
+            return '<article class="message-item" id="message-' + message.id + '">' +
                 '<div class="message-content-wrapper">' +
                 '<div class="message-content" id="message-content-' + message.id + '">' +
                 message.description.replace(/\n/g, '<br>') +

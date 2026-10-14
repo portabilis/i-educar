@@ -1,5 +1,5 @@
 <span class="form">
-    <select class="geral" name="ref_cod_curso" id="ref_cod_curso" aria-label="Curso" style="width: 308px;">
+    <select class="geral" name="ref_cod_curso" id="ref_cod_curso" style="width: 308px;">
         <option value="">Selecione um curso</option>
         @if(old('ref_cod_escola', Request::get('ref_cod_escola')))
             @foreach(App_Model_IedFinder::getCursos(old('ref_cod_escola', Request::get('ref_cod_escola'))) as $id => $name)
