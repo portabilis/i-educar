@@ -176,9 +176,6 @@ return new class extends clsListagem
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-                $obj_ref_cod_matricula = new clsPmieducarMatricula($registro['ref_cod_matricula']);
-                $det_ref_cod_matricula = $obj_ref_cod_matricula->detalhe();
-
                 $registro['ref_ref_cod_serie'] = $nomesSeriesPorMatricula[$registro['ref_cod_matricula']] ?? null;
 
                 $det_ref_cod_tipo_ocorrencia_disciplinar = LegacyDisciplinaryOccurrenceType::find($registro['ref_cod_tipo_ocorrencia_disciplinar'])?->getAttributes();

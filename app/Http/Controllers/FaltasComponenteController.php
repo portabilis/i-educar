@@ -42,7 +42,6 @@ class FaltasComponenteController extends DiarioController
                 );
             }
 
-            $i = 1;
             foreach ($faltasAlunoTurma as $componenteCurricularId => $faltaTurmaAlunoDisciplina) {
                 if (!$this->service->validateComponenteTurma($componenteCurricularId, $componentesTurma, $turmaId, $matricula)) {
                     throw new DisciplineNotExistsForSchoolClass($componenteCurricularId, $turmaId);
