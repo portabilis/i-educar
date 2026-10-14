@@ -74,11 +74,8 @@ return new class extends clsDetalhe
 
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-        if ($nivel_usuario == 1) {
-            if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe(['Instituição',
-                    $registro['ref_cod_instituicao']]);
-            }
+        if ($nivel_usuario == 1 && $registro['ref_cod_instituicao']) {
+            $this->addDetalhe(['Instituição', $registro['ref_cod_instituicao']]);
         }
 
         if ($registro['ref_cod_curso']) {
@@ -100,13 +97,9 @@ return new class extends clsDetalhe
         }
 
         if ($registro['concluinte']) {
-            if ($registro['concluinte'] == 1) {
-                $registro['concluinte'] = 'não';
-            } elseif ($registro['concluinte'] == 2) {
-                $registro['concluinte'] = 'sim';
-            }
+            $concluinte = [1 => 'não', 2 => 'sim'][$registro['concluinte']] ?? $registro['concluinte'];
 
-            $this->addDetalhe(['Concluinte', $registro['concluinte']]);
+            $this->addDetalhe(['Concluinte', $concluinte]);
         }
 
         if ($registro['carga_horaria']) {
