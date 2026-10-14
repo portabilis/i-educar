@@ -108,6 +108,15 @@ return new class extends clsCadastro
             $this->url_cancelar = ($retorno == 'Editar') ? "educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_tipo_ocorrencia_disciplinar={$registro['ref_cod_tipo_ocorrencia_disciplinar']}&sequencial={$registro['sequencial']}" : "educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}";
         }
 
+        $this->montarBreadcrumb(editando: $retorno == 'Editar');
+
+        $this->nome_url_cancelar = 'Cancelar';
+
+        return $retorno;
+    }
+
+    private function montarBreadcrumb(bool $editando): void
+    {
         // Aberta pelo menu, sem matrícula, a tela é avulsa: a matrícula é
         // escolhida no formulário e o caminho não tem aluno nem matrícula
         if (!is_numeric($this->ref_cod_matricula)) {
@@ -117,7 +126,7 @@ return new class extends clsCadastro
         } else {
             // Início > Escola > Alunos > Nome > Matrícula > Ocorrências disciplinares > Nova (ou Editar)
             $registration = LegacyRegistration::find($this->ref_cod_matricula);
-            $this->breadcrumb($retorno == 'Editar' ? 'Editar' : 'Nova', [
+            $this->breadcrumb($editando ? 'Editar' : 'Nova', [
                 url('intranet/educar_index.php') => 'Escola',
                 url('intranet/educar_aluno_lst.php') => 'Alunos',
                 url("intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
@@ -125,10 +134,6 @@ return new class extends clsCadastro
                 url("intranet/educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}") => 'Ocorrências disciplinares',
             ]);
         }
-
-        $this->nome_url_cancelar = 'Cancelar';
-
-        return $retorno;
     }
 
     public function Gerar()

@@ -70,7 +70,6 @@ return new class extends clsListagem
 
         // Paginador
         $limite = 10;
-        $iniciolimit = ($this->getQueryString(name: "pagina_{$this->nome}")) ? $this->getQueryString(name: "pagina_{$this->nome}") * $limite - $limite : 0;
 
         $lista = LegacyPerson::query()->filter([
             'name' => $par_nome,
@@ -89,27 +88,7 @@ return new class extends clsListagem
 
         $total = $lista->total();
 
-        if ($lista->isNotEmpty()) {
-            foreach ($lista as $pessoa) {
-                $cod = $pessoa->getKey();
-                $nome = $pessoa->name;
-
-                if ($pessoa->social_name) {
-                    // Inalcançável: a pessoa física é carregada só com o CPF, então o nome social nunca vem preenchido.
-                    // @codeCoverageIgnoreStart
-                    $nome = $pessoa->social_name . '<br> <i>Nome de registro: </i>' . $pessoa->name;
-                    // @codeCoverageIgnoreEnd
-                }
-
-                $cpf = $pessoa->individual?->cpf
-                    ? "<span class='cpf-situacao cpf-situacao-com'>{$pessoa->individual->cpf}</span>"
-                    : "<span class='cpf-situacao cpf-situacao-sem'>Sem CPF</span>";
-                $this->addLinhas(linha: [
-                    "<img src='imagens/noticia.jpg' border=0><a href='atendidos_det.php?cod_pessoa={$cod}'>" . e($nome) . '</a>',
-                    $cpf,
-                ]);
-            }
-        }
+        $this->adicionarPessoas($lista);
 
         $obj_permissao = new clsPermissoes;
 
@@ -149,6 +128,29 @@ return new class extends clsListagem
             currentPage: 'Listagem de pessoa física',
             breadcrumbs: ['educar_pessoas_index.php' => 'Pessoas']
         );
+    }
+
+    private function adicionarPessoas(iterable $lista): void
+    {
+        foreach ($lista as $pessoa) {
+            $cod = $pessoa->getKey();
+            $nome = $pessoa->name;
+
+            if ($pessoa->social_name) {
+                // Inalcançável: a pessoa física é carregada só com o CPF, então o nome social nunca vem preenchido.
+                // @codeCoverageIgnoreStart
+                $nome = $pessoa->social_name . '<br> <i>Nome de registro: </i>' . $pessoa->name;
+                // @codeCoverageIgnoreEnd
+            }
+
+            $cpf = $pessoa->individual?->cpf
+                ? "<span class='cpf-situacao cpf-situacao-com'>{$pessoa->individual->cpf}</span>"
+                : "<span class='cpf-situacao cpf-situacao-sem'>Sem CPF</span>";
+            $this->addLinhas(linha: [
+                "<img src='imagens/noticia.jpg' border=0><a href='atendidos_det.php?cod_pessoa={$cod}'>" . e($nome) . '</a>',
+                $cpf,
+            ]);
+        }
     }
 
     public function Formular()
