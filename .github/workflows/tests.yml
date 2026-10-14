@@ -30,9 +30,12 @@ jobs:
 
     timeout-minutes: 60
 
+    # Na main roda o baseline do TIA: cancelá-lo a cada merge faz ele nunca
+    # terminar, e sem baseline todo PR roda a suíte completa. O GitHub mantém só
+    # o pendente mais recente do grupo, então a fila não acumula.
     concurrency:
       group: tests-${{ github.ref }}
-      cancel-in-progress: true
+      cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
     env:
       APP_URL: http://localhost:8000
