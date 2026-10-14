@@ -85,7 +85,7 @@ return new class extends clsCadastro
     public function Gerar()
     {
         $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
-        $opcoes = $opcoes_curso = ['' => 'Selecione'];
+        $opcoes = ['' => 'Selecione'];
 
         $cursos = LegacyCourse::query()
             ->active()

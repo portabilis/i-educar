@@ -46,11 +46,12 @@ return new class extends clsDetalhe
         $this->ref_cod_serie = $_GET['ref_cod_serie'];
         $this->ref_cod_disciplina = $_GET['ref_cod_disciplina'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
+        $urlListagem = 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
 
         if (!is_numeric($this->ref_cod_matricula) || !is_numeric($this->ref_cod_serie)
             || !is_numeric($this->ref_cod_escola) || !is_numeric($this->ref_cod_disciplina)) {
             $this->redirectNotFound(
-                url: 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula,
+                url: $urlListagem,
                 registro: 'dispensa de componente curricular',
                 feminino: true,
                 dica: 'Confira os registros listados abaixo.',
@@ -69,7 +70,7 @@ return new class extends clsDetalhe
 
         if (!$dispensa) {
             $this->redirectNotFound(
-                url: 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula,
+                url: $urlListagem,
                 registro: 'dispensa de componente curricular',
                 feminino: true,
                 dica: 'Confira os registros listados abaixo.',
@@ -150,7 +151,7 @@ return new class extends clsDetalhe
             );
         }
 
-        $this->url_cancelar = 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
+        $this->url_cancelar = $urlListagem;
         $this->largura = '100%';
 
         // Início > Escola > Alunos > Nome > Matrícula > Dispensa de componentes curriculares > Dispensa

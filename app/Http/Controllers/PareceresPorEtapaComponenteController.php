@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PostPareceresPorEtapaComponenteRequest;
 use App\Services\RemoveHtmlTagsStringService;
 use iEducar\Modules\EvaluationRules\Exceptions\DisciplineNotExistsForSchoolClass;
+use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowDescriptiveOpinion;
 use Illuminate\Http\Response;
 
 class PareceresPorEtapaComponenteController extends DiarioController
@@ -23,7 +24,7 @@ class PareceresPorEtapaComponenteController extends DiarioController
 
         try {
             if ($regra->get('parecerDescritivo') != \RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
-                throw new \RuntimeException("A regra da turma {$turmaId} não permite lançamento de pareceres por etapa e componente.");
+                throw new EvaluationRuleNotAllowDescriptiveOpinion($turmaId, 'por etapa e componente');
             }
 
             if (!$this->service->validateComponenteTurma($componenteCurricularId, $componentesTurma, $turmaId, $matricula)) {
@@ -44,7 +45,7 @@ class PareceresPorEtapaComponenteController extends DiarioController
             } catch (\CoreExt_Service_Exception) {
                 // Evita Exception ao não promover matrículas, pois não houve mudança de situação
             }
-        } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException|DisciplineNotExistsForSchoolClass $exception) {
+        } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException|DisciplineNotExistsForSchoolClass|EvaluationRuleNotAllowDescriptiveOpinion $exception) {
             return $this->unprocessableResponse($exception);
         } catch (\Exception $exception) {
             return response()->json([

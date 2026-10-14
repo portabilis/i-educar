@@ -56,7 +56,7 @@
     <h1>{{ config('legacy.config.ieducar_entity_name') }}</h1>
 
     @if (session('status'))
-        <p class="success" role="status">{{ session('status') }}</p>
+        <output class="success">{{ session('status') }}</output>
     @endif
 
     @if($errors->count())

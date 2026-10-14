@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PostFaltaComponenteRequest;
 use iEducar\Modules\EvaluationRules\Exceptions\DisciplineNotExistsForSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowDisciplineAbsence;
+use iEducar\Modules\EvaluationRules\Exceptions\KnowledgeAreaWithoutGroupedDisciplines;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 
@@ -42,7 +43,6 @@ class FaltasComponenteController extends DiarioController
                 );
             }
 
-            $i = 1;
             foreach ($faltasAlunoTurma as $componenteCurricularId => $faltaTurmaAlunoDisciplina) {
                 if (!$this->service->validateComponenteTurma($componenteCurricularId, $componentesTurma, $turmaId, $matricula)) {
                     throw new DisciplineNotExistsForSchoolClass($componenteCurricularId, $turmaId);
@@ -62,7 +62,7 @@ class FaltasComponenteController extends DiarioController
                     // Evita Exception ao não promover matrículas pois não houve mudança de situação
                 }
             }
-        } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException|EvaluationRuleNotAllowDisciplineAbsence|DisciplineNotExistsForSchoolClass $exception) {
+        } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException|EvaluationRuleNotAllowDisciplineAbsence|DisciplineNotExistsForSchoolClass|KnowledgeAreaWithoutGroupedDisciplines $exception) {
             return $this->unprocessableResponse($exception);
         } catch (\Exception $exception) {
             return response()->json([
@@ -87,9 +87,7 @@ class FaltasComponenteController extends DiarioController
             ->where('knowledgeArea.agrupar_descritores', true);
 
         if ($componentesArea->isEmpty()) {
-            throw new \RuntimeException(
-                'Não foi possível encontrar componentes dessa turma agrupados para a área do conhecimento informada.'
-            );
+            throw new KnowledgeAreaWithoutGroupedDisciplines($areaDoConhecimentoId);
         }
 
         $componenteAreaPrimeiro = $componentesArea->shift();

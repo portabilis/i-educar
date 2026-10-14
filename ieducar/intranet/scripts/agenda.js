@@ -88,7 +88,7 @@ function text2form( compId )
 	chck1 = ( inputOpcoes.value & 2 ) ? 'checked' : '';
 	chck2 = ( inputOpcoes.value & 1 ) ? 'checked' : '';
 
-	conteudo = '<textarea name="agenda_rap_conteudo" id="agenda_rap_conteudo" class="agenda_conteudo">' + agenda_escape( inputConteudo.value ) + '</textarea><br>';
+	let conteudo = '<textarea name="agenda_rap_conteudo" id="agenda_rap_conteudo" class="agenda_conteudo">' + agenda_escape( inputConteudo.value ) + '</textarea><br>';
 	conteudo += 'Fim do Compromisso:<input type="text" name="agenda_rap_horafim" id="agenda_rap_horafim" class="agenda_hora" value="' + agenda_escape( inputHoraFim.value ) + '" maxlength="5" onKeyPress="formataHora(this, event);"> Data: <input type="text" name="agenda_rap_data" id="agenda_rap_data" class="agenda_data" value="' + agenda_escape( inputData.value ) + '"  maxlength="10" onKeyPress="formataData(this, event);"><br>';
 	conteudo += 'Importante:<input type="checkbox" name="agenda_rap_importante" id="agenda_rap_importante" ' + chck2 + ' style="margin-right:89px;">';
 	if( publica == 1 )
@@ -192,8 +192,8 @@ function agenda_retrair( compId )
 
 	divExpandir.innerHTML = '<div id="agenda_expandir_' + compId + '"><a href="javascript:agenda_expandir( ' + compId + ' );"><img src="imagens/agenda_icon_retraido.gif" border="0" alt="Expandir" title="Expandir este compromisso"></a></div>';
 
-	textoArr = agenda_escape( inputConteudo.value.split( ' ' ).slice( 0, 21 ).join( ' ' ) + '...' );
-	textoArr = textoArr.split( '\n' ).join( '<br>' );
+	let textoArr = agenda_escape( inputConteudo.value.split( ' ' ).slice( 0, 21 ).join( ' ' ) + '...' );
+	textoArr = textoArr.replaceAll( '\n', '<br>' );
 	divConteudo.innerHTML = textoArr;
 	document.getElementById( "aberto_" + compId ).value = 0;
 }

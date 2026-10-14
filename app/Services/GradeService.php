@@ -147,7 +147,11 @@ class GradeService
 
         [, $month, $day] = explode('-', $enrollmentBaseDate);
 
-        $birth = $birthDate instanceof DateTimeInterface ? $birthDate : new DateTime($birthDate ?: 'now');
+        $birth = $birthDate ?: 'now';
+
+        if (!$birth instanceof DateTimeInterface) {
+            $birth = new DateTime($birth);
+        }
 
         $age = $birth->diff(new DateTime("{$year}-{$month}-{$day}"))->y;
 

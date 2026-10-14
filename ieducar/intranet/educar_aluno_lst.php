@@ -153,29 +153,7 @@ return new class extends clsListagem
         $studentFilter = new StudentFilter(...$dataFilter);
         $students = LegacyStudent::query()->findStudentWithMultipleSearch(studentFilter: $studentFilter);
 
-        foreach ($students as $student) {
-            $nomeAluno = $student->person->name;
-            $nomeSocial = $student->individual->nome_social;
-
-            if ($nomeSocial) {
-                $nomeAluno = $nomeSocial . '<br> <i>Nome de registro: </i>' . $nomeAluno;
-            }
-
-            $nomeResponsavel = mb_strtoupper(string: $student->getGuardianName() ?? '-');
-            $cpfResponsavel = ucfirst(string: $student->getGuardianCpf());
-            $nomeMae = mb_strtoupper(string: $student->individual->mother->name ?? '-');
-
-            $linhas = array_filter(array: [
-                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$student->cod_aluno</a>",
-                $configuracoes['mostrar_codigo_inep_aluno'] === 1 ? "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">" . ($student->inepNumber ?? '-'). '</a>' : null,
-                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeAluno</a>",
-                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeMae</a>",
-                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeResponsavel</a>",
-                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$cpfResponsavel</a>",
-            ]);
-
-            $this->addLinhas(linha: $linhas);
-        }
+        $this->adicionarAlunos(students: $students, mostrarCodigoInep: $configuracoes['mostrar_codigo_inep_aluno'] === 1);
 
         $this->addPaginador2(strUrl: 'educar_aluno_lst.php', intTotalRegistros: $students->total(), mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
 
@@ -190,6 +168,33 @@ return new class extends clsListagem
 
         $this->largura = '100%';
         $this->breadcrumb(currentPage: 'Alunos', breadcrumbs: ['/intranet/educar_index.php' => 'Escola']);
+    }
+
+    private function adicionarAlunos(iterable $students, bool $mostrarCodigoInep): void
+    {
+        foreach ($students as $student) {
+            $nomeAluno = $student->person->name;
+            $nomeSocial = $student->individual->nome_social;
+
+            if ($nomeSocial) {
+                $nomeAluno = $nomeSocial . '<br> <i>Nome de registro: </i>' . $nomeAluno;
+            }
+
+            $nomeResponsavel = mb_strtoupper(string: $student->getGuardianName() ?? '-');
+            $cpfResponsavel = ucfirst(string: $student->getGuardianCpf());
+            $nomeMae = mb_strtoupper(string: $student->individual->mother->name ?? '-');
+
+            $linhas = array_filter(array: [
+                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$student->cod_aluno</a>",
+                $mostrarCodigoInep ? "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">" . ($student->inepNumber ?? '-'). '</a>' : null,
+                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeAluno</a>",
+                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeMae</a>",
+                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$nomeResponsavel</a>",
+                "<a href=\"educar_aluno_det.php?cod_aluno=$student->cod_aluno\">$cpfResponsavel</a>",
+            ]);
+
+            $this->addLinhas(linha: $linhas);
+        }
     }
 
     public function Formular()

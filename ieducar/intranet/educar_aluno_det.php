@@ -487,29 +487,21 @@ return new class extends clsDetalhe
             $nome
         );
 
-        if ($tipoResponsavel == 'p' || $tipoResponsavel == null) {
-            if ($fisicaAluno?->idpes_pai && $fisicaAluno->father) {
-                $nomeResponsavelAluno = $linkPessoa($fisicaAluno->father->idpes, $fisicaAluno->father->nome);
-            }
+        if (($tipoResponsavel == 'p' || $tipoResponsavel == null) && $fisicaAluno?->idpes_pai && $fisicaAluno->father) {
+            $nomeResponsavelAluno = $linkPessoa($fisicaAluno->father->idpes, $fisicaAluno->father->nome);
         }
 
-        if ($tipoResponsavel == 'm' || ($nomeResponsavelAluno == null && $tipoResponsavel == null)) {
-            if ($fisicaAluno?->idpes_mae && $fisicaAluno->mother) {
-                $nomeResponsavelAluno = $linkPessoa($fisicaAluno->mother->idpes, $fisicaAluno->mother->nome);
-            }
+        if (($tipoResponsavel == 'm' || ($nomeResponsavelAluno == null && $tipoResponsavel == null)) && $fisicaAluno?->idpes_mae && $fisicaAluno->mother) {
+            $nomeResponsavelAluno = $linkPessoa($fisicaAluno->mother->idpes, $fisicaAluno->mother->nome);
         }
 
-        if ($tipoResponsavel == 'r' || ($nomeResponsavelAluno == null && $tipoResponsavel == null)) {
-            if ($fisicaAluno?->idpes_responsavel && $fisicaAluno->responsible) {
-                $nomeResponsavelAluno = $linkPessoa($fisicaAluno->responsible->idpes, $fisicaAluno->responsible->nome);
-            }
+        if (($tipoResponsavel == 'r' || ($nomeResponsavelAluno == null && $tipoResponsavel == null)) && $fisicaAluno?->idpes_responsavel && $fisicaAluno->responsible) {
+            $nomeResponsavelAluno = $linkPessoa($fisicaAluno->responsible->idpes, $fisicaAluno->responsible->nome);
         }
 
-        if ($tipoResponsavel == 'a') {
-            if ($fisicaAluno?->idpes_mae && $fisicaAluno?->idpes_pai && $fisicaAluno->mother && $fisicaAluno->father) {
-                $nomeResponsavelAluno = $linkPessoa($fisicaAluno->father->idpes, $fisicaAluno->father->nome)
-                    . ', ' . $linkPessoa($fisicaAluno->mother->idpes, $fisicaAluno->mother->nome);
-            }
+        if ($tipoResponsavel == 'a' && $fisicaAluno?->idpes_mae && $fisicaAluno?->idpes_pai && $fisicaAluno->mother && $fisicaAluno->father) {
+            $nomeResponsavelAluno = $linkPessoa($fisicaAluno->father->idpes, $fisicaAluno->father->nome)
+                . ', ' . $linkPessoa($fisicaAluno->mother->idpes, $fisicaAluno->mother->nome);
         }
 
         if (is_null(value: $registro['ref_idpes_responsavel'])) {
@@ -1180,9 +1172,12 @@ return new class extends clsDetalhe
             return "<span class='cpf-situacao cpf-situacao-com'>{$situacao['cpf']}</span>";
         }
 
-        $detalhe = $situacao['type'] === 'justified_absence'
-            ? $situacao['reason'] . ($situacao['user'] ? " · {$situacao['user']}, {$situacao['date']}" : '')
-            : 'Sem justificativa registrada';
+        $detalhe = 'Sem justificativa registrada';
+
+        if ($situacao['type'] === 'justified_absence') {
+            $autoria = $situacao['user'] ? " · {$situacao['user']}, {$situacao['date']}" : '';
+            $detalhe = $situacao['reason'] . $autoria;
+        }
 
         return sprintf("<span class='cpf-situacao cpf-situacao-sem' title='%s'>Sem CPF</span>", e($detalhe));
     }

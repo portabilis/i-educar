@@ -59,29 +59,7 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 628, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: 'educar_dispensa_disciplina_lst.php?ref_ref_cod_matricula=' . $this->ref_cod_matricula);
 
-        if (is_numeric($this->ref_cod_matricula)) {
-            $obj_matricula = new clsPmieducarMatricula(cod_matricula: $this->ref_cod_matricula, ativo: 1);
-            $det_matricula = $obj_matricula->detalhe();
-            if (!$det_matricula) {
-                $this->redirectNotFound(
-                    url: 'educar_matricula_lst.php',
-                    registro: 'matrícula',
-                    feminino: true,
-                    codigo: $this->ref_cod_matricula,
-                    dica: 'Acesse a matrícula pela ficha do aluno.',
-                );
-            }
-
-            $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
-            $this->ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
-        } else {
-            $this->redirectNotFound(
-                url: 'educar_matricula_lst.php',
-                registro: 'matrícula',
-                feminino: true,
-                dica: 'Acesse a matrícula pela ficha do aluno.',
-            );
-        }
+        $this->carregarMatricula();
 
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_serie) &&
             is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina)) {
@@ -140,6 +118,37 @@ return new class extends clsCadastro
         $this->loadAssets();
 
         return $retorno;
+    }
+
+    /**
+     * Preenche a escola e a série da matrícula ativa, ou redireciona para a
+     * listagem quando a matrícula não existe.
+     */
+    private function carregarMatricula(): void
+    {
+        if (is_numeric($this->ref_cod_matricula)) {
+            $obj_matricula = new clsPmieducarMatricula(cod_matricula: $this->ref_cod_matricula, ativo: 1);
+            $det_matricula = $obj_matricula->detalhe();
+            if (!$det_matricula) {
+                $this->redirectNotFound(
+                    url: 'educar_matricula_lst.php',
+                    registro: 'matrícula',
+                    feminino: true,
+                    codigo: $this->ref_cod_matricula,
+                    dica: 'Acesse a matrícula pela ficha do aluno.',
+                );
+            }
+
+            $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
+            $this->ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
+        } else {
+            $this->redirectNotFound(
+                url: 'educar_matricula_lst.php',
+                registro: 'matrícula',
+                feminino: true,
+                dica: 'Acesse a matrícula pela ficha do aluno.',
+            );
+        }
     }
 
     public function Gerar()

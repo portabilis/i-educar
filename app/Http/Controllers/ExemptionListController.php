@@ -28,7 +28,7 @@ class ExemptionListController extends Controller
         $exemptions = LegacyDisciplineExemption::filter([
             'schools' => array_filter($schools),
             // Sem ano na URL, o ano corrente, que é o que o campo mostra
-            // (form.select-year); ano vazio (limpo pela pessoa) traz todos
+            // (form.select-year); ano vazio (limpo pela pessoa) traz os de qualquer ano
             'yearEq' => $request->get('ano', date('Y')),
             'grade' => $request->get('ref_cod_serie'),
             'course' => $request->get('ref_cod_curso'),

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostPareceresPorEtapaGeralRequest;
 use App\Services\RemoveHtmlTagsStringService;
+use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowDescriptiveOpinion;
 use Illuminate\Http\Response;
 
 class PareceresPorEtapaGeralController extends DiarioController
@@ -20,7 +21,7 @@ class PareceresPorEtapaGeralController extends DiarioController
 
         try {
             if ($regra->get('parecerDescritivo') != \RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) {
-                throw new \RuntimeException("A regra da turma {$turmaId} não permite lançamento de pareceres por etapa geral.");
+                throw new EvaluationRuleNotAllowDescriptiveOpinion($turmaId, 'por etapa geral');
             }
 
             $parecerDescritivo = new \Avaliacao_Model_ParecerDescritivoGeral([
@@ -36,7 +37,7 @@ class PareceresPorEtapaGeralController extends DiarioController
             } catch (\CoreExt_Service_Exception) {
                 // Evita Exception ao não promover matrículas, pois não houve mudança de situação
             }
-        } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException $exception) {
+        } catch (\RuntimeException|\CoreExt_Exception_InvalidArgumentException|EvaluationRuleNotAllowDescriptiveOpinion $exception) {
             return $this->unprocessableResponse($exception);
         } catch (\Exception $exception) {
             return response()->json([
