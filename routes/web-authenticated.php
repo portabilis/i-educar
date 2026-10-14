@@ -3,6 +3,7 @@
 use App\Http\Controllers\EnrollmentInepController;
 use App\Http\Controllers\EnrollmentsPromotionController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\LegacyController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\WebController;
 use App\Http\Middleware\AnnouncementMiddleware;
@@ -20,7 +21,9 @@ Route::get('/institution', [WebController::class, 'institution']);
 Route::get('/menus', [WebController::class, 'menus']);
 Route::get('/authorization', [WebController::class, 'authorization']);
 
-Route::get('/intranet/educar_matricula_turma_lst.php', 'LegacyController@intranet')
+$legacyIntranet = [LegacyController::class, 'intranet'];
+
+Route::get('/intranet/educar_matricula_turma_lst.php', $legacyIntranet)
     ->defaults('uri', 'educar_matricula_turma_lst.php')
     ->name('enrollments.index');
 Route::get('/matricula/{registration}/enturmar/{schoolClass}', 'EnrollmentController@viewEnroll')
@@ -53,24 +56,26 @@ Route::post('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@enro
     ->middleware('can:modify:' . Process::BATCH_ENROLLMENT)
     ->name('enrollments.batch.enroll');
 
-Route::get('/usuarios/tipos', 'LegacyController@intranet')
-    ->defaults('uri', 'educar_tipo_usuario_lst.php')
-    ->name('usertype.index');
-Route::get('/usuarios/tipos/novo', 'AccessLevelController@new')
-    ->middleware('can:modify:' . Process::USER_TYPES)
-    ->name('usertype.new');
-Route::get('/usuarios/tipos/{userType}', 'AccessLevelController@show')
-    ->middleware('can:view:' . Process::USER_TYPES)
-    ->name('usertype.show');
-Route::post('/usuarios/tipos', 'AccessLevelController@create')
-    ->middleware('can:modify:' . Process::USER_TYPES)
-    ->name('usertype.create');
-Route::put('/usuarios/tipos/{userType}', 'AccessLevelController@update')
-    ->middleware('can:modify:' . Process::USER_TYPES)
-    ->name('usertype.update');
-Route::delete('/usuarios/tipos/{userType}', 'AccessLevelController@delete')
-    ->middleware('can:remove:' . Process::USER_TYPES)
-    ->name('usertype.delete');
+Route::prefix('/usuarios/tipos')->group(function () use ($legacyIntranet) {
+    Route::get('/', $legacyIntranet)
+        ->defaults('uri', 'educar_tipo_usuario_lst.php')
+        ->name('usertype.index');
+    Route::get('/novo', 'AccessLevelController@new')
+        ->middleware('can:modify:' . Process::USER_TYPES)
+        ->name('usertype.new');
+    Route::get('/{userType}', 'AccessLevelController@show')
+        ->middleware('can:view:' . Process::USER_TYPES)
+        ->name('usertype.show');
+    Route::post('/', 'AccessLevelController@create')
+        ->middleware('can:modify:' . Process::USER_TYPES)
+        ->name('usertype.create');
+    Route::put('/{userType}', 'AccessLevelController@update')
+        ->middleware('can:modify:' . Process::USER_TYPES)
+        ->name('usertype.update');
+    Route::delete('/{userType}', 'AccessLevelController@delete')
+        ->middleware('can:remove:' . Process::USER_TYPES)
+        ->name('usertype.delete');
+});
 
 Route::get('/cancelar-enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@indexCancelEnrollments')
     ->middleware('can:view:' . Process::BATCH_ENROLLMENT)
@@ -96,7 +101,7 @@ Route::get('/unificacao-aluno/{unification}/undo', 'StudentLogUnificationControl
 Route::get('/unificacao-pessoa', 'PersonLogUnificationController@index')->name('person-log-unification.index');
 Route::get('/unificacao-pessoa/{unification}', 'PersonLogUnificationController@show')->name('person-log-unification.show');
 
-Route::get('intranet/educar_configuracoes_index.php', 'LegacyController@intranet')
+Route::get('intranet/educar_configuracoes_index.php', $legacyIntranet)
     ->defaults('uri', 'educar_configuracoes_index.php')
     ->name('settings');
 
@@ -107,7 +112,7 @@ Route::any('module/{module}/{path}/{resource}', 'LegacyModuleRewriteController@r
 
 Route::any('module/{uri}', 'LegacyController@module')->where('uri', '.*');
 Route::any('modules/{uri}', 'LegacyController@modules')->where('uri', '.*');
-Route::any('intranet/{uri}', 'LegacyController@intranet')->where('uri', '.*');
+Route::any('intranet/{uri}', $legacyIntranet)->where('uri', '.*');
 
 Route::group(['namespace' => 'Educacenso', 'prefix' => 'educacenso'], function () {
     Route::get('validar/{validator}', 'ValidatorController@validation');

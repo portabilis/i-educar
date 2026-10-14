@@ -229,7 +229,7 @@ function novoForm(array_compromissos)
 	}
 	publica = document.getElementById( "agenda_publica" ).value;
 
-	conteudo = '<form id="novo_form" action="'+acao+ document.getElementById( "parametros" ).value + '" method="POST"><br>';
+	let conteudo = '<form id="novo_form" action="'+acao+ document.getElementById( "parametros" ).value + '" method="POST"><br>';
 	conteudo += '<table border="0" cellpadding="0" cellspacing="3">';
 	conteudo += '<tr>';
 	conteudo += '<td width="25%">Inicio <input type="text" name="novo_hora_inicio" id="novo_hora_inicio" class="agenda_hora" title="Horas (hh:mm)" onChange="verifica_hora(this.value)" maxlength="5"onKeyPress="formataHora(this, event);"></td>';
@@ -278,7 +278,7 @@ function novoForm(array_compromissos)
 
 function salvaNota( compId )
 {
-	conteudo = '<form id="novo_form" action="agenda.php' + document.getElementById( "parametros" ).value + '" method="POST"><br>';
+	let conteudo = '<form id="novo_form" action="agenda.php' + document.getElementById( "parametros" ).value + '" method="POST"><br>';
 	conteudo += '<input type="hidden" name="grava_compromisso" value="' + compId + '">';
 	conteudo += '<table border="0" cellpadding="0" cellspacing="3">';
 	conteudo += '<tr>';
