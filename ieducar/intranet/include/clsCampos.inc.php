@@ -402,7 +402,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $arr_componente = [
             'hora',
             $this->__adicionando_tabela ? $nome : $campo,
-            $limitaHora ? ($obrigatorio ? '/^([0-9]?[0-9]|9[0-9]):([0-5][0-9])(:[0-5][0-9])?$/' : '*(/^([0-9]?[0-9]|9[0-9]):([0-5][0-9])(:[0-5][0-9])?$/)') : ($obrigatorio ? '/[0-9]{2}:[0-9]{2}/' : '*(/[0-9]{9}:[0-9]{2}/)'),
+            $limitaHora ? ($obrigatorio ? '/^\d{1,2}:[0-5]\d$/' : '*(/^\d{1,2}:[0-5]\d$/)') : ($obrigatorio ? '/[0-9]{2}:[0-9]{2}/' : '*(/[0-9]{9}:[0-9]{2}/)'),
             $valor,
             6,
             5,
