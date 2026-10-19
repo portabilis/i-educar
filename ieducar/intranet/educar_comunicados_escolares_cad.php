@@ -39,6 +39,9 @@ return new class extends clsCadastro
         if (is_numeric($this->id) && $this->id > 0) {
             $registro = SchoolNotice::findOrFail($this->id);
             if ($registro) {
+                if (! $this->usuarioPodeGerenciarAviso($registro)) {
+                    $this->simpleRedirect("educar_comunicados_escolares_det.php?id={$registro->getKey()}");
+                }
 
                 $this->ref_cod_instituicao = $registro->institution_id;
                 $this->escolas = $registro->schools()->pluck('cod_escola')->all();
@@ -84,6 +87,18 @@ return new class extends clsCadastro
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
             '/vendor/legacy/Cadastro/Assets/Javascripts/ComunicadosEscolares.js',
         ]);
+    }
+
+    private function usuarioPodeGerenciarAviso(SchoolNotice $notice): bool
+    {
+        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
+            $escolasDoAviso = $notice->schools()->pluck('cod_escola')->all();
+            $escolasPermitidas = array_map('intval', array_keys($this->escolasDisponiveis()));
+
+            return array_diff($escolasDoAviso, $escolasPermitidas) === [];
+        }
+
+        return true;
     }
 
     private function escolasDisponiveis(): array
@@ -158,16 +173,16 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $escolas = $this->obterEscolasValidadas();
-        if ($escolas === null) {
+        $notice = SchoolNotice::find($this->id);
+
+        if (! $notice || ! $this->usuarioPodeGerenciarAviso($notice)) {
+            $this->mensagem = 'Você não tem permissão para editar este comunicado.<br>';
+
             return false;
         }
 
-        $notice = SchoolNotice::find($this->id);
-
-        if (!$notice) {
-            $this->mensagem = 'Edição não realizada.<br>';
-
+        $escolas = $this->obterEscolasValidadas();
+        if ($escolas === null) {
             return false;
         }
 
@@ -189,9 +204,15 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
-        $return = SchoolNotice::query()
-            ->whereKey($this->id)
-            ->delete();
+        $notice = SchoolNotice::find($this->id);
+
+        if (! $notice || ! $this->usuarioPodeGerenciarAviso($notice)) {
+            $this->mensagem = 'Você não tem permissão para excluir este comunicado.<br>';
+
+            return false;
+        }
+
+        $return = $notice->delete();
 
         if ($return) {
             $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
