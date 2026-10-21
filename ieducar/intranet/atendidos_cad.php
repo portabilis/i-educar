@@ -1204,6 +1204,9 @@ return new class extends clsCadastro
         $this->afterChangePessoa(id: $pessoaId);
         $this->saveFiles(idpes: $pessoaId);
 
+        // Fica na sessão até a listagem, para onde o JavaScript redireciona.
+        Session::flash('success', $pessoaIdOrNull ? 'Edição efetuada com sucesso.' : 'Cadastro efetuado com sucesso.');
+
         return true;
     }
 
