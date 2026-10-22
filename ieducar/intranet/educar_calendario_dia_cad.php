@@ -185,7 +185,7 @@ return new class extends clsCadastro
         $det_calendario_ano_letivo = LegacyCalendarYear::find($this->ref_cod_calendario_ano_letivo)?->getAttributes();
         $ref_cod_escola = $det_calendario_ano_letivo['ref_cod_escola'];
 
-        $this->campoRotulo(nome: 'ano', campo: 'Ano Letivo', valor: $this->ano);
+        $this->campoRotulo(nome: 'ano', campo: 'Ano letivo', valor: $this->ano);
         $this->campoOculto(nome: 'mes', valor: $this->mes);
         $this->campoOculto(nome: 'dia', valor: $this->dia);
 
@@ -197,7 +197,7 @@ return new class extends clsCadastro
 
         $this->campoLista(
             nome: 'ref_cod_calendario_dia_motivo',
-            campo: 'Calendário Dia Motivo',
+            campo: 'Calendário dia motivo',
             valor: $opcoes,
             default: $this->ref_cod_calendario_dia_motivo,
             obrigatorio: false
@@ -421,7 +421,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Calendário Dia';
+        $this->title = 'Calendário dia';
         $this->processoAp = 620;
     }
 };

@@ -15,7 +15,7 @@ beforeEach(function () {
 test('mostra o código e o nome da religião e os links de novo e de edição', function () {
     $this->get($this->url)
         ->assertOk()
-        ->assertSeeInOrder(['Religião', (string) $this->religion->getKey(), 'Nome Religião', 'Registro Alfa'])
+        ->assertSeeInOrder(['Religião', (string) $this->religion->getKey(), 'Nome religião', 'Registro Alfa'])
         ->assertSee('educar_religiao_cad.php?cod_religiao=' . $this->religion->getKey(), false)
         ->assertSee('educar_religiao_lst.php', false);
 });

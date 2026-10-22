@@ -431,7 +431,7 @@ return new class extends clsCadastro
 
         $this->campoTexto(nome: 'sgl_turma', campo: _cl(key: 'turma.detalhe.sigla'), valor: $this->sgl_turma, tamanhovisivel: 15, tamanhomaximo: 15);
 
-        $this->campoNumero(nome: 'max_aluno', campo: 'Máximo de Alunos', valor: $this->max_aluno, tamanhovisivel: 3, tamanhomaximo: 3, obrigatorio: true);
+        $this->campoNumero(nome: 'max_aluno', campo: 'Máximo de alunos', valor: $this->max_aluno, tamanhovisivel: 3, tamanhomaximo: 3, obrigatorio: true);
 
         unset($opcoes);
         if (!is_null(value: $this->ref_cod_serie)) {
@@ -573,10 +573,10 @@ return new class extends clsCadastro
             desabilitado: null
         );
 
-        $this->campoTabelaInicio(nome: 'turma_modulo', titulo: 'Etapas', arr_campos: ['Data inicial', 'Data final', 'Dias Letivos'], arr_valores: $this->turma_modulo);
+        $this->campoTabelaInicio(nome: 'turma_modulo', titulo: 'Etapas', arr_campos: ['Data inicial', 'Data final', 'Dias letivos'], arr_valores: $this->turma_modulo);
 
-        $this->campoData(nome: 'data_inicio', campo: 'Data Início', valor: $this->data_inicio);
-        $this->campoData(nome: 'data_fim', campo: 'Data Fim', valor: $this->data_fim);
+        $this->campoData(nome: 'data_inicio', campo: 'Data início', valor: $this->data_inicio);
+        $this->campoData(nome: 'data_fim', campo: 'Data fim', valor: $this->data_fim);
         $this->campoTexto(nome: 'dias_letivos', campo: 'Dias Letivos', valor: $this->dias_letivos_, tamanhovisivel: 9);
 
         $this->campoTabelaFim();
@@ -625,7 +625,7 @@ return new class extends clsCadastro
         ], $etapas_agregada
         );
 
-        $options = ['label' => 'Etapa Agregada', 'resources' => $etapas_agregada, 'value' => $this->etapa_agregada, 'required' => false, 'size' => 70];
+        $options = ['label' => 'Etapa agregada', 'resources' => $etapas_agregada, 'value' => $this->etapa_agregada, 'required' => false, 'size' => 70];
         $this->inputsHelper()->select(attrName: 'etapa_agregada', inputOptions: $options);
 
         $etapas_educacenso = loadJson(file: 'educacenso_json/etapas_ensino.json');
@@ -709,7 +709,7 @@ return new class extends clsCadastro
         ];
 
         $options = [
-            'label' => 'Turma de Educação Especial (classe especial)',
+            'label' => 'Turma de educação especial (classe especial)',
             'resources' => $resources,
             'value' => (string) $this->classe_especial,
             'required' => false,
@@ -718,7 +718,7 @@ return new class extends clsCadastro
         $this->inputsHelper()->select(attrName: 'classe_especial', inputOptions: $options);
 
         $options = [
-            'label' => 'Turma de Formação por Alternância (proposta pedagógica de formação por alternância: tempo-escola e tempo-comunidade)',
+            'label' => 'Turma de formação por alternância (proposta pedagógica de formação por alternância: tempo-escola e tempo-comunidade)',
             'resources' => $resources,
             'value' => (string) $this->formacao_alternancia,
             'required' => false,
@@ -727,7 +727,7 @@ return new class extends clsCadastro
         $this->inputsHelper()->select(attrName: 'formacao_alternancia', inputOptions: $options);
 
         $options = [
-            'label' => 'Turma de Educação Bilíngue de Surdos (classe bilíngue de surdos)',
+            'label' => 'Turma de educação bilíngue de surdos (classe bilíngue de surdos)',
             'resources' => $resources,
             'value' => $this->classe_com_lingua_brasileira_sinais,
             'required' => $obrigarCamposCenso,
@@ -800,7 +800,7 @@ return new class extends clsCadastro
         $this->inputsHelper()->integer(
             attrName: 'codigo_inep_matutino',
             inputOptions: [
-                'label' => 'Código INEP - Turno Matutino',
+                'label' => 'Código INEP - Turno matutino',
                 'label_hint' => 'Somente números',
                 'placeholder' => 'INEP',
                 'required' => false,
@@ -829,7 +829,7 @@ return new class extends clsCadastro
 
         $this->campoHora(
             nome: 'hora_final_matutino',
-            campo: 'Hora Final do turno MATUTINO',
+            campo: 'Hora final do turno MATUTINO',
             valor: $this->hora_final_matutino,
         );
 
@@ -842,7 +842,7 @@ return new class extends clsCadastro
         $this->inputsHelper()->integer(
             attrName: 'codigo_inep_vespertino',
             inputOptions: [
-                'label' => 'Código INEP - Turno Vespertino',
+                'label' => 'Código INEP - Turno vespertino',
                 'label_hint' => 'Somente números',
                 'placeholder' => 'INEP',
                 'required' => false,
@@ -871,7 +871,7 @@ return new class extends clsCadastro
 
         $this->campoHora(
             nome: 'hora_final_vespertino',
-            campo: 'Hora Final do turno VESPERTINO',
+            campo: 'Hora final do turno VESPERTINO',
             valor: $this->hora_final_vespertino,
         );
 

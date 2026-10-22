@@ -34,7 +34,7 @@ return new class extends clsListagem
 
         $this->addCabecalhos([
             'Nome',
-            'Sigla Uf',
+            'Sigla UF',
             'Pais',
         ]);
 

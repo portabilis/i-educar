@@ -28,7 +28,7 @@ return new class extends clsDetalhe
         }
 
         if ($registro['id']) {
-            $this->addDetalhe(detalhe: ['Código Regional', "{$registro['id']}"]);
+            $this->addDetalhe(detalhe: ['Código regional', "{$registro['id']}"]);
         }
         if ($registro['name']) {
             $this->addDetalhe(detalhe: ['Nome', "{$registro['name']}"]);
@@ -47,7 +47,7 @@ return new class extends clsDetalhe
         $this->url_cancelar = 'educar_regional_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Detalhe da Regional', breadcrumbs: [
+        $this->breadcrumb(currentPage: 'Detalhe da regional', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
     }

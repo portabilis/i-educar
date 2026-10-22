@@ -24,7 +24,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Tipo Ensino - Detalhe';
+        $this->titulo = 'Tipo ensino - Detalhe';
 
         $this->cod_tipo_ensino = $_GET['cod_tipo_ensino'];
 
@@ -71,7 +71,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->title = 'Tipo Ensino';
+        $this->title = 'Tipo ensino';
         $this->processoAp = '558';
     }
 };

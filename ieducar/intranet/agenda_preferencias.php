@@ -52,7 +52,7 @@ return new class extends clsCadastro
         $this->nm_agenda = $agenda->nm_agenda;
 
         $this->campoOculto(nome: 'cod_agenda', valor: $this->cod_agenda);
-        $this->campoLista(nome: 'envia_alerta', campo: 'Envia Alerta', valor: ['Não', 'Sim'], default: $this->envia_alerta);
+        $this->campoLista(nome: 'envia_alerta', campo: 'Envia alerta', valor: ['Não', 'Sim'], default: $this->envia_alerta);
 
         $db->Consulta(consulta: "SELECT ref_cod_agenda FROM agenda_responsavel WHERE ref_ref_cod_pessoa_fj = '{$this->pessoa_logada}' AND principal = 1");
         if ($db->ProximoRegistro()) {

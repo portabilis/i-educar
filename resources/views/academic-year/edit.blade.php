@@ -48,7 +48,7 @@
         <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0" role="presentation">
             <tbody>
             <tr>
-                <td class="formdktd" colspan="2" height="24"><b>Ano Letivo em Lote</b></td>
+                <td class="formdktd" colspan="2" height="24"><b>Ano letivo em lote</b></td>
             </tr>
 
             <tr id="tr_nm_ano">
@@ -93,7 +93,7 @@
             </tr>
             <tr id="tr_nm_modulo">
                 <td class="formlttd" valign="top">
-                    <label for="ref_cod_modulo" class="form">Tipo de Etapa <span class="campo_obrigatorio">*</span></label>
+                    <label for="ref_cod_modulo" class="form">Tipo de etapa <span class="campo_obrigatorio">*</span></label>
                 </td>
                 <td class="formlttd" valign="top">
                     <select class="geral obrigatorio" name="ref_cod_modulo" id="ref_cod_modulo" style="width: 308px;">

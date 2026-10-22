@@ -68,11 +68,11 @@ return new class extends clsListagem
             $this->$var = $val === '' ? null : $val;
         }
         $this->addCabecalhos(coluna: [
-            'Nome do Servidor',
+            'Nome do servidor',
             'Matrícula',
             'Instituição',
         ]);
-        $this->campoTexto(nome: 'nome_servidor', campo: 'Nome Servidor', valor: $this->nome_servidor, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'nome_servidor', campo: 'Nome servidor', valor: $this->nome_servidor, tamanhovisivel: 30, tamanhomaximo: 255);
         $this->campoOculto(nome: 'tipo', valor: $_GET['tipo']);
         // Paginador
         $this->limite = 20;

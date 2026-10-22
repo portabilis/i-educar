@@ -144,7 +144,7 @@
             </tbody>
         </table>
         <div style="text-align: center">
-            <button class="btn-green" type="submit">Processar Atualização</button>
+            <button class="btn-green" type="submit">Processar atualização</button>
         </div>
     </form>
 @endsection
@@ -432,7 +432,7 @@
 
                     this.makeDialog({
                         content: modalContent,
-                        title: 'Confirmação de Atualização em Lote',
+                        title: 'Confirmação de atualização em lote',
                         maxWidth: 800,
                         width: 800,
                         modal: true,

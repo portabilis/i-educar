@@ -424,7 +424,7 @@ return new class extends clsCadastro
 
         $helperOptions = ['objectName' => 'curso_formacao_continuada'];
         $options = [
-            'label' => 'Outros cursos de formação continuada (Mínimo de 80 horas)',
+            'label' => 'Outros cursos de formação continuada (mínimo de 80 horas)',
             'required' => $obrigarCamposCenso,
             'options' => [
                 'values' => $this->curso_formacao_continuada,

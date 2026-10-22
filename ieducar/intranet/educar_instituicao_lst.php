@@ -54,10 +54,10 @@ return new class extends clsListagem
             $this->$var = ($val === '') ? null : $val;
         }
 
-        $this->addCabecalhos(['Nome da Instituição']);
+        $this->addCabecalhos(['Nome da instituição']);
 
         // outros Filtros
-        $this->campoTexto(nome: 'nm_instituicao', campo: 'Nome da Instituição', valor: $this->nm_instituicao, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'nm_instituicao', campo: 'Nome da instituição', valor: $this->nm_instituicao, tamanhovisivel: 30, tamanhomaximo: 255);
 
         // Paginador
         $this->limite = 20;

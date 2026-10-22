@@ -43,8 +43,8 @@ test('mostra os dados, o endereço e os telefones da empresa', function () {
 
     ($this->detail)($organization)
         ->assertSeeInOrder([
-            'Razão Social', 'Registro Alfa Ltda',
-            'Nome Fantasia', 'Fantasia Alfa',
+            'Razão social', 'Registro Alfa Ltda',
+            'Nome fantasia', 'Fantasia Alfa',
             'CNPJ', '12.345.678/0001-95',
             'Endereço', 'Avenida Central',
             'CEP', '88800123',
@@ -56,8 +56,8 @@ test('mostra os dados, o endereço e os telefones da empresa', function () {
             'Fax', '(48) 34320004',
             'Site', 'https://alfa.test',
             'E-mail', 'contato@alfa.test',
-            'Inscrição Estadual', '250123456',
-            'Capital Social', '150000',
+            'Inscrição estadual', '250123456',
+            'Capital social', '150000',
         ])
         ->assertSee('empresas_cad.php?idpes=' . $organization->getKey(), false)
         ->assertSee('empresas_lst.php', false);
@@ -66,7 +66,7 @@ test('mostra os dados, o endereço e os telefones da empresa', function () {
 test('sem inscrição estadual mostra "isento"', function () {
     $organization = ($this->organization)(['insc_estadual' => null]);
 
-    ($this->detail)($organization)->assertSeeInOrder(['Inscrição Estadual', 'isento']);
+    ($this->detail)($organization)->assertSeeInOrder(['Inscrição estadual', 'isento']);
 });
 
 test('não oferece novo nem editar a quem só pode visualizar', function () {
@@ -86,5 +86,5 @@ test('não oferece novo nem editar a quem só pode visualizar', function () {
 test('defeito: com uma empresa que não existe mostra a tela vazia', function () {
     $this->get('/intranet/empresas_det.php?cod_empresa=0')
         ->assertOk()
-        ->assertSeeInOrder(['Razão Social', 'Nome Fantasia', 'Inscrição Estadual', 'isento']);
+        ->assertSeeInOrder(['Razão social', 'Nome fantasia', 'Inscrição estadual', 'isento']);
 });

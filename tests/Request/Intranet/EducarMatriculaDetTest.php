@@ -49,7 +49,7 @@ test('mostra os dados da matrícula e da enturmação', function () {
     );
 
     ($this->detail)($registration)->assertSeeInOrder([
-        'Número Matrícula', (string) $registration->getKey(),
+        'Número matrícula', (string) $registration->getKey(),
         'Aluno', 'Ana Alves',
         'Instituição', $this->user->institution->nm_instituicao,
         'Escola', 'Escola Aurora',
@@ -58,7 +58,7 @@ test('mostra os dados da matrícula e da enturmação', function () {
         'Observações', 'Entrou por ordem judicial',
         'Turma', 'Turma Alfa',
         'Turno', 'Vespertino',
-        'Data Enturmação', '10/02/2030',
+        'Data enturmação', '10/02/2030',
         'Situação', 'Cursando',
         'Formando', 'Não',
     ], false);
@@ -80,14 +80,14 @@ test('a enturmação com turno integral não tem nome de turno próprio', functi
     $registration = ($this->enrolled)(['turma_turno_id' => $this->scenario->period(4)], ['turno_id' => 4]);
 
     ($this->detail)($registration)
-        ->assertSeeInOrder(['Turma', 'Turma Alfa', 'Turno', 'Data Enturmação'])
+        ->assertSeeInOrder(['Turma', 'Turma Alfa', 'Turno', 'Data enturmação'])
         ->assertDontSee('Integral');
 });
 
 test('sem turno próprio na enturmação mostra o turno da turma', function (int $shift, string $name) {
     $registration = ($this->enrolled)(['turma_turno_id' => $this->scenario->period($shift)]);
 
-    ($this->detail)($registration)->assertSeeInOrder(['Turno', $name, 'Data Enturmação']);
+    ($this->detail)($registration)->assertSeeInOrder(['Turno', $name, 'Data enturmação']);
 })->with([
     [1, 'Matutino'],
     [3, 'Noturno'],
@@ -117,7 +117,7 @@ test('sem enturmação deixa turma, turno e data em branco e não oferece dispen
     $registration = ($this->registration)(['dependencia' => true]);
 
     ($this->detail)($registration)
-        ->assertSeeInOrder(['Turma', 'Turno', 'Data Enturmação', 'Situação'])
+        ->assertSeeInOrder(['Turma', 'Turno', 'Data enturmação', 'Situação'])
         ->assertDontSee('educar_dispensa_disciplina_lst.php', false)
         ->assertDontSee('educar_disciplina_dependencia_lst.php', false);
 });
@@ -241,7 +241,7 @@ test('na matrícula com abandono mostra o motivo e oferece desfazer', function (
     ]);
 
     ($this->detail)($registration)
-        ->assertSeeInOrder(['Motivo - Deixou de Frequentar', 'Mudança de cidade', 'Observação', 'Não voltou das férias'])
+        ->assertSeeInOrder(['Motivo - Deixou de frequentar', 'Mudança de cidade', 'Observação', 'Não voltou das férias'])
         ->assertSee('showAlertTurnoDeixouFrequentar()', false)
         ->assertSee("deleteAbandono({$registration->getKey()})", false);
 });
@@ -249,7 +249,7 @@ test('na matrícula com abandono mostra o motivo e oferece desfazer', function (
 test('na matrícula com abandono sem motivo cadastrado deixa o motivo em branco', function () {
     $registration = ($this->enrolled)([], [], ['aprovado' => App_Model_MatriculaSituacao::ABANDONO]);
 
-    ($this->detail)($registration)->assertSee('Motivo - Deixou de Frequentar');
+    ($this->detail)($registration)->assertSee('Motivo - Deixou de frequentar');
 });
 
 test('na matrícula reclassificada mostra a descrição, resumida quando longa, e oferece desfazer', function () {

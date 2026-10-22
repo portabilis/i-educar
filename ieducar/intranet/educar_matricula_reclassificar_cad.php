@@ -385,7 +385,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Reclassificar Matrícula';
+        $this->title = 'Reclassificar matrícula';
         $this->processoAp = Process::RECLASSIFY_REGISTRATION;
     }
 };

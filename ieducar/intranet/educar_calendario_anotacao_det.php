@@ -36,7 +36,7 @@ return new class extends clsDetalhe
             $this->$var = ($val === '') ? null : $val;
         }
 
-        $this->titulo = 'Calendario Anotacao - Detalhe';
+        $this->titulo = 'Calendario anotacao - Detalhe';
 
         $this->cod_calendario_anotacao = $_GET['cod_calendario_anotacao'];
 
@@ -53,10 +53,10 @@ return new class extends clsDetalhe
         }
 
         if ($registro['cod_calendario_anotacao']) {
-            $this->addDetalhe(detalhe: ['Calendario Anotacão', e($registro['cod_calendario_anotacao'])]);
+            $this->addDetalhe(detalhe: ['Calendario anotacão', e($registro['cod_calendario_anotacao'])]);
         }
         if ($registro['nm_anotacao']) {
-            $this->addDetalhe(detalhe: ['Nome Anotacão', e($registro['nm_anotacao'])]);
+            $this->addDetalhe(detalhe: ['Nome anotacão', e($registro['nm_anotacao'])]);
         }
         if ($registro['descricao']) {
             $this->addDetalhe(detalhe: ['Descricão', e($registro['descricao'])]);
@@ -74,7 +74,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->title = 'Calendario Anotacao';
+        $this->title = 'Calendario anotacao';
         $this->processoAp = '620';
     }
 };

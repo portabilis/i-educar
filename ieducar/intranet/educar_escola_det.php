@@ -115,7 +115,7 @@ return new class extends clsDetalhe
         }
 
         if ($registro['ref_idpes']) {
-            $this->addDetalhe(detalhe: ['Razão Social', e($registro['ref_idpes'])]);
+            $this->addDetalhe(detalhe: ['Razão social', e($registro['ref_idpes'])]);
         }
 
         if (isset($place)) {

@@ -32,7 +32,7 @@ return new class extends clsListagem
 
     public function Gerar()
     {
-        $this->titulo = 'Motivo Transferência - Listagem';
+        $this->titulo = 'Motivo transferência - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;
@@ -108,7 +108,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->title = 'Motivo Transferência';
+        $this->title = 'Motivo transferência';
         $this->processoAp = '575';
     }
 };

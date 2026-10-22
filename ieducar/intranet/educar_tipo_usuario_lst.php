@@ -45,15 +45,15 @@ return new class extends clsListagem
 
     public function Gerar()
     {
-        $this->titulo = 'Tipo Usuario - Listagem';
+        $this->titulo = 'Tipo usuario - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;
         }
 
         $this->addCabecalhos(coluna: [
-            'Código Tipo Usuário',
-            'Tipo Usuário',
+            'Código tipo usuário',
+            'Tipo usuário',
             'Descrição',
             'Nível',
         ]);
@@ -66,7 +66,7 @@ return new class extends clsListagem
         }
 
         // outros Filtros
-        $this->campoTexto(nome: 'nm_tipo', campo: 'Nome Tipo', valor: $this->nm_tipo, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'nm_tipo', campo: 'Nome tipo', valor: $this->nm_tipo, tamanhovisivel: 30, tamanhomaximo: 255);
         $this->campoTexto(nome: 'descricao', campo: 'Descrição', valor: $this->descricao, tamanhovisivel: 30, tamanhomaximo: 255);
         $this->campoLista(nome: 'nivel', campo: 'Nível', valor: $array_nivel, default: $this->nivel, obrigatorio: false);
 
@@ -121,7 +121,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->title = 'Tipo Usuario';
+        $this->title = 'Tipo usuario';
         $this->processoAp = '554';
     }
 };

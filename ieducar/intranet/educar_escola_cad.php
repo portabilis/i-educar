@@ -662,7 +662,7 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'pessoaj_id', valor: $this->pessoaj_id);
 
         if ($this->pesquisaPessoaJuridica) {
-            $this->inputsHelper()->simpleSearchPessoaj(attrName: 'idpes', inputOptions: ['label' => 'Pessoa Jurídica']);
+            $this->inputsHelper()->simpleSearchPessoaj(attrName: 'idpes', inputOptions: ['label' => 'Pessoa jurídica']);
             $this->acao_enviar = false;
             $this->url_cancelar = false;
             $this->array_botao = ['Continuar', 'Cancelar'];
@@ -681,7 +681,7 @@ return new class extends clsCadastro
             $this->campoTexto(nome: 'fantasia', campo: 'Escola', valor: $this->fantasia, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
             $this->campoTexto(nome: 'sigla', campo: 'Sigla', valor: $this->sigla, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
             $options = [
-                'label' => 'Característica Escolar',
+                'label' => 'Característica escolar',
                 'value' => $this->caracteristica_escolar,
                 'resources' => SchoolCharacteristic::getDescriptiveValues()->prepend('Selecione', ''),
                 'required' => false,
@@ -932,7 +932,7 @@ return new class extends clsCadastro
             $resources = PoderPublicoConveniado::getDescriptiveValues();
 
             $options = [
-                'label' => 'Poder público responsável pela parceria ou convênio entre a Administração Pública e outras instituições',
+                'label' => 'Poder público responsável pela parceria ou convênio entre a administração pública e outras instituições',
                 'size' => 50,
                 'required' => false,
                 'options' => [
@@ -1272,7 +1272,7 @@ return new class extends clsCadastro
             $options = ['label' => 'Quantidade de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida', 'resources' => $resources, 'value' => $this->numero_salas_acessibilidade, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4];
             $this->inputsHelper()->integer(attrName: 'numero_salas_acessibilidade', inputOptions: $options);
 
-            $options = ['label' => 'Quantidade de salas de aula com Cantinho da Leitura para a Educação Infantil e o Ensino fundamental (Anos iniciais)', 'resources' => $resources, 'value' => $this->numero_salas_cantinho_leitura, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4];
+            $options = ['label' => 'Quantidade de salas de aula com cantinho da leitura para a educação infantil e o ensino fundamental (anos iniciais)', 'resources' => $resources, 'value' => $this->numero_salas_cantinho_leitura, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4];
             $this->inputsHelper()->integer(attrName: 'numero_salas_cantinho_leitura', inputOptions: $options);
 
             $helperOptions = ['objectName' => 'equipamentos'];
@@ -1342,10 +1342,10 @@ return new class extends clsCadastro
                 campo: '<b>Quantidade de equipamentos para ensino/aprendizagem</b>'
             );
 
-            $options = ['label' => 'Aparelho de Televisão', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
+            $options = ['label' => 'Aparelho de televisão', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer(attrName: 'televisoes', inputOptions: $options);
 
-            $options = ['label' => 'Projetor Multimídia (Data show)', 'resources' => $resources, 'value' => $this->projetores_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
+            $options = ['label' => 'Projetor multimídia (data show)', 'resources' => $resources, 'value' => $this->projetores_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
             $this->inputsHelper()->integer(attrName: 'projetores_digitais', inputOptions: $options);
 
             $options = ['label' => 'Aparelho de som', 'resources' => $resources, 'value' => $this->aparelhos_de_som, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => ''];
@@ -1519,7 +1519,7 @@ return new class extends clsCadastro
 
             $resources = SelectOptions::unidadesVinculadasEscola();
             $options = [
-                'label' => 'Unidade vinculada à Escola de Educação Básica ou Unidade Ofertante de Educação Superior',
+                'label' => 'Unidade vinculada à escola de educação básica ou unidade ofertante de educação superior',
                 'resources' => $resources,
                 'value' => $this->unidade_vinculada_outra_instituicao,
                 'size' => 70,
@@ -1542,7 +1542,7 @@ return new class extends clsCadastro
             $this->inputsHelper()->simpleSearchIes(attrName: null, inputOptions: $options, helperOptions: $helperOptions);
 
             $this->campoTabelaInicio('espacos', 'Espaços Escolares', [
-                'Espaço Escolar',
+                'Espaço escolar',
                 'Tamanho do espaço<br><font size=-1; color=gray>Em metros quadrados</font>',
             ], $this->espaco_escolares);
             $this->campoTexto(nome: 'espaco_escolar_nome', campo: 'Espaço Escolar', valor: $this->espaco_escolar_nome);

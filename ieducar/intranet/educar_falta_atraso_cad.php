@@ -119,8 +119,8 @@ return new class extends clsCadastro
             $this->qtd_min = null;
         }
 
-        $this->campoNumero(nome: 'qtd_horas', campo: 'Quantidade de Horas', valor: $this->qtd_horas, tamanhovisivel: 30, tamanhomaximo: 255);
-        $this->campoNumero(nome: 'qtd_min', campo: 'Quantidade de Minutos', valor: $this->qtd_min, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoNumero(nome: 'qtd_horas', campo: 'Quantidade de horas', valor: $this->qtd_horas, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoNumero(nome: 'qtd_min', campo: 'Quantidade de minutos', valor: $this->qtd_min, tamanhovisivel: 30, tamanhomaximo: 255);
 
         $opcoes = [
             '' => 'Selecione',

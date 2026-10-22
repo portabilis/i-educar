@@ -74,7 +74,7 @@ return new class extends clsCadastro
         include 'include/pmieducar/educar_campo_lista.php';
 
         // text
-        $this->campoTexto(nome: 'nm_nivel', campo: 'Nível Ensino', valor: $this->nm_nivel, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoTexto(nome: 'nm_nivel', campo: 'Nível ensino', valor: $this->nm_nivel, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
         $this->campoMemo(nome: 'descricao', campo: 'Descrição', valor: $this->descricao, colunas: 60, linhas: 5);
     }
 
@@ -152,7 +152,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Nível Ensino';
+        $this->title = 'Nível ensino';
         $this->processoAp = '571';
     }
 };

@@ -32,7 +32,7 @@ return new class extends clsListagem
 
     public function Gerar()
     {
-        $this->titulo = 'Tipo Dispensa - Listagem';
+        $this->titulo = 'Tipo dispensa - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;
@@ -53,7 +53,7 @@ return new class extends clsListagem
         include 'include/pmieducar/educar_campo_lista.php';
 
         // outros Filtros
-        $this->campoTexto('nm_tipo', 'Tipo Dispensa', $this->nm_tipo, 30, 255, false);
+        $this->campoTexto('nm_tipo', 'Tipo dispensa', $this->nm_tipo, 30, 255, false);
 
         // Paginador
         $this->limite = 20;
@@ -107,7 +107,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->title = 'Tipo Dispensa';
+        $this->title = 'Tipo dispensa';
         $this->processoAp = '577';
     }
 };

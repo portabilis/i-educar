@@ -82,7 +82,7 @@ return new class extends clsDetalhe
         $registro['ref_cod_escola'] = $nomesEscola;
 
         if ($registro['ref_cod_tipo_usuario']) {
-            $this->addDetalhe(detalhe: ['Tipo Usuário', e($registro['ref_cod_tipo_usuario'])]);
+            $this->addDetalhe(detalhe: ['Tipo usuário', e($registro['ref_cod_tipo_usuario'])]);
         }
 
         if ($registro['ref_cod_instituicao']) {

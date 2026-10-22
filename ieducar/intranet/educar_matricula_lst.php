@@ -211,7 +211,7 @@ return new class extends clsListagem
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->acao = "go(\"educar_matricula_cad.php?ref_cod_aluno={$this->ref_cod_aluno}\")";
-            $this->nome_acao = 'Nova Matrícula';
+            $this->nome_acao = 'Nova matrícula';
         }
 
         $this->array_botao[] = 'Voltar';

@@ -423,7 +423,7 @@
                 width: 560,
                 modal: true,
                 resizable: false,
-                title: 'Editar Observação',
+                title: 'Editar observação',
                 buttons: {
                     "Salvar": function () {
                         var observacao = $editTextarea.val().trim();
@@ -477,7 +477,7 @@
                 width: 560,
                 modal: true,
                 resizable: false,
-                title: 'Confirmar Exclusão',
+                title: 'Confirmar exclusão',
                 buttons: {
                     "Excluir": function () {
                         if (!currentMessageId) {
