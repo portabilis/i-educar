@@ -162,9 +162,11 @@ Antes de abrir seu PR (pull request) certique-se que:
 - Se for inevitável criar vários commits intermediários, por favor execute um
   [squash](https://git-scm.com/book/pt-br/v1/Ferramentas-do-Git-Reescrevendo-o-Hist%C3%B3rico#Achatando-um-Commit)
   antes de abrir seu PR;
-- As mensagens de seus commits são claras e descrevem bem o trabalho. Para
-  maiores dicas sobre como escrever mensagens de commit adequadas, veja
-  [este guia](https://chris.beams.io/posts/git-commit/).
+- As mensagens de seus commits são claras, descrevem bem o trabalho e seguem o
+  padrão [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/)
+  (veja [Mensagens de commit](#mensagens-de-commit));
+- O [CHANGELOG.md](CHANGELOG.md) foi atualizado (veja
+  [Atualizando o changelog](#atualizando-o-changelog)).
 
 Caso seu PR não atenda a uma destas demandas ele poderá ser fechado. Isto inclui
 PRs que tentam resolver problemas reais mas que contém código cheio de erros ou
@@ -173,6 +175,61 @@ dificultando o trabalho de outros membros da comunidade que podem ajudar
 revisando as mudanças, pedimos que PRs sejam abertos quando sua solução estiver
 a mais completa possível. Por isso é imprescindível usar a discussão nas issues
 para a criação de soluções mais assertivas.
+
+#### Mensagens de commit
+
+As mensagens de commit seguem o padrão
+[Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/), que é
+validado automaticamente em cada PR. A mensagem começa com o tipo da mudança,
+opcionalmente seguido do escopo entre parênteses, e uma descrição curta:
+
+```
+fix(turma): valida a ordem dos horários
+feat: adiciona cancelamento de matrícula em lote
+docs: atualiza o guia de instalação
+```
+
+Os tipos aceitos são `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `build`,
+`perf`, `ci`, `chore` e `revert`. Para mais dicas sobre como escrever boas
+mensagens de commit, veja [este guia](https://chris.beams.io/posts/git-commit/).
+
+#### Atualizando o changelog
+
+O [CHANGELOG.md](CHANGELOG.md) segue o padrão
+[Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/). Todo PR com uma
+mudança perceptível para quem usa, instala ou desenvolve o i-Educar deve
+adicionar uma linha na seção `[Unreleased]`, no topo do arquivo, dentro da
+categoria correspondente:
+
+| Categoria    | Quando usar                                   | Tipo do commit      |
+|--------------|-----------------------------------------------|---------------------|
+| `Added`      | Novas funcionalidades.                        | `feat`              |
+| `Changed`    | Mudanças em funcionalidades existentes.       | `refactor`, `perf`… |
+| `Deprecated` | Funcionalidades que serão removidas em breve. |                     |
+| `Removed`    | Funcionalidades removidas.                    |                     |
+| `Fixed`      | Correções de bugs.                            | `fix`               |
+| `Security`   | Correções de vulnerabilidades.                |                     |
+
+A linha descreve a mudança para quem vai ler, no presente, e termina com o link
+do PR. Crie a categoria se ela ainda não existir em `[Unreleased]`:
+
+```markdown
+## [Unreleased]
+
+### Fixed
+
+- Valida a ordem dos horários no cadastro de turma ([#1223](https://github.com/portabilis/i-educar/pull/1223))
+```
+
+PRs que não alteram o comportamento do sistema (como testes, documentação,
+CI ou atualizações de dependências feitas pelo Dependabot) não precisam
+de entrada.
+
+Ao publicar uma versão, os mantenedores renomeiam a seção `[Unreleased]` para
+o número e a data da versão (`## [2.12.0] - AAAA-MM-DD`), criam uma nova seção
+`[Unreleased]` vazia acima dela e atualizam os links de comparação no final do
+arquivo. Correções aplicadas em versões já publicadas (backports) entram na
+seção da nova versão de correção do respectivo branch.
 
 #### Sobre mudanças cosméticas
 
