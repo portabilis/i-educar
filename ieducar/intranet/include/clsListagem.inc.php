@@ -96,6 +96,10 @@ class clsListagem extends clsCampos
     // campos na gaveta de filtros.
     public $filtrosEmGaveta = true;
 
+    public $filtrosBasicos = [];
+
+    public $filtrosAvancados = [];
+
     public function __construct()
     {
         parent::__construct();
@@ -338,7 +342,7 @@ HTML;
                     </tr>';
                 // @codeCoverageIgnoreEnd
             } else {
-                $retorno .= $this->MakeCampos();
+                $retorno .= $this->renderFiltros();
             }
 
             $retorno .= '
@@ -674,6 +678,43 @@ HTML;
             <!-- listagem end -->';
 
         Portabilis_View_Helper_Application::embedJavascriptToFixupFieldsWidth($this);
+
+        return $retorno;
+    }
+
+    private function renderFiltros(): string
+    {
+        if (empty($this->filtrosBasicos) && empty($this->filtrosAvancados)) {
+            return $this->MakeCampos();
+        }
+
+        $camposBasicos = array_intersect_key($this->campos, array_flip($this->filtrosBasicos));
+        $camposAvancados = array_intersect_key($this->campos, array_flip($this->filtrosAvancados));
+        $filtrosAvancadosAtivos = array_filter(
+            $this->filtrosAvancados,
+            fn ($filtro) => isset($_GET[$filtro]) && $_GET[$filtro] !== ''
+        );
+        $expandido = empty($filtrosAvancadosAtivos) ? 'false' : 'true';
+        $oculto = empty($filtrosAvancadosAtivos) ? ' hidden' : '';
+
+        $retorno = "
+            <tbody id='filtros-basicos' data-filter-section='basic'>
+                <tr>
+                    <td class='formmdtd' colspan='2'><b>Filtros básicos</b></td>
+                </tr>";
+        $retorno .= $this->MakeCampos($camposBasicos);
+        $retorno .= "
+            </tbody>
+            <tbody data-filter-section='advanced-toggle'>
+                <tr>
+                    <td class='formlttd' colspan='2'>
+                        <button type='button' aria-expanded='{$expandido}' aria-controls='filtros-avancados' onclick=\"var filtros = document.getElementById('filtros-avancados'); filtros.hidden = !filtros.hidden; this.setAttribute('aria-expanded', filtros.hidden ? 'false' : 'true');\">Filtros avançados</button>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody id='filtros-avancados' data-filter-section='advanced'{$oculto}>";
+        $retorno .= $this->MakeCampos($camposAvancados);
+        $retorno .= '</tbody>';
 
         return $retorno;
     }

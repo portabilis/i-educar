@@ -53,6 +53,43 @@ test('mostra o nome social antes do nome de registro', function () {
         ->assertSee('Nina Alves<br> <i>Nome de registro: </i>Ana Alves', false);
 });
 
+test('organiza os filtros básicos e avançados em seções distintas', function () {
+    $response = ($this->list)();
+    $html = $response->getContent();
+
+    $inicioBasicos = strpos($html, "data-filter-section='basic'");
+    $fimBasicos = strpos($html, '</tbody>', $inicioBasicos);
+    $filtrosBasicos = substr($html, $inicioBasicos, $fimBasicos - $inicioBasicos);
+
+    $inicioAvancados = strpos($html, "data-filter-section='advanced'", $fimBasicos);
+    $fimAvancados = strpos($html, '</tbody>', $inicioAvancados);
+    $filtrosAvancados = substr($html, $inicioAvancados, $fimAvancados - $inicioAvancados);
+
+    expect($filtrosBasicos)
+        ->toContain('tr_nome_aluno')
+        ->toContain('tr_cpf_aluno')
+        ->toContain('tr_situacao_matricula_id')
+        ->toContain('tr_ano')
+        ->toContain('tr_ref_cod_escola')
+        ->not->toContain('tr_data_nascimento');
+
+    expect($filtrosAvancados)
+        ->toContain('tr_cod_aluno')
+        ->toContain('tr_data_nascimento')
+        ->toContain('tr_ref_cod_instituicao')
+        ->toContain('tr_ref_cod_curso')
+        ->toContain('tr_ref_cod_serie')
+        ->not->toContain('tr_nome_aluno');
+});
+
+test('mostra os filtros básicos e mantém os avançados recolhidos', function () {
+    ($this->list)()
+        ->assertSee('Filtros básicos')
+        ->assertSee('Filtros avançados')
+        ->assertSee("aria-expanded='false'", false)
+        ->assertSee("<tbody id='filtros-avancados' data-filter-section='advanced' hidden>", false);
+});
+
 test('filtra por cada campo da pessoa', function (Closure $query) {
     $ana = StudentScenario::named('Ana Alves', ['aluno_estado_id' => '111.222.333-4'], ['data_nasc' => '2015-04-20', 'cpf' => '12345678909']);
     $ana->mother('Marta Alves');
