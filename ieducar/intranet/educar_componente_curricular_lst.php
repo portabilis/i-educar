@@ -34,7 +34,7 @@ return new class extends clsListagem
             'Nome',
             'Abreviatura',
             'Base',
-            'Área de Conhecimento',
+            'Área de conhecimento',
         ];
 
         $obj_permissoes = new clsPermissoes;
@@ -53,7 +53,7 @@ return new class extends clsListagem
         $tipos = Portabilis_Array_Utils::insertIn(key: null, value: 'Selecionar', array: $tipos);
 
         $options = [
-            'label' => 'Base Curricular',
+            'label' => 'Base curricular',
             'placeholder' => 'Base curricular',
             'value' => $this->tipo_base,
             'resources' => $tipos,

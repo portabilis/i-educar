@@ -197,13 +197,13 @@ return new class extends clsCadastro
 
         $lista_pais_origem = Country::query()->orderBy('name')->pluck(column: 'name', key: 'id')->prepend(value: 'Selecione um país', key: '');
 
-        $this->campoLista(nome: 'idpais', campo: 'País da Escola', valor: $lista_pais_origem, default: $countryId ?? 45, obrigatorio: false);
+        $this->campoLista(nome: 'idpais', campo: 'País da escola', valor: $lista_pais_origem, default: $countryId ?? 45, obrigatorio: false);
 
         $lista_estado = ['' => 'Selecione um estado'] + State::getListKeyAbbreviation()->toArray();
 
-        $this->campoLista(nome: 'escola_uf', campo: 'Estado da Escola', valor: $lista_estado, default: $this->escola_uf, obrigatorio: false);
+        $this->campoLista(nome: 'escola_uf', campo: 'Estado da escola', valor: $lista_estado, default: $this->escola_uf, obrigatorio: false);
 
-        $options = ['label' => 'Cidade da Escola', 'required' => false];
+        $options = ['label' => 'Cidade da escola', 'required' => false];
 
         $helperOptions = [
             'objectName' => 'escola_cidade',
@@ -228,16 +228,16 @@ return new class extends clsCadastro
             $this->campoNumero(nome: 'posicao', campo: 'Posição', valor: $this->posicao, tamanhovisivel: 1, tamanhomaximo: 1, obrigatorio: false, descricao: 'Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2');
         }
 
-        $this->campoNumero(nome: 'carga_horaria', campo: 'Carga Horária', valor: $this->carga_horaria, tamanhovisivel: 8, tamanhomaximo: 8);
-        $this->campoCheck(nome: 'cb_faltas_globalizadas', campo: 'Faltas Globalizadas', valor: is_numeric($this->faltas_globalizadas) ? 'on' : '');
+        $this->campoNumero(nome: 'carga_horaria', campo: 'Carga horária', valor: $this->carga_horaria, tamanhovisivel: 8, tamanhomaximo: 8);
+        $this->campoCheck(nome: 'cb_faltas_globalizadas', campo: 'Faltas globalizadas', valor: is_numeric($this->faltas_globalizadas) ? 'on' : '');
         $this->inputsHelper()->integer(attrName: 'faltas_globalizadas', inputOptions: [
             'required' => false,
-            'label' => 'Faltas Globalizadas',
+            'label' => 'Faltas globalizadas',
             'value' => $this->faltas_globalizadas,
             'max_length' => 4,
             'size' => 4,
         ]);
-        $this->campoNumero(nome: 'dias_letivos', campo: 'Dias Letivos', valor: $this->dias_letivos, tamanhovisivel: 3, tamanhomaximo: 3);
+        $this->campoNumero(nome: 'dias_letivos', campo: 'Dias letivos', valor: $this->dias_letivos, tamanhovisivel: 3, tamanhomaximo: 3);
         $this->campoMonetario(nome: 'frequencia', campo: 'Frequência', valor: $this->frequencia, tamanhovisivel: 8, tamanhomaximo: 6);
         $this->campoCheck(nome: 'extra_curricular', campo: 'Extra-Curricular', valor: $this->extra_curricular);
         $this->campoCheck(nome: 'aceleracao', campo: 'Aceleração', valor: $this->aceleracao);
@@ -490,7 +490,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Histórico Escolar';
+        $this->title = 'Histórico escolar';
         $this->processoAp = '578';
     }
 };

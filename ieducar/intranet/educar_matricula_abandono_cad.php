@@ -99,7 +99,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Deixou de Frequentar Matrícula';
+        $this->title = 'Deixou de frequentar matrícula';
         $this->processoAp = '578';
     }
 };

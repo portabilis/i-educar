@@ -36,7 +36,7 @@ return new class extends clsListagem
 
     public function Gerar()
     {
-        $this->titulo = 'Comunicados Escolares - Listagem';
+        $this->titulo = 'Comunicados escolares - Listagem';
 
         $this->titulo_busca = request()->string('titulo_busca');
 
@@ -138,14 +138,14 @@ return new class extends clsListagem
         }
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Listagem de Comunicados Escolares', breadcrumbs: [
+        $this->breadcrumb(currentPage: 'Listagem de comunicados escolares', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'Comunicados Escolares';
+        $this->title = 'Comunicados escolares';
         $this->processoAp = SchoolNotice::PROCESS;
     }
 };

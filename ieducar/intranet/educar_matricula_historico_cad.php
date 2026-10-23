@@ -52,7 +52,7 @@ return new class extends clsCadastro
         $this->campoRotulo(nome: 'ano', campo: 'Ano', valor: $matricula->ano);
         $this->campoRotulo(nome: 'nm_instituicao', campo: 'Instituição', valor: $instituicao->nm_instituicao);
         $this->campoRotulo(nome: 'nm_escola', campo: 'Escola', valor: $escola->name);
-        $this->campoRotulo(nome: 'nm_pessoa', campo: 'Nome do Aluno', valor: $enturmacao->studentName);
+        $this->campoRotulo(nome: 'nm_pessoa', campo: 'Nome do aluno', valor: $enturmacao->studentName);
         $this->campoRotulo(nome: 'sequencial', campo: 'Sequencial', valor: $enturmacao->sequencial);
 
         $situacao = RegistrationStatus::getRegistrationAndEnrollmentStatus()[$matricula->aprovado] ?? '';

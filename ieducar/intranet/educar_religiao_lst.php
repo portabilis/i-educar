@@ -55,13 +55,13 @@ return new class extends clsListagem
         }
 
         $this->addCabecalhos(coluna: [
-            'Nome Religião',
+            'Nome religião',
         ]);
 
         // Filtros de Foreign Keys
 
         // outros Filtros
-        $this->campoTexto(nome: 'nm_religiao', campo: 'Nome Religião', valor: $this->nm_religiao, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'nm_religiao', campo: 'Nome religião', valor: $this->nm_religiao, tamanhovisivel: 30, tamanhomaximo: 255);
 
         // Paginador
         $this->limite = 20;

@@ -95,7 +95,7 @@ return new class extends clsListagem
         $this->campoOculto('ref_cod_matricula', $this->ref_cod_matricula);
 
         $this->addCabecalhos([
-            'Tipo de Ocorrência Disciplinar',
+            'Tipo de ocorrência disciplinar',
             'Série ',
             'Turma',
         ]);

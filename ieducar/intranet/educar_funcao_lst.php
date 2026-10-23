@@ -42,7 +42,7 @@ return new class extends clsListagem
         }
 
         $lista_busca = [
-            'Nome Funcão',
+            'Nome funcão',
             'Abreviatura',
             'Permitir vincular a turmas?',
         ];
@@ -59,7 +59,7 @@ return new class extends clsListagem
         include 'include/pmieducar/educar_campo_lista.php';
 
         // outros Filtros
-        $this->campoTexto(nome: 'nm_funcao', campo: 'Nome Função', valor: $this->nm_funcao, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'nm_funcao', campo: 'Nome função', valor: $this->nm_funcao, tamanhovisivel: 30, tamanhomaximo: 255);
         $this->campoTexto(nome: 'abreviatura', campo: 'Abreviatura', valor: $this->abreviatura, tamanhovisivel: 30, tamanhomaximo: 255);
         $opcoes = [
             '' => 'Selecione',

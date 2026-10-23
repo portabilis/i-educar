@@ -37,8 +37,8 @@ return new class extends clsDetalhe
             }
         }
 
-        $this->addDetalhe(detalhe: ['Razão Social', e($razao_social)]);
-        $this->addDetalhe(detalhe: ['Nome Fantasia', e($nm_pessoa)]);
+        $this->addDetalhe(detalhe: ['Razão social', e($razao_social)]);
+        $this->addDetalhe(detalhe: ['Nome fantasia', e($nm_pessoa)]);
         $this->addDetalhe(detalhe: ['CNPJ', empty($id_federal) ? '' : int2CNPJ(int: $id_federal)]);
         $this->addDetalhe(detalhe: ['Endereço', e($endereco)]);
         $this->addDetalhe(detalhe: ['CEP', e($cep)]);
@@ -56,8 +56,8 @@ return new class extends clsDetalhe
         if (!$ins_est) {
             $ins_est = 'isento';
         }
-        $this->addDetalhe(detalhe: ['Inscrição Estadual', e($ins_est)]);
-        $this->addDetalhe(detalhe: ['Capital Social', e($capital_social)]);
+        $this->addDetalhe(detalhe: ['Inscrição estadual', e($ins_est)]);
+        $this->addDetalhe(detalhe: ['Capital social', e($capital_social)]);
 
         $obj_permissao = new clsPermissoes;
 

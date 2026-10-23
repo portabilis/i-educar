@@ -31,7 +31,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Nível Ensino - Detalhe';
+        $this->titulo = 'Nível ensino - Detalhe';
 
         $this->cod_nivel_ensino = $_GET['cod_nivel_ensino'];
 
@@ -57,7 +57,7 @@ return new class extends clsDetalhe
             }
         }
         if ($registro['nm_nivel']) {
-            $this->addDetalhe(detalhe: ['Nível Ensino', e($registro['nm_nivel'])]);
+            $this->addDetalhe(detalhe: ['Nível ensino', e($registro['nm_nivel'])]);
         }
         if ($registro['descricao']) {
             $this->addDetalhe(detalhe: ['Descrição', e($registro['descricao'])]);
@@ -77,7 +77,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->title = 'Nivel Ensino';
+        $this->title = 'Nivel ensino';
         $this->processoAp = '571';
     }
 };

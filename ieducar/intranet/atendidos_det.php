@@ -15,7 +15,7 @@ return new class extends clsDetalhe
 {
     public function Gerar()
     {
-        $this->titulo = 'Detalhe da Pessoa';
+        $this->titulo = 'Detalhe da pessoa';
 
         $cod_pessoa = (int) $this->getQueryString(name: 'cod_pessoa');
 
@@ -46,7 +46,7 @@ return new class extends clsDetalhe
         $this->addDetalhe(detalhe: ['CPF', $fisica?->cpf]);
 
         if ($fisica?->data_nasc) {
-            $this->addDetalhe(detalhe: ['Data de Nascimento', dataFromPgToBr(data_original: $fisica->data_nasc)]);
+            $this->addDetalhe(detalhe: ['Data de nascimento', dataFromPgToBr(data_original: $fisica->data_nasc)]);
         }
 
         // Cor/Raça.

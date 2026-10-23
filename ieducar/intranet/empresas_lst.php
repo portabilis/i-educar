@@ -9,10 +9,10 @@ return new class extends clsListagem
     {
         $this->titulo = 'Empresas';
 
-        $this->addCabecalhos(coluna: ['Razão Social', 'Nome Fantasia']);
+        $this->addCabecalhos(coluna: ['Razão social', 'Nome fantasia']);
 
-        $this->campoTexto(nome: 'fantasia', campo: 'Nome Fantasia', valor: $_GET['fantasia'], tamanhovisivel: '50', tamanhomaximo: '255');
-        $this->campoTexto(nome: 'razao_social', campo: 'Razão Social', valor: $_GET['razao_social'], tamanhovisivel: '50', tamanhomaximo: '255');
+        $this->campoTexto(nome: 'fantasia', campo: 'Nome fantasia', valor: $_GET['fantasia'], tamanhovisivel: '50', tamanhomaximo: '255');
+        $this->campoTexto(nome: 'razao_social', campo: 'Razão social', valor: $_GET['razao_social'], tamanhovisivel: '50', tamanhomaximo: '255');
         $this->campoCnpj(nome: 'id_federal', campo: 'CNPJ', valor: $_GET['id_federal']);
 
         // Paginador

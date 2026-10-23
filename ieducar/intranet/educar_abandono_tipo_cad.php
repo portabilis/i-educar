@@ -68,7 +68,7 @@ return new class extends clsCadastro
         include 'include/pmieducar/educar_campo_lista.php';
 
         // text
-        $this->campoTexto(nome: 'nome', campo: 'Motivo - Deixou de Frequentar', valor: $this->nome, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoTexto(nome: 'nome', campo: 'Motivo - Deixou de frequentar', valor: $this->nome, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
     }
 
     public function Novo()
@@ -134,7 +134,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Motivo - Deixou de Frequentar';
+        $this->title = 'Motivo - Deixou de frequentar';
         $this->processoAp = '950';
     }
 };

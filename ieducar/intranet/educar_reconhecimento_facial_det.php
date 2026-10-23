@@ -15,7 +15,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Reconhecimento Facial - Detalhe';
+        $this->titulo = 'Reconhecimento facial - Detalhe';
         $this->cod_aluno = request('ref_cod_aluno');
 
         $student = LegacyStudent::find($this->cod_aluno);
@@ -28,7 +28,7 @@ return new class extends clsDetalhe
             );
         }
 
-        $this->addDetalhe(detalhe: ['Código Aluno', $student->getKey()]);
+        $this->addDetalhe(detalhe: ['Código aluno', $student->getKey()]);
 
         $this->addDetalhe(detalhe: ['Nome', $student->name]);
 
@@ -56,7 +56,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->title = 'Reconhecimento Facial - Detalhes';
+        $this->title = 'Reconhecimento facial - Detalhes';
         $this->processoAp = '5781';
     }
 

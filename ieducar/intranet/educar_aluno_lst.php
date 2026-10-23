@@ -91,12 +91,12 @@ return new class extends clsListagem
             desc: 'Ativar busca por similaridade',
             dica: 'Exibe grafias parecidas com o nome do aluno que você está buscando'
         );
-        $this->campoData(nome: 'data_nascimento', campo: 'Data de Nascimento', valor: $this->data_nascimento);
+        $this->campoData(nome: 'data_nascimento', campo: 'Data de nascimento', valor: $this->data_nascimento);
         $this->campoCpf(nome: 'cpf_aluno', campo: 'CPF', valor: $this->cpf_aluno);
         $this->campoTexto(nome: 'rg_aluno', campo: 'RG', valor: $this->rg_aluno);
-        $this->campoTexto(nome: 'nome_pai', campo: 'Nome do Pai', valor: $this->nome_pai, tamanhovisivel: 50, tamanhomaximo: 255);
-        $this->campoTexto(nome: 'nome_mae', campo: 'Nome da Mãe', valor: $this->nome_mae, tamanhovisivel: 50, tamanhomaximo: 255);
-        $this->campoTexto(nome: 'nome_responsavel', campo: 'Nome do Responsável', valor: $this->nome_responsavel, tamanhovisivel: 50, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'nome_pai', campo: 'Nome do pai', valor: $this->nome_pai, tamanhovisivel: 50, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'nome_mae', campo: 'Nome da mãe', valor: $this->nome_mae, tamanhovisivel: 50, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'nome_responsavel', campo: 'Nome do responsável', valor: $this->nome_responsavel, tamanhovisivel: 50, tamanhomaximo: 255);
         $this->campoRotulo(nome: 'filtros_matricula', campo: '<b>Filtros de alunos</b>');
 
         $this->inputsHelper()->integer(attrName: 'ano', inputOptions: ['required' => false, 'value' => $this->ano, 'max_length' => 4, 'label_hint' => 'Retorna alunos com matrículas no ano selecionado']);
@@ -107,12 +107,12 @@ return new class extends clsListagem
 
         $obj_permissoes = new clsPermissoes;
 
-        $cabecalhos = ['Código Aluno',
+        $cabecalhos = ['Código aluno',
             $configuracoes['mostrar_codigo_inep_aluno'] === 1 ? 'Código INEP' : null,
-            'Nome do Aluno',
-            'Nome da Mãe',
-            'Nome do Responsável',
-            'CPF Responsável',
+            'Nome do aluno',
+            'Nome da mãe',
+            'Nome do responsável',
+            'CPF responsável',
         ];
 
         $this->addCabecalhos(coluna: array_filter(array: $cabecalhos));

@@ -26,7 +26,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Tipo Dispensa - Detalhe';
+        $this->titulo = 'Tipo dispensa - Detalhe';
 
         $this->cod_tipo_dispensa = $_GET['cod_tipo_dispensa'];
 
@@ -70,7 +70,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->title = 'Tipo Dispensa';
+        $this->title = 'Tipo dispensa';
         $this->processoAp = '577';
     }
 };

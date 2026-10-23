@@ -154,7 +154,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Calendário Dia Motivo';
+        $this->title = 'Calendário dia motivo';
         $this->processoAp = '576';
     }
 };

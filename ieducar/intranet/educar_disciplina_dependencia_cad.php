@@ -169,7 +169,7 @@ return new class extends clsCadastro
             $this->ref_sequencial = $enturmacao->sequencial;
         }
 
-        $this->campoRotulo(nome: 'nm_aluno', campo: 'Nome do Aluno', valor: $nm_aluno);
+        $this->campoRotulo(nome: 'nm_aluno', campo: 'Nome do aluno', valor: $nm_aluno);
 
         if (!isset($this->ref_cod_turma)) {
             $this->mensagem = 'Para cadastrar uma disciplina de dependência de um aluno, é necessário que este esteja enturmado.';
@@ -437,7 +437,7 @@ SQL;
 
     public function Formular()
     {
-        $this->title = 'Dispensa Componente Curricular';
+        $this->title = 'Dispensa componente curricular';
         $this->processoAp = 578;
     }
 };

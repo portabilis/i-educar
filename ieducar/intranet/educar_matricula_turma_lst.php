@@ -121,7 +121,7 @@ return new class extends clsListagem
             $this->campoRotulo(nome: 'nm_escola', campo: 'Escola', valor: $det_escola['nome']);
         }
 
-        $this->campoRotulo(nome: 'nm_pessoa', campo: 'Nome do Aluno', valor: $nm_aluno);
+        $this->campoRotulo(nome: 'nm_pessoa', campo: 'Nome do aluno', valor: $nm_aluno);
 
         // Filtros de foreign keys
         $opcoes = ['' => 'Selecione'];
@@ -292,7 +292,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->title = 'Matricula Turma';
+        $this->title = 'Matricula turma';
         $this->processoAp = 578;
     }
 

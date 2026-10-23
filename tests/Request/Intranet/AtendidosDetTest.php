@@ -29,7 +29,7 @@ test('mostra os dados, o endereço, os telefones e os vínculos da pessoa', func
             'Nome', 'Ana Alves',
             'Nome social e/ou afetivo', 'Nina Alves',
             'CPF', '123.456.789-09',
-            'Data de Nascimento', '20/04/2015',
+            'Data de nascimento', '20/04/2015',
             'Raça', 'Raça Alfa',
             'Endereço', 'Rua das Acácias nº 120',
             'Complemento', 'Casa 2',
@@ -57,7 +57,7 @@ test('sem vínculos nem dados opcionais mostra só o nome e o CPF vazio', functi
     ($this->detail)($person)
         ->assertSeeInOrder(['Nome', 'Registro Alfa', 'CPF', 'Vínculos', 'Pessoa física não possui vínculos'])
         ->assertDontSee('Nome social')
-        ->assertDontSee('Data de Nascimento')
+        ->assertDontSee('Data de nascimento')
         ->assertDontSee('Endereço')
         ->assertDontSee('Telefone 1')
         ->assertDontSee('Sexo');

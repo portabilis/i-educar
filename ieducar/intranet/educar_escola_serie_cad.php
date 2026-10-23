@@ -224,10 +224,10 @@ return new class extends clsCadastro
         $this->hora_fim_intervalo = substr(string: $this->hora_fim_intervalo, offset: 0, length: 5);
 
         // hora
-        $this->campoHora(nome: 'hora_inicial', campo: 'Hora Inicial', valor: $this->hora_inicial);
-        $this->campoHora(nome: 'hora_final', campo: 'Hora Final', valor: $this->hora_final);
-        $this->campoHora(nome: 'hora_inicio_intervalo', campo: 'Hora Início Intervalo', valor: $this->hora_inicio_intervalo);
-        $this->campoHora(nome: 'hora_fim_intervalo', campo: 'Hora Fim Intervalo', valor: $this->hora_fim_intervalo);
+        $this->campoHora(nome: 'hora_inicial', campo: 'Hora inicial', valor: $this->hora_inicial);
+        $this->campoHora(nome: 'hora_final', campo: 'Hora final', valor: $this->hora_final);
+        $this->campoHora(nome: 'hora_inicio_intervalo', campo: 'Hora início intervalo', valor: $this->hora_inicio_intervalo);
+        $this->campoHora(nome: 'hora_fim_intervalo', campo: 'Hora fim intervalo', valor: $this->hora_fim_intervalo);
         $this->campoCheck(nome: 'bloquear_enturmacao_sem_vagas', campo: 'Bloquear enturmação após atingir limite de vagas', valor: $this->bloquear_enturmacao_sem_vagas);
         $this->campoCheck(nome: 'bloquear_cadastro_turma_para_serie_com_vagas', campo: 'Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)', valor: $this->bloquear_cadastro_turma_para_serie_com_vagas);
         $this->campoQuebra();
@@ -965,7 +965,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Escola Série';
+        $this->title = 'Escola série';
         $this->processoAp = 585;
     }
 };

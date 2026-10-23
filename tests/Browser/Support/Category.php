@@ -259,7 +259,7 @@ final class Category
         return [
             'Tipos de benefício' => new self(
                 screen: 'educar_aluno_beneficio',
-                heading: 'Benefício Aluno - Listagem',
+                heading: 'Benefício aluno - Listagem',
                 field: 'nm_beneficio',
                 name: 'Bolsa Escola',
                 renamed: 'Bolsa Escola Municipal',
@@ -295,7 +295,7 @@ final class Category
             ),
             'Tipos de ocorrência disciplinar' => new self(
                 screen: 'educar_tipo_ocorrencia_disciplinar',
-                heading: 'Tipo Ocorrência Disciplinar - Listagem',
+                heading: 'Tipo ocorrência disciplinar - Listagem',
                 field: 'nm_tipo',
                 name: 'Indisciplina em sala',
                 renamed: 'Indisciplina em sala de aula',
@@ -306,7 +306,7 @@ final class Category
             ),
             'Tipos de transferência' => new self(
                 screen: 'educar_transferencia_tipo',
-                heading: 'Motivo Transferência - Listagem',
+                heading: 'Motivo transferência - Listagem',
                 field: 'nm_tipo',
                 name: 'Transferência para outra rede',
                 renamed: 'Transferência para a rede estadual',
@@ -317,7 +317,7 @@ final class Category
             ),
             'Tipos de dispensa' => new self(
                 screen: 'educar_tipo_dispensa',
-                heading: 'Tipo Dispensa - Listagem',
+                heading: 'Tipo dispensa - Listagem',
                 field: 'nm_tipo',
                 name: 'Dispensa por atestado médico',
                 renamed: 'Dispensa por laudo médico',
@@ -328,7 +328,7 @@ final class Category
             ),
             'Tipos de ensino' => new self(
                 screen: 'educar_tipo_ensino',
-                heading: 'Tipo Ensino - Listagem',
+                heading: 'Tipo ensino - Listagem',
                 field: 'nm_tipo',
                 name: 'Educação de Jovens e Adultos',
                 renamed: 'Educação de Jovens e Adultos (EJA)',
@@ -339,7 +339,7 @@ final class Category
             ),
             'Tipos de nível ensino' => new self(
                 screen: 'educar_nivel_ensino',
-                heading: 'Nível Ensino - Listagem',
+                heading: 'Nível ensino - Listagem',
                 field: 'nm_nivel',
                 name: 'Etapa anual',
                 renamed: 'Etapa anual do curso',
@@ -350,7 +350,7 @@ final class Category
             ),
             'Tipos de regime' => new self(
                 screen: 'educar_tipo_regime',
-                heading: 'Tipo Regime - Listagem',
+                heading: 'Tipo regime - Listagem',
                 field: 'nm_tipo',
                 name: 'Ciclado',
                 renamed: 'Ciclado por idade',
@@ -373,7 +373,7 @@ final class Category
             ),
             'Tipos de turma' => new self(
                 screen: 'educar_turma_tipo',
-                heading: 'Turma Tipo - Listagem',
+                heading: 'Turma tipo - Listagem',
                 field: 'nm_tipo',
                 name: 'Turma Multisseriada',
                 renamed: 'Turma Multisseriada do campo',
@@ -421,7 +421,7 @@ final class Category
             ),
             'Motivos de afastamento' => new self(
                 screen: 'educar_motivo_afastamento',
-                heading: 'Motivo Afastamento - Listagem',
+                heading: 'Motivo afastamento - Listagem',
                 field: 'nm_motivo',
                 name: 'Licença para tratamento de saúde',
                 renamed: 'Licença para tratamento da própria saúde',

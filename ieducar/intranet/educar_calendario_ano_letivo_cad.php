@@ -233,7 +233,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Calendario Ano Letivo';
+        $this->title = 'Calendario ano letivo';
         $this->processoAp = '620';
     }
 };

@@ -127,7 +127,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->title = 'Ocorrência Disciplinar';
+        $this->title = 'Ocorrência disciplinar';
         $this->processoAp = '578';
     }
 };

@@ -24,7 +24,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Aluno Beneficio - Detalhe';
+        $this->titulo = 'Aluno beneficio - Detalhe';
 
         $registro = LegacyBenefit::find(request()->integer('cod_aluno_beneficio'))?->getAttributes();
 
@@ -37,7 +37,7 @@ return new class extends clsDetalhe
         }
 
         if ($registro['cod_aluno_beneficio']) {
-            $this->addDetalhe(detalhe: ['Código Benefício', e($registro['cod_aluno_beneficio'])]);
+            $this->addDetalhe(detalhe: ['Código benefício', e($registro['cod_aluno_beneficio'])]);
         }
         if ($registro['nm_beneficio']) {
             $this->addDetalhe(detalhe: ['Benefício', e($registro['nm_beneficio'])]);
@@ -65,7 +65,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->title = 'Benefício Aluno';
+        $this->title = 'Benefício aluno';
         $this->processoAp = '581';
     }
 };

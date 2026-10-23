@@ -8,7 +8,7 @@ return new class extends clsListagem
 {
     public function Gerar()
     {
-        $this->titulo = 'Pessoas Físicas';
+        $this->titulo = 'Pessoas físicas';
 
         $par_nome = str_replace(['[', ']', '{', '}', '(', ')', '\\', '/'], '', $this->getQueryString(name: 'nm_pessoa')) ?: false;
         $par_id_federal = idFederal2Int(str: $this->getQueryString(name: 'id_federal')) ?: false;
@@ -155,7 +155,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->title = 'Pessoas Físicas';
+        $this->title = 'Pessoas físicas';
         $this->processoAp = '43';
     }
 };

@@ -35,7 +35,7 @@ return new class extends clsListagem
             $this->simpleRedirect(url: 'educar_aluno_lst.php');
         }
 
-        $this->addCabecalhos(coluna: ['Ano', 'Kit completo', 'Tipo', 'Data da Distribuição']);
+        $this->addCabecalhos(coluna: ['Ano', 'Kit completo', 'Tipo', 'Data da distribuição']);
 
         $obj_permissao = new clsPermissoes;
         $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);

@@ -73,7 +73,7 @@ return new class extends clsCadastro
 
         // text
         $this->campoTexto(nome: 'nm_beneficio', campo: 'Benefício', valor: $this->nm_beneficio, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
-        $this->campoMemo(nome: 'desc_beneficio', campo: 'Descrição Benefício', valor: $this->desc_beneficio, colunas: 60, linhas: 5);
+        $this->campoMemo(nome: 'desc_beneficio', campo: 'Descrição benefício', valor: $this->desc_beneficio, colunas: 60, linhas: 5);
         $this->campoCheck(nome: 'bolsa_familia', campo: 'Bolsa Família', valor: $this->bolsa_familia);
     }
 
@@ -150,7 +150,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Benefício Aluno';
+        $this->title = 'Benefício aluno';
         $this->processoAp = '581';
     }
 };

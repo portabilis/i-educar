@@ -15,7 +15,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Comunicado Escolar - Detalhe';
+        $this->titulo = 'Comunicado escolar - Detalhe';
 
         $registro = SchoolNotice::query()
             ->with('institution', 'school', 'user')
@@ -55,14 +55,14 @@ return new class extends clsDetalhe
         $this->url_cancelar = 'educar_comunicados_escolares_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Detalhe do Comunicado Escolar', breadcrumbs: [
+        $this->breadcrumb(currentPage: 'Detalhe do comunicado escolar', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'Comunicado Escolar';
+        $this->title = 'Comunicado escolar';
         $this->processoAp = SchoolNotice::PROCESS;
     }
 };

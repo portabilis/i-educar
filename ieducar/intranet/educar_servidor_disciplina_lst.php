@@ -158,7 +158,7 @@ return new class extends clsCadastro
         // Disciplinas
         $this->campoLista(
             nome: 'ref_cod_disciplina',
-            campo: 'Componente Curricular',
+            campo: 'Componente curricular',
             valor: $opcoes,
             default: $this->ref_cod_disciplina,
             duplo: ''
@@ -222,7 +222,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Servidor Disciplina';
+        $this->title = 'Servidor disciplina';
         $this->processoAp = 0;
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

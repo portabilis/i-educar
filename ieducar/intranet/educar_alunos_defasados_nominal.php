@@ -118,7 +118,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Movimentação Mensal de Alunos';
+        $this->title = 'Movimentação mensal de alunos';
         $this->processoAp = '944';
     }
 };

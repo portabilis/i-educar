@@ -28,7 +28,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Tipo Ocorrência Disciplinar - Detalhe';
+        $this->titulo = 'Tipo ocorrência disciplinar - Detalhe';
 
         $this->cod_tipo_ocorrencia_disciplinar = $_GET['cod_tipo_ocorrencia_disciplinar'];
 
@@ -77,7 +77,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->title = 'Tipo Ocorrência Disciplinar';
+        $this->title = 'Tipo ocorrência disciplinar';
         $this->processoAp = '580';
     }
 };

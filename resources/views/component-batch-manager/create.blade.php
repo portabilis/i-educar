@@ -77,7 +77,7 @@
 
             <tr>
                 <td class="formlttd" valign="top">
-                    <label for="discipline_ids" class="form">Componentes Curriculares <span class="campo_obrigatorio">*</span></label>
+                    <label for="discipline_ids" class="form">Componentes curriculares <span class="campo_obrigatorio">*</span></label>
                 </td>
                 <td class="formlttd" valign="top">
                     <select name="discipline_ids[]" id="discipline_ids" multiple="multiple" style="width: 308px;">

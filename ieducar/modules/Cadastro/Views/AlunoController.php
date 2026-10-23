@@ -73,12 +73,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ],
 
         'certidao_nascimento' => [
-            'label' => 'Certidão de Nascimento',
+            'label' => 'Certidão de nascimento',
             'help' => '',
         ],
 
         'certidao_casamento' => [
-            'label' => 'Certidão de Casamento',
+            'label' => 'Certidão de casamento',
             'help' => '',
         ],
 
@@ -141,7 +141,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'help' => '',
         ],
 
-        'sus' => ['label' => 'Número da Carteira do SUS'],
+        'sus' => ['label' => 'Número da carteira do SUS'],
 
         'grupo_sanguineo' => ['label' => 'Grupo sanguíneo'],
 
@@ -213,7 +213,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         'desc_plano_saude' => ['label' => 'Qual?'],
 
-        'aceita_hospital_proximo' => ['label' => '<b>Em caso de emergência, autorizo levar meu(minha) filho(a) para o Hospital ou Clínica mais próximos:</b>'],
+        'aceita_hospital_proximo' => ['label' => '<b>Em caso de emergência, autorizo levar meu(minha) filho(a) para o hospital ou clínica mais próximos:</b>'],
 
         'desc_aceita_hospital_proximo' => ['label' => 'Responsável'],
 
@@ -796,7 +796,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $label = $this->_getLabel('responsavel');
 
-        $tiposResponsavel = [null => 'Informe uma Pessoa primeiro'];
+        $tiposResponsavel = [null => 'Informe uma pessoa primeiro'];
         $options = [
             'label' => 'Responsável',
             'resources' => $tiposResponsavel,
@@ -902,7 +902,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         // is_numeric aceita "123." e "1e3", que o PostgreSQL recusa como integer
         $idAluno = filter_var(request('id'), FILTER_VALIDATE_INT);
         $files = $idAluno ? $fileService->getFiles(relation: LegacyStudent::find($idAluno), type: FileRelation::TYPE_MEDICAL_REPORT) : [];
-        $this->addHtml(html: view(view: 'uploads.upload', data: ['files' => $files, 'label' => 'Laudo Médico'])->render());
+        $this->addHtml(html: view(view: 'uploads.upload', data: ['files' => $files, 'label' => 'Laudo médico'])->render());
 
         $options = ['label' => $this->_getLabel('observacao_aluno'), 'required' => false, 'size' => 50, 'max_length' => 255, 'value' => $this->observacao];
         $this->inputsHelper()->textArea('observacao_aluno', $options);
@@ -1321,7 +1321,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ];
 
         $options = [
-            'label' => 'Zona Localização',
+            'label' => 'Zona localização',
             'value' => $this->zona_localizacao_censo,
             'resources' => $zonas,
             'required' => $obrigarCamposCenso,

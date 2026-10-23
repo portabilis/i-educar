@@ -21,7 +21,7 @@ test('mostra os dados do benefício e os links de novo e de edição', function 
 
     $this->get(($this->url)($benefit))
         ->assertOk()
-        ->assertSeeInOrder(['Código Benefício', (string) $benefit->getKey(), 'Benefício', 'Registro Alfa', 'Descrição', 'Bolsa Família', 'Sim'])
+        ->assertSeeInOrder(['Código benefício', (string) $benefit->getKey(), 'Benefício', 'Registro Alfa', 'Descrição', 'Bolsa Família', 'Sim'])
         ->assertSee("Primeira linha<br />\nSegunda linha", false)
         ->assertSee('educar_aluno_beneficio_cad.php?cod_aluno_beneficio=' . $benefit->getKey(), false)
         ->assertSee('educar_aluno_beneficio_lst.php', false);

@@ -66,7 +66,7 @@ return new class extends clsCadastro
             $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
         }
         // text
-        $this->campoTexto(nome: 'nm_tipo', campo: 'Turma Tipo', valor: $this->nm_tipo, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoTexto(nome: 'nm_tipo', campo: 'Turma tipo', valor: $this->nm_tipo, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
         $this->campoTexto(nome: 'sgl_tipo', campo: 'Sigla', valor: $this->sgl_tipo, tamanhovisivel: 15, tamanhomaximo: 15, obrigatorio: true);
     }
 
@@ -108,7 +108,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Turma Tipo';
+        $this->title = 'Turma tipo';
         $this->processoAp = '570';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

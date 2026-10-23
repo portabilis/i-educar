@@ -31,7 +31,7 @@ test('abre a enturmação com os dados da matrícula e a situação atual', func
 
     $response = $this->get(($this->url)($this->enrollment))
         ->assertOk()
-        ->assertSeeInOrder(['Ano', '2030', 'Escola', 'Escola Aurora', 'Nome do Aluno', 'Bia Borges', 'Sequencial', '1']);
+        ->assertSeeInOrder(['Ano', '2030', 'Escola', 'Escola Aurora', 'Nome do aluno', 'Bia Borges', 'Sequencial', '1']);
 
     $payload = LegacyFields::from($response->getContent());
 

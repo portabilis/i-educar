@@ -1962,7 +1962,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Pessoa Física - Cadastro';
+        $this->title = 'Pessoa física - Cadastro';
         $this->processoAp = 43;
     }
 };
