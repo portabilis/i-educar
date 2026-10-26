@@ -87,7 +87,16 @@ test('mostra os filtros básicos e mantém os avançados recolhidos', function (
         ->assertSee('Filtros básicos')
         ->assertSee('Filtros avançados')
         ->assertSee("aria-expanded='false'", false)
-        ->assertSee("<tbody id='filtros-avancados' data-filter-section='advanced' hidden>", false);
+        ->assertSee("<tbody id='filtros-avancados' data-filter-section='advanced' hidden>", false)
+        ->assertSee('Limpar filtros avançados');
+});
+
+test('abre e sinaliza os filtros avançados aplicados', function () {
+    ($this->list)(['nome_aluno' => 'Ana', 'nome_mae' => 'Marta', 'similaridade' => 'on'])
+        ->assertSee('Filtros avançados (2 ativos)')
+        ->assertSee("aria-expanded='true'", false)
+        ->assertSee("<tbody id='filtros-avancados' data-filter-section='advanced'>", false)
+        ->assertDontSee("<tbody id='filtros-avancados' data-filter-section='advanced' hidden>", false);
 });
 
 test('filtra por cada campo da pessoa', function (Closure $query) {
@@ -173,6 +182,20 @@ test('pagina de 20 em 20, do cadastro mais recente para o mais antigo', function
     ($this->list)(['nome_aluno' => 'Registro Aluno', 'pagina_formulario' => 2])
         ->assertSee('Registro Aluno 21')
         ->assertDontSee('Registro Aluno 20');
+});
+
+test('preserva filtros básicos e avançados nos links da paginação', function () {
+    foreach (range(1, 21) as $number) {
+        StudentScenario::named(sprintf('Aluno %02d', $number), ['data_cadastro' => now()->subDays($number)])->mother('Marta Alves');
+    }
+
+    ($this->list)(['nome_aluno' => 'Aluno', 'nome_mae' => 'Marta'])
+        ->assertSee('nome_aluno=Aluno&amp;nome_mae=Marta&amp;pagina_formulario=2', false)
+        ->assertSee('Filtros avançados (1 ativo)');
+
+    ($this->list)(['nome_aluno' => 'Aluno', 'nome_mae' => 'Marta', 'pagina_formulario' => 2])
+        ->assertSee('Aluno 21')
+        ->assertSee('Filtros avançados (1 ativo)');
 });
 
 test('mostra o filtro e a coluna do código INEP quando a instituição pede', function () {

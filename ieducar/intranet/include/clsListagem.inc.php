@@ -691,11 +691,13 @@ HTML;
         $camposBasicos = array_intersect_key($this->campos, array_flip($this->filtrosBasicos));
         $camposAvancados = array_intersect_key($this->campos, array_flip($this->filtrosAvancados));
         $filtrosAvancadosAtivos = array_filter(
-            $this->filtrosAvancados,
+            array_keys($camposAvancados),
             fn ($filtro) => isset($_GET[$filtro]) && $_GET[$filtro] !== ''
         );
+        $totalFiltrosAvancadosAtivos = count($filtrosAvancadosAtivos);
         $expandido = empty($filtrosAvancadosAtivos) ? 'false' : 'true';
         $oculto = empty($filtrosAvancadosAtivos) ? ' hidden' : '';
+        $indicador = $totalFiltrosAvancadosAtivos ? " ({$totalFiltrosAvancadosAtivos} " . ($totalFiltrosAvancadosAtivos === 1 ? 'ativo' : 'ativos') . ')' : '';
 
         $retorno = "
             <tbody id='filtros-basicos' data-filter-section='basic'>
@@ -708,11 +710,16 @@ HTML;
             <tbody data-filter-section='advanced-toggle'>
                 <tr>
                     <td class='formlttd' colspan='2'>
-                        <button type='button' aria-expanded='{$expandido}' aria-controls='filtros-avancados' onclick=\"var filtros = document.getElementById('filtros-avancados'); filtros.hidden = !filtros.hidden; this.setAttribute('aria-expanded', filtros.hidden ? 'false' : 'true');\">Filtros avançados</button>
+                        <button type='button' aria-expanded='{$expandido}' aria-controls='filtros-avancados' onclick=\"var filtros = document.getElementById('filtros-avancados'); filtros.hidden = !filtros.hidden; this.setAttribute('aria-expanded', filtros.hidden ? 'false' : 'true');\">Filtros avançados{$indicador}</button>
                     </td>
                 </tr>
             </tbody>
-            <tbody id='filtros-avancados' data-filter-section='advanced'{$oculto}>";
+            <tbody id='filtros-avancados' data-filter-section='advanced'{$oculto}>
+                <tr>
+                    <td class='formlttd' colspan='2'>
+                        <button type='button' onclick=\"this.form.querySelectorAll('#filtros-avancados input, #filtros-avancados select, #filtros-avancados textarea').forEach(function (campo) { campo.disabled = true; }); this.form.submit();\">Limpar filtros avançados</button>
+                    </td>
+                </tr>";
         $retorno .= $this->MakeCampos($camposAvancados);
         $retorno .= '</tbody>';
 
