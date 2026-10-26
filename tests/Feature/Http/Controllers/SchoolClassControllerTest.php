@@ -373,6 +373,14 @@ test('não cadastra outra turma enquanto a série bloqueia o cadastro com vagas 
         ->assertExactJson(['msg' => "Não é possivel cadastrar turmas, pois ainda existem 10 vagas em aberto na turma 'Turma A' desta serie e turno. Tal limitação ocorre devido definição feita para estae scola e série."]);
 });
 
+test('não cadastra a turma com a hora final anterior à inicial', function () {
+    ($this->store)(($this->form)(['hora_inicial' => '14:00', 'hora_final' => '10:00']))
+        ->assertStatus(422)
+        ->assertExactJson(['msg' => 'A hora final deve ser posterior à hora inicial.']);
+
+    expect(LegacySchoolClass::query()->where('nm_turma', 'Turma A')->exists())->toBeFalse();
+});
+
 test('exige o boletim diferenciado quando a regra da série tem regra diferenciada', function () {
     ($this->rule)($this->second, ['regra_diferenciada_id' => $this->firstRule->getKey()]);
 

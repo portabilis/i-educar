@@ -11,6 +11,7 @@ use App\Rules\CanDeleteTurma;
 use App\Rules\CheckAlternativeReportCardExists;
 use App\Rules\CheckMandatoryCensoFields;
 use App\Rules\CheckSchoolClassExistsByName;
+use App\Rules\CheckSchoolClassTimes;
 use Carbon\Carbon;
 use iEducar\Modules\SchoolClass\Period;
 use Illuminate\Support\Collection;
@@ -142,6 +143,7 @@ class SchoolClassService
                     new CanAlterSchoolClassGrade,
                     new CheckMandatoryCensoFields,
                     new CheckSchoolClassExistsByName,
+                    new CheckSchoolClassTimes,
                     new CheckAlternativeReportCardExists,
                 ],
             ]
