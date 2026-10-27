@@ -315,10 +315,12 @@ function getSeriesSemComponentesViculados(){
 
 function initChosenSerie() {
     if (comboSerie.prop('multiple') && !comboSerie.data('chosen')) {
+        comboSerie.css('width', '307px');
         comboSerie.chosen({
             no_results_text: 'Sem resultados para ',
             placeholder_text_multiple: 'Selecione as séries',
             search_contains: true,
+            width: '307px',
         });
 
         comboSerie.change(function () {
@@ -347,6 +349,7 @@ function handleGetSeries(response){
         }
 
         initChosenSerie();
+        comboSerie.next('.chosen-container').css('width', '307px');
         comboSerie.trigger('chosen:updated');
     } else {
         if(series === undefined || series.length == 0){
