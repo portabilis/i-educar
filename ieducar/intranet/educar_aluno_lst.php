@@ -6,6 +6,29 @@ use App\Models\LegacyStudent;
 
 return new class extends clsListagem
 {
+    private const FILTROS_BASICOS = [
+        'nome_aluno',
+        'cpf_aluno',
+        'situacao_matricula_id',
+        'ano',
+        'ref_cod_escola',
+    ];
+
+    private const FILTROS_AVANCADOS = [
+        'cod_aluno',
+        'cod_inep',
+        'aluno_estado_id',
+        'similaridade',
+        'data_nascimento',
+        'rg_aluno',
+        'nome_pai',
+        'nome_mae',
+        'nome_responsavel',
+        'ref_cod_instituicao',
+        'ref_cod_curso',
+        'ref_cod_serie',
+    ];
+
     public $titulo;
 
     public $limite;
@@ -67,6 +90,8 @@ return new class extends clsListagem
         $this->titulo = 'Aluno - Listagem';
         $this->buscaRapida = 'nome_aluno';
         $this->buscaRapidaRotulo = 'Buscar por nome, código ou CPF do aluno';
+        $this->filtrosBasicos = self::FILTROS_BASICOS;
+        $this->filtrosAvancados = self::FILTROS_AVANCADOS;
 
         $configuracoes = LegacyGeneralConfiguration::query()
             ->forActiveInstitution()
@@ -93,12 +118,11 @@ return new class extends clsListagem
         );
         $this->campoData(nome: 'data_nascimento', campo: 'Data de Nascimento', valor: $this->data_nascimento);
         $this->campoCpf(nome: 'cpf_aluno', campo: 'CPF', valor: $this->cpf_aluno);
+        $this->inputsHelper()->dynamic(helperNames: 'situacaoMatricula', inputOptions: ['required' => false, 'value' => $this->situacao_matricula_id]);
         $this->campoTexto(nome: 'rg_aluno', campo: 'RG', valor: $this->rg_aluno);
         $this->campoTexto(nome: 'nome_pai', campo: 'Nome do Pai', valor: $this->nome_pai, tamanhovisivel: 50, tamanhomaximo: 255);
         $this->campoTexto(nome: 'nome_mae', campo: 'Nome da Mãe', valor: $this->nome_mae, tamanhovisivel: 50, tamanhomaximo: 255);
         $this->campoTexto(nome: 'nome_responsavel', campo: 'Nome do Responsável', valor: $this->nome_responsavel, tamanhovisivel: 50, tamanhomaximo: 255);
-        $this->campoRotulo(nome: 'filtros_matricula', campo: '<b>Filtros de alunos</b>');
-
         $this->inputsHelper()->integer(attrName: 'ano', inputOptions: ['required' => false, 'value' => $this->ano, 'max_length' => 4, 'label_hint' => 'Retorna alunos com matrículas no ano selecionado']);
         $this->inputsHelper()->dynamic(helperNames: 'instituicao', inputOptions: ['required' => false, 'value' => $this->ref_cod_instituicao]);
         $this->inputsHelper()->dynamic(helperNames: 'escolaSemFiltroPorUsuario', inputOptions: ['required' => false, 'value' => $this->ref_cod_escola, 'label_hint' => 'Retorna alunos com matrículas na escola selecionada']);
