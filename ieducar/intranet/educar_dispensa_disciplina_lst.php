@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\LegacyDisciplineExemption;
+use App\Models\LegacyEnrollment;
 use App\Models\LegacyExemptionType;
+use App\Models\LegacyRegistration;
 
 return new class extends clsListagem
 {
@@ -9,8 +12,6 @@ return new class extends clsListagem
     public $titulo;
 
     public $limite;
-
-    public $offset;
 
     public $ref_cod_matricula;
 
@@ -49,7 +50,10 @@ return new class extends clsListagem
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -80,18 +84,19 @@ return new class extends clsListagem
             $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
             $this->ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
 
-            $obj_matricula_turma = new clsPmieducarMatriculaTurma;
-            $lst_matricula_turma = $obj_matricula_turma->lista(
-                int_ref_cod_matricula: $this->ref_cod_matricula,
-                int_ativo: 1,
-                int_ref_cod_serie: $this->ref_cod_serie,
-                int_ref_cod_escola: $this->ref_cod_escola
-            );
+            $enturmacao = LegacyEnrollment::query()
+                ->active()
+                ->when(is_numeric($this->ref_cod_matricula), fn ($q) => $q->whereRegistration($this->ref_cod_matricula))
+                ->whereHas('registration', function ($q) {
+                    $q->whereHas('student', fn ($q) => $q->active());
+                    $q->when(is_numeric($this->ref_cod_serie), fn ($q) => $q->whereGrade($this->ref_cod_serie));
+                    $q->when(is_numeric($this->ref_cod_escola), fn ($q) => $q->whereSchool($this->ref_cod_escola));
+                })
+                ->first(['ref_cod_turma', 'sequencial']);
 
-            if (is_array(value: $lst_matricula_turma)) {
-                $det = array_shift(array: $lst_matricula_turma);
-                $this->ref_cod_turma = $det['ref_cod_turma'];
-                $this->ref_sequencial = $det['sequencial'];
+            if ($enturmacao) {
+                $this->ref_cod_turma = $enturmacao->ref_cod_turma;
+                $this->ref_sequencial = $enturmacao->sequencial;
             } else {
                 $this->mensagem .= 'Matrícula sem enturmações ativas.<br>';
                 $this->simpleRedirect(url: "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
@@ -146,54 +151,39 @@ return new class extends clsListagem
 
         // Paginador
         $this->limite = 20;
-        $this->offset = $_GET['pagina_' . $this->nome] ?
-            $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
 
-        $obj_dispensa_disciplina = new clsPmieducarDispensaDisciplina;
-        $obj_dispensa_disciplina->setOrderby(strNomeCampo: 'data_cadastro ASC');
-        $obj_dispensa_disciplina->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
+        $resultado = LegacyDisciplineExemption::query()
+            ->with(['type:cod_tipo_dispensa,nm_tipo', 'discipline:id,nome'])
+            ->when(is_numeric($this->ref_cod_matricula), function ($query) {
+                $query->whereRegistration($this->ref_cod_matricula);
+            })
+            ->when(is_numeric($this->ref_cod_disciplina), function ($query) {
+                $query->whereDiscipline($this->ref_cod_disciplina);
+            })
+            ->when(is_numeric($this->ref_cod_tipo_dispensa), function ($query) {
+                $query->whereExemptionType($this->ref_cod_tipo_dispensa);
+            })
+            ->orderBy('data_cadastro')
+            ->orderBy('cod_dispensa')
+            ->paginate(perPage: $this->limite, pageName: 'pagina_' . $this->nome);
 
-        $lista = $obj_dispensa_disciplina->lista(
-            int_ref_cod_matricula: $this->ref_cod_matricula,
-            int_ref_cod_disciplina: $this->ref_cod_disciplina,
-            int_ref_cod_tipo_dispensa: $this->ref_cod_tipo_dispensa,
-            int_ativo: 1
-        );
+        $total = $resultado->total();
+        $dispensas = $resultado->getCollection();
 
-        $total = $obj_dispensa_disciplina->_total;
+        foreach ($dispensas as $registro) {
+            $url = 'educar_dispensa_disciplina_det.php';
+            $options = ['query' => [
+                'ref_cod_matricula' => $registro['ref_cod_matricula'],
+                'ref_cod_serie' => $registro['ref_cod_serie'],
+                'ref_cod_escola' => $registro['ref_cod_escola'],
+                'ref_cod_disciplina' => $registro['ref_cod_disciplina'],
+            ]];
 
-        // Mapper de componente curricular
-        $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper;
-
-        // monta a lista
-        if (is_array(value: $lista) && count(value: $lista)) {
-            foreach ($lista as $registro) {
-                // muda os campos data
-                $registro['data_cadastro_time'] = strtotime(datetime: substr(string: $registro['data_cadastro'], offset: 0, length: 16));
-                $registro['data_cadastro_br'] = date(format: 'd/m/Y', timestamp: $registro['data_cadastro_time']);
-
-                // Tipo da dispensa
-                $det_ref_cod_tipo_dispensa = LegacyExemptionType::find($registro['ref_cod_tipo_dispensa'])?->getAttributes();
-                $registro['ref_cod_tipo_dispensa'] = $det_ref_cod_tipo_dispensa['nm_tipo'];
-
-                // Componente curricular
-                $componente = $componenteMapper->find(pkey: $registro['ref_cod_disciplina']);
-
-                // Dados para a url
-                $url = 'educar_dispensa_disciplina_det.php';
-                $options = ['query' => [
-                    'ref_cod_matricula' => $registro['ref_cod_matricula'],
-                    'ref_cod_serie' => $registro['ref_cod_serie'],
-                    'ref_cod_escola' => $registro['ref_cod_escola'],
-                    'ref_cod_disciplina' => $registro['ref_cod_disciplina'],
-                ]];
-
-                $this->addLinhas(linha: [
-                    $urlHelper->l(text: $componente->nome, path: $url, options: $options),
-                    $urlHelper->l(text: $registro['ref_cod_tipo_dispensa'], path: $url, options: $options),
-                    $urlHelper->l(text: $registro['data_cadastro_br'], path: $url, options: $options),
-                ]);
-            }
+            $this->addLinhas(linha: [
+                $urlHelper->l(text: $registro->discipline->nome, path: $url, options: $options),
+                $urlHelper->l(text: $registro->type->nm_tipo, path: $url, options: $options),
+                $urlHelper->l(text: $registro['data_cadastro']->format('d/m/Y'), path: $url, options: $options),
+            ]);
         }
 
         $this->addPaginador2(
@@ -219,8 +209,13 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
+        // Início > Escola > Alunos > Nome > Matrícula > Dispensa de componentes curriculares
+        $registration = LegacyRegistration::find($this->ref_cod_matricula);
         $this->breadcrumb(currentPage: 'Dispensa de componentes curriculares', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_aluno_lst.php') => 'Alunos',
+            url(path: "intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url(path: "intranet/educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}") => 'Matrícula',
         ]);
     }
 

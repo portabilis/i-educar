@@ -21,7 +21,7 @@ class SchoolInepFactory extends Factory
     {
         return [
             'cod_escola' => fn () => LegacySchoolFactory::new()->create(),
-            'cod_escola_inep' => $this->faker->numerify('########'),
+            'cod_escola_inep' => $this->faker->numberBetween(10000000, 99999999),
         ];
     }
 }

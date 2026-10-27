@@ -29,16 +29,16 @@ return new class extends clsDetalhe
         $this->cod_tipo_ensino = $_GET['cod_tipo_ensino'];
 
         $registro = LegacyEducationType::find($this->cod_tipo_ensino)?->getAttributes();
-        if (!$registro) {
-            $this->simpleRedirect('educar_tipo_ensino_lst.php');
-        }
-
-        if (!$registro['ativo']) {
-            $this->simpleRedirect('educar_tipo_ensino_lst.php');
+        if (!$registro || !$registro['ativo']) {
+            $this->redirectNotFound(
+                url: 'educar_tipo_ensino_lst.php',
+                registro: 'tipo de ensino',
+                codigo: $this->cod_tipo_ensino,
+            );
         }
 
         if ($registro['cod_tipo_ensino']) {
-            $this->addDetalhe(['Tipo Ensino', "{$registro['cod_tipo_ensino']}"]);
+            $this->addDetalhe(['Tipo Ensino', e($registro['cod_tipo_ensino'])]);
         }
 
         if ($registro['ref_cod_instituicao']) {
@@ -46,10 +46,10 @@ return new class extends clsDetalhe
             $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
             $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
-            $this->addDetalhe(['Instituição', "{$registro['ref_cod_instituicao']}"]);
+            $this->addDetalhe(['Instituição', e($registro['ref_cod_instituicao'])]);
         }
         if ($registro['nm_tipo']) {
-            $this->addDetalhe(['Nome Tipo', "{$registro['nm_tipo']}"]);
+            $this->addDetalhe(['Nome Tipo', e($registro['nm_tipo'])]);
         }
 
         // ** Verificacao de permissao para cadastro ou edicao

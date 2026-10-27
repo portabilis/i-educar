@@ -21,13 +21,32 @@ class LegacyValueRoundingTableFactory extends Factory
     {
         return [
             'tabela_arredondamento_id' => fn () => LegacyRoundingTableFactory::new()->create(),
-            'nome' => $this->faker->text(5),
-            'descricao' => $this->faker->text(50),
-            'valor_minimo' => $this->faker->randomNumber(1),
-            'valor_maximo' => $this->faker->randomNumber(1),
-            'casa_decimal_exata' => $this->faker->randomNumber(1),
-            'acao' => $this->faker->randomNumber(1),
-            'observacao' => $this->faker->text(50),
+            'nome' => '0',
+            'descricao' => null,
+            'valor_minimo' => 0,
+            'valor_maximo' => 0.4,
+            'casa_decimal_exata' => null,
+            'acao' => null,
+            'observacao' => null,
         ];
+    }
+
+    /**
+     * As 21 faixas da tabela numérica padrão, de 0 a 10 em passos de 0,5,
+     * como a instalação as traz.
+     */
+    public function numericBands(): self
+    {
+        $bands = [];
+
+        for ($value = 0; $value <= 10; $value += 0.5) {
+            $bands[] = [
+                'nome' => (string) $value,
+                'valor_minimo' => $value,
+                'valor_maximo' => min($value + 0.4, 10),
+            ];
+        }
+
+        return $this->count(count($bands))->sequence(...$bands);
     }
 }

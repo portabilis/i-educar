@@ -1,21 +1,15 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacySchool;
 use App\Models\LegacyStudent;
 use App\Models\UniformDistribution;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class UniformDistributionTest extends EloquentTestCase
-{
-    protected $relations = [
-        'student' => LegacyStudent::class,
-        'school' => LegacySchool::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName()
-    {
-        return UniformDistribution::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(UniformDistribution::class, relations: [
+    'student' => LegacyStudent::class,
+    'school' => LegacySchool::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

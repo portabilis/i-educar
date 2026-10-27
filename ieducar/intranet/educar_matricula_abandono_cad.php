@@ -58,9 +58,17 @@ return new class extends clsCadastro
         $det_matricula = $obj_matricula->detalhe();
 
         if (!$det_matricula) {
-            $this->simpleRedirect(url: 'educar_matricula_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_matricula_lst.php',
+                registro: 'matrícula',
+                feminino: true,
+                codigo: $this->cod_matricula,
+                dica: 'Acesse a matrícula pela ficha do aluno.',
+            );
         }
 
+        // Não testável: o caminho termina em `exit`, que encerraria a suíte de testes.
+        // @codeCoverageIgnoreStart
         if ($obj_matricula->edita()) {
             echo "<script>
                 alert('Situação deixou de frequentar cadastrada com sucesso');
@@ -69,17 +77,24 @@ return new class extends clsCadastro
         }
 
         exit();
+        // @codeCoverageIgnoreEnd
     }
 
+    // Não testável: o `Inicializar()` termina em `exit` antes de qualquer um deles.
+    // @codeCoverageIgnoreStart
     public function Gerar() {}
 
     public function Novo() {}
 
     public function Excluir() {}
+    // @codeCoverageIgnoreEnd
 
     public function makeExtra()
     {
+        // Não testável: a tela nunca chega a ser desenhada, o `Inicializar()` termina em `exit`.
+        // @codeCoverageIgnoreStart
         return file_get_contents(filename: __DIR__ . '/scripts/extra/educar-matricula-abandono-cad.js');
+        // @codeCoverageIgnoreEnd
     }
 
     public function Formular()

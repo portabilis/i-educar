@@ -43,7 +43,6 @@ INSERT INTO public.menus VALUES (69, 12, 'Configurações gerais', 'Configuraç�
 INSERT INTO public.menus VALUES (73, 13, 'Exportação de usuários', 'Exportação de usuários', '/intranet/educar_exportacao_usuarios.php', NULL, 1, 3, 999869, 999869, 999910, true, NULL, NULL);
 INSERT INTO public.menus VALUES (75, 32, 'Tipos', NULL, NULL, NULL, 1, 3, NULL, 999912, 999911, true, NULL, NULL);
 INSERT INTO public.menus VALUES (76, 32, 'Servidores', 'Servidores', '/intranet/educar_servidor_lst.php', NULL, 2, 3, 635, 21130, 999911, true, NULL, NULL);
-INSERT INTO public.menus VALUES (77, 32, 'Quadros de horários', 'Quadros de horários', '/intranet/educar_quadro_horario_lst.php', NULL, 3, 3, 641, 21137, 999911, true, NULL, NULL);
 INSERT INTO public.menus VALUES (78, 16, 'Faltas e notas', 'Lançamento de faltas e notas', '/module/Avaliacao/diario', NULL, 0, 3, 642, 21152, 999920, true, NULL, NULL);
 INSERT INTO public.menus VALUES (79, 16, 'Ocorrências disciplinares', 'Lançamento de ocorrências disciplinares', '/intranet/educar_matricula_ocorrencia_disciplinar_cad.php', NULL, 0, 3, 21145, 21145, 999920, true, NULL, NULL);
 INSERT INTO public.menus VALUES (80, 17, 'Históricos escolares', 'Processamento de históricos escolares', '/module/HistoricoEscolar/processamento', NULL, 1, 3, 999613, 999613, 999921, true, NULL, NULL);

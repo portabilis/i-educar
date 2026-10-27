@@ -1,0 +1,21 @@
+name: TIA Baseline
+
+on:
+  push:
+    branches: [main]
+
+  # Permite publicar o baseline à mão, por exemplo quando o último foi cancelado.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  tests:
+    # O tests.yml usa o último baseline publicado, de qualquer branch: só a main publica.
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/tests.yml
+    with:
+      publish-baseline: true
+    secrets: inherit

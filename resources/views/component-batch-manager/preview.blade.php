@@ -81,7 +81,7 @@
         'totalIeducar' => $totalIeducar,
     ])
 
-    <form id="formcadastro">
+    <form class="formcadastro">
     <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0" role="presentation">
         <tbody>
 
@@ -157,7 +157,7 @@
                 <td class="formmdtd" colspan="2">
                     <div style="padding: 10px;">
                         <p>Para confirmar a operação, digite <strong>delete</strong> no campo abaixo:</p>
-                        <input type="text" id="confirm_input" class="geral" style="width: 200px;" autocomplete="off" placeholder="Digite delete" onpaste="return false;" ondrop="return false;">
+                        <input type="text" id="confirm_input" aria-label="Digite delete para confirmar a operação" class="geral" style="width: 200px;" autocomplete="off" placeholder="Digite delete" onpaste="return false;" ondrop="return false;">
                     </div>
                 </td>
             </tr>

@@ -1,46 +1,27 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\City;
 use App\Models\District;
 use App\Models\Place;
 use App\Models\State;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-#[
-    Schema(name: 'City'),
-    Property(Type::INT, 'id', 'City ID', 1),
-    Property(Type::INT, 'state_id', 'State ID', 1),
-    Property(Type::STRING, 'name', 'City name', 'Francisco Beltrão'),
-    Property(Type::STRING, 'ibge_code', 'IBGE code', 12345),
-    Property(Type::STRING, 'created_at', 'Creation date', '2022-01-01 00:00:00'),
-    Property(Type::STRING, 'updated_at', 'Update date', '2022-01-01 00:00:00'),
-]
-class CityTest extends EloquentTestCase
-{
-    protected $relations = [
-        'state' => State::class,
-        'districts' => District::class,
-        'places' => Place::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return City::class;
-    }
+beforeEach(fn () => $this->eloquent(City::class, relations: [
+    'state' => State::class,
+    'districts' => District::class,
+    'places' => Place::class,
+]));
 
-    public function test_attributes()
-    {
-        $query = City::queryFindByName($this->model->name)->first();
+EloquentModelTestCase::registerModelTests();
 
-        $this->assertEquals($this->model->name, $query->name);
+test('attributes', function () {
+    $query = City::queryFindByName($this->model->name)->first();
 
-        $query = City::getNameById($this->model->id);
+    $this->assertEquals($this->model->name, $query->name);
 
-        $this->assertEquals($this->model->name, $query);
-    }
-}
+    $query = City::getNameById($this->model->id);
+
+    $this->assertEquals($this->model->name, $query);
+});

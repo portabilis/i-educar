@@ -100,8 +100,12 @@ class RegistrationService
     {
         $newStatus = $data['nova_situacao'];
 
+        // A cobertura não registra a passagem por estes `case` com constantes de
+        // classe, mesmo quando o corpo de cada um roda nos testes.
         switch ($newStatus) {
+            // @codeCoverageIgnoreStart
             case App_Model_MatriculaSituacao::TRANSFERIDO:
+                // @codeCoverageIgnoreEnd
                 $this->markEnrollmentsAsTransferred($registration);
                 $this->createTransferRequest(
                     $data['transferencia_data'],
@@ -114,16 +118,22 @@ class RegistrationService
                 $this->processDisciplineScoreSituation($registration, $newStatus);
                 break;
 
+                // @codeCoverageIgnoreStart
             case App_Model_MatriculaSituacao::RECLASSIFICADO:
+                // @codeCoverageIgnoreEnd
                 $this->markEnrollmentsAsReclassified($registration);
                 break;
 
+                // @codeCoverageIgnoreStart
             case App_Model_MatriculaSituacao::ABANDONO:
+                // @codeCoverageIgnoreEnd
                 $this->markEnrollmentsAsAbandoned($registration);
                 $this->processDisciplineScoreSituation($registration, $newStatus);
                 break;
 
+                // @codeCoverageIgnoreStart
             case App_Model_MatriculaSituacao::FALECIDO:
+                // @codeCoverageIgnoreEnd
                 $this->markEnrollmentsAsDeceased($registration);
                 $this->processDisciplineScoreSituation($registration, $newStatus);
                 break;

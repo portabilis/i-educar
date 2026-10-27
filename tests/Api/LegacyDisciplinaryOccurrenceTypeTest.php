@@ -1,81 +1,74 @@
 <?php
 
-namespace Tests\Api;
-
 use Database\Factories\LegacyDisciplinaryOccurrenceTypeFactory;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class LegacyDisciplinaryOccurrenceTypeTest extends TestCase
-{
-    use DatabaseTransactions;
+uses(TestCase::class, DatabaseTransactions::class);
 
-    public function test_save_success(): void
-    {
-        $user = LegacyUserFactory::new()->admin()->create();
-        $this->actingAs($user);
+test('save success', function () {
+    $user = LegacyUserFactory::new()->admin()->create();
+    $this->actingAs($user);
 
-        $type = LegacyDisciplinaryOccurrenceTypeFactory::new()->make();
+    $type = LegacyDisciplinaryOccurrenceTypeFactory::new()->make();
 
-        $request = [
-            'tipoacao' => 'Novo',
-        ];
+    $request = [
+        'tipoacao' => 'Novo',
+    ];
 
-        $data = [
-            'ref_cod_instituicao' => $type->ref_cod_instituicao,
-            'nm_tipo' => $type->nm_tipo,
-            'descricao' => $type->descricao,
-            'max_ocorrencias' => $type->max_ocorrencias,
-        ];
+    $data = [
+        'ref_cod_instituicao' => $type->ref_cod_instituicao,
+        'nm_tipo' => $type->nm_tipo,
+        'descricao' => $type->descricao,
+        'max_ocorrencias' => $type->max_ocorrencias,
+    ];
 
-        $payload = array_merge($request, $data);
-        $this->post('/intranet/educar_tipo_ocorrencia_disciplinar_cad.php', $payload)
-            ->assertRedirectContains('educar_tipo_ocorrencia_disciplinar_lst.php');
+    $payload = array_merge($request, $data);
+    $this->post('/intranet/educar_tipo_ocorrencia_disciplinar_cad.php', $payload)
+        ->assertRedirectContains('educar_tipo_ocorrencia_disciplinar_lst.php');
 
-        $this->assertDatabaseHas($type->getTable(), [
-            'ref_cod_instituicao' => $type->ref_cod_instituicao,
-            'ref_usuario_cad' => $user->getKey(),
-            'nm_tipo' => $type->nm_tipo,
-            'descricao' => $type->descricao,
-            'max_ocorrencias' => $type->max_ocorrencias,
-            'ativo' => 1,
-        ]);
-    }
+    $this->assertDatabaseHas($type->getTable(), [
+        'ref_cod_instituicao' => $type->ref_cod_instituicao,
+        'ref_usuario_cad' => $user->getKey(),
+        'nm_tipo' => $type->nm_tipo,
+        'descricao' => $type->descricao,
+        'max_ocorrencias' => $type->max_ocorrencias,
+        'ativo' => 1,
+    ]);
+});
 
-    public function test_edit_success(): void
-    {
-        $user = LegacyUserFactory::new()->admin()->create();
-        $this->actingAs($user);
+test('edit success', function () {
+    $user = LegacyUserFactory::new()->admin()->create();
+    $this->actingAs($user);
 
-        $typeOrignal = LegacyDisciplinaryOccurrenceTypeFactory::new()->create();
+    $typeOrignal = LegacyDisciplinaryOccurrenceTypeFactory::new()->create();
 
-        $editType = LegacyDisciplinaryOccurrenceTypeFactory::new()->make();
+    $editType = LegacyDisciplinaryOccurrenceTypeFactory::new()->make();
 
-        $request = [
-            'tipoacao' => 'Editar',
-        ];
+    $request = [
+        'tipoacao' => 'Editar',
+    ];
 
-        $data = [
-            'cod_tipo_ocorrencia_disciplinar' => $typeOrignal->getKey(),
-            'ref_cod_instituicao' => $editType->ref_cod_instituicao,
-            'nm_tipo' => $editType->nm_tipo,
-            'descricao' => $editType->descricao,
-            'max_ocorrencias' => $editType->max_ocorrencias,
-        ];
+    $data = [
+        'cod_tipo_ocorrencia_disciplinar' => $typeOrignal->getKey(),
+        'ref_cod_instituicao' => $editType->ref_cod_instituicao,
+        'nm_tipo' => $editType->nm_tipo,
+        'descricao' => $editType->descricao,
+        'max_ocorrencias' => $editType->max_ocorrencias,
+    ];
 
-        $payload = array_merge($request, $data);
-        $this->post('/intranet/educar_tipo_ocorrencia_disciplinar_cad.php', $payload)
-            ->assertRedirectContains('educar_tipo_ocorrencia_disciplinar_lst.php');
+    $payload = array_merge($request, $data);
+    $this->post('/intranet/educar_tipo_ocorrencia_disciplinar_cad.php', $payload)
+        ->assertRedirectContains('educar_tipo_ocorrencia_disciplinar_lst.php');
 
-        $this->assertDatabaseHas($editType, [
-            'cod_tipo_ocorrencia_disciplinar' => $typeOrignal->getKey(),
-            'ref_usuario_exc' => $user->getKey(),
-            'ref_cod_instituicao' => $editType->ref_cod_instituicao,
-            'nm_tipo' => $editType->nm_tipo,
-            'descricao' => $editType->descricao,
-            'max_ocorrencias' => $editType->max_ocorrencias,
-            'ativo' => 1,
-        ]);
-    }
-}
+    $this->assertDatabaseHas($editType, [
+        'cod_tipo_ocorrencia_disciplinar' => $typeOrignal->getKey(),
+        'ref_usuario_exc' => $user->getKey(),
+        'ref_cod_instituicao' => $editType->ref_cod_instituicao,
+        'nm_tipo' => $editType->nm_tipo,
+        'descricao' => $editType->descricao,
+        'max_ocorrencias' => $editType->max_ocorrencias,
+        'ativo' => 1,
+    ]);
+});

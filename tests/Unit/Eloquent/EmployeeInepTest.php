@@ -1,24 +1,17 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\Employee;
 use App\Models\EmployeeInep;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class EmployeeInepTest extends EloquentTestCase
-{
-    public $relations = [
-        'employee' => Employee::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return EmployeeInep::class;
-    }
+beforeEach(fn () => $this->eloquent(EmployeeInep::class, relations: [
+    'employee' => Employee::class,
+]));
 
-    public function test_get_number_attribute(): void
-    {
-        $this->assertEquals($this->model->cod_docente_inep, $this->model->number);
-    }
-}
+EloquentModelTestCase::registerModelTests();
+
+test('get number attribute', function () {
+    $this->assertEquals($this->model->cod_docente_inep, $this->model->number);
+});

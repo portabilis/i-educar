@@ -1,23 +1,14 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyGrade;
 use App\Models\LegacyGradeSequence;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyGradeSequenceTest extends EloquentTestCase
-{
-    protected $relations = [
-        'gradeOrigin' => LegacyGrade::class,
-        'gradeDestiny' => LegacyGrade::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyGradeSequence::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyGradeSequence::class, relations: [
+    'gradeOrigin' => LegacyGrade::class,
+    'gradeDestiny' => LegacyGrade::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

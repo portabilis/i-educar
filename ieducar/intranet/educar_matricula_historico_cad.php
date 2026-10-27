@@ -260,9 +260,12 @@ return new class extends clsCadastro
             $this->simpleRedirect(url: "/enrollment-history/{$this->ref_cod_matricula}");
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Formular()

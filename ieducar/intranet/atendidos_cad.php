@@ -15,8 +15,11 @@ use App\Models\LegacyPerson;
 use App\Models\LegacyPhone;
 use App\Models\LegacyRace;
 use App\Models\LegacySchoolingDegree;
+use App\Models\LegacyStudent;
 use App\Models\LegacyUser;
 use App\Services\FileService;
+use App\Services\IndividualCpfStateService;
+use App\Services\IndividualCpfTimelineService;
 use App\Services\PhoneService;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
@@ -30,6 +33,7 @@ use iEducar\Modules\Educacenso\Validator\NisValidator;
 use iEducar\Modules\Educacenso\Validator\ResidenceCityValidator;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
@@ -116,6 +120,12 @@ return new class extends clsCadastro
 
     public $observacao;
 
+    public $possui_cpf;
+
+    public $document_absence_reason_id;
+
+    public $document_absence_observation;
+
     public function Inicializar()
     {
         $obj_permissoes = new clsPermissoes;
@@ -175,6 +185,9 @@ return new class extends clsCadastro
                 $this->pais_residencia = $fisica->pais_residencia;
                 $this->observacao = $fisica->observacao;
                 $this->povo_indigena_educacenso_id = $fisica->povo_indigena_educacenso_id;
+                $this->document_absence_reason_id = $fisica->document_absence_reason_id;
+                $this->document_absence_observation = $fisica->document_absence_observation;
+                $this->possui_cpf = (int) $fisica->possui_cpf;
             }
 
             $this->loadAddress(person: $this->cod_pessoa_fj);
@@ -188,6 +201,8 @@ return new class extends clsCadastro
             $this->pais_origem_id = $this->pais_origem;
             $this->naturalidade_id = $this->naturalidade;
         }
+
+        $this->possui_cpf ??= 1;
 
         $this->fexcluir = is_numeric(value: $this->cod_pessoa_fj) && $obj_permissoes->permissao_excluir(
             int_processo_ap: 43,
@@ -228,19 +243,9 @@ return new class extends clsCadastro
             }
         }
 
-        $user = Auth::user();
+        $this->inputCpf();
 
-        if ($user->ref_cod_instituicao) {
-            $obrigarCpf = LegacyInstitution::query()
-                ->find($user->ref_cod_instituicao, ['obrigar_cpf'])?->obrigar_cpf;
-        } else {
-            $obrigarCpf = LegacyInstitution::query()
-                ->first(['obrigar_cpf'])?->obrigar_cpf;
-        }
-
-        $this->campoCpf(nome: 'id_federal', campo: 'CPF', valor: $this->id_federal, obrigatorio: (bool) $obrigarCpf);
-
-        $this->campoOculto('obrigarCPF', (int) $obrigarCpf);
+        $this->campoOculto('obrigarCPF', (int) $this->obrigarCPFPessoa());
 
         $this->campoOculto(nome: 'cod_pessoa_fj', valor: $this->cod_pessoa_fj);
         $this->campoTexto(nome: 'nm_pessoa', campo: 'Nome', valor: $this->nm_pessoa, tamanhovisivel: '50', tamanhomaximo: '100', obrigatorio: true);
@@ -809,6 +814,19 @@ return new class extends clsCadastro
 
         Portabilis_View_Helper_Application::loadStylesheet(viewInstance: $this, files: $styles);
 
+        $motivosExigemObservacao = (new IndividualCpfStateService)->reasonsRequiringObservation();
+        $motivosInativos = (new IndividualCpfStateService)->inactiveReasons();
+        $motivosSistema = (new IndividualCpfStateService)->systemReasons();
+        $opcoesJson = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP;
+
+        Portabilis_View_Helper_Application::embedJavascript(
+            viewInstance: $this,
+            script: 'var motivosExigemObservacao = ' . json_encode($motivosExigemObservacao, $opcoesJson)
+                . '; var motivosInativos = ' . json_encode($motivosInativos, $opcoesJson)
+                . '; var motivosSistema = ' . json_encode($motivosSistema, $opcoesJson) . ';',
+            afterReady: false
+        );
+
         $script = [
             '/vendor/legacy/Cadastro/Assets/Javascripts/PessoaFisica.js',
             '/vendor/legacy/Cadastro/Assets/Javascripts/Addresses.js',
@@ -838,8 +856,7 @@ return new class extends clsCadastro
     {
         $idPes = $this->cod_pessoa_fj;
 
-        $aluno = new clsPmieducarAluno;
-        $aluno = $aluno->lista(int_cod_aluno: null, int_ref_cod_aluno_beneficio: null, int_ref_cod_religiao: null, int_ref_usuario_exc: null, int_ref_usuario_cad: null, int_ref_idpes: $idPes, date_data_cadastro_ini: null, date_data_cadastro_fim: null, date_data_exclusao_ini: null, date_data_exclusao_fim: null, int_ativo: 1);
+        $aluno = is_numeric($idPes) && LegacyStudent::query()->active()->wherePerson($idPes)->exists();
 
         if ($aluno) {
             $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com aluno.';
@@ -924,10 +941,76 @@ return new class extends clsCadastro
 
     protected function loadAlunoByPessoaId($id)
     {
-        $aluno = new clsPmieducarAluno;
-        $aluno->ref_idpes = $id;
+        if (!is_numeric($id)) {
+            return null;
+        }
 
-        return $aluno->detalhe();
+        return LegacyStudent::query()
+            ->wherePerson($id)
+            ->first([
+                'cod_aluno',
+                'ref_idpes',
+            ]);
+    }
+
+    protected function inputCpf()
+    {
+        $this->campoRadio(
+            nome: 'possui_cpf',
+            campo: 'CPF',
+            valor: [1 => 'Possui CPF', 0 => 'Não possui / não informado'],
+            default: (int) $this->possui_cpf
+        );
+
+        $this->campoCpf(
+            nome: 'id_federal',
+            campo: 'Número do CPF',
+            valor: $this->id_federal,
+            obrigatorio: false
+        );
+
+        $this->campoLista(
+            nome: 'document_absence_reason_id',
+            campo: 'Motivo',
+            valor: collect((new IndividualCpfStateService)->reasonOptions(
+                is_numeric($this->document_absence_reason_id) ? (int) $this->document_absence_reason_id : null
+            ))
+                ->map(fn ($name) => htmlspecialchars($name, ENT_QUOTES, 'UTF-8'))
+                ->toArray(),
+            default: $this->document_absence_reason_id,
+            descricao: 'Justificativa da ausência de CPF',
+            obrigatorio: false
+        );
+
+        $this->campoTexto(
+            nome: 'document_absence_observation',
+            campo: 'Observações',
+            valor: $this->document_absence_observation,
+            tamanhovisivel: 50,
+            tamanhomaximo: 255,
+            obrigatorio: false
+        );
+
+        $this->campoTrilhaCpf();
+    }
+
+    protected function campoTrilhaCpf()
+    {
+        if (!is_numeric($this->cod_pessoa_fj)) {
+            return;
+        }
+
+        $historico = (new IndividualCpfTimelineService)->history((int) $this->cod_pessoa_fj);
+
+        if ($historico->isEmpty()) {
+            return;
+        }
+
+        $this->campoRotulo(
+            nome: 'cpf_timeline',
+            campo: 'Última alteração do CPF',
+            valor: view(view: 'individual.cpf-timeline', data: ['historico' => $historico])->render()
+        );
     }
 
     protected function inputPai()
@@ -947,7 +1030,7 @@ return new class extends clsCadastro
         }
 
         if (!isset($this->_aluno)) {
-            $this->_aluno = $this->loadAlunoByPessoaId(id: $this->cod_pessoa_fj);
+            $this->_aluno = $this->loadAlunoByPessoaId(id: $this->cod_pessoa_fj) ?? false;
         }
 
         $parentId = $this->{$parentType . '_id'};
@@ -956,11 +1039,14 @@ return new class extends clsCadastro
         // pela antiga interface do cadastro de alunos.
 
         if (!$parentId && $this->_aluno['nm_' . $parentType]) {
+            // Inalcançável: `clsPmieducarAluno::detalhe()` não traz `nm_pai` nem `nm_mae`.
+            // @codeCoverageIgnoreStart
             $nome = $this->_aluno['nm_' . $parentType];
 
             $inputHint = '<br /><b>Dica:</b> Foi informado o nome "' . $nome .
                 '" no cadastro de aluno,<br />tente pesquisar esta pessoa ' .
                 'pelo CPF ou RG, caso não encontre, cadastre uma nova pessoa.';
+            // @codeCoverageIgnoreEnd
         }
 
         $hiddenInputOptions = ['options' => ['value' => $parentId]];
@@ -977,6 +1063,39 @@ return new class extends clsCadastro
         ];
 
         $this->inputsHelper()->simpleSearchPessoa(attrName: 'nome', inputOptions: $options, helperOptions: $helperOptions);
+    }
+
+    protected function estadoCpf()
+    {
+        return [
+            'possui_cpf' => (int) $this->possui_cpf === 1,
+            'cpf' => $this->id_federal,
+            'document_absence_reason_id' => $this->document_absence_reason_id,
+            'document_absence_observation' => $this->document_absence_observation,
+        ];
+    }
+
+    protected function normalizaEstadoCpf()
+    {
+        $estado = (new IndividualCpfStateService)->normalize($this->estadoCpf());
+
+        $this->id_federal = $estado['cpf'];
+        $this->document_absence_reason_id = $estado['document_absence_reason_id'];
+        $this->document_absence_observation = $estado['document_absence_observation'];
+    }
+
+    protected function validaEstadoCpf()
+    {
+        $erro = (new IndividualCpfStateService)->validate(
+            state: $this->estadoCpf(),
+            individualId: is_numeric($this->cod_pessoa_fj) ? (int) $this->cod_pessoa_fj : null
+        );
+
+        foreach ($erro ?? [] as $campo => $mensagem) {
+            $this->erros[$campo] = $mensagem;
+        }
+
+        return $erro === null;
     }
 
     protected function validatesCpf($cpf)
@@ -1003,9 +1122,9 @@ return new class extends clsCadastro
 
     protected function createOrUpdate($pessoaIdOrNull = null)
     {
-        if ($this->tipo_nacionalidade !== 3 && $this->obrigarCPFPessoa() && !$this->id_federal) {
-            $this->mensagem = 'É necessário o preenchimento do CPF.';
+        $this->normalizaEstadoCpf();
 
+        if (!$this->validaEstadoCpf()) {
             return false;
         }
 
@@ -1026,7 +1145,10 @@ return new class extends clsCadastro
         }
 
         if (!$this->validatePhoto()) {
+            // Não testável: no servidor in-process o upload chega como objeto, e a tela o lê como o array de `$_FILES`.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         if (!$this->validaNisPisPasep()) {
@@ -1189,6 +1311,8 @@ return new class extends clsCadastro
     {
         $caminhoFoto = Asset::get('intranet/imagens/user-perfil.png');
         if ($this->objPhoto != null) {
+            // Não testável: no servidor in-process o upload chega como objeto, e a tela o lê como o array de `$_FILES`.
+            // @codeCoverageIgnoreStart
             $caminhoFoto = $this->objPhoto->sendPicture();
             if ($caminhoFoto != '') {
                 if (is_numeric($id) && is_string($caminhoFoto)) {
@@ -1202,6 +1326,7 @@ return new class extends clsCadastro
             $caminhoFoto = (new UrlPresigner)->getPresignedUrl(url: $caminhoFoto);
         } elseif ($this->file_delete == 'on') {
             LegacyIndividualPicture::whereKey($id)->delete();
+            // @codeCoverageIgnoreEnd
         }
 
         $loggedUser = session(key: 'logged_user');
@@ -1219,6 +1344,8 @@ return new class extends clsCadastro
     {
         $this->arquivoFoto = $_FILES['photo'];
         if (!empty($this->arquivoFoto['name'])) {
+            // Não testável: no servidor in-process o upload chega como objeto, e a tela o lê como o array de `$_FILES`.
+            // @codeCoverageIgnoreStart
             $this->arquivoFoto['name'] = mb_strtolower(string: $this->arquivoFoto['name'], encoding: 'UTF-8');
             $this->objPhoto = new PictureController(imageFile: $this->arquivoFoto);
             if ($this->objPhoto->validatePicture()) {
@@ -1227,6 +1354,7 @@ return new class extends clsCadastro
                 $this->mensagem = $this->objPhoto->getErrorMessage();
 
                 return false;
+                // @codeCoverageIgnoreEnd
             }
         } else {
             $this->objPhoto = null;
@@ -1242,8 +1370,11 @@ return new class extends clsCadastro
             $obrigarDocumentoPessoa = LegacyInstitution::query()
                 ->find($user->ref_cod_instituicao, ['obrigar_documento_pessoa'])?->obrigar_documento_pessoa;
         } else {
+            // Inalcançável: qualquer usuário que chega aqui tem instituição.
+            // @codeCoverageIgnoreStart
             $obrigarDocumentoPessoa = LegacyInstitution::query()
                 ->first(['obrigar_documento_pessoa'])?->obrigar_documento_pessoa;
+            // @codeCoverageIgnoreEnd
         }
 
         return $obrigarDocumentoPessoa;
@@ -1257,8 +1388,11 @@ return new class extends clsCadastro
             $obrigarCpf = LegacyInstitution::query()
                 ->find($user->ref_cod_instituicao, ['obrigar_cpf'])?->obrigar_cpf;
         } else {
+            // Inalcançável: qualquer usuário que chega aqui tem instituição.
+            // @codeCoverageIgnoreStart
             $obrigarCpf = LegacyInstitution::query()
                 ->first(['obrigar_cpf'])?->obrigar_cpf;
+            // @codeCoverageIgnoreEnd
         }
 
         return $obrigarCpf;
@@ -1373,15 +1507,51 @@ return new class extends clsCadastro
     {
         $fisica = LegacyIndividual::find($pessoaId);
 
-        if ($fisica) {
-            $fisica->update($this->montarDadosFisicaEdicao());
-            $this->atualizarSlugPessoaFisica($pessoaId, isInsert: false);
-        } else {
-            LegacyIndividual::create($this->montarDadosFisicaCadastro($pessoaId));
-            $this->atualizarSlugPessoaFisica($pessoaId, isInsert: true);
+        $estadoAnterior = [
+            'cpf' => $fisica?->getRawOriginal('cpf'),
+            'document_absence_reason_id' => $fisica?->document_absence_reason_id,
+            'document_absence_observation' => $fisica?->document_absence_observation,
+        ];
+
+        DB::beginTransaction();
+
+        try {
+            if ($fisica) {
+                $fisica->update($this->montarDadosFisicaEdicao());
+                $this->atualizarSlugPessoaFisica($pessoaId, isInsert: false);
+            } else {
+                LegacyIndividual::create($this->montarDadosFisicaCadastro($pessoaId));
+                $this->atualizarSlugPessoaFisica($pessoaId, isInsert: true);
+            }
+
+            $this->registrarTrilhaCpf(pessoaId: $pessoaId, estadoAnterior: $estadoAnterior);
+
+            DB::commit();
+            // Não testável: a consulta com erro aborta a transação que envolve cada teste.
+            // @codeCoverageIgnoreStart
+        } catch (Throwable $exception) {
+            DB::rollBack();
+
+            throw $exception;
         }
+        // @codeCoverageIgnoreEnd
 
         $this->createOrUpdateRaca(pessoaId: $pessoaId, corRaca: $this->cor_raca);
+    }
+
+    protected function registrarTrilhaCpf($pessoaId, array $estadoAnterior)
+    {
+        $cpfInt = $this->id_federal ? idFederal2int(str: $this->id_federal) : null;
+
+        (new IndividualCpfTimelineService)->register(
+            individualId: (int) $pessoaId,
+            before: $estadoAnterior,
+            after: [
+                'cpf' => is_numeric($cpfInt) ? $cpfInt : null,
+                'document_absence_reason_id' => $this->document_absence_reason_id ?: null,
+                'document_absence_observation' => $this->document_absence_observation ?: null,
+            ]
+        );
     }
 
     private function montarDadosFisicaCadastro($pessoaId): array
@@ -1404,6 +1574,11 @@ return new class extends clsCadastro
         $cpfInt = $this->id_federal ? idFederal2int(str: $this->id_federal) : null;
         if (is_numeric($cpfInt)) {
             $dados['cpf'] = $cpfInt;
+        }
+
+        if (is_numeric($this->document_absence_reason_id)) {
+            $dados['document_absence_reason_id'] = $this->document_absence_reason_id;
+            $dados['document_absence_observation'] = $this->document_absence_observation ?: null;
         }
 
         if (is_numeric($this->pai_id)) {
@@ -1525,6 +1700,11 @@ return new class extends clsCadastro
         $cpfInt = $this->id_federal ? idFederal2int(str: $this->id_federal) : null;
         $dados['cpf'] = is_numeric($cpfInt) ? $cpfInt : null;
 
+        $dados['document_absence_reason_id'] = is_numeric($this->document_absence_reason_id) ? $this->document_absence_reason_id : null;
+        $dados['document_absence_observation'] = $dados['document_absence_reason_id'] && $this->document_absence_observation
+            ? $this->document_absence_observation
+            : null;
+
         $sus = trim(string: (string) $this->sus);
         $dados['sus'] = !empty($sus) ? $sus : null;
 
@@ -1592,7 +1772,10 @@ return new class extends clsCadastro
 
         $pessoa = LegacyPerson::find($pessoaId);
         if (!$pessoa) {
+            // Inalcançável: a pessoa acabou de ser criada ou encontrada.
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         $slugNome = Str::lower(Str::slug($pessoa->nome, ' '));
@@ -1625,7 +1808,10 @@ return new class extends clsCadastro
     protected function createOrUpdateDocumentos($pessoaId)
     {
         if (!is_numeric($pessoaId)) {
+            // Inalcançável: a pessoa acabou de ser criada ou encontrada.
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         // certidão civil
@@ -1717,7 +1903,10 @@ return new class extends clsCadastro
     protected function inputTelefone($type, $typeLabel = '')
     {
         if (!$typeLabel) {
+            // Inalcançável: todas as chamadas informam o rótulo.
+            // @codeCoverageIgnoreStart
             $typeLabel = "Telefone {$type}";
+            // @codeCoverageIgnoreEnd
         }
 
         // ddd

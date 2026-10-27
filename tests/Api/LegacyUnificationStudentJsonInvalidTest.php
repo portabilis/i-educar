@@ -1,54 +1,40 @@
 <?php
 
-namespace Tests\Api;
-
-use App\Models\LegacyStudent;
 use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\LoginFirstUser;
 use Tests\TestCase;
 
-class LegacyUnificationStudentJsonInvalidTest extends TestCase
-{
-    use DatabaseTransactions;
-    use LoginFirstUser;
+uses(TestCase::class, DatabaseTransactions::class, LoginFirstUser::class);
 
-    private LegacyStudent $studentOne;
+beforeEach(function () {
+    $this->loginWithFirstUser();
 
-    private LegacyStudent $studentTwo;
+    $this->studentOne = LegacyStudentFactory::new()->create();
+    $this->studentTwo = LegacyStudentFactory::new()->create();
+});
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->loginWithFirstUser();
+test('json invalid', function () {
+    $request = [
+        'tipoacao' => 'Novo',
+    ];
 
-        $this->studentOne = LegacyStudentFactory::new()->create();
-        $this->studentTwo = LegacyStudentFactory::new()->create();
-    }
-
-    public function test_json_invalid(): void
-    {
-        $request = [
-            'tipoacao' => 'Novo',
-        ];
-
-        $data = [
-            'alunos' => [
-                [
-                    'codAluno' => $this->studentOne->getKey(),
-                    'aluno_principal' => true,
-                ],
-                [
-                    'codAluno' => $this->studentTwo->getKey(),
-                    'aluno_principal' => false,
-                ],
+    $data = [
+        'alunos' => [
+            [
+                'codAluno' => $this->studentOne->getKey(),
+                'aluno_principal' => true,
             ],
-        ];
+            [
+                'codAluno' => $this->studentTwo->getKey(),
+                'aluno_principal' => false,
+            ],
+        ],
+    ];
 
-        $payload = array_merge($request, $data);
+    $payload = array_merge($request, $data);
 
-        $this->post('/intranet/educar_unifica_aluno.php', $payload)
-            ->assertSuccessful()
-            ->assertSee('Informações inválidas para unificação');
-    }
-}
+    $this->post('/intranet/educar_unifica_aluno.php', $payload)
+        ->assertSuccessful()
+        ->assertSee('Informações inválidas para unificação');
+});

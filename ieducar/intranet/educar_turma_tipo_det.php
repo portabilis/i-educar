@@ -32,10 +32,14 @@ return new class extends clsDetalhe
 
         $this->cod_turma_tipo = $_GET['cod_turma_tipo'];
 
-        $registro = LegacySchoolClassType::find(id: $this->cod_turma_tipo)->getAttributes();
+        $registro = LegacySchoolClassType::find(id: $this->cod_turma_tipo)?->getAttributes();
 
         if (!$registro) {
-            $this->simpleRedirect(url: 'educar_turma_tipo_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_turma_tipo_lst.php',
+                registro: 'tipo de turma',
+                codigo: $this->cod_turma_tipo,
+            );
         }
 
         $obj_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
@@ -46,15 +50,15 @@ return new class extends clsDetalhe
         $nivel_usuario = $obj_permissao->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe(detalhe: ['Instituição', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe(detalhe: ['Instituição', e($registro['ref_cod_instituicao'])]);
             }
         }
 
         if ($registro['nm_tipo']) {
-            $this->addDetalhe(detalhe: ['Turma Tipo', "{$registro['nm_tipo']}"]);
+            $this->addDetalhe(detalhe: ['Turma Tipo', e($registro['nm_tipo'])]);
         }
         if ($registro['sgl_tipo']) {
-            $this->addDetalhe(detalhe: ['Sigla', "{$registro['sgl_tipo']}"]);
+            $this->addDetalhe(detalhe: ['Sigla', e($registro['sgl_tipo'])]);
         }
 
         $obj_permissao = new clsPermissoes;

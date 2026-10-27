@@ -4,6 +4,12 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
+/**
+ * Apaga e recria o banco informado e restaura o backup com `psql` e
+ * `pg_restore` no shell: não roda na suíte de testes.
+ *
+ * @codeCoverageIgnore
+ */
 class DatabaseRestoreCommand extends Command
 {
     /**

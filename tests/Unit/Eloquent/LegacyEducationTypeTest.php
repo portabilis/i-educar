@@ -1,22 +1,13 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyEducationType;
 use App\Models\LegacyInstitution;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyEducationTypeTest extends EloquentTestCase
-{
-    public $relations = [
-        'institution' => LegacyInstitution::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyEducationType::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyEducationType::class, relations: [
+    'institution' => LegacyInstitution::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

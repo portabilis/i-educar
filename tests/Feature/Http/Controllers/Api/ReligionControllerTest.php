@@ -1,41 +1,33 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\Api;
-
 use App\Models\Religion;
 use Database\Factories\ReligionFactory;
 use Tests\ResourceTestCase;
 
-class ReligionControllerTest extends ResourceTestCase
-{
-    protected string $uri = '/api/religion';
+uses(ResourceTestCase::class);
 
-    protected string $model = Religion::class;
+beforeEach(function () {
+    $this->uri = '/api/religion';
+    $this->model = Religion::class;
+    $this->factory = ReligionFactory::class;
+});
 
-    protected string $factory = ReligionFactory::class;
+test('index', function () {
+    $this->index();
+});
 
-    public function test_index(): void
-    {
-        $this->index();
-    }
+test('store', function () {
+    $this->store();
+});
 
-    public function test_store(): void
-    {
-        $this->store();
-    }
+test('show', function () {
+    $this->show();
+});
 
-    public function test_show(): void
-    {
-        $this->show();
-    }
+test('update', function () {
+    $this->update();
+});
 
-    public function test_update(): void
-    {
-        $this->update();
-    }
-
-    public function test_delete(): void
-    {
-        $this->destroy();
-    }
-}
+test('delete', function () {
+    $this->destroy();
+});

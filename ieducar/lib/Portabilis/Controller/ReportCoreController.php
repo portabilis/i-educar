@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Modules\ErrorTracking\TrackerFactory;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Support\Facades\Auth;
 
 class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_EditController
@@ -135,6 +136,9 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
                 throw new Exception('No report result to render!');
             }
 
+            // Fora dos testes: a entrega do PDF termina com `exit()`, que encerraria
+            // o processo que roda a suíte.
+            // @codeCoverageIgnoreStart
             $this->headers($result);
 
             ob_clean();
@@ -142,11 +146,13 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
             echo $result;
             exit();
+            // @codeCoverageIgnoreEnd
         } catch (Exception $e) {
-            if (config('legacy.modules.error.track')) {
+            // Respeita o $dontReport do handler para não reportar erros de uso
+            if (config('legacy.modules.error.track') && app(ExceptionHandler::class)->shouldReport($e)) {
                 $tracker = TrackerFactory::getTracker(config('legacy.modules.error.tracker_name'));
                 $data['controller'] = app('request')->path();
-                $data['action'] = $this->report->templateName();
+                $data['action'] = $this->trackerAction();
                 $tracker->notify($e, $data);
             }
 
@@ -159,6 +165,23 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
             }
 
             $this->renderError($details);
+        }
+    }
+
+    /**
+     * Identifica o relatório no rastreamento de erros.
+     *
+     * O templateName() pode ser a própria origem do erro; chamá-lo de novo
+     * dentro do catch relançaria a exceção sem exibir o erro ao usuário.
+     *
+     * @return string
+     */
+    private function trackerAction()
+    {
+        try {
+            return $this->report->templateName();
+        } catch (Throwable) {
+            return get_class($this->report);
         }
     }
 

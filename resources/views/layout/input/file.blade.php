@@ -1,1 +1,1 @@
-<input name="file" type="file">
+<input name="file" aria-label="Arquivo" type="file">

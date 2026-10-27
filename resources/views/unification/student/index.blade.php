@@ -12,20 +12,20 @@
                 <td class="formdktd" colspan="2" height="24"><b>Unificação de alunos</b></td>
             </tr>
             <tr id="tr_nm_instituicao">
-                <td class="formmdtd" valign="top"><span class="form">Instituição:</span></td>
+                <td class="formmdtd" valign="top"><span class="form"><label for="ref_cod_instituicao">Instituição:</label></span></td>
                 <td class="formmdtd" valign="top">
                     @include('form.select-institution')
                 </td>
             </tr>
             <tr id="tr_nm_escola">
-                <td class="formlttd" valign="top"><span class="form">Escola:</span></td>
+                <td class="formlttd" valign="top"><span class="form"><label for="ref_cod_escola">Escola:</label></span></td>
                 <td class="formlttd" valign="top">
                     @include('form.select-school')
                 </td>
             </tr>
             <tr>
                 <td class="formmdtd" valign="top">
-                    <span class="form">Nome do aluno:</span>
+                    <span class="form"><label for="name">Nome do aluno:</label></span>
                 </td>
                 <td class="formmdtd" valign="top">
                     <span class="form">

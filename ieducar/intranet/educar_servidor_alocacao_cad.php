@@ -118,8 +118,12 @@ return new class extends clsCadastro
         );
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb('Alocar servidor', [
-            url('intranet/educar_servidores_index.php') => 'Servidores',
+        // Início > Servidores > Nome > Alocações > Nova (ou Editar). A tela
+        // legada edita em modo "Novo"; o que distingue é a alocação carregada.
+        $this->breadcrumb(is_numeric($this->cod_servidor_alocacao) ? 'Editar' : 'Nova', [
+            url('intranet/educar_servidor_lst.php') => 'Servidores',
+            url("intranet/educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}") => LegacyPerson::whereKey($this->ref_cod_servidor)->value('nome'),
+            url("intranet/{$this->url_cancelar}") => 'Alocações',
         ]);
 
         return $retorno;
@@ -402,17 +406,20 @@ return new class extends clsCadastro
 
     public function arrayHhmmToMinutes($array)
     {
+        // Inalcançável: nenhum ponto do sistema chama este método.
+        // @codeCoverageIgnoreStart
         $total = 0;
         foreach ($array as $value) {
             $total += $this->hhmmToMinutes($value);
         }
 
         return $total;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Formular()
     {
-        $this->title = 'Servidores - Servidor Alocação';
+        $this->title = 'Servidores - Alocação';
         $this->processoAp = 635;
     }
 };

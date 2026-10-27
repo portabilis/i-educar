@@ -56,11 +56,11 @@
     <h1>{{ config('legacy.config.ieducar_entity_name') }}</h1>
 
     @if (session('status'))
-        <p class="success">{{ session('status') }}</p>
+        <output class="success">{{ session('status') }}</output>
     @endif
 
     @if($errors->count())
-        <p class="error">{{ $errors->first() }}</p>
+        <p class="error" role="alert">{{ $errors->first() }}</p>
     @endif
 
     <div id="login-form" class="box shadow">

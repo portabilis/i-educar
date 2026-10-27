@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property bool                   $dependencia
  * @property int                    $cod_matricula
  * @property int                    $ref_ref_cod_escola
+ * @property int                    $ref_ref_cod_serie
  * @property int                    $ano
  * @property int                    $aprovado
  * @property int                    $ativo
