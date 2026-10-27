@@ -2,7 +2,9 @@
 
 use App\Models\LegacyDisciplinaryOccurrenceType;
 use App\Models\LegacyGeneralConfiguration;
+use App\Models\LegacyRegistration;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
+use App\Models\LegacyStudent;
 use Illuminate\Validation\ValidationException;
 
 return new class extends clsCadastro
@@ -106,13 +108,32 @@ return new class extends clsCadastro
             $this->url_cancelar = ($retorno == 'Editar') ? "educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_tipo_ocorrencia_disciplinar={$registro['ref_cod_tipo_ocorrencia_disciplinar']}&sequencial={$registro['sequencial']}" : "educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}";
         }
 
-        $this->breadcrumb('Ocorrências disciplinares da matrícula', [
-            url('intranet/educar_index.php') => 'Escola',
-        ]);
+        $this->montarBreadcrumb(editando: $retorno == 'Editar');
 
         $this->nome_url_cancelar = 'Cancelar';
 
         return $retorno;
+    }
+
+    private function montarBreadcrumb(bool $editando): void
+    {
+        // Aberta pelo menu, sem matrícula, a tela é avulsa: a matrícula é
+        // escolhida no formulário e o caminho não tem aluno nem matrícula
+        if (!is_numeric($this->ref_cod_matricula)) {
+            $this->breadcrumb('Ocorrências disciplinares', [
+                url('intranet/educar_index.php') => 'Escola',
+            ]);
+        } else {
+            // Início > Escola > Alunos > Nome > Matrícula > Ocorrências disciplinares > Nova (ou Editar)
+            $registration = LegacyRegistration::find($this->ref_cod_matricula);
+            $this->breadcrumb($editando ? 'Editar' : 'Nova', [
+                url('intranet/educar_index.php') => 'Escola',
+                url('intranet/educar_aluno_lst.php') => 'Alunos',
+                url("intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+                url("intranet/educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}") => 'Matrícula',
+                url("intranet/educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}") => 'Ocorrências disciplinares',
+            ]);
+        }
     }
 
     public function Gerar()
@@ -123,11 +144,13 @@ return new class extends clsCadastro
             if ($detalhe_aluno) {
                 $detalhe_aluno = array_shift($detalhe_aluno);
             }
-            $obj_aluno = new clsPmieducarAluno;
-            $det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'], null, null, null, null, null, null, null, null, null, 1);
-            $det_aluno = current($det_aluno);
+            $nm_aluno = LegacyStudent::query()
+                ->active()
+                ->whereStudent($detalhe_aluno['ref_cod_aluno'])
+                ->joinPerson()
+                ->value('pessoa.nome');
 
-            $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $det_aluno['nome_aluno']);
+            $this->campoRotulo('nm_pessoa', 'Nome do Aluno', $nm_aluno);
         } else {
             $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola']);
             // FIXME #parameters
@@ -198,8 +221,11 @@ return new class extends clsCadastro
                 $resposta = json_decode($this->enviaOcorrenciaNovoEducacao($obj->id));
 
                 if (is_array($resposta->errors)) {
+                    // Não testável: depende da resposta de um serviço externo, e o ramo termina em `exit`.
+                    // @codeCoverageIgnoreStart
                     echo 'Erro ao enviar ocorrencia disciplinar ao sistema externo: ' . $resposta->errors[0];
                     exit;
+                    // @codeCoverageIgnoreEnd
                 }
             }
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
@@ -213,9 +239,12 @@ return new class extends clsCadastro
             return true;
         }
 
+        // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
@@ -245,9 +274,12 @@ return new class extends clsCadastro
             }
         }
 
+        // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()
@@ -264,9 +296,12 @@ return new class extends clsCadastro
             $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
         }
 
+        // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     protected function getDataHoraCadastro()

@@ -1,7 +1,10 @@
 <?php
 
+use App\Models\LegacyRegistration;
+use App\Models\LegacySchoolClass;
 use iEducar\Support\Exceptions\Exception as iEducarException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ApiCoreController extends Core_Controller_Page_EditController
 {
@@ -26,6 +29,8 @@ class ApiCoreController extends Core_Controller_Page_EditController
     protected $_processoAp = 0;
 
     protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
+
+    protected $_authenticatedByAccessKey = false;
 
     public function __construct()
     {
@@ -67,6 +72,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
         if (!$canAccess) {
             $canAccess = ($this->validatesAccessKey() && $this->validatesSignature());
+            $this->_authenticatedByAccessKey = $canAccess;
         }
 
         if (!$canAccess) {
@@ -119,6 +125,88 @@ class ApiCoreController extends Core_Controller_Page_EditController
         }
 
         return $can;
+    }
+
+    protected function validatesAuthorizationToView()
+    {
+        if ($this->_processoAp === 0 || $this->_authenticatedByAccessKey) {
+            return true;
+        }
+
+        $can = Gate::allows('view', $this->getBaseProcessoAp());
+
+        if (!$can) {
+            $this->messenger->append("Usuário sem permissão para visualizar '{$this->getRequest()->resource}'.");
+        }
+
+        return $can;
+    }
+
+    /**
+     * Permite o acesso quando o usuário tem a permissão informada em pelo
+     * menos um dos processos, para recursos usados por mais de uma tela.
+     */
+    protected function validatesAuthorizationToAnyProcess(array $processes, string $ability = 'view')
+    {
+        if ($this->_authenticatedByAccessKey) {
+            return true;
+        }
+
+        foreach ($processes as $process) {
+            if (Gate::allows($ability, $process)) {
+                return true;
+            }
+        }
+
+        $this->messenger->append("Usuário sem permissão para acessar '{$this->getRequest()->resource}'.");
+
+        return false;
+    }
+
+    /**
+     * Usuários de nível escola só acessam dados das escolas às quais estão
+     * vinculados.
+     */
+    protected function validatesAccessToSchool($schoolId)
+    {
+        if (!$this->requiresSchoolScope()) {
+            return true;
+        }
+
+        if (Auth::user()->schools()->where('cod_escola', (int) $schoolId)->exists()) {
+            return true;
+        }
+
+        $this->messenger->append("Usuário sem permissão para acessar '{$this->getRequest()->resource}' desta escola.");
+
+        return false;
+    }
+
+    protected function validatesAccessToRegistrationSchool($registrationId)
+    {
+        if (!$this->requiresSchoolScope()) {
+            return true;
+        }
+
+        $schoolId = LegacyRegistration::query()->whereKey((int) $registrationId)->value('ref_ref_cod_escola');
+
+        return $this->validatesAccessToSchool($schoolId);
+    }
+
+    protected function validatesAccessToSchoolClassSchool($schoolClassId)
+    {
+        if (!$this->requiresSchoolScope()) {
+            return true;
+        }
+
+        $schoolId = LegacySchoolClass::query()->whereKey((int) $schoolClassId)->value('ref_ref_cod_escola');
+
+        return $this->validatesAccessToSchool($schoolId);
+    }
+
+    private function requiresSchoolScope()
+    {
+        return !$this->_authenticatedByAccessKey && (bool) Auth::user()?->isSchooling();
     }
 
     protected function canAcceptRequest()

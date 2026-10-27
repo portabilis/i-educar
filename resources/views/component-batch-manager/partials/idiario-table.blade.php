@@ -8,8 +8,8 @@
             <td class="titulo-tabela-listagem" colspan="2">Registros no i-Diário</td>
         </tr>
         <tr>
-            <td class="formdktd" style="vertical-align: top; text-align: left; width: 60%">Tipo</td>
-            <td class="formdktd" style="vertical-align: top; text-align: left; width: 40%">Quantidade</td>
+            <th scope="col" class="formdktd" style="vertical-align: top; text-align: left; width: 60%">Tipo</th>
+            <th scope="col" class="formdktd" style="vertical-align: top; text-align: left; width: 40%">Quantidade</th>
         </tr>
         @php $idiarioRowClass = 'formlttd'; @endphp
         @foreach($idiarioData as $item)

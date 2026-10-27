@@ -132,7 +132,7 @@ trait LegacySoftDeletes
             });
         }
 
-        return $this->runSoftDelete();
+        $this->runSoftDelete();
     }
 
     /**

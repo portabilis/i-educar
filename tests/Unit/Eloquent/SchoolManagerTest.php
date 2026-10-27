@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\Employee;
 use App\Models\Individual;
 use App\Models\LegacySchool;
@@ -11,37 +9,31 @@ use App\Models\ManagerRole;
 use App\Models\SchoolManager;
 use Database\Factories\LegacySchoolFactory;
 use Database\Factories\SchoolManagerFactory;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class SchoolManagerTest extends EloquentTestCase
-{
-    protected $relations = [
-        'individual' => Individual::class,
-        'school' => LegacySchool::class,
-        'employee' => Employee::class,
-        'role' => ManagerRole::class,
-        'accessCriteria' => ManagerAccessCriteria::class,
-        'linkType' => ManagerLinkType::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return SchoolManager::class;
-    }
+beforeEach(fn () => $this->eloquent(SchoolManager::class, relations: [
+    'individual' => Individual::class,
+    'school' => LegacySchool::class,
+    'employee' => Employee::class,
+    'role' => ManagerRole::class,
+    'accessCriteria' => ManagerAccessCriteria::class,
+    'linkType' => ManagerLinkType::class,
+]));
 
-    public function test_is_chief(): void
-    {
-        $this->assertEquals($this->model->chief, $this->model->isChief());
-    }
+EloquentModelTestCase::registerModelTests();
 
-    public function test_scope_of_school(): void
-    {
-        $school = LegacySchoolFactory::new()->create();
-        SchoolManagerFactory::new()->create(['school_id' => $school]);
-        SchoolManagerFactory::new()->create();
+test('is chief', function () {
+    $this->assertEquals($this->model->chief, $this->model->isChief());
+});
 
-        $modelSearch = $this->instanceNewEloquentModel()->ofSchool($school->id)->get();
-        $this->assertCount(1, $modelSearch);
-        $this->assertInstanceOf(SchoolManager::class, $modelSearch->first());
-    }
-}
+test('scope of school', function () {
+    $school = LegacySchoolFactory::new()->create();
+    SchoolManagerFactory::new()->create(['school_id' => $school]);
+    SchoolManagerFactory::new()->create();
+
+    $modelSearch = $this->instanceNewEloquentModel()->ofSchool($school->id)->get();
+    $this->assertCount(1, $modelSearch);
+    $this->assertInstanceOf(SchoolManager::class, $modelSearch->first());
+});

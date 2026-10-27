@@ -27,7 +27,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Servidor alocação - Detalhe';
+        $this->titulo = 'Alocação - Detalhe';
 
         $this->cod_servidor_alocacao = $_GET['cod_servidor_alocacao'];
 
@@ -36,7 +36,13 @@ return new class extends clsDetalhe
             : null;
 
         if (!$registro) {
-            $this->simpleRedirect('educar_servidor_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_servidor_lst.php',
+                registro: 'alocação',
+                feminino: true,
+                codigo: $this->cod_servidor_alocacao,
+                dica: 'Acesse a alocação pelo cadastro do servidor.',
+            );
         }
 
         $this->ref_cod_servidor = $registro['ref_cod_servidor'];
@@ -99,14 +105,17 @@ return new class extends clsDetalhe
         $this->url_cancelar = "educar_servidor_alocacao_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}";
         $this->largura = '100%';
 
-        $this->breadcrumb('Detalhe da alocação', [
-            url('intranet/educar_servidores_index.php') => 'Servidores',
+        // Início > Servidores > Nome > Alocações > Alocação
+        $this->breadcrumb('Alocação', [
+            url('intranet/educar_servidor_lst.php') => 'Servidores',
+            url("intranet/educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}") => $nome,
+            url("intranet/{$this->url_cancelar}") => 'Alocações',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'Servidores - Servidor alocação';
+        $this->title = 'Servidores - Alocação';
         $this->processoAp = 635;
     }
 };

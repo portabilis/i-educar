@@ -2,39 +2,31 @@
 
 use PHPUnit\Framework\MockObject\MockObject;
 
-class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
-{
-    public function test_cria_nova_instancia_de_falta_aluno()
-    {
-        $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
+uses(Avaliacao_Service_TestCommon::class);
 
-        $faltaSave = clone $faltaAluno;
-        $faltaSave->id = null;
+test('cria nova instancia de falta aluno', function () {
+    $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
-        // Configura mock para Avaliacao_Model_FaltaAlunoDataMapper
-        /** @var MockObject|Avaliacao_Model_FaltaAlunoDataMapper $mock */
-        $mock = $this->getCleanMock('Avaliacao_Model_FaltaAlunoDataMapper');
+    $faltaSave = clone $faltaAluno;
+    $faltaSave->id = null;
 
-        $mock
-            ->method('save')
-            ->with($faltaSave)
-            ->willReturn(true);
-        $mock
-            ->expects(self::exactly(2))
-            ->method('findAll')
-            ->willReturnOnConsecutiveCalls([], [$faltaAluno]);
-        $this->assertEquals(1, $this->_getConfigOption('matricula', 'cod_matricula'));
+    // Configura mock para Avaliacao_Model_FaltaAlunoDataMapper
+    /** @var MockObject|Avaliacao_Model_FaltaAlunoDataMapper $mock */
+    $mock = $this->getCleanMock('Avaliacao_Model_FaltaAlunoDataMapper');
 
-        $this->_setFaltaAlunoDataMapperMock($mock);
+    $mock
+        ->method('save')
+        ->with($faltaSave)
+        ->willReturn(true);
+    $mock
+        ->expects(self::exactly(2))
+        ->method('findAll')
+        ->willReturnOnConsecutiveCalls([], [$faltaAluno]);
+    $this->assertEquals($this->matricula->getKey(), $this->_getConfigOption('matricula', 'cod_matricula'));
 
-        $_GET['etapa'] = 'Rc';
+    $this->_setFaltaAlunoDataMapperMock($mock);
 
-        $this->_getServiceInstance();
-    }
+    $_GET['etapa'] = 'Rc';
 
-    protected function tearDown(): void
-    {
-        $_GET = [];
-        Portabilis_Utils_Database::$_db = null;
-    }
-}
+    $this->_getServiceInstance();
+});

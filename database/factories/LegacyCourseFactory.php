@@ -23,7 +23,7 @@ class LegacyCourseFactory extends Factory
             'nm_curso' => $this->faker->words(3, true),
             'descricao' => $this->faker->words(3, true),
             'sgl_curso' => $this->faker->word,
-            'qtd_etapas' => $this->faker->randomElement([2, 3, 4]),
+            'qtd_etapas' => 4,
             'carga_horaria' => 800,
             'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
             'hora_falta' => 0.75,

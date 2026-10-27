@@ -9,9 +9,9 @@
                     <b>Publicação de avisos</b>
                 </td>
             </tr>
-            <tr id="tr_description">
+            <tr id="tr_name">
                 <td class="formmdtd" valign="top" nowrap>
-                    <span class="form">Nome</span>
+                    <span class="form"><label for="name">Nome</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formmdtd" valign="top">
@@ -22,7 +22,7 @@
             </tr>
             <tr id="tr_description">
                 <td class="formmdtd" valign="top" nowrap>
-                    <span class="form">Conteúdo do aviso</span>
+                    <span class="form"><label for="description">Conteúdo do aviso</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formmdtd" valign="top">
@@ -33,7 +33,7 @@
             </tr>
             <tr id="tr_repeat_on_login">
                 <td class="formmdtd" valign="top" nowrap>
-                    <span class="form">Repetir aviso a cada login do usuário?</span>
+                    <span class="form"><label for="repeat_on_login">Repetir aviso a cada login do usuário?</label></span>
                 </td>
                 <td class="formmdtd" valign="top">
                    <span class="form">
@@ -43,7 +43,7 @@
             </tr>
             <tr id="tr_show_confirmation">
                 <td class="formmdtd" valign="top" nowrap>
-                    <span class="form">Exigir que o usuário marque "Estou ciente" para poder fechar o aviso?</span>
+                    <span class="form"><label for="show_confirmation">Exigir que o usuário marque "Estou ciente" para poder fechar o aviso?</label></span>
                 </td>
                 <td class="formmdtd" valign="top">
                    <span class="form">
@@ -53,7 +53,7 @@
             </tr>
             <tr id="tr_show_vacancy">
                 <td class="formmdtd" valign="top" nowrap>
-                    <span class="form">Incluir aviso de vagas disponíveis na unidades escolares vinculadas ao usuário?</span>
+                    <span class="form"><label for="show_vacancy">Incluir aviso de vagas disponíveis na unidades escolares vinculadas ao usuário?</label></span>
                     <i data-toogle="tooltip"
                        title="Ao marcar esta opção o sistema irá informar ao fim do aviso a quantidade de vagas livres nas turmas das unidades escolares vinculadas. Se o usuário for de nível gestão (institucional), apresentará as vagas de todas a rede municipal."
                        class="ml-5 fa fa-info-circle">
@@ -67,7 +67,7 @@
             </tr>
             <tr id="tr_active">
                 <td class="formmdtd" valign="top" nowrap>
-                    <span class="form">Ativar aviso</span></td>
+                    <span class="form"><label for="active">Ativar aviso</label></span></td>
                 <td class="formmdtd" valign="top">
                    <span class="form">
                        <input value="off" type="checkbox" name="active" id="active" onclick="fixupCheckboxValue(this)" autocomplete="off" @checked($announcement->deleted_at === null)>
@@ -75,7 +75,7 @@
                 </td>
             </tr>
             <tr id="tr_tipo_usuario">
-                <td class="formmdtd" valign="top"><span class="form">Tipos de usuários que serão notificados</span></td>
+                <td class="formmdtd" valign="top"><span class="form"><label for="tipo_usuario">Tipos de usuários que serão notificados</label></span></td>
                 <td class="formmdtd" valign="top">
                     @include('form.select-user-type-multiple')
                 </td>

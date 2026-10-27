@@ -28,8 +28,6 @@ return new class extends clsListagem
 
     public $ref_cod_servidor;
 
-    public $identificador;
-
     public function Gerar()
     {
         Session::put(key: [
@@ -39,7 +37,6 @@ return new class extends clsListagem
             'ref_cod_escola' => $_GET['ref_cod_escola'] ?? Session::get(key: 'ref_cod_escola'),
             'ref_cod_servidor' => $_GET['ref_cod_servidor'] ?? Session::get(key: 'ref_cod_servidor'),
             'professor' => $_GET['professor'] ?? Session::get(key: 'professor'),
-            'identificador' => $_GET['identificador'] ?? Session::get(key: 'identificador'),
         ]);
 
         if (!isset($_GET['tipo'])) {
@@ -54,11 +51,6 @@ return new class extends clsListagem
         $this->ref_cod_escola = Session::get(key: 'ref_cod_escola');
         $this->ref_cod_servidor = Session::get(key: 'ref_cod_servidor');
         $this->professor = Session::get(key: 'professor');
-        $this->identificador = Session::get(key: 'identificador');
-
-        if (isset($_GET['lst_matriculas']) && Session::has(key: 'lst_matriculas')) {
-            $this->lst_matriculas = $_GET['lst_matriculas'] ?? Session::get(key: 'lst_matriculas');
-        }
 
         Session::put(key: 'tipo', value: $_GET['tipo'] ?? Session::get(key: 'tipo'));
 
@@ -66,9 +58,6 @@ return new class extends clsListagem
         // Passa todos os valores obtidos no GET para atributos do objeto
         foreach ($_GET as $var => $val) {
             $this->$var = $val === '' ? null : $val;
-        }
-        if (isset($this->lst_matriculas)) {
-            $this->lst_matriculas = urldecode(string: $this->lst_matriculas);
         }
         $this->addCabecalhos(coluna: [
             'Nome do Servidor',

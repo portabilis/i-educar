@@ -4,24 +4,39 @@ on:
   push:
     branches:
       - 2.*
-      - main
 
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+  workflow_dispatch:
+
+  workflow_call:
+    inputs:
+      publish-baseline:
+        type: boolean
+        default: false
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   default:
-    name: Unit, Integration and Pages (PHP ${{ matrix.php-version }})
+    name: Unit, Integration and Pages
 
     if: '! github.event.pull_request.draft'
 
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        php-version: ['8.4', '8.5']
+    runs-on: [self-hosted, linux]
+
+    timeout-minutes: 60
+
+    # Na main roda o baseline do TIA: cancelá-lo a cada merge faz ele nunca
+    # terminar, e sem baseline todo PR roda a suíte completa. O GitHub mantém só
+    # o pendente mais recente do grupo, então a fila não acumula.
+    concurrency:
+      group: tests-${{ github.ref }}
+      cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
     env:
       APP_URL: http://localhost:8000
       APP_ENV: testing
@@ -41,10 +56,11 @@ jobs:
       LEGACY_SEED_DATA: false
       COMPOSER_ALLOW_SUPERUSER: 1
       NODE_OPTIONS: --max_old_space_size=1024
+      GH_TOKEN: ${{ github.token }}
 
     services:
       postgres:
-        image: postgres
+        image: postgres:18-alpine
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -56,13 +72,17 @@ jobs:
     steps:
       - name: Setup PHP
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-version }}
+          php-version: '8.5'
           extensions: bcmath, gd, pdo, pcntl, pdo_pgsql, pgsql, zip
+          coverage: pcov
         env:
           update: true
+          runner: self-hosted
 
       - name: Get composer cache directory
         id: composer-cache
@@ -81,5 +101,44 @@ jobs:
       - name: Prepare tests
         run: php artisan legacy:create:tests
 
+      # No runner self-hosted o diretório do TIA (~/.pest/tia) sobrevive entre os
+      # jobs, com o grafo de outras branches e a pausa de 24 h que o Pest grava
+      # quando não acha baseline. Cada execução começa limpa, como num runner
+      # do GitHub, e o estado vem só do baseline publicado.
+      - name: Limpa o estado local do TIA
+        run: rm -rf "$(vendor/bin/pest --baseline)"
+
+      # O Pest aborta se o tia-baseline.yml ainda não existir na branch padrão
+      # (HTTP 404) ou se o artefato do último run não tiver o graph.json, então
+      # só liga o --baselined quando o baseline publicado (o mesmo run que o
+      # Pest baixa) está completo.
+      - name: Verifica se há baseline do TIA publicado
+        if: ${{ !inputs.publish-baseline }}
+        id: tia
+        run: |
+          run_id=$(gh run list --workflow tia-baseline.yml --status success --limit 1 --json databaseId --jq '.[0].databaseId // empty' 2>/dev/null || true)
+          if [ -n "$run_id" ] \
+            && gh run download "$run_id" -n pest-tia-baseline -D "$RUNNER_TEMP/tia-baseline" 2>/dev/null \
+            && [ -f "$RUNNER_TEMP/tia-baseline/graph.json" ]; then
+            echo "baselined=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Na gravação do baseline não há --baselined: o grafo é gravado do zero.
       - name: Unit tests
-        run: vendor/bin/pest
+        run: vendor/bin/pest --tia
+        env:
+          PEST_TIA_BASELINED: ${{ steps.tia.outputs.baselined }}
+
+      - name: Resolve o caminho do baseline do TIA
+        if: inputs.publish-baseline
+        id: baseline
+        run: echo "path=$(vendor/bin/pest --baseline)" >> "$GITHUB_OUTPUT"
+
+      - name: Publica o baseline do TIA
+        if: inputs.publish-baseline
+        uses: actions/upload-artifact@v7
+        with:
+          name: pest-tia-baseline
+          path: ${{ steps.baseline.outputs.path }}
+          include-hidden-files: true
+          retention-days: 30

@@ -1,18 +1,10 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyCalendarYear;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyCalendarYearTest extends EloquentTestCase
-{
-    public $relationships = [
-        'school' => LegacySchool::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName()
-    {
-        return LegacyCalendarYear::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyCalendarYear::class));
+
+EloquentModelTestCase::registerModelTests();

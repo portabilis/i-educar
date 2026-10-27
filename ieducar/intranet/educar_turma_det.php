@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyCourse;
+use App\Models\LegacyGrade;
 use App\Models\LegacyPerson;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassGrade;
@@ -64,7 +66,11 @@ return new class extends clsDetalhe
         $this->cod_turma = request()->integer('cod_turma');
 
         if (is_null($this->cod_turma) || $this->cod_turma === 0) {
-            $this->simpleRedirect(url: 'educar_turma_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_turma_lst.php',
+                registro: 'turma',
+                feminino: true,
+            );
         }
 
         $dias_da_semana = [
@@ -92,7 +98,12 @@ return new class extends clsDetalhe
         );
 
         if (empty($lst_obj) || $not_access) {
-            $this->simpleRedirect(url: 'educar_turma_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_turma_lst.php',
+                registro: 'turma',
+                feminino: true,
+                motivo: 'A turma não existe, foi excluída ou pertence a uma escola à qual você não tem acesso.',
+            );
         }
 
         $registro = array_shift(array: $lst_obj);
@@ -115,15 +126,12 @@ return new class extends clsDetalhe
         $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
         $registro['ref_ref_cod_escola'] = $det_ref_cod_escola['nome'];
 
-        $obj_ref_cod_curso = new clsPmieducarCurso(cod_curso: $registro['ref_cod_curso']);
-        $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-        $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
-        $padrao_ano_escolar = $det_ref_cod_curso['padrao_ano_escolar'];
+        $curso = LegacyCourse::query()->find($registro['ref_cod_curso'], ['nm_curso', 'padrao_ano_escolar']);
+        $registro['ref_cod_curso'] = $curso?->nm_curso;
+        $padrao_ano_escolar = (int) $curso?->padrao_ano_escolar;
 
         $this->ref_ref_cod_serie = $registro['ref_ref_cod_serie'];
-        $obj_ser = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
-        $det_ser = $obj_ser->detalhe();
-        $registro['ref_ref_cod_serie'] = $det_ser['nm_serie'];
+        $registro['ref_ref_cod_serie'] = LegacyGrade::query()->whereKey($registro['ref_ref_cod_serie'])->value('nm_serie');
 
         $obj_permissoes = new clsPermissoes;
 
@@ -469,11 +477,14 @@ return new class extends clsDetalhe
 
     public function getComponentesTurma()
     {
+        // Inalcançável: nada chama este método.
+        // @codeCoverageIgnoreStart
         return LegacySchoolGradeDiscipline::whereGrade($this->ref_ref_cod_serie)
             ->whereSchool(school: $this->ref_ref_cod_escola)
             ->whereYearEq($this->ano)
             ->active()
             ->get();
+        // @codeCoverageIgnoreEnd
     }
 
     public function getComponentesTurmaMulti($turmaId)

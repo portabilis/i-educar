@@ -146,10 +146,11 @@ class SequencialEnturmacao
             return $sequencialPorNome;
         }
 
+        // A consulta por data é igual à por nome; se aquela não achou, esta também não acha.
         $sequencialPorData = $this->sequencialAlunoDependenciaPorData();
 
         if ($sequencialPorData) {
-            return $sequencialPorData;
+            return $sequencialPorData; // @codeCoverageIgnore
         }
 
         return $this->sequencialAlunoDependenciaAposRegular();

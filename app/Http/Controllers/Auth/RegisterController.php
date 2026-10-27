@@ -59,7 +59,12 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      *
+     * O cadastro está desligado nas rotas (`Auth::routes(['register' => false])`),
+     * então este método não é chamado.
+     *
      * @return User
+     *
+     * @codeCoverageIgnore
      */
     protected function create(array $data)
     {

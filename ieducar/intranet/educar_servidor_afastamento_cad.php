@@ -1,10 +1,8 @@
 <?php
 
-use App\Models\Employee;
 use App\Models\EmployeeWithdrawal;
 use App\Models\LegacyPerson;
 use App\Models\WithdrawalReason;
-use App\Services\EmployeeService;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 use App\Support\View\Employee\EmployeeReturn;
@@ -40,20 +38,7 @@ return new class extends clsCadastro
 
     public $status;
 
-    public $alocacao_array;
-
     public $parametros;
-
-    public $dias_da_semana = [
-        '' => 'Selecione',
-        1 => 'Domingo',
-        2 => 'Segunda',
-        3 => 'Terça',
-        4 => 'Quarta',
-        5 => 'Quinta',
-        6 => 'Sexta',
-        7 => 'Sábado',
-    ];
 
     /**
      * Implementação do método clsCadastro::Inicializar()
@@ -114,8 +99,10 @@ return new class extends clsCadastro
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb('Registro de afastamento do servidor', [
-            url('intranet/educar_servidores_index.php') => 'Servidores',
+        // Início > Servidores > Nome > Afastamento (ou Retorno)
+        $this->breadcrumb($this->retornar_servidor == EmployeeReturn::SIM ? 'Retorno' : 'Afastamento', [
+            url('intranet/educar_servidor_lst.php') => 'Servidores',
+            url("intranet/educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}") => LegacyPerson::whereKey($this->ref_cod_servidor)->value('nome'),
         ]);
 
         return $retorno;
@@ -177,190 +164,6 @@ return new class extends clsCadastro
             $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, true);
         }
 
-        $servidorExiste = is_numeric($this->ref_cod_servidor)
-            && is_numeric($this->ref_cod_instituicao)
-            && Employee::query()
-                ->whereEmployee($this->ref_cod_servidor)
-                ->whereInstitution($this->ref_cod_instituicao)
-                ->exists();
-
-        if ($servidorExiste) {
-            // Se for professor
-            if ((new EmployeeService)->isTeacher($this->ref_cod_servidor, $this->ref_cod_instituicao)) {
-                $obj = new clsPmieducarQuadroHorarioHorarios;
-
-                // Pega a lista de aulas alocadas para este servidor
-                $lista = $obj->lista(
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    $this->ref_cod_instituicao,
-                    null,
-                    $this->ref_cod_servidor,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    1,
-                    null,
-                    true
-                );
-
-                if ($lista) {
-                    // Passa todos os valores obtidos no registro para atributos do objeto
-                    foreach ($lista as $val) {
-                        $temp = [];
-                        $temp['hora_inicial'] = $val['hora_inicial'];
-                        $temp['hora_final'] = $val['hora_final'];
-                        $temp['dia_semana'] = $val['dia_semana'];
-                        $temp['ref_cod_escola'] = $val['ref_cod_escola'];
-                        $temp['ref_cod_disciplina'] = $val['ref_cod_disciplina'];
-                        $temp['ref_cod_substituto'] = $val['ref_servidor_substituto'];
-                        $objTemp = new clsPmieducarSerie($val['ref_cod_serie']);
-                        $detalheTemp = $objTemp->detalhe();
-                        $temp['ref_cod_curso'] = $detalheTemp['ref_cod_curso'];
-                        $this->alocacao_array[] = $temp;
-                    }
-
-                    if ($this->alocacao_array) {
-                        $tamanho = count($this->alocacao_array);
-                        $script = "<script>\nvar num_alocacao = {$tamanho};\n";
-                        $script .= "var array_servidores = Array();\n";
-
-                        $idsSubstitutos = collect($this->alocacao_array)->pluck('ref_cod_substituto')->filter(fn ($id) => is_numeric($id))->unique()->all();
-                        $nomesPorSubstituto = $idsSubstitutos
-                            ? LegacyPerson::query()->whereIn('idpes', $idsSubstitutos)->pluck('nome', 'idpes')
-                            : collect();
-
-                        foreach ($this->alocacao_array as $key => $alocacao) {
-                            $script .= "array_servidores[{$key}] = new Array();\n";
-
-                            $hora_ini = explode(':', $alocacao['hora_inicial']);
-                            $hora_fim = explode(':', $alocacao['hora_final']);
-
-                            $horas_utilizadas = ($hora_fim[0] - $hora_ini[0]);
-                            $minutos_utilizados = ($hora_fim[1] - $hora_ini[1]);
-
-                            $horas = sprintf('%02d', (int) $horas_utilizadas);
-                            $minutos = sprintf('%02d', (int) $minutos_utilizados);
-
-                            $str_horas_utilizadas = "{$horas}:{$minutos}";
-
-                            $script .= "array_servidores[{$key}][0] = '{$str_horas_utilizadas}';\n";
-                            $script .= "array_servidores[{$key}][1] = '';\n\n";
-
-                            $obj_escola = new clsPmieducarEscola($alocacao['ref_cod_escola']);
-                            $det_escola = $obj_escola->detalhe();
-                            $det_escola = $det_escola['nome'];
-                            $nm_dia_semana = $this->dias_da_semana[$alocacao['dia_semana']];
-
-                            $nomeSubstituto = $nomesPorSubstituto[$alocacao['ref_cod_substituto']] ?? null;
-
-                            if ($this->status == clsCadastro::NOVO) {
-                                $this->campoTextoInv(
-                                    "dia_semana_{$key}_",
-                                    '',
-                                    $nm_dia_semana,
-                                    8,
-                                    8,
-                                    false,
-                                    false,
-                                    true,
-                                    '',
-                                    '',
-                                    '',
-                                    '',
-                                    'dia_semana'
-                                );
-
-                                $this->campoTextoInv(
-                                    "hora_inicial_{$key}_",
-                                    '',
-                                    $alocacao['hora_inicial'],
-                                    5,
-                                    5,
-                                    false,
-                                    false,
-                                    true,
-                                    '',
-                                    '',
-                                    '',
-                                    '',
-                                    'ds_hora_inicial_'
-                                );
-
-                                $this->campoTextoInv(
-                                    "hora_final_{$key}_",
-                                    '',
-                                    $alocacao['hora_final'],
-                                    5,
-                                    5,
-                                    false,
-                                    false,
-                                    true,
-                                    '',
-                                    '',
-                                    '',
-                                    '',
-                                    'ds_hora_final_'
-                                );
-
-                                $this->campoTextoInv(
-                                    "ref_cod_escola_{$key}",
-                                    '',
-                                    $det_escola,
-                                    30,
-                                    255,
-                                    false,
-                                    false,
-                                    true,
-                                    '',
-                                    '',
-                                    '',
-                                    '',
-                                    'ref_cod_escola_'
-                                );
-
-                                $this->campoTextoInv(
-                                    "ref_cod_servidor_substituto_{$key}_",
-                                    '',
-                                    $nomeSubstituto,
-                                    30,
-                                    255,
-                                    false,
-                                    false,
-                                    false,
-                                    '',
-                                    "<span name=\"ref_cod_servidor_substituto\" id=\"ref_cod_servidor_substituicao_{$key}\"><img border='0'  onclick=\"pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_substituto[{$key}]&campo2=ref_cod_servidor_substituto_{$key}_&ref_cod_instituicao={$this->ref_cod_instituicao}&dia_semana={$alocacao['dia_semana']}&hora_inicial={$alocacao['hora_inicial']}&hora_final={$alocacao['hora_final']}&ref_cod_servidor={$this->ref_cod_servidor}&professor=1&ref_cod_escola={$alocacao['ref_cod_escola']}&horario=S&ref_cod_disciplina={$alocacao['ref_cod_disciplina']}&ref_cod_curso={$alocacao['ref_cod_curso']}', 'nome')\" src=\"imagens/lupa.png\" ></span>",
-                                    '',
-                                    '',
-                                    'ref_cod_servidor_substituto'
-                                );
-                            }
-
-                            $this->campoOculto("dia_semana_{$key}", $alocacao['dia_semana']);
-                            $this->campoOculto("hora_inicial_{$key}", $alocacao['hora_inicial']);
-                            $this->campoOculto("hora_final_{$key}", $alocacao['hora_final']);
-                            $this->campoOculto("ref_cod_escola_{$key}", $alocacao['ref_cod_escola']);
-                            $this->campoOculto("ref_cod_servidor_substituto[{$key}]", $alocacao['ref_cod_substituto']);
-                        }
-
-                        $script .= "\n</script>";
-
-                        // Print do Javascript
-                        echo $script;
-                    }
-                }
-            }
-        }
         if ($this->retornar_servidor != EmployeeReturn::SIM) {
             if ($this->id == '') {
                 $this->id = null;
@@ -403,79 +206,13 @@ return new class extends clsCadastro
         $withdrawal->sequencial = null;
 
         $cadastrou = $withdrawal->save();
-        if ($cadastrou) {
-            if (is_array($_POST['ref_cod_servidor_substituto'])) {
-                /*
-                 * Itera cada substituto e atualiza o quadro de horário com o código
-                 * do servidor substituto, campos:
-                 * - ref_cod_instituicao_substituto
-                 * - ref_cod_servidor_substituto
-                 */
-                foreach ($_POST['ref_cod_servidor_substituto'] as $key => $valor) {
-                    $ref_cod_servidor_substituto = $valor;
-                    $ref_cod_escola = $_POST["ref_cod_escola_{$key}"];
-                    $dia_semana = $_POST["dia_semana_{$key}"];
-                    $hora_inicial = urldecode($_POST["hora_inicial_{$key}"]);
-                    $hora_final = urldecode($_POST["hora_final_{$key}"]);
-
-                    if (is_numeric($ref_cod_servidor_substituto) && is_numeric($ref_cod_escola) &&
-                        is_numeric($dia_semana) && is_string($hora_inicial) &&
-                        is_string($hora_final)
-                    ) {
-                        $obj_horarios = new clsPmieducarQuadroHorarioHorarios(
-                            null,
-                            null,
-                            $ref_cod_escola,
-                            null,
-                            null,
-                            null,
-                            $this->ref_cod_instituicao,
-                            $ref_cod_servidor_substituto,
-                            $this->ref_cod_servidor,
-                            $hora_inicial,
-                            $hora_final,
-                            null,
-                            null,
-                            1,
-                            $dia_semana
-                        );
-
-                        $det_horarios = $obj_horarios->detalhe($ref_cod_escola);
-
-                        $obj_horario = new clsPmieducarQuadroHorarioHorarios(
-                            $det_horarios['ref_cod_quadro_horario'],
-                            $det_horarios['ref_cod_serie'],
-                            $det_horarios['ref_cod_escola'],
-                            $det_horarios['ref_cod_disciplina'],
-                            $det_horarios['sequencial'],
-                            $det_horarios['ref_cod_instituicao_servidor'],
-                            $det_horarios['ref_cod_instituicao_servidor'],
-                            $ref_cod_servidor_substituto,
-                            $this->ref_cod_servidor,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null
-                        );
-
-                        // Caso a atualização não tenha sucesso
-                        if (!$obj_horario->edita()) {
-                            $this->mensagem = 'Cadastro não realizado.<br>';
-
-                            return false;
-                        }
-                    }
-                }
-
-                $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-                $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-            }
-        } else {
+        if (!$cadastrou) {
+            // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Cadastro não realizado.<br>';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $fileService = new FileService(new UrlPresigner);
@@ -544,62 +281,6 @@ return new class extends clsCadastro
 
         $editou = $withdrawal->save();
         if ($editou) {
-            if (is_array($_POST['ref_cod_servidor_substituto'])) {
-                foreach ($_POST['ref_cod_servidor_substituto'] as $key => $valor) {
-                    $ref_cod_servidor_substituto = $valor;
-                    $ref_cod_escola = $_POST["ref_cod_escola_{$key}"];
-                    $dia_semana = $_POST["dia_semana_{$key}"];
-                    $hora_inicial = urldecode($_POST["hora_inicial_{$key}"]);
-                    $hora_final = urldecode($_POST["hora_final_{$key}"]);
-
-                    if (is_numeric($ref_cod_servidor_substituto) && is_numeric($ref_cod_escola) &&
-                        is_numeric($dia_semana) && is_string($hora_inicial) &&
-                        is_string($hora_final)
-                    ) {
-                        $obj_horarios = new clsPmieducarQuadroHorarioHorarios(
-                            null,
-                            null,
-                            $ref_cod_escola,
-                            null,
-                            null,
-                            null,
-                            $this->ref_cod_instituicao,
-                            $ref_cod_servidor_substituto,
-                            $this->ref_cod_servidor,
-                            $hora_inicial,
-                            $hora_final,
-                            null,
-                            null,
-                            1,
-                            $dia_semana
-                        );
-
-                        $det_horarios = $obj_horarios->detalhe($ref_cod_escola);
-
-                        // Os valores NULL apagam os campos ref_cod_instituicao_ e
-                        // ref_cod_servidor_ -substituto da tabela pmieducar.
-                        // quadro_horario_horarios
-                        $obj_horario = new clsPmieducarQuadroHorarioHorarios(
-                            $det_horarios['ref_cod_quadro_horario'],
-                            $det_horarios['ref_cod_serie'],
-                            $det_horarios['ref_cod_escola'],
-                            $det_horarios['ref_cod_disciplina'],
-                            $det_horarios['sequencial'],
-                            null,
-                            $det_horarios['ref_cod_instituicao_servidor'],
-                            null,
-                            $this->ref_cod_servidor
-                        );
-
-                        if (!$obj_horario->edita()) {
-                            $this->mensagem = 'Cadastro não realizado.<br>';
-
-                            return false;
-                        }
-                    }
-                }
-            }
-
             $fileService = new FileService(new UrlPresigner);
 
             if ($this->file_url) {
@@ -625,9 +306,12 @@ return new class extends clsCadastro
             $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
         }
 
+        // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -659,14 +343,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_servidor_afastamento_lst.php');
         }
 
+        // Inalcançável: `delete()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
-    }
-
-    public function makeExtra()
-    {
-        return file_get_contents(__DIR__ . '/scripts/extra/educar-servidor-afastamento-cad.js');
+        // @codeCoverageIgnoreEnd
     }
 
     public function Formular()

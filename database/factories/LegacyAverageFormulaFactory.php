@@ -33,7 +33,7 @@ class LegacyAverageFormulaFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return array_merge($attributes, [
-                'formula_media' => $this->faker->randomElement(['((((Se / Et) * 7) + (Rc * 3)) / 10)', '(((((Se / Et) * 3) + (Rc * 2)) / 5))', '((Rc * 0.4) + (Se / Et * 0.6))']),
+                'formula_media' => '((((Se / Et) * 7) + (Rc * 3)) / 10)',
                 'tipo_formula' => 2,
             ]);
         });

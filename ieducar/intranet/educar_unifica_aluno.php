@@ -111,17 +111,26 @@ return new class extends clsCadastro
         $cod_aluno_principal = $this->buscaPessoaPrincipal(pessoas: $alunos);
         $cod_alunos = $this->buscaIdesDasPessoasParaUnificar(pessoas: $alunos);
 
+        if (empty($cod_alunos)) {
+            $this->mensagem = 'Informe pelo menos dois alunos para unificar.';
+
+            return false;
+        }
+
         DB::beginTransaction();
         $unificationId = $this->createLog(mainId: $cod_aluno_principal, duplicatesId: $cod_alunos, createdBy: $this->pessoa_logada);
         App_Unificacao_Aluno::unifica(codAlunoPrincipal: $cod_aluno_principal, codAlunos: $cod_alunos, codPessoa: $this->pessoa_logada, db: new clsBanco, unificationId: $unificationId);
 
         try {
             DB::commit();
+            // Não testável: só roda se o commit da transação falhar.
+            // @codeCoverageIgnoreStart
         } catch (Throwable) {
             DB::rollBack();
             $this->mensagem = 'Não foi possível realizar a unificação';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $this->mensagem = '<span>Alunos unificados com sucesso.</span>';

@@ -64,7 +64,11 @@ return new class extends clsDetalhe
         $registro = $servidor ? $servidor->getAttributes() : [];
 
         if (empty($registro)) {
-            $this->simpleRedirect('educar_servidor_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_servidor_lst.php',
+                registro: 'servidor',
+                codigo: $this->cod_servidor,
+            );
         }
 
         // Escolaridade
@@ -115,7 +119,7 @@ return new class extends clsDetalhe
             $link = sprintf(
                 '<a href="/intranet/atendidos_det.php?cod_pessoa=%s" target="_blank">%s</a>',
                 $registro['cod_servidor'],
-                $registro['nome']
+                e($registro['nome'])
             );
             $this->addDetalhe(['Nome', $link]);
         }
@@ -133,12 +137,15 @@ return new class extends clsDetalhe
             $this->addDetalhe(['Código Educacenso/Inep', $docenteInep->docenteInep]);
 
             if (isset($docenteInep->nomeInep)) {
-                $this->addDetalhe(['Nome Educacenso/Inep', $docenteInep->nomeInep]);
+                $this->addDetalhe(['Nome Educacenso/Inep', e($docenteInep->nomeInep)]);
             }
         }
 
         if ($registro['idpes']) {
-            $this->addDetalhe(['Nome', $registro['Nome']]);
+            // Inalcançável: o registro do servidor não tem a chave `idpes`.
+            // @codeCoverageIgnoreStart
+            $this->addDetalhe(['Nome', e($registro['Nome'])]);
+            // @codeCoverageIgnoreEnd
         }
 
         if ($registro['ref_cod_instituicao']) {
@@ -150,7 +157,10 @@ return new class extends clsDetalhe
         }
 
         if ($registro['ref_cod_funcao']) {
+            // Inalcançável: o registro do servidor não tem a chave `ref_cod_funcao`.
+            // @codeCoverageIgnoreStart
             $this->addDetalhe(['Função', $registro['ref_cod_funcao']]);
+            // @codeCoverageIgnoreEnd
         }
 
         $this->addDetalhe(
@@ -178,17 +188,6 @@ return new class extends clsDetalhe
             $cargaHoraria = sprintf('%02d:%02d', $horas, $minutos);
             $this->addDetalhe(['Carga Horária', $cargaHoraria]);
         }
-
-        $dias_da_semana = [
-            '' => 'Selecione',
-            1 => 'Domingo',
-            2 => 'Segunda',
-            3 => 'Terça',
-            4 => 'Quarta',
-            5 => 'Quinta',
-            6 => 'Sexta',
-            7 => 'Sábado',
-        ];
 
         if ($this->alocacao_array) {
             $tabela .= '
@@ -230,86 +229,6 @@ return new class extends clsDetalhe
 
             $this->addDetalhe(['Horários de trabalho',
                 '<a href=\'javascript:trocaDisplay("det_pree");\' >Mostrar detalhe</a><div id=\'det_pree\' name=\'det_pree\' style=\'display:none;\'>' . $tabela . '</div>']);
-        }
-
-        // Horários do professor
-        $horarios = DB::table('pmieducar.quadro_horario_horarios')
-            ->select([
-                'curso.nm_curso',
-                'serie.nm_serie',
-                'turma.nm_turma',
-                'componente_curricular.nome',
-                'quadro_horario_horarios.dia_semana',
-                'quadro_horario_horarios.hora_inicial',
-                'quadro_horario_horarios.hora_final',
-            ])
-            ->selectRaw('null as nm_escola')
-            ->join('pmieducar.quadro_horario', function ($j) {
-                $j->on('quadro_horario.cod_quadro_horario', 'quadro_horario_horarios.ref_cod_quadro_horario');
-                $j->where('quadro_horario.ativo', 1);
-            })
-            ->join('pmieducar.turma', function ($j) {
-                $j->on('turma.cod_turma', 'quadro_horario.ref_cod_turma');
-                $j->where('turma.ativo', 1);
-            })
-            ->join('pmieducar.serie', 'serie.cod_serie', 'turma.ref_ref_cod_serie')
-            ->join('pmieducar.curso', 'curso.cod_curso', 'serie.ref_cod_curso')
-            ->join('modules.componente_curricular', 'componente_curricular.id', 'quadro_horario_horarios.ref_cod_disciplina')
-            ->where('quadro_horario_horarios.ativo', 1)
-            ->where('quadro_horario_horarios.ref_servidor', $registro['cod_servidor'])
-            ->where('quadro_horario_horarios.ref_cod_instituicao_servidor', $this->ref_cod_instituicao)
-            ->orderBy('quadro_horario_horarios.dia_semana')
-            ->orderBy('quadro_horario_horarios.hora_inicial')
-            ->get();
-
-        if ($horarios->isNotEmpty()) {
-            $tabela = '
-        <table cellspacing=\'0\' cellpadding=\'0\' border=\'0\'>
-          <tr bgcolor=\'#ccdce6\' align=\'center\'>
-            <td width=\'150\'>Escola</td>
-            <td width=\'100\'>Curso</td>
-            <td width=\'70\'>Série</td>
-            <td width=\'70\'>Turma</td>
-            <td width=\'100\'>Componente curricular</td>
-            <td width=\'70\'>Dia da semana</td>
-            <td width=\'70\'>Hora inicial</td>
-            <td width=\'70\'>Hora final</td>
-          </tr>';
-
-            foreach ($horarios as $horario) {
-                $class = $class == 'formlttd' ? 'formmdtd' : 'formlttd';
-
-                $tabela .= sprintf(
-                    '
-          <tr class="%s" align="center">
-            <td>%s</td>
-            <td>%s</td>
-            <td>%s</td>
-            <td>%s</td>
-            <td>%s</td>
-            <td>%s</td>
-            <td>%s</td>
-            <td>%s</td>
-          </tr>',
-                    $class,
-                    $horario->nm_escola,
-                    $horario->nm_curso,
-                    $horario->nm_serie,
-                    $horario->nm_turma,
-                    $horario->nome,
-                    $dias_da_semana[$horario->dia_semana],
-                    $horario->hora_inicial,
-                    $horario->hora_final
-                );
-            }
-
-            $tabela .= '</table>';
-
-            $this->addDetalhe([
-                'Horários de aula',
-                '<a href=\'javascript:trocaDisplay("horarios");\' >Mostrar detalhes</a>' .
-                '<div id=\'horarios\' name=\'det_pree\' style=\'display:none;\'>' . $tabela . '</div>',
-            ]);
         }
 
         $isAllowedModify = (new clsPermissoes)->permissao_cadastra(635, $this->pessoa_logada, 7);
@@ -376,8 +295,9 @@ return new class extends clsDetalhe
         $this->url_cancelar = 'educar_servidor_lst.php';
         $this->largura = '100%';
 
-        $this->breadcrumb('Funções do servidor', [
-            url('intranet/educar_servidores_index.php') => 'Servidores',
+        // O servidor é um nível do caminho: Início > Servidores > Nome
+        $this->breadcrumb($registro['nome'], [
+            url('intranet/educar_servidor_lst.php') => 'Servidores',
         ]);
     }
 

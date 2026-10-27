@@ -12,7 +12,7 @@
     <form id="formcadastro" action="{{ route('component-batch-manager.preview') }}" method="post">
         @csrf
 
-        <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
+        <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0" role="presentation">
             <tbody>
             <tr>
                 <td class="formdktd" colspan="2" height="24"><b>Nova Operação em Lote</b></td>
@@ -94,7 +94,7 @@
 
             <tr>
                 <td class="formmdtd" valign="top">
-                    <span class="form">Remover lançamentos</span>
+                    <span class="form"><label for="remove_records">Remover lançamentos</label></span>
                 </td>
                 <td class="formmdtd" valign="top">
                     <input type="checkbox" name="remove_records" id="remove_records" value="1" {{ old('remove_records', '1') ? 'checked' : '' }} class="operation-checkbox">
@@ -103,7 +103,7 @@
 
             <tr>
                 <td class="formlttd" valign="top">
-                    <span class="form">Remover dispensas</span>
+                    <span class="form"><label for="remove_exemptions">Remover dispensas</label></span>
                 </td>
                 <td class="formlttd" valign="top">
                     <input type="checkbox" name="remove_exemptions" id="remove_exemptions" value="1" {{ old('remove_exemptions', '1') ? 'checked' : '' }} class="operation-checkbox">
@@ -112,7 +112,7 @@
 
             <tr>
                 <td class="formmdtd" valign="top">
-                    <span class="form">Remover componentes da turma</span>
+                    <span class="form"><label for="unlink_class_components">Remover componentes da turma</label></span>
                 </td>
                 <td class="formmdtd" valign="top">
                     <input type="checkbox" name="unlink_class_components" id="unlink_class_components" value="1" {{ old('unlink_class_components', '1') ? 'checked' : '' }} class="operation-checkbox">
@@ -121,7 +121,7 @@
 
             <tr>
                 <td class="formlttd" valign="top">
-                    <span class="form">Remover disciplinas do vínculo professor/turma</span>
+                    <span class="form"><label for="unlink_teacher_disciplines">Remover disciplinas do vínculo professor/turma</label></span>
                 </td>
                 <td class="formlttd" valign="top">
                     <input type="checkbox" name="unlink_teacher_disciplines" id="unlink_teacher_disciplines" value="1" {{ old('unlink_teacher_disciplines', '1') ? 'checked' : '' }} class="operation-checkbox">
@@ -130,7 +130,7 @@
 
             <tr>
                 <td class="formmdtd" valign="top">
-                    <span class="form">Remover componentes da série da escola</span>
+                    <span class="form"><label for="unlink_school_grade_disciplines">Remover componentes da série da escola</label></span>
                 </td>
                 <td class="formmdtd" valign="top">
                     <input type="checkbox" name="unlink_school_grade_disciplines" id="unlink_school_grade_disciplines" value="1" {{ old('unlink_school_grade_disciplines', '1') ? 'checked' : '' }} class="operation-checkbox">
@@ -139,7 +139,7 @@
 
             <tr>
                 <td class="formlttd" valign="top">
-                    <span class="form">Remover componentes da série</span>
+                    <span class="form"><label for="unlink_grade_components">Remover componentes da série</label></span>
                 </td>
                 <td class="formlttd" valign="top">
                     <input type="checkbox" name="unlink_grade_components" id="unlink_grade_components" value="1" {{ old('unlink_grade_components', '1') ? 'checked' : '' }} class="operation-checkbox">

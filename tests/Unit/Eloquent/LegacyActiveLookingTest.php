@@ -1,22 +1,13 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyActiveLooking;
 use App\Models\LegacyRegistration;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyActiveLookingTest extends EloquentTestCase
-{
-    public $relations = [
-        'registration' => LegacyRegistration::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyActiveLooking::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyActiveLooking::class, relations: [
+    'registration' => LegacyRegistration::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

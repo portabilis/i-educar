@@ -1,22 +1,15 @@
 <?php
 
-namespace Tests\Unit\Enum;
-
 use App\Models\PersonType;
-use Tests\EnumTestCase;
+use Tests\TestCase;
 
-class PersonTypeTest extends EnumTestCase
-{
-    public function getEnumName(): string
-    {
-        return PersonType::class;
-    }
+uses(TestCase::class);
 
-    public function getDescriptiveValues(): array
-    {
-        return [
-            1 => 'Pessoa Física',
-            2 => 'Pessoa Jurídica',
-        ];
-    }
-}
+test('descriptive values', function () {
+    $values = (new PersonType)->getDescriptiveValues();
+    $this->assertIsArray($values);
+    $this->assertJsonStringEqualsJsonString(collect([
+        1 => 'Pessoa Física',
+        2 => 'Pessoa Jurídica',
+    ]), collect($values));
+});

@@ -24,7 +24,7 @@
             </tr>
             <tr id="tr_nm_instituicao">
                 <td class="formlttd" valign="top">
-                    <span class="form">Instituição</span>
+                    <span class="form"><label for="ref_cod_instituicao">Instituição</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
@@ -33,7 +33,7 @@
             </tr>
             <tr id="tr_nm_escola">
                 <td class="formmdtd" valign="top">
-                    <span class="form">Escola</span>
+                    <span class="form"><label for="ref_cod_escola">Escola</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formmdtd" valign="top">
@@ -42,7 +42,7 @@
             </tr>
             <tr id="tr_nm_curso">
                 <td class="formlttd" valign="top">
-                    <span class="form">Curso</span>
+                    <span class="form"><label for="ref_cod_curso">Curso</label></span>
                 </td>
                 <td class="formlttd" valign="top">
                     <span class="form">
@@ -66,7 +66,7 @@
                 </td>
             </tr>
             <tr id="tr_nm_serie">
-                <td class="formmdtd" valign="top"><span class="form">Série</span></td>
+                <td class="formmdtd" valign="top"><span class="form"><label for="ref_cod_serie">Série</label></span></td>
                 <td class="formmdtd" valign="top">
                     <span class="form">
                         <select class="geral" name="ref_cod_serie" id="ref_cod_serie" style="width: 308px;">
@@ -89,14 +89,14 @@
                 </td>
             </tr>
             <tr id="tr_nm_turma">
-                <td class="formlttd" valign="top"><span class="form">Turma</span></td>
+                <td class="formlttd" valign="top"><span class="form"><label for="ref_cod_turma">Turma</label></span></td>
                 <td class="formlttd" valign="top">
                     @include('form.select-school-class')
                 </td>
             </tr>
-            <tr id="tr_nm_serie">
+            <tr id="tr_situacao">
                 <td class="formmdtd" valign="top">
-                    <span class="form">Situação</span>
+                    <span class="form"><label for="situacao">Situação</label></span>
                 </td>
                 <td class="formmdtd" valign="top">
                    <span class="form">
@@ -114,9 +114,9 @@
                     </span>
                 </td>
             </tr>
-            <tr id="tr_nm_serie">
+            <tr id="tr_ref_cod_componente_curricular">
                 <td class="formlttd" valign="top">
-                    <span class="form">Componentes curriculares</span>
+                    <span class="form"><label for="ref_cod_componente_curricular">Componentes curriculares</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
@@ -133,9 +133,9 @@
                     </span>
                 </td>
             </tr>
-            <tr id="tr_nm_serie">
+            <tr id="tr_exemption_type">
                 <td class="formmdtd" valign="top">
-                    <span class="form">Tipo de dispensa</span>
+                    <span class="form"><label for="exemption_type">Tipo de dispensa</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formmdtd" valign="top">
@@ -152,7 +152,7 @@
             </tr>
             <tr>
                 <td class="formlttd" valign="top">
-                    <span class="form">Tipo de etapa</span>
+                    <span class="form"><label for="stage_type">Tipo de etapa</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
@@ -161,7 +161,7 @@
             </tr>
             <tr>
                 <td class="formmdtd" valign="top">
-                    <span class="form">Etapa</span>
+                    <span class="form"><label for="stage">Etapa</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formmdtd" valign="top">
@@ -174,17 +174,17 @@
             </tr>
             <tr id="tr_descricao">
                 <td class="formlttd">
-                    <span class="form">Observações</span>
+                    <span class="form"><label for="observacoes">Observações</label></span>
                 </td>
                 <td class="formlttd">
                             <span class="form">
-                                <textarea class="geral" name="observacoes" cols="37" rows="5"></textarea>
+                                <textarea class="geral" name="observacoes" id="observacoes" cols="37" rows="5"></textarea>
                             </span>
                 </td>
             </tr>
             <tr id="tr_nm_data" class="field-transfer">
                 <td class="formmdtd" valign="top">
-                    <span class="form">Não remover frequências lançadas?</span>
+                    <span class="form"><label for="manter_frequencias">Não remover frequências lançadas?</label></span>
                 </td>
                 <td class="formmdtd" valign="top">
                            <span class="form">

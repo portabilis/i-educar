@@ -19,10 +19,15 @@ class EmployeeWithdrawalFactory extends Factory
      */
     public function definition(): array
     {
+        // A FK de servidor_afastamento é composta por (ref_cod_servidor,
+        // ref_ref_cod_instituicao), então a instituição precisa vir do próprio
+        // servidor: resolvê-la à parte gera um par que não existe em servidor.
+        $employee = EmployeeFactory::new()->create();
+
         return [
-            'ref_cod_servidor' => EmployeeFactory::new()->create(),
+            'ref_cod_servidor' => $employee,
             'sequencial' => $this->faker->randomDigitNotZero(),
-            'ref_ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
+            'ref_ref_cod_instituicao' => $employee->institution_id,
             'ref_cod_motivo_afastamento' => WithdrawalReasonFactory::new()->create(),
             'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
             'ref_usuario_exc' => fn () => LegacyUserFactory::new()->current(),

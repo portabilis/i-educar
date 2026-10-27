@@ -37,20 +37,24 @@ return new class extends clsDetalhe
         $registro = LegacyCalendarDayReason::find($this->cod_calendario_dia_motivo);
 
         if (!$registro) {
-            $this->simpleRedirect('educar_calendario_dia_motivo_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_calendario_dia_motivo_lst.php',
+                registro: 'motivo de dia do calendário',
+                codigo: $this->cod_calendario_dia_motivo,
+            );
         }
 
-        $this->addDetalhe(['Instituição', "{$registro->institution_name}"]);
+        $this->addDetalhe(['Instituição', e($registro->institution_name)]);
 
-        $this->addDetalhe(['Escola', "{$registro->school_name}"]);
+        $this->addDetalhe(['Escola', e($registro->school_name)]);
 
-        $this->addDetalhe(['Motivo', "{$registro->name}"]);
+        $this->addDetalhe(['Motivo', e($registro->name)]);
 
-        $this->addDetalhe(['Sigla', "{$registro->sigla}"]);
+        $this->addDetalhe(['Sigla', e($registro->sigla)]);
 
-        $this->addDetalhe(['Descricão', "{$registro['descricao']}"]);
+        $this->addDetalhe(['Descricão', e($registro['descricao'])]);
 
-        $this->addDetalhe(['Tipo', "{$registro->type}"]);
+        $this->addDetalhe(['Tipo', e($registro->type)]);
 
         $obj_permissao = new clsPermissoes;
         if ($obj_permissao->permissao_cadastra(int_processo_ap: 576, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {

@@ -84,8 +84,11 @@ return new class extends clsCadastro
             ? $_GET['referrer'] . '?cod_escola=' . $this->ref_ref_cod_escola
             : 'educar_escola_lst.php';
 
+        // Início > Escola > Escolas > Nome > Etapas do ano letivo
         $this->breadcrumb(currentPage: 'Etapas do ano letivo', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_escola_lst.php') => 'Escolas',
+            url(path: "intranet/educar_escola_det.php?cod_escola={$this->ref_ref_cod_escola}") => LegacySchool::find($this->ref_ref_cod_escola)?->name,
         ]);
 
         $this->nome_url_cancelar = 'Cancelar';
@@ -271,8 +274,11 @@ return new class extends clsCadastro
             if ($this->tipoacao == 'Novo') {
                 // Se não é admin, "Copiar turmas" é sempre true, então os checkboxes devem estar habilitados
                 if ($isAdmin && !$checkedTurmas) {
+                    // Inalcançável: no cadastro `$checkedTurmas` é sempre "checked" (ver a atribuição acima).
+                    // @codeCoverageIgnoreStart
                     $disabledProfessores = 'disabled';
                     $disabledServidores = 'disabled';
+                    // @codeCoverageIgnoreEnd
                 }
             }
 
@@ -497,7 +503,7 @@ return new class extends clsCadastro
         );
 
         try {
-            app(AcademicYearService::class)->deleteAcademicYear(
+            $excluiu = app(AcademicYearService::class)->deleteAcademicYear(
                 schoolId: $this->ref_ref_cod_escola,
                 year: $this->ref_ano,
                 userId: $this->pessoa_logada
@@ -510,6 +516,8 @@ return new class extends clsCadastro
                 return true;
             }
 
+            // Inalcançável: `deleteAcademicYear()` sempre retorna true e nunca lança `AcademicYearServiceException`.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Exclusão não realizada.<br />';
 
             return false;
@@ -517,6 +525,7 @@ return new class extends clsCadastro
             $this->mensagem = 'Erro na exclusão: ' . $e->getMessage();
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
