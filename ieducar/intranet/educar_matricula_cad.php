@@ -18,6 +18,7 @@ use App\Models\LegacyStudent;
 use App\Models\RegistrationStatus;
 use App\Services\EnrollmentService;
 use App\Services\GradeService;
+use App\Services\PendingTransferService;
 use App\Services\PromotionService;
 use App\Services\RegistrationService;
 use App\Services\SchoolClass\AvailableTimeService;
@@ -125,6 +126,14 @@ return new class extends clsCadastro
 
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 578, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: $url);
+
+        if ($transferId = $this->getQueryString(name: 'transferencia_id')) {
+            $transfer = app(PendingTransferService::class)
+                ->forUser(auth()->user())->findOrFail($transferId);
+            abort_unless((int) $transfer->oldRegistration->ref_cod_aluno === (int) $this->ref_cod_aluno, 403);
+            $this->ref_cod_escola = $transfer->ref_cod_escola_destino;
+            $this->ref_cod_instituicao = $transfer->destinationSchool->ref_cod_instituicao;
+        }
 
         if (is_numeric(value: $this->cod_matricula)) {
             if ($obj_permissoes->permissao_excluir(int_processo_ap: 627, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
