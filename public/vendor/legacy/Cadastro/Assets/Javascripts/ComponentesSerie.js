@@ -20,6 +20,10 @@ if(modoEdicao){
 if (comboSerie.prop('multiple')) {
     comboSerie.empty();
     initChosenSerie();
+    if (modoCadastro && $j('#ref_cod_curso').val()) {
+        curso_id = $j('#ref_cod_curso').val();
+        getSeriesSemComponentesViculados();
+    }
 }
 
 $j("#ref_cod_instituicao").change(function() {
