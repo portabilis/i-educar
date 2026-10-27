@@ -365,26 +365,27 @@ return new class extends clsCadastro
                 20
             );
 
-            $hora = explode(':', $this->total_horas_alocadas);
-            $this->total_horas_alocadas = $hora[0] + ($hora[1] / 60);
+            if (str_contains((string) $this->total_horas_alocadas, ':')) {
+                $hora = explode(':', $this->total_horas_alocadas);
+                $this->total_horas_alocadas = $hora[0] + ($hora[1] / 60);
+            }
             $this->campoOculto('total_horas_alocadas', $this->total_horas_alocadas);
             $this->acao_enviar = 'acao2()';
         }
 
-        if ($this->carga_horaria) {
+        $hora_formatada = $this->carga_horaria;
+        if (is_numeric($this->carga_horaria)) {
             $horas = (int) $this->carga_horaria;
             $minutos = round(($this->carga_horaria - (int) $this->carga_horaria) * 60);
             $hora_formatada = sprintf('%02d:%02d', $horas, $minutos);
         }
 
-        $this->campoHora(
+        $this->campoHoraServidor(
             'carga_horaria',
             'Carga Horária',
             $hora_formatada,
             true,
-            ' Número de horas deve ser maior que horas alocadas',
-            '',
-            false
+            ' Número de horas deve ser maior que horas alocadas'
         );
 
         $this->inputsHelper()->checkbox('multi_seriado', ['label' => 'Multisseriado', 'value' => $this->multi_seriado]);
@@ -482,6 +483,10 @@ JS;
 
     public function Novo()
     {
+        if (!$this->cargaHorariaValida()) {
+            return false;
+        }
+
         $this->cod_servidor = (int) $this->cod_servidor;
         $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
 
@@ -557,6 +562,10 @@ JS;
 
     public function Editar()
     {
+        if (!$this->cargaHorariaValida()) {
+            return false;
+        }
+
         if (!$this->validaExclusaoFuncoes()) {
             $this->mensagem = 'Edição não realizada. O servidor possui funções vinculadas a falta/atraso!';
 
@@ -668,6 +677,17 @@ JS;
 
         $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
         $this->simpleRedirect('educar_servidor_lst.php');
+    }
+
+    private function cargaHorariaValida(): bool
+    {
+        if (is_string($this->carga_horaria) && preg_match('/^\d{1,2}:[0-5]\d$/D', $this->carga_horaria)) {
+            return true;
+        }
+
+        $this->mensagem = 'Carga horária inválida. Informe um valor entre 00:00 e 99:59.<br>';
+
+        return false;
     }
 
     private function camposCenso(): array
