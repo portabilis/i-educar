@@ -99,6 +99,20 @@ test('abre e sinaliza os filtros avançados aplicados', function () {
         ->assertDontSee("<tbody id='filtros-avancados' data-filter-section='advanced' hidden>", false);
 });
 
+test('conta somente filtros avançados presentes e preenchidos no formulário', function (array $query, string $label, string $expanded) {
+    ($this->list)($query)
+        ->assertSee($label, false)
+        ->assertSee("aria-expanded='{$expanded}'", false);
+})->with([
+    'nenhum' => [[], 'Filtros avançados</button>', 'false'],
+    'um' => [['nome_mae' => 'Marta'], 'Filtros avançados (1 ativo)', 'true'],
+    'vários' => [['nome_mae' => 'Marta', 'nome_pai' => 'Pedro'], 'Filtros avançados (2 ativos)', 'true'],
+    'valor vazio' => [['nome_mae' => ''], 'Filtros avançados</button>', 'false'],
+    'filtro básico' => [['nome_aluno' => 'Ana'], 'Filtros avançados</button>', 'false'],
+    'campo condicional ausente' => [['cod_inep' => '123456789012'], 'Filtros avançados</button>', 'false'],
+    'parâmetro desconhecido' => [['filtro_inexistente' => 'valor'], 'Filtros avançados</button>', 'false'],
+]);
+
 test('filtra por cada campo da pessoa', function (Closure $query) {
     $ana = StudentScenario::named('Ana Alves', ['aluno_estado_id' => '111.222.333-4'], ['data_nasc' => '2015-04-20', 'cpf' => '12345678909']);
     $ana->mother('Marta Alves');
