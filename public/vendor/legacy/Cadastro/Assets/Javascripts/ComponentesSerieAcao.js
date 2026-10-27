@@ -29,7 +29,20 @@ submitButton.click(function(){
 });
 
 function atualizaComponentesSerie(componentes){
-        serieId = serieId != '' ? serieId : $j('#ref_cod_serie').val();
+        var seriesIds = [];
+        if (serieId && serieId !== '') {
+            seriesIds = [serieId];
+        } else {
+            var valorSerie = $j('#ref_cod_serie').val();
+            if (Array.isArray(valorSerie)) {
+                seriesIds = valorSerie.filter(function(id) {
+                    return id && id !== 'all';
+                });
+            } else if (valorSerie && valorSerie !== '' && valorSerie !== 'all') {
+                seriesIds = [valorSerie];
+            }
+        }
+
         var urlForAtualizaComponentesSerie = postResourceUrlBuilder.buildUrl('/module/Api/ComponentesSerie', 'atualiza-componentes-serie', {});
 
         var options = {
@@ -37,7 +50,8 @@ function atualizaComponentesSerie(componentes){
           url      : urlForAtualizaComponentesSerie,
           dataType : 'json',
           data     : {
-            serie_id    : serieId,
+            series      : JSON.stringify(seriesIds),
+            serie_id    : seriesIds.length > 0 ? seriesIds[0] : '',
             componentes : JSON.stringify(componentes)
           },
           success  : handleAtualizaComponentesSerie,
@@ -47,43 +61,83 @@ function atualizaComponentesSerie(componentes){
         postResource(options);
 }
 
+var filaSeriesModal = [];
+
+function executaModalProximaSerie() {
+    if (filaSeriesModal.length === 0) {
+        if (ModalSelectEscolas.dialogContainer && ModalSelectEscolas.dialogContainer.dialog('isOpen')) {
+            ModalSelectEscolas.dialogContainer.dialog('close');
+        }
+        redirecionaListagem();
+        return;
+    }
+
+    var proxima = filaSeriesModal.shift();
+    ModalSelectEscolas.init(proxima.serieId, proxima.serieNome, proxima.componentes, 'novos-componentes', proxima.actions);
+}
+
 function handleAtualizaComponentesSerie(response) {
 
         if (response.msgErro) {
             let msgs = response.msgErro.split("\n");
 
             msgs.forEach(msg => messageUtils.error(msg));
-        }else{
-            let nmSerie = $j('#ref_cod_serie option:selected').map(function() {
-                return this.text;
-            }).get();
+            return;
+        }
 
-            serieId = $j('#serie_id').val();
+        messageUtils.success('Componentes da série alterados com sucesso!');
 
-            let arrayComponentes = [];
-            let actions = [];
-            if(response.insert && response.insert.length > 0){
-                arrayComponentes = arrayComponentes.concat(response.insert);
-                actions.push('novos-componentes');
-            }
+        filaSeriesModal = [];
+        let seriesRetorno = response.series;
+        if (!seriesRetorno && (response.insert || response.update)) {
+            seriesRetorno = [{
+                id: serieId || $j('#ref_cod_serie').val(),
+                insert: response.insert,
+                update: response.update
+            }];
+        }
 
-            if (response.update && response.update.length > 0) {
-                $j.each(response.update, function (key, componente) {
-                    if (componente.anos_letivos_inseridos && componente.anos_letivos_inseridos.length > 0) {
-                        componente.anos_letivos = componente.anos_letivos_inseridos;
-                        arrayComponentes = arrayComponentes.concat(componente);
-                        actions.push('novos-anos');
+        if (seriesRetorno && seriesRetorno.length > 0) {
+            seriesRetorno.forEach(function(item) {
+                let arrayComponentes = [];
+                let actions = [];
+
+                if (item.insert && item.insert.length > 0) {
+                    arrayComponentes = arrayComponentes.concat(item.insert);
+                    actions.push('novos-componentes');
+                }
+
+                if (item.update && item.update.length > 0) {
+                    $j.each(item.update, function (key, componente) {
+                        if (componente.anos_letivos_inseridos && componente.anos_letivos_inseridos.length > 0) {
+                            componente.anos_letivos = componente.anos_letivos_inseridos;
+                            arrayComponentes = arrayComponentes.concat(componente);
+                            actions.push('novos-anos');
+                        }
+                    });
+                }
+
+                if (arrayComponentes.length > 0) {
+                    let option = $j('#ref_cod_serie option[value="' + item.id + '"]');
+                    let nmSerie = option.length ? option.text().trim() : '';
+                    if (!nmSerie) {
+                        nmSerie = $j('#ref_cod_serie option:selected').text().trim();
                     }
-                });
-            }
 
-            if (arrayComponentes.length > 0) {
-                ModalSelectEscolas.init(serieId, nmSerie, arrayComponentes, 'novos-componentes', actions);
-            } else {
-                redirecionaListagem();
-            }
+                    filaSeriesModal.push({
+                        serieId: item.id,
+                        serieNome: nmSerie,
+                        componentes: arrayComponentes,
+                        actions: actions
+                    });
+                }
+            });
+        }
 
-            messageUtils.success('Componentes da série alterados com sucesso!');
+        if (filaSeriesModal.length > 0) {
+            executaModalProximaSerie();
+        } else {
+            redirecionaListagem();
         }
     }
 
@@ -92,15 +146,17 @@ function handleErroAtualizaComponentesSerie(response){
     safeLog(response);
 }
 
-function adicionaComponentesTodasEscolas(dialogId){
+function adicionaComponentesTodasEscolas(dialogId, targetSerieId){
     var url = postResourceUrlBuilder.buildUrl('/module/Api/ComponentesSerie', 'replica-componentes-adicionados-escolas', {});
+
+    var currentSerieId = targetSerieId || ModalSelectEscolas.serieId || serieId;
 
     var options = {
       type     : 'POST',
       url      : url,
       dataType : 'json',
       data     : {
-        serie_id    : serieId,
+        serie_id    : currentSerieId,
         componentes : $j('#json-componentes').val()
       },
       success  : function(response) {
@@ -108,7 +164,7 @@ function adicionaComponentesTodasEscolas(dialogId){
               messageUtils.error('Erro ao aplicar alterações para todas as escolas.');
           }
           messageUtils.success('Alterações aplicadas para todas as escolas.');
-          redirecionaListagem();
+          executaModalProximaSerie();
       },
       error    : handleErroReplicaComponentesEscola
     };
@@ -192,20 +248,20 @@ ModalSelectEscolas = {
             );
 
             this.dialogContainer = $j('#dialog-container-' + this.idContainer);
-        }
 
-        this.dialog = this.dialogContainer.dialog({
-            autoOpen: false,
-            closeOnEscape: false,
-            draggable: false,
-            width: 820,
-            modal: true,
-            resizable: true,
-            title: 'Seleção de escolas',
-            open: function(event, ui) {
-                $j(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
-            }
-        });
+            this.dialog = this.dialogContainer.dialog({
+                autoOpen: false,
+                closeOnEscape: false,
+                draggable: false,
+                width: 820,
+                modal: true,
+                resizable: true,
+                title: 'Seleção de escolas',
+                open: function(event, ui) {
+                    $j(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+                }
+            });
+        }
     },
     makeHtml: function (data) {
         let dialog = this.dialogContainer;
@@ -287,8 +343,8 @@ ModalSelectEscolas = {
             'align': 'center'
         });
 
-        buttonsTd.append('<input type="button" class="botaolistagem" value="Aplicar em todas" onclick="adicionaComponentesTodasEscolas(\''+this.idContainer+'\')">');
-        buttonsTd.append('<input type="button" class="botaolistagem" value="Aplicar somente na série" onclick="redirecionaListagem();">');
+        buttonsTd.append('<input type="button" class="botaolistagem" value="Aplicar em todas" onclick="adicionaComponentesTodasEscolas(\''+this.idContainer+'\', ' + this.serieId + ')">');
+        buttonsTd.append('<input type="button" class="botaolistagem" value="Aplicar somente na série" onclick="executaModalProximaSerie();">');
         buttonsTd.append('<input type="button" class="botao" value="Selecionar escolas para aplicar" onclick="expandEscolas()">');
 
         buttonsTr.append(buttonsTd);
@@ -407,7 +463,7 @@ function atualizaComponentesEscolas (serieId, dialogId) {
 
     $j.post(url, params, function (response) {
         messageUtils.success('Alterações aplicadas para todas as escolas selecionadas');
-        redirecionaListagem();
+        executaModalProximaSerie();
     });
 }
 
