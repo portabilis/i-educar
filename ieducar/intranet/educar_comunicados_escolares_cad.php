@@ -39,7 +39,7 @@ return new class extends clsCadastro
         if (is_numeric($this->id) && $this->id > 0) {
             $registro = SchoolNotice::findOrFail($this->id);
             if ($registro) {
-                if (! $this->usuarioPodeGerenciarAviso($registro)) {
+                if (!$this->usuarioPodeGerenciarAviso($registro)) {
                     $this->simpleRedirect("educar_comunicados_escolares_det.php?id={$registro->getKey()}");
                 }
 
@@ -178,7 +178,7 @@ return new class extends clsCadastro
     {
         $notice = SchoolNotice::find($this->id);
 
-        if (! $notice || ! $this->usuarioPodeGerenciarAviso($notice)) {
+        if (!$notice || !$this->usuarioPodeGerenciarAviso($notice)) {
             $this->mensagem = 'Você não tem permissão para editar este comunicado.<br>';
 
             return false;
@@ -209,7 +209,7 @@ return new class extends clsCadastro
     {
         $notice = SchoolNotice::find($this->id);
 
-        if (! $notice || ! $this->usuarioPodeGerenciarAviso($notice)) {
+        if (!$notice || !$this->usuarioPodeGerenciarAviso($notice)) {
             $this->mensagem = 'Você não tem permissão para excluir este comunicado.<br>';
 
             return false;
