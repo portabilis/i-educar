@@ -11,19 +11,20 @@ beforeEach(function () {
     $this->notice = SchoolNotice::create([
         'institution_id' => $this->user->ref_cod_instituicao,
         'user_id' => $this->user->getKey(),
-        'school_id' => LegacySchoolFactory::new()->create()->getKey(),
         'title' => 'Comunicado Alfa',
         'description' => 'Texto do comunicado',
         'date' => now(),
         'hour' => '10:00',
         'local' => 'Auditório',
     ]);
+    $this->school = LegacySchoolFactory::new()->create();
+    $this->notice->schools()->attach($this->school);
 });
 
 test('cadastra um comunicado escolar', function () {
     $payload = LegacyFields::from($this->get('/intranet/educar_comunicados_escolares_cad.php')->assertOk()->getContent(), [
         'ref_cod_instituicao' => $this->user->ref_cod_instituicao,
-        'ref_cod_escola' => $this->notice->school_id,
+        'escolas' => [$this->school->getKey()],
         'titulo' => 'Comunicado Beta',
         'descricao' => 'Texto do comunicado',
         'data' => now()->format('d/m/Y'),
@@ -40,7 +41,7 @@ test('cadastra um comunicado escolar', function () {
 test('edita e exclui o comunicado escolar', function () {
     $url = '/intranet/educar_comunicados_escolares_cad.php?id=' . $this->notice->getKey();
 
-    $payload = LegacyFields::from($this->get($url)->assertOk()->getContent(), ['titulo' => 'Comunicado renomeado']);
+    $payload = LegacyFields::from($this->get($url)->assertOk()->getContent(), ['titulo' => 'Comunicado renomeado', 'escolas' => [$this->school->getKey()]]);
 
     expect($payload['tipoacao'])->toBe('Editar');
 

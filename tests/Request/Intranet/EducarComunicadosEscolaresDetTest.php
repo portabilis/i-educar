@@ -10,13 +10,14 @@ beforeEach(function () {
     $this->notice = SchoolNotice::create([
         'institution_id' => $this->user->ref_cod_instituicao,
         'user_id' => $this->user->getKey(),
-        'school_id' => LegacySchoolFactory::new()->create()->getKey(),
         'title' => 'Comunicado Alfa',
         'description' => 'Texto do comunicado',
         'date' => now(),
         'hour' => '10:00',
         'local' => 'Auditório',
     ]);
+    $this->school = LegacySchoolFactory::new()->create();
+    $this->notice->schools()->attach($this->school);
 });
 
 test('mostra o detalhe do comunicado escolar', function () {
