@@ -1,7 +1,19 @@
 <?php
 
 use App\Models\LegacyAcademicYearStage;
+use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolAcademicYear;
+use App\Models\LegacySchoolGrade;
+use Database\Factories\LegacyCourseFactory;
+use Database\Factories\LegacyDisciplineExemptionFactory;
+use Database\Factories\LegacyDisciplineFactory;
+use Database\Factories\LegacyExemptionStageFactory;
+use Database\Factories\LegacyGradeFactory;
+use Database\Factories\LegacyRegistrationFactory;
+use Database\Factories\LegacySchoolGradeDisciplineFactory;
+use Database\Factories\LegacySchoolGradeFactory;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Collection;
 use Mockery\MockInterface;
 
 /**
@@ -61,6 +73,10 @@ use Mockery\MockInterface;
  */
 abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 {
+    use DatabaseTransactions;
+
+    protected const ANO_LETIVO = 2009;
+
     /**
      * Array com as diretrizes de configuração para uso nas dependências de
      * Avaliacao_Service_Boletim.
@@ -68,6 +84,12 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
      * @var array
      */
     protected $_config = [];
+
+    protected LegacySchoolGrade $escolaSerie;
+
+    protected LegacyRegistration $matricula;
+
+    protected Collection $componentes;
 
     /**
      * @var RegraAvaliacao_Model_RegraDataMapper
@@ -137,11 +159,12 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     {
         parent::setUp();
 
+        $this->criaCenarioNoBanco();
+
         // Armazena valores de configuração para serem usados nas diferentes
         // instâncias de objetos legados e novos
         $this->_setConfigOptions('usuario', ['cod_usuario' => 1])
             ->_setConfigOptions('matricula', $this->_getMatricula())
-            ->_setConfigOptions('matriculaTurma', $this->_getMatriculaTurma())
             ->_setConfigOptions('serie', $this->_getSerie())
             ->_setConfigOptions('curso', $this->_getCurso())
             ->_setConfigOptions('escolaAnoLetivo', $this->_getEscolaAnoLetivo())
@@ -160,6 +183,13 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             ->_setRegraOption('formulaRecuperacao', $this->_setUpFormulaRecuperacao())
             ->_setRegraOption('tabelaArredondamento', $this->_setUpTabelaArredondamento())
             ->_setRegraOption('tabelaArredondamentoConceitual', $this->_setUpTabelaArredondamentoConceitual());
+    }
+
+    protected function tearDown(): void
+    {
+        Portabilis_Utils_Database::$_db = null;
+
+        parent::tearDown();
     }
 
     protected function _getServiceInstance()
@@ -182,13 +212,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
         // Cria os mocks das classes legadas
         $this->_setUpMatriculaMock()
-            ->_setUpMatriculaTurmaMock()
-            ->_setUpCursoMock()
-            ->_setUpSerieMock()
             ->_setUpEscolaAnoLetivo()
-            ->_setUpAnoLetivoModulo()
-            ->_setUpEscolaSerieDisciplinaMock()
-            ->_setUpDispensaDisciplinaMock();
+            ->_setUpAnoLetivoModulo();
 
         // Instancia o service
         return new Avaliacao_Service_Boletim($this->_getServiceOptions());
@@ -303,28 +328,61 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
         return $this->_config[$namespace][$key];
     }
 
-    /**
-     * @return array
-     */
+    private function criaCenarioNoBanco(): void
+    {
+        $curso = LegacyCourseFactory::new()->standardAcademicYear()->create();
+
+        $serie = LegacyGradeFactory::new()->create([
+            'ref_cod_curso' => $curso,
+        ]);
+
+        $this->escolaSerie = LegacySchoolGradeFactory::new()->create([
+            'ref_cod_serie' => $serie,
+            'anos_letivos' => '{' . self::ANO_LETIVO . '}',
+        ]);
+
+        $this->componentes = collect([250, 250, 150, 150])->map(function ($cargaHoraria) {
+            $componente = LegacyDisciplineFactory::new()->create();
+
+            LegacySchoolGradeDisciplineFactory::new()->create([
+                'ref_ref_cod_escola' => $this->escolaSerie->ref_cod_escola,
+                'ref_ref_cod_serie' => $this->escolaSerie->ref_cod_serie,
+                'ref_cod_disciplina' => $componente->id,
+                'carga_horaria' => $cargaHoraria,
+                'anos_letivos' => '{' . self::ANO_LETIVO . '}',
+            ]);
+
+            return $componente;
+        });
+
+        $this->matricula = LegacyRegistrationFactory::new()->create([
+            'ref_ref_cod_escola' => $this->escolaSerie->ref_cod_escola,
+            'ref_ref_cod_serie' => $this->escolaSerie->ref_cod_serie,
+            'ref_cod_curso' => $curso,
+            'ano' => self::ANO_LETIVO,
+        ]);
+
+        $dispensa = LegacyDisciplineExemptionFactory::new()->create([
+            'ref_cod_matricula' => $this->matricula,
+            'ref_cod_escola' => $this->escolaSerie->ref_cod_escola,
+            'ref_cod_serie' => $this->escolaSerie->ref_cod_serie,
+            'ref_cod_disciplina' => $this->componentes->first()->id,
+        ]);
+
+        LegacyExemptionStageFactory::new()->create([
+            'ref_cod_dispensa' => $dispensa,
+            'etapa' => null,
+        ]);
+    }
+
     protected function _getMatricula()
     {
         return [
-            'cod_matricula' => 1,
-            'ref_cod_curso' => 1,
-            'ref_ref_cod_serie' => 1,
-            'ref_ref_cod_escola' => 1,
+            'cod_matricula' => $this->matricula->getKey(),
+            'ref_cod_curso' => $this->matricula->ref_cod_curso,
+            'ref_ref_cod_serie' => $this->escolaSerie->ref_cod_serie,
+            'ref_ref_cod_escola' => $this->escolaSerie->ref_cod_escola,
             'aprovado' => 1,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function _getMatriculaTurma()
-    {
-        return [
-            'ref_cod_matricula' => 1,
-            'ref_cod_turma' => 1,
         ];
     }
 
@@ -358,7 +416,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     {
         return [[
             'ref_cod_escola' => 1,
-            'ano' => 2009,
+            'ano' => self::ANO_LETIVO,
             'andamento' => 1,
             'ativo' => 1,
         ]];
@@ -370,10 +428,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     protected function _getAnoLetivoModulo()
     {
         return [
-            ['ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 1, 'ref_cod_modulo' => 1],
-            ['ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 2, 'ref_cod_modulo' => 1],
-            ['ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 3, 'ref_cod_modulo' => 1],
-            ['ref_ano' => 2009, 'ref_ref_cod_escola' => 1, 'sequencial' => 4, 'ref_cod_modulo' => 1],
+            ['ref_ano' => self::ANO_LETIVO, 'ref_ref_cod_escola' => 1, 'sequencial' => 1, 'ref_cod_modulo' => 1],
+            ['ref_ano' => self::ANO_LETIVO, 'ref_ref_cod_escola' => 1, 'sequencial' => 2, 'ref_cod_modulo' => 1],
+            ['ref_ano' => self::ANO_LETIVO, 'ref_ref_cod_escola' => 1, 'sequencial' => 3, 'ref_cod_modulo' => 1],
+            ['ref_ano' => self::ANO_LETIVO, 'ref_ref_cod_escola' => 1, 'sequencial' => 4, 'ref_cod_modulo' => 1],
         ];
     }
 
@@ -416,12 +474,14 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
      */
     protected function _getEscolaSerieDisciplina()
     {
-        return [
-            ['ref_cod_serie' => 1, 'ref_cod_disciplina' => 1, 'carga_horaria' => 250],
-            ['ref_cod_serie' => 1, 'ref_cod_disciplina' => 2, 'carga_horaria' => 250],
-            ['ref_cod_serie' => 1, 'ref_cod_disciplina' => 3, 'carga_horaria' => 150],
-            ['ref_cod_serie' => 1, 'ref_cod_disciplina' => 4, 'carga_horaria' => 150],
-        ];
+        return $this->componentes
+            ->zip([250, 250, 150, 150])
+            ->map(fn ($par) => [
+                'ref_cod_serie' => $this->escolaSerie->ref_cod_serie,
+                'ref_cod_disciplina' => $par[0]->id,
+                'carga_horaria' => $par[1],
+            ])
+            ->all();
     }
 
     /**
@@ -430,7 +490,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     protected function _getDispensaDisciplina()
     {
         return [[
-            'ref_cod_disciplina' => 1,
+            'ref_cod_disciplina' => $this->componentes->first()->id,
             'etapa' => null,
         ]];
     }
@@ -440,20 +500,18 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
      */
     protected function _getComponenteCurricular()
     {
-        return [
-            1 => new ComponenteCurricular_Model_Componente(
-                ['id' => 1, 'nome' => 'Matemática', 'cargaHoraria' => 100]
-            ),
-            2 => new ComponenteCurricular_Model_Componente(
-                ['id' => 2, 'nome' => 'Português', 'cargaHoraria' => 100]
-            ),
-            3 => new ComponenteCurricular_Model_Componente(
-                ['id' => 3, 'nome' => 'Ciências', 'cargaHoraria' => 60]
-            ),
-            4 => new ComponenteCurricular_Model_Componente(
-                ['id' => 4, 'nome' => 'Física', 'cargaHoraria' => 60]
-            ),
-        ];
+        $nomes = ['Matemática', 'Português', 'Ciências', 'Física'];
+        $cargas = [100, 100, 60, 60];
+
+        return $this->componentes
+            ->mapWithKeys(fn ($componente, $indice) => [
+                $componente->id => new ComponenteCurricular_Model_Componente([
+                    'id' => $componente->id,
+                    'nome' => $nomes[$indice],
+                    'cargaHoraria' => $cargas[$indice],
+                ]),
+            ])
+            ->all();
     }
 
     /**
@@ -541,12 +599,12 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
         $this->mockDbPreparedQuery([[
             'serie_regra_avaliacao_id' => 1,
-            'ref_ref_cod_escola' => 1,
-            'ref_cod_curso' => 1,
+            'ref_ref_cod_escola' => $this->escolaSerie->ref_cod_escola,
+            'ref_cod_curso' => $this->matricula->ref_cod_curso,
             'ref_cod_turma' => 1,
-            'ref_cod_aluno' => 1,
-            'ref_ref_cod_serie' => 1,
-            'ano' => 2009,
+            'ref_cod_aluno' => $this->matricula->ref_cod_aluno,
+            'ref_ref_cod_serie' => $this->escolaSerie->ref_cod_serie,
+            'ano' => self::ANO_LETIVO,
             'serie_carga_horaria' => 800,
             'curso_hora_falta' => 250 / 300,
             'escola_utiliza_regra_diferenciada' => null,
@@ -554,7 +612,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             'aprovado' => 1,
             'curso_carga_horaria' => 7200,
             'serie_dias_letivos' => 960,
-            'cod_matricula' => 1,
+            'cod_matricula' => $this->matricula->getKey(),
         ]]);
 
         return $this;
@@ -608,76 +666,6 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
      *
      * @throws Exception
      */
-    protected function _setUpMatriculaTurmaMock()
-    {
-        $mock = $this->getCleanMock('clsPmieducarMatriculaTurma');
-
-        $mock
-            ->method('lista')
-            ->with(1)
-            ->willReturn($this->_getConfigOptions('matriculaTurma'));
-
-        CoreExt_Entity::addClassToStorage(
-            'clsPmieducarMatriculaTurma',
-            $mock,
-            null,
-            true
-        );
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     *
-     * @throws Exception
-     */
-    protected function _setUpSerieMock()
-    {
-        $mock = $this->getCleanMock('clsPmieducarSerie');
-
-        $mock
-            ->method('detalhe')
-            ->willReturn($this->_getConfigOptions('serie'));
-
-        CoreExt_Entity::addClassToStorage(
-            'clsPmieducarSerie',
-            $mock,
-            null,
-            true
-        );
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     *
-     * @throws Exception
-     */
-    protected function _setUpCursoMock()
-    {
-        $mock = $this->getCleanMock('clsPmieducarCurso');
-
-        $mock
-            ->method('detalhe')
-            ->willReturn($this->_getConfigOptions('curso'));
-
-        CoreExt_Entity::addClassToStorage(
-            'clsPmieducarCurso',
-            $mock,
-            null,
-            true
-        );
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     *
-     * @throws Exception
-     */
     protected function _setUpEscolaAnoLetivo()
     {
         $mock = $this->instance(
@@ -686,7 +674,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
                 $mock->shouldReceive('withSchool')
                     ->with(1)
                     ->shouldReceive('withYearEq')
-                    ->with(2009)
+                    ->with(self::ANO_LETIVO)
                     ->shouldReceive(['active', 'inProgress'])
                     ->andReturn($this->_getConfigOptions('escolaAnoLetivo'));
             })
@@ -715,59 +703,13 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
                 $mock->shouldReceive('withSchool')
                     ->with(1)
                     ->shouldReceive('withYearEq')
-                    ->with(2009)
+                    ->with(self::ANO_LETIVO)
                     ->andReturn($this->_getConfigOptions('anoLetivoModulo'));
             })
         );
 
         CoreExt_Entity::addClassToStorage(
             LegacyAcademicYearStage::class,
-            $mock,
-            null,
-            true
-        );
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     *
-     * @throws Exception
-     */
-    protected function _setUpEscolaSerieDisciplinaMock()
-    {
-        $mock = $this->getCleanMock('clsPmieducarEscolaSerieDisciplina');
-
-        $mock->expects($this->any())
-            ->method('lista')
-            ->willReturn($this->_getConfigOptions('escolaSerieDisciplina'));
-
-        CoreExt_Entity::addClassToStorage(
-            'clsPmieducarEscolaSerieDisciplina',
-            $mock,
-            null,
-            true
-        );
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     *
-     * @throws Exception
-     */
-    protected function _setUpDispensaDisciplinaMock()
-    {
-        $mock = $this->getCleanMock('clsPmieducarDispensaDisciplina');
-
-        $mock
-            ->method('disciplinaDispensadaEtapa')
-            ->willReturn($this->_getConfigOptions('dispensaDisciplina'));
-
-        CoreExt_Entity::addClassToStorage(
-            'clsPmieducarDispensaDisciplina',
             $mock,
             null,
             true
@@ -828,6 +770,26 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
         }
 
         return $this->_regraOptions[$key];
+    }
+
+    /**
+     * Configura opções da regra no beforeEach dos testes Pest.
+     *
+     * O beforeEach roda depois do setUp(), então, além de alterar as opções,
+     * refaz as configurações do setUp() que dependem delas: as instâncias de
+     * Avaliacao_Model_FaltaAluno ('tipoPresenca') e de
+     * Avaliacao_Model_ParecerDescritivoAluno ('parecerDescritivo').
+     *
+     * @return $this
+     */
+    public function configuraRegra(array $options)
+    {
+        foreach ($options as $key => $value) {
+            $this->_setRegraOption($key, $value);
+        }
+
+        return $this->_setConfigOptions('faltaAluno', $this->_getFaltaAluno())
+            ->_setConfigOptions('parecerDescritivoAluno', $this->_getParecerDescritivoAluno());
     }
 
     /**
@@ -1024,10 +986,12 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     protected function _getNotaComponenteDataMapperMock()
     {
         if (is_null($this->_notaComponenteDataMapperMock)) {
+            $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
+
             $mock = $this->getCleanMock('Avaliacao_Model_NotaComponenteDataMapper');
             $mock
                 ->method('findAll')
-                ->with([], ['notaAluno' => $this->_getConfigOption('matricula', 'cod_matricula')], ['etapa' => 'ASC'])
+                ->with([], ['notaAluno' => $notaAluno->id], ['etapa' => 'ASC'])
                 ->willReturn([]);
 
             $this->_setNotaComponenteDataMapperMock($mock);

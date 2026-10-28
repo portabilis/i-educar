@@ -244,7 +244,7 @@ class clsCadastro extends clsCampos
 
         $retorno .= "\n<!-- cadastro begin -->\n";
         $retorno .= "<form name='$this->__nome' id='$this->__nome' onsubmit='return $this->onSubmit' action='$this->action'  method='post' target='$this->target' $this->form_enctype>\n";
-        $retorno .= "<input name='tipoacao' id='tipoacao' type='hidden' value='$this->tipoacao'>\n";
+        $retorno .= "<input name='tipoacao' id='tipoacao' type='hidden' value='" . htmlspecialchars((string) $this->tipoacao, ENT_QUOTES) . "'>\n";
 
         if ($this->campos) {
             reset($this->campos);
@@ -262,7 +262,7 @@ class clsCadastro extends clsCampos
 
         $retorno .= "<center>\n<table class='tablecadastro' $width border='0' cellpadding='2' cellspacing='0'>\n";
         $applicationTitle = $this->titulo_aplication ?? '';
-        $titulo = isset($this->titulo) ? $this->titulo : "<b>{$this->tipoacao} {$applicationTitle}</b>";
+        $titulo = isset($this->titulo) ? $this->titulo : '<b>' . htmlspecialchars((string) $this->tipoacao, ENT_QUOTES) . " {$applicationTitle}</b>";
 
         View::share('title', $this->getPageTitle());
 
@@ -301,7 +301,10 @@ class clsCadastro extends clsCampos
             $validador = $componente[2];
 
             if ($nomeCampo === 'avulso') {
+                // Inalcançável: nenhum construtor de campo cria o tipo 'avulso'.
+                // @codeCoverageIgnoreStart
                 continue;
+                // @codeCoverageIgnoreEnd
             }
 
             if (empty($validador) && $nomeCampo == 'cpf' && preg_match('/^(tab_add_[0-9])/', $nome) !== 1) {

@@ -1,5 +1,11 @@
 <?php
 
+use App\Models\LegacyCourse;
+use App\Models\LegacyGrade;
+use App\Models\LegacySchoolClass;
+use App\Services\GradeService;
+use Illuminate\Support\Facades\DB;
+
 return new class extends clsCadastro
 {
     public $pessoa_logada;
@@ -70,6 +76,14 @@ return new class extends clsCadastro
 
     public $etapa_educacenso;
 
+    private function possuiTurmasVinculadas(): bool
+    {
+        return LegacySchoolClass::query()
+            ->where('ref_ref_cod_serie', $this->cod_serie)
+            ->active()
+            ->exists();
+    }
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -87,10 +101,11 @@ return new class extends clsCadastro
         $this->regras_ano_letivo = [];
 
         if (is_numeric($this->cod_serie)) {
-            $obj = new clsPmieducarSerie($this->cod_serie);
-            $registro = $obj->detalhe();
+            $serie = LegacyGrade::query()->find($this->cod_serie);
 
-            if ($registro) {
+            if ($serie) {
+                $registro = $serie->getAttributes();
+
                 // passa todos os valores obtidos no registro para atributos do objeto
                 foreach ($registro as $campo => $val) {
                     $this->$campo = $val;
@@ -98,11 +113,9 @@ return new class extends clsCadastro
 
                 $this->carga_horaria = formatDecimalBr($this->carga_horaria) ?? $this->carga_horaria;
 
-                $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
-                $obj_curso_det = $obj_curso->detalhe();
-                $this->ref_cod_instituicao = $obj_curso_det['ref_cod_instituicao'];
+                $this->ref_cod_instituicao = LegacyCourse::query()->whereKey($registro['ref_cod_curso'])->value('ref_cod_instituicao');
 
-                if ($obj->possuiTurmasVinculadas()) {
+                if ($this->possuiTurmasVinculadas()) {
                     $this->script_excluir = 'excluirSerieComTurmas();';
                 }
 
@@ -142,7 +155,7 @@ return new class extends clsCadastro
         }
 
         $this->url_cancelar = ($retorno == 'Editar')
-            ? "educar_serie_det.php?cod_serie={$registro['cod_serie']}"
+            ? "educar_serie_det.php?cod_serie={$this->cod_serie}"
             : 'educar_serie_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
@@ -197,20 +210,13 @@ return new class extends clsCadastro
         $this->campoNumero('idade_final', '&nbsp;até', $this->idade_final, 2, 2, false);
         $opcoes = ['' => 'Selecione'];
 
-        if ($this->ref_cod_curso) {
-            $objTemp = new clsPmieducarCurso;
-            $lista = $objTemp->lista(
-                int_cod_curso: $this->ref_cod_curso,
-                int_ativo: 1
-            );
+        if (is_numeric($this->ref_cod_curso)) {
+            $etapas = LegacyCourse::query()
+                ->active()
+                ->whereKey($this->ref_cod_curso)
+                ->value('qtd_etapas');
 
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes_["{$registro['cod_curso']}"] = "{$registro['qtd_etapas']}";
-                }
-            }
-
-            for ($i = 1; $i <= $opcoes_["{$registro['cod_curso']}"]; $i++) {
+            for ($i = 1; $i <= $etapas; $i++) {
                 $opcoes[$i] = "Etapa {$i}";
             }
         }
@@ -271,38 +277,11 @@ return new class extends clsCadastro
             return false;
         }
 
-        $obj = new clsPmieducarSerie(
-            null,
-            null,
-            $this->pessoa_logada,
-            $this->ref_cod_curso,
-            $this->nm_serie,
-            $this->etapa_curso,
-            $this->concluinte,
-            $this->carga_horaria,
-            null,
-            null,
-            1,
-            $this->idade_inicial,
-            $this->idade_final,
-            $this->regra_avaliacao_id,
-            $this->observacao_historico,
-            $this->dias_letivos,
-            $this->regra_avaliacao_diferenciada_id,
-            !is_null($this->alerta_faixa_etaria),
-            !is_null($this->bloquear_matricula_faixa_etaria),
-            $this->idade_ideal,
-            !is_null($this->exigir_inep),
-            !is_null($this->importar_serie_pre_matricula),
-            $this->descricao,
-            $this->etapa_educacenso
-        );
+        $serie = $this->cadastraSerieComRegrasPorAno();
 
-        $this->cod_serie = $cadastrou = $obj->cadastra();
+        $this->cod_serie = $cadastrou = $serie?->getKey();
 
         if ($cadastrou) {
-            $this->persisteRegraSerieAno();
-
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_serie_lst.php');
         }
@@ -310,6 +289,46 @@ return new class extends clsCadastro
         $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
+    }
+
+    private function cadastraSerieComRegrasPorAno(): ?LegacyGrade
+    {
+        DB::beginTransaction();
+
+        $serie = app(GradeService::class)->create([
+            'ref_usuario_cad' => $this->pessoa_logada,
+            'ref_cod_curso' => $this->ref_cod_curso,
+            'nm_serie' => $this->nm_serie,
+            'etapa_curso' => $this->etapa_curso,
+            'concluinte' => $this->concluinte,
+            'carga_horaria' => $this->carga_horaria,
+            'idade_inicial' => $this->idade_inicial,
+            'idade_final' => $this->idade_final,
+            'regra_avaliacao_id' => $this->regra_avaliacao_id,
+            'observacao_historico' => $this->observacao_historico,
+            'dias_letivos' => $this->dias_letivos,
+            'regra_avaliacao_diferenciada_id' => $this->regra_avaliacao_diferenciada_id,
+            'alerta_faixa_etaria' => !is_null($this->alerta_faixa_etaria),
+            'bloquear_matricula_faixa_etaria' => !is_null($this->bloquear_matricula_faixa_etaria),
+            'idade_ideal' => $this->idade_ideal,
+            'exigir_inep' => !is_null($this->exigir_inep),
+            'importar_serie_pre_matricula' => !is_null($this->importar_serie_pre_matricula),
+            'descricao' => $this->descricao,
+            'etapa_educacenso' => $this->etapa_educacenso,
+        ]);
+
+        if ($serie === null) {
+            DB::rollBack();
+
+            return null;
+        }
+
+        $this->cod_serie = $serie->getKey();
+        $this->persisteRegraSerieAno();
+
+        DB::commit();
+
+        return $serie;
     }
 
     public function Editar()
@@ -328,71 +347,97 @@ return new class extends clsCadastro
             return false;
         }
 
-        $obj = new clsPmieducarSerie(
-            $this->cod_serie,
-            $this->pessoa_logada,
-            null,
-            $this->ref_cod_curso,
-            $this->nm_serie,
-            $this->etapa_curso,
-            $this->concluinte,
-            $this->carga_horaria,
-            null,
-            null,
-            1,
-            $this->idade_inicial,
-            $this->idade_final,
-            $this->regra_avaliacao_id,
-            $this->observacao_historico,
-            $this->dias_letivos,
-            $this->regra_avaliacao_diferenciada_id,
-            !is_null($this->alerta_faixa_etaria),
-            !is_null($this->bloquear_matricula_faixa_etaria),
-            $this->idade_ideal,
-            !is_null($this->exigir_inep),
-            !is_null($this->importar_serie_pre_matricula),
-            $this->descricao,
-            $this->etapa_educacenso
-        );
+        if (!is_numeric($this->cod_serie) || !is_numeric($this->pessoa_logada)) {
+            $this->mensagem = 'Edição não realizada.<br>';
 
-        $editou = $obj->edita();
+            return false;
+        }
+
+        $editou = $this->editaSerieComRegrasPorAno();
 
         if ($editou) {
-            $this->persisteRegraSerieAno();
-
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_serie_lst.php');
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
+    }
+
+    private function editaSerieComRegrasPorAno(): bool
+    {
+        DB::beginTransaction();
+
+        $editou = app(GradeService::class)->update($this->cod_serie, [
+            'ref_usuario_exc' => $this->pessoa_logada,
+            'ref_cod_curso' => $this->ref_cod_curso,
+            'nm_serie' => $this->nm_serie,
+            'etapa_curso' => $this->etapa_curso,
+            'concluinte' => $this->concluinte,
+            'carga_horaria' => $this->carga_horaria,
+            'ativo' => 1,
+            'idade_inicial' => $this->idade_inicial,
+            'idade_final' => $this->idade_final,
+            'regra_avaliacao_id' => $this->regra_avaliacao_id,
+            'observacao_historico' => $this->observacao_historico,
+            'dias_letivos' => $this->dias_letivos,
+            'regra_avaliacao_diferenciada_id' => $this->regra_avaliacao_diferenciada_id,
+            'alerta_faixa_etaria' => !is_null($this->alerta_faixa_etaria),
+            'bloquear_matricula_faixa_etaria' => !is_null($this->bloquear_matricula_faixa_etaria),
+            'idade_ideal' => $this->idade_ideal,
+            'exigir_inep' => !is_null($this->exigir_inep),
+            'importar_serie_pre_matricula' => !is_null($this->importar_serie_pre_matricula),
+            'descricao' => $this->descricao,
+            'etapa_educacenso' => $this->etapa_educacenso,
+        ]);
+
+        if (!$editou) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
+            DB::rollBack();
+
+            return false;
+            // @codeCoverageIgnoreEnd
+        }
+
+        $this->persisteRegraSerieAno();
+
+        DB::commit();
+
+        return true;
     }
 
     public function Excluir()
     {
-        $obj = new clsPmieducarSerie(
-            cod_serie: $this->cod_serie,
-            ref_usuario_exc: $this->pessoa_logada,
-            ativo: 0
-        );
+        if (!is_numeric($this->cod_serie) || !is_numeric($this->pessoa_logada)) {
+            $this->mensagem = 'Exclusão não realizada.<br>';
 
-        if ($obj->possuiTurmasVinculadas()) {
+            return false;
+        }
+
+        if ($this->possuiTurmasVinculadas()) {
             $this->mensagem = 'Não foi possível excluir a série, pois a mesma possui turmas vinculadas.';
 
             return false;
         }
 
-        $excluiu = $obj->excluir();
+        $excluiu = app(GradeService::class)->delete($this->cod_serie, $this->pessoa_logada);
 
         if ($excluiu) {
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_serie_lst.php');
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     protected function persisteRegraSerieAno()

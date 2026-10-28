@@ -1,1 +1,1 @@
-<input name="date" type="date" value="{{ old('date', request('date')) }}">
+<input name="date" aria-label="Data" type="date" value="{{ old('date', request('date')) }}">

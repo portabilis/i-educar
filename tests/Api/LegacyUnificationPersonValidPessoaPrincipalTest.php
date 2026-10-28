@@ -1,106 +1,90 @@
 <?php
 
-namespace Tests\Api;
-
-use App\Models\LegacyIndividual;
 use Database\Factories\LegacyIndividualFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\LoginFirstUser;
 use Tests\TestCase;
 
-class LegacyUnificationPersonValidPessoaPrincipalTest extends TestCase
-{
-    use DatabaseTransactions;
-    use LoginFirstUser;
+uses(TestCase::class, DatabaseTransactions::class, LoginFirstUser::class);
 
-    private LegacyIndividual $individualOne;
+beforeEach(function () {
+    $this->loginWithFirstUser();
 
-    private LegacyIndividual $individualTwo;
+    $this->individualOne = LegacyIndividualFactory::new()->create();
+    $this->individualTwo = LegacyIndividualFactory::new()->create();
+});
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->loginWithFirstUser();
+test('unification person invalid pessoa principal', function () {
+    $request = [
+        'tipoacao' => 'Novo',
+    ];
 
-        $this->individualOne = LegacyIndividualFactory::new()->create();
-        $this->individualTwo = LegacyIndividualFactory::new()->create();
-    }
+    $data = [
+        'pessoas' => collect([
+            [
+                'idpes' => $this->individualOne->getKey(),
+                'pessoaprincipal' => true,
+            ],
+            [
+                'idpes' => $this->individualTwo->getKey(),
+                'pessoa_principal' => false,
+            ],
+        ]),
+    ];
 
-    public function test_unification_person_invalid_pessoa_principal(): void
-    {
-        $request = [
-            'tipoacao' => 'Novo',
-        ];
+    $payload = array_merge($request, $data);
 
-        $data = [
-            'pessoas' => collect([
-                [
-                    'idpes' => $this->individualOne->getKey(),
-                    'pessoaprincipal' => true,
-                ],
-                [
-                    'idpes' => $this->individualTwo->getKey(),
-                    'pessoa_principal' => false,
-                ],
-            ]),
-        ];
+    $this->post('/intranet/educar_unifica_pessoa.php', $payload)
+        ->assertSuccessful()
+        ->assertSee('Dados enviados inválidos, recarregue a tela e tente novamente!');
+});
 
-        $payload = array_merge($request, $data);
+test('unification person not present pessoa principal', function () {
+    $request = [
+        'tipoacao' => 'Novo',
+    ];
 
-        $this->post('/intranet/educar_unifica_pessoa.php', $payload)
-            ->assertSuccessful()
-            ->assertSee('Dados enviados inválidos, recarregue a tela e tente novamente!');
-    }
+    $data = [
+        'pessoas' => collect([
+            [
+                'idpes' => $this->individualOne->getKey(),
+                'pessoa_principal' => false,
+            ],
+            [
+                'idpes' => $this->individualTwo->getKey(),
+                'pessoa_principal' => false,
+            ],
+        ]),
+    ];
 
-    public function test_unification_person_not_present_pessoa_principal(): void
-    {
-        $request = [
-            'tipoacao' => 'Novo',
-        ];
+    $payload = array_merge($request, $data);
 
-        $data = [
-            'pessoas' => collect([
-                [
-                    'idpes' => $this->individualOne->getKey(),
-                    'pessoa_principal' => false,
-                ],
-                [
-                    'idpes' => $this->individualTwo->getKey(),
-                    'pessoa_principal' => false,
-                ],
-            ]),
-        ];
+    $this->post('/intranet/educar_unifica_pessoa.php', $payload)
+        ->assertSuccessful()
+        ->assertSee('Pessoa principal não informada');
+});
 
-        $payload = array_merge($request, $data);
+test('unification person duplicate pessoa principal', function () {
+    $request = [
+        'tipoacao' => 'Novo',
+    ];
 
-        $this->post('/intranet/educar_unifica_pessoa.php', $payload)
-            ->assertSuccessful()
-            ->assertSee('Pessoa principal não informada');
-    }
+    $data = [
+        'pessoas' => collect([
+            [
+                'idpes' => $this->individualOne->getKey(),
+                'pessoa_principal' => true,
+            ],
+            [
+                'idpes' => $this->individualTwo->getKey(),
+                'pessoa_principal' => true,
+            ],
+        ]),
+    ];
 
-    public function test_unification_person_duplicate_pessoa_principal(): void
-    {
-        $request = [
-            'tipoacao' => 'Novo',
-        ];
+    $payload = array_merge($request, $data);
 
-        $data = [
-            'pessoas' => collect([
-                [
-                    'idpes' => $this->individualOne->getKey(),
-                    'pessoa_principal' => true,
-                ],
-                [
-                    'idpes' => $this->individualTwo->getKey(),
-                    'pessoa_principal' => true,
-                ],
-            ]),
-        ];
-
-        $payload = array_merge($request, $data);
-
-        $this->post('/intranet/educar_unifica_pessoa.php', $payload)
-            ->assertSuccessful()
-            ->assertSee('Não pode haver mais de uma pessoa principal');
-    }
-}
+    $this->post('/intranet/educar_unifica_pessoa.php', $payload)
+        ->assertSuccessful()
+        ->assertSee('Não pode haver mais de uma pessoa principal');
+});

@@ -1,29 +1,23 @@
 <?php
 
-class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
-{
-    protected function setUp(): void
-    {
-        $this->_setRegraOption('tipoPresenca', RegraAvaliacao_Model_TipoPresenca::GERAL);
-        parent::setUp();
-    }
+uses(Avaliacao_Service_FaltaCommon::class);
 
-    protected function _getFaltaTestInstanciaDeFaltaERegistradaApenasUmaVezNoBoletim()
-    {
+beforeEach(function () {
+    $this->configuraRegra(['tipoPresenca' => RegraAvaliacao_Model_TipoPresenca::GERAL]);
+
+    $this->getFaltaTestInstanciaDeFaltaERegistradaApenasUmaVezNoBoletim = function () {
         return new Avaliacao_Model_FaltaGeral([
             'quantidade' => 10,
         ]);
-    }
+    };
 
-    protected function _getFaltaTestAdicionaFaltaNoBoletim()
-    {
+    $this->getFaltaTestAdicionaFaltaNoBoletim = function () {
         return new Avaliacao_Model_FaltaComponente([
             'quantidade' => 10,
         ]);
-    }
+    };
 
-    protected function _testAdicionaFaltaNoBoletimVerificaValidadores(Avaliacao_Model_FaltaAbstract $falta)
-    {
+    $this->testAdicionaFaltaNoBoletimVerificaValidadores = function (Avaliacao_Model_FaltaAbstract $falta) {
         $this->markTestSkipped();
 
         $this->assertEquals(1, $falta->etapa);
@@ -40,196 +34,195 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
             array_merge(range(1, count($this->_getConfigOptions('anoLetivoModulo'))), ['Rc']),
             $validators['etapa']->getOption('choices')
         );
-    }
+    };
+});
 
-    /**
-     * Testa o service adicionando faltas de apenas um componente curricular,
-     * para todas as etapas regulares (1 a 4).
-     */
-    public function test_salvar_faltas_no_boletim()
-    {
-        $this->markTestSkipped();
+Avaliacao_Service_FaltaCommon::registerFaltaTests();
 
-        $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
+/**
+ * Testa o service adicionando faltas de apenas um componente curricular,
+ * para todas as etapas regulares (1 a 4).
+ */
+test('salvar faltas no boletim', function () {
+    $this->markTestSkipped();
 
-        $faltas = [
-            new Avaliacao_Model_FaltaGeral([
-                'quantidade' => 7,
-                'etapa' => 1,
-            ]),
-            new Avaliacao_Model_FaltaGeral([
-                'quantidade' => 11,
-                'etapa' => 2,
-            ]),
-            new Avaliacao_Model_FaltaGeral([
-                'quantidade' => 8,
-                'etapa' => 3,
-            ]),
-            new Avaliacao_Model_FaltaGeral([
-                'quantidade' => 8,
-                'etapa' => 4,
-            ]),
-        ];
+    $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
-        // Configura mock para Avaliacao_Model_FaltaGeralDataMapper
-        $mock = $this->getCleanMock('Avaliacao_Model_FaltaGeralDataMapper');
+    $faltas = [
+        new Avaliacao_Model_FaltaGeral([
+            'quantidade' => 7,
+            'etapa' => 1,
+        ]),
+        new Avaliacao_Model_FaltaGeral([
+            'quantidade' => 11,
+            'etapa' => 2,
+        ]),
+        new Avaliacao_Model_FaltaGeral([
+            'quantidade' => 8,
+            'etapa' => 3,
+        ]),
+        new Avaliacao_Model_FaltaGeral([
+            'quantidade' => 8,
+            'etapa' => 4,
+        ]),
+    ];
 
-        $mock->expects($this->at(0))
-            ->method('findAll')
-            ->with([], ['faltaAluno' => $faltaAluno->id], ['etapa' => 'ASC'])
-            ->willReturn([]);
+    // Configura mock para Avaliacao_Model_FaltaGeralDataMapper
+    $mock = $this->getCleanMock('Avaliacao_Model_FaltaGeralDataMapper');
 
-        $mock->expects($this->at(1))
-            ->method('save')
-            ->with($faltas[0])
-            ->willReturn(true);
+    $mock->expects($this->at(0))
+        ->method('findAll')
+        ->with([], ['faltaAluno' => $faltaAluno->id], ['etapa' => 'ASC'])
+        ->willReturn([]);
 
-        $mock->expects($this->at(2))
-            ->method('save')
-            ->with($faltas[1])
-            ->willReturn(true);
+    $mock->expects($this->at(1))
+        ->method('save')
+        ->with($faltas[0])
+        ->willReturn(true);
 
-        $mock->expects($this->at(3))
-            ->method('save')
-            ->with($faltas[2])
-            ->willReturn(true);
+    $mock->expects($this->at(2))
+        ->method('save')
+        ->with($faltas[1])
+        ->willReturn(true);
 
-        $mock->expects($this->at(4))
-            ->method('save')
-            ->with($faltas[3])
-            ->willReturn(true);
+    $mock->expects($this->at(3))
+        ->method('save')
+        ->with($faltas[2])
+        ->willReturn(true);
 
-        $this->_setFaltaAbstractDataMapperMock($mock);
+    $mock->expects($this->at(4))
+        ->method('save')
+        ->with($faltas[3])
+        ->willReturn(true);
 
-        $service = $this->_getServiceInstance();
-        $service->addFaltas($faltas);
-        $service->saveFaltas();
-    }
+    $this->_setFaltaAbstractDataMapperMock($mock);
 
-    /**
-     * Testa o service adicionando novas faltas para um componente curricular,
-     * que inclusive já tem a falta lançada para a segunda etapa.
-     */
-    public function test_salvas_faltas_no_boletim_com_etapas_lancadas()
-    {
-        $this->markTestSkipped();
+    $service = $this->_getServiceInstance();
+    $service->addFaltas($faltas);
+    $service->saveFaltas();
+});
 
-        $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
+/**
+ * Testa o service adicionando novas faltas para um componente curricular,
+ * que inclusive já tem a falta lançada para a segunda etapa.
+ */
+test('salvas faltas no boletim com etapas lancadas', function () {
+    $this->markTestSkipped();
 
-        $faltas = [
-            new Avaliacao_Model_FaltaGeral([
-                'quantidade' => 7,
-                'etapa' => 2,
-            ]),
-            new Avaliacao_Model_FaltaGeral([
-                'quantidade' => 9,
-                'etapa' => 3,
-            ]),
-        ];
+    $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
-        $faltasPersistidas = [
-            new Avaliacao_Model_FaltaGeral([
-                'id' => 1,
-                'faltaAluno' => $faltaAluno->id,
-                'quantidade' => 8,
-                'etapa' => 1,
-            ]),
-            new Avaliacao_Model_FaltaGeral([
-                'id' => 2,
-                'faltaAluno' => $faltaAluno->id,
-                'quantidade' => 11,
-                'etapa' => 2,
-            ]),
-        ];
+    $faltas = [
+        new Avaliacao_Model_FaltaGeral([
+            'quantidade' => 7,
+            'etapa' => 2,
+        ]),
+        new Avaliacao_Model_FaltaGeral([
+            'quantidade' => 9,
+            'etapa' => 3,
+        ]),
+    ];
 
-        // Configura mock para Avaliacao_Model_FaltaGeralDataMapper
-        $mock = $this->getCleanMock('Avaliacao_Model_FaltaGeralDataMapper');
+    $faltasPersistidas = [
+        new Avaliacao_Model_FaltaGeral([
+            'id' => 1,
+            'faltaAluno' => $faltaAluno->id,
+            'quantidade' => 8,
+            'etapa' => 1,
+        ]),
+        new Avaliacao_Model_FaltaGeral([
+            'id' => 2,
+            'faltaAluno' => $faltaAluno->id,
+            'quantidade' => 11,
+            'etapa' => 2,
+        ]),
+    ];
 
-        $mock->expects($this->at(0))
-            ->method('findAll')
-            ->with([], ['faltaAluno' => $faltaAluno->id], ['etapa' => 'ASC'])
-            ->willReturn($faltasPersistidas);
+    // Configura mock para Avaliacao_Model_FaltaGeralDataMapper
+    $mock = $this->getCleanMock('Avaliacao_Model_FaltaGeralDataMapper');
 
-        $mock->expects($this->at(1))
-            ->method('save')
-            ->with($faltas[0])
-            ->willReturn(true);
+    $mock->expects($this->at(0))
+        ->method('findAll')
+        ->with([], ['faltaAluno' => $faltaAluno->id], ['etapa' => 'ASC'])
+        ->willReturn($faltasPersistidas);
 
-        $mock->expects($this->at(2))
-            ->method('save')
-            ->with($faltas[1])
-            ->willReturn(true);
+    $mock->expects($this->at(1))
+        ->method('save')
+        ->with($faltas[0])
+        ->willReturn(true);
 
-        $this->_setFaltaAbstractDataMapperMock($mock);
+    $mock->expects($this->at(2))
+        ->method('save')
+        ->with($faltas[1])
+        ->willReturn(true);
 
-        $service = $this->_getServiceInstance();
-        $service->addFaltas($faltas);
-        $service->saveFaltas();
-    }
+    $this->_setFaltaAbstractDataMapperMock($mock);
 
-    public function test_salvas_faltas_atualizando_etapa_da_ultima_instancia_adicionada_no_boletim_com_etapas_lancadas()
-    {
-        $this->markTestSkipped();
+    $service = $this->_getServiceInstance();
+    $service->addFaltas($faltas);
+    $service->saveFaltas();
+});
 
-        $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
+test('salvas faltas atualizando etapa da ultima instancia adicionada no boletim com etapas lancadas', function () {
+    $this->markTestSkipped();
 
-        $faltas = [
-            new Avaliacao_Model_FaltaGeral([
-                'quantidade' => 7,
-                'etapa' => 2,
-            ]),
-            // Etapa omitida, será atribuída a etapa '3'
-            new Avaliacao_Model_FaltaGeral([
-                'quantidade' => 9,
-            ]),
-        ];
+    $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
-        $faltasPersistidas = [
-            new Avaliacao_Model_FaltaGeral([
-                'id' => 1,
-                'faltaAluno' => $faltaAluno->id,
-                'quantidade' => 8,
-                'etapa' => 1,
-            ]),
-            new Avaliacao_Model_FaltaGeral([
-                'id' => 2,
-                'faltaAluno' => $faltaAluno->id,
-                'quantidade' => 11,
-                'etapa' => 2,
-            ]),
-        ];
+    $faltas = [
+        new Avaliacao_Model_FaltaGeral([
+            'quantidade' => 7,
+            'etapa' => 2,
+        ]),
+        // Etapa omitida, será atribuída a etapa '3'
+        new Avaliacao_Model_FaltaGeral([
+            'quantidade' => 9,
+        ]),
+    ];
 
-        // Configura mock para Avaliacao_Model_FaltaGeralDataMapper
-        $mock = $this->getCleanMock('Avaliacao_Model_FaltaGeralDataMapper');
+    $faltasPersistidas = [
+        new Avaliacao_Model_FaltaGeral([
+            'id' => 1,
+            'faltaAluno' => $faltaAluno->id,
+            'quantidade' => 8,
+            'etapa' => 1,
+        ]),
+        new Avaliacao_Model_FaltaGeral([
+            'id' => 2,
+            'faltaAluno' => $faltaAluno->id,
+            'quantidade' => 11,
+            'etapa' => 2,
+        ]),
+    ];
 
-        $mock->expects($this->at(0))
-            ->method('findAll')
-            ->with([], ['faltaAluno' => $faltaAluno->id], ['etapa' => 'ASC'])
-            ->willReturn($faltasPersistidas);
+    // Configura mock para Avaliacao_Model_FaltaGeralDataMapper
+    $mock = $this->getCleanMock('Avaliacao_Model_FaltaGeralDataMapper');
 
-        $mock->expects($this->at(1))
-            ->method('save')
-            ->with($faltas[0])
-            ->willReturn(true);
+    $mock->expects($this->at(0))
+        ->method('findAll')
+        ->with([], ['faltaAluno' => $faltaAluno->id], ['etapa' => 'ASC'])
+        ->willReturn($faltasPersistidas);
 
-        $mock->expects($this->at(2))
-            ->method('save')
-            ->with($faltas[1])
-            ->willReturn(true);
+    $mock->expects($this->at(1))
+        ->method('save')
+        ->with($faltas[0])
+        ->willReturn(true);
 
-        $this->_setFaltaAbstractDataMapperMock($mock);
+    $mock->expects($this->at(2))
+        ->method('save')
+        ->with($faltas[1])
+        ->willReturn(true);
 
-        $service = $this->_getServiceInstance();
-        $service->addFaltas($faltas);
-        $service->saveFaltas();
+    $this->_setFaltaAbstractDataMapperMock($mock);
 
-        $faltas = $service->getFaltas();
+    $service = $this->_getServiceInstance();
+    $service->addFaltas($faltas);
+    $service->saveFaltas();
 
-        $falta = array_shift($faltas);
-        $this->assertEquals(2, $falta->etapa);
+    $faltas = $service->getFaltas();
 
-        // Etapa atribuída automaticamente
-        $falta = array_shift($faltas);
-        $this->assertEquals(3, $falta->etapa);
-    }
-}
+    $falta = array_shift($faltas);
+    $this->assertEquals(2, $falta->etapa);
+
+    // Etapa atribuída automaticamente
+    $falta = array_shift($faltas);
+    $this->assertEquals(3, $falta->etapa);
+});

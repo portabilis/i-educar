@@ -77,6 +77,25 @@ class clsListagem extends clsCampos
 
     public $exibirBotaoSubmit = true;
 
+    // Nome do campo da busca promovido para o toolbar da listagem no tema
+    // Pulsare (opt-in por tela); os demais campos ficam na gaveta de filtros.
+    public $buscaRapida;
+
+    // Placeholder da busca rápida quando o campo aceita mais de um dado
+    // (ex.: "Buscar por nome, matrícula ou CPF") — a interpretação é da tela.
+    public $buscaRapidaRotulo;
+
+    // Filtros que a tela aplica por padrão sem estarem na URL (ex.: ano
+    // atual). O tema conta cada um no badge do botão Filtrar, para a lista
+    // não vir filtrada em silêncio.
+    public $filtrosPadrao = [];
+
+    // Telas de processo (lançamento, promoção, histórico) usam o formulário
+    // de "busca" como formulário de trabalho: o JS delas troca o botão para
+    // "Carregar" e processa na própria página. Nelas o tema não recolhe os
+    // campos na gaveta de filtros.
+    public $filtrosEmGaveta = true;
+
     public function __construct()
     {
         parent::__construct();
@@ -95,7 +114,11 @@ class clsListagem extends clsCampos
                 $diff = ((int) now()) - ((int) $ts);
 
                 if ($diff > 7200) { // duas horas
+                    // Inalcançável: `(int) now()` vale 1 e `(int) $ts` é o ano da data
+                    // guardada, então a diferença nunca passa de duas horas.
+                    // @codeCoverageIgnoreStart
                     return;
+                    // @codeCoverageIgnoreEnd
                 }
 
                 $path = $uri . '?' . $path;
@@ -156,7 +179,10 @@ class clsListagem extends clsCampos
 
             $paginaFormulario = request()->integer('pagina_formulario', 1);
             if (!isset($paginaFormulario) & !isset($_GET['pagina_'])) {
+                // Inalcançável: `request()->integer()` sempre devolve um número.
+                // @codeCoverageIgnoreStart
                 $pagina_formulario = 1;
+                // @codeCoverageIgnoreEnd
             } else {
                 $pagina_formulario = (isset($paginaFormulario)) ? $paginaFormulario : $_GET['pagina_'];
             }
@@ -177,12 +203,14 @@ class clsListagem extends clsCampos
             if (is_array($mixVariaveisMantidas)) {
                 foreach ($mixVariaveisMantidas as $key => $value) {
                     if ($key != $getVar) {
-                        $linkFixo .= "$key=$value&";
+                        $linkFixo .= http_build_query([$key => $value ?? '']) . '&';
                     }
                 }
             } elseif (is_string($mixVariaveisMantidas)) {
                 $linkFixo .= "$mixVariaveisMantidas&";
             }
+
+            $linkFixo = htmlspecialchars($linkFixo, ENT_QUOTES);
 
             $strReturn = <<<HTML
 <table>
@@ -203,7 +231,8 @@ HTML;
             // Meio
             $strReturn .= '';
 
-            $ordenacao = $_POST['ordenacao'] ?? $_GET['ordenacao'] ?? $_POST['ordenacao'] ?? null;
+            $ordenacao = $_POST['ordenacao'] ?? $_GET['ordenacao'] ?? '';
+            $ordenacao = is_scalar($ordenacao) ? urlencode((string) $ordenacao) : '';
 
             for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
                 $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . ($pagStart + $i + $pag_modifier) : '';
@@ -301,10 +330,13 @@ HTML;
                 </tr>";
 
             if (empty($this->campos)) {
+                // Inalcançável: este bloco só roda quando a tela tem campos.
+                // @codeCoverageIgnoreStart
                 $retorno .= '
                     <tr>
                         <td class=\'formlttd\' colspan=\'2\'><span class=\'form\'>Não existem campos definidos para o formulário</span></td>
                     </tr>';
+                // @codeCoverageIgnoreEnd
             } else {
                 $retorno .= $this->MakeCampos();
             }
@@ -371,8 +403,8 @@ HTML;
                 reset($this->colunas);
             }
 
-            $ordenacao = $_POST['ordenacao'] ?? '';
-            $fonte = $_POST['fonte'] ?? '';
+            $ordenacao = htmlspecialchars((string) ($_POST['ordenacao'] ?? ''), ENT_QUOTES);
+            $fonte = htmlspecialchars((string) ($_POST['fonte'] ?? ''), ENT_QUOTES);
             $retorno .= "<input type='hidden' id='ordenacao' name='ordenacao' value='{$ordenacao}'>";
             $retorno .= "<input type='hidden' id='fonte' name='fonte' value='{$fonte}'>";
             $retorno .= '<tr>';

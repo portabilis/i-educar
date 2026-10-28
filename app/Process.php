@@ -105,4 +105,12 @@ class Process
     public const DOCUMENT_ABSENCE_REASON = 5842;
 
     public const DISCIPLINES = 946;
+  
+    public const USER_TYPES = 554;
+
+    public const BATCH_ENROLLMENT = 659;
+
+    public const EDUCACENSO_CONSULT = 847;
+
+    public const STUDENT_UNIFICATION = 999847;
 }

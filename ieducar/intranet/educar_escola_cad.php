@@ -413,8 +413,11 @@ return new class extends clsCadastro
             $registro = $obj->detalhe();
 
             if ($registro === false) {
-                throw new HttpResponseException(
-                    new RedirectResponse('educar_escola_lst.php')
+                $this->redirectNotFound(
+                    url: 'educar_escola_lst.php',
+                    registro: 'escola',
+                    feminino: true,
+                    codigo: $this->cod_escola,
                 );
             }
 
@@ -707,7 +710,10 @@ return new class extends clsCadastro
                 if ($this->ref_cod_instituicao) {
                     $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
                 } else {
+                    // O `exit` encerra o processo, e com ele a suíte de testes.
+                    // @codeCoverageIgnoreStart
                     exit('Usuário não é do nivel poli-institucional e não possui uma instituição');
+                    // @codeCoverageIgnoreEnd
                 }
             }
 
@@ -788,7 +794,10 @@ return new class extends clsCadastro
                 if ($this->ref_cod_instituicao) {
                     $this->campoOculto(nome: 'ref_cod_instituicao', valor: $this->ref_cod_instituicao);
                 } else {
+                    // O `exit` encerra o processo, e com ele a suíte de testes.
+                    // @codeCoverageIgnoreStart
                     exit('Usuário não é do nivel poli-institucional e não possui uma instituição');
+                    // @codeCoverageIgnoreEnd
                 }
             }
 
@@ -2085,7 +2094,10 @@ return new class extends clsCadastro
     private function atualizaNomePessoaJuridica($idpes)
     {
         if (!is_numeric($idpes) || !Auth::check()) {
+            // Inalcançável: a tela exige autenticação, e sem a pessoa jurídica o `processaTelefones()` falha antes.
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         LegacyOrganization::find($idpes)?->update([
@@ -2118,7 +2130,10 @@ return new class extends clsCadastro
     protected function inputTelefone($type, $typeLabel = '')
     {
         if (!$typeLabel) {
+            // Inalcançável: as quatro chamadas informam o rótulo.
+            // @codeCoverageIgnoreStart
             $typeLabel = "Telefone {$type}";
+            // @codeCoverageIgnoreEnd
         }
 
         // ddd
@@ -2497,16 +2512,14 @@ return new class extends clsCadastro
 
         $opcoes = ['' => 'Selecione'];
         if ($this->cod_escola || $this->ref_cod_instituicao) {
-            $objTemp = new clsPmieducarCurso;
-            $objTemp->setOrderby('nm_curso');
-            $lista = $objTemp->lista(int_ativo: 1, int_ref_cod_instituicao: $this->ref_cod_instituicao);
-            if (is_array($lista)) {
-                foreach ($lista as $registro) {
-                    $nm = empty($registro['descricao'])
-                        ? $registro['nm_curso']
-                        : "{$registro['nm_curso']} ({$registro['descricao']})";
-                    $opcoes[$registro['cod_curso']] = $nm;
-                }
+            $cursos = LegacyCourse::query()
+                ->active()
+                ->when(is_numeric($this->ref_cod_instituicao), fn ($query) => $query->whereInstitution((int) $this->ref_cod_instituicao))
+                ->orderByName()
+                ->get(['cod_curso', 'nm_curso', 'descricao']);
+
+            foreach ($cursos as $registro) {
+                $opcoes[$registro->cod_curso] = $registro->name;
             }
 
             $cursosInativos = [];
@@ -2781,6 +2794,8 @@ return new class extends clsCadastro
             return true;
         }
 
+        // Inalcançável: `local_funcionamento` chega como lista, então a comparação acima com um inteiro sempre retorna antes.
+        // @codeCoverageIgnoreStart
         if ($this->numero_salas_utilizadas_dentro_predio == '0') {
             $this->mensagem = 'O campo: <b>Quantidade de salas de aula utilizadas pela escola dentro do prédio escolar</b> não pode ser preenchido com 0';
 
@@ -2788,6 +2803,7 @@ return new class extends clsCadastro
         }
 
         return true;
+        // @codeCoverageIgnoreEnd
     }
 
     protected function validaSalasUtilizadasForaEscola()

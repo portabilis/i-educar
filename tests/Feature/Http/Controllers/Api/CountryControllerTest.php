@@ -1,11 +1,8 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\Api;
-
 use App\Models\Country;
 use Database\Factories\CountryFactory;
 use Database\Factories\LegacyUserFactory;
-use OpenApiGenerator\Attributes\Controller;
 use OpenApiGenerator\Attributes\DELETE;
 use OpenApiGenerator\Attributes\GET;
 use OpenApiGenerator\Attributes\PathParameter;
@@ -17,112 +14,95 @@ use OpenApiGenerator\Type;
 use OpenApiGenerator\Types\SchemaType;
 use Tests\ResourceTestCase;
 
-#[Controller]
-class CountryControllerTest extends ResourceTestCase
-{
-    protected string $uri = '/api/country';
+uses(ResourceTestCase::class);
 
-    protected string $model = Country::class;
+beforeEach(function () {
+    $this->uri = '/api/country';
+    $this->model = Country::class;
+    $this->factory = CountryFactory::class;
 
-    protected string $factory = CountryFactory::class;
-
-    #[
-        GET('/api/country', ['Country'], 'Get all countries'),
-        Response(200, schemaType: SchemaType::ARRAY, ref: 'Country')
-    ]
-    public function test_index(): void
-    {
-        $this->index();
-    }
-
-    #[
-        POST('/api/country', ['Country'], 'Create a country'),
-        Property(Type::STRING, 'name', 'Name of the country', 'Brasil'),
-        Property(Type::INT, 'ibge_code', 'IBGE code of the country', 12345),
-        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'Country'),
-    ]
-    public function test_store(): void
-    {
-        $this->store();
-    }
-
-    #[
-        GET('/api/country/{id}', ['Country'], 'Get country with ID'),
-        PathParameter('id', Type::INT, required: true, example: 1),
-        Response(200, ref: 'Country')
-    ]
-    public function test_show(): void
-    {
-        $this->show();
-    }
-
-    #[
-        PUT('/api/country/{id}', ['Country'], 'Update country with ID'),
-        Property(Type::STRING, 'name', 'Name of the country', 'Brasil'),
-        Property(Type::INT, 'ibge_code', 'IBGE code of the country', 12345),
-        PathParameter('id', Type::INT, required: true, example: 1),
-        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'Country'),
-    ]
-    public function test_update(): void
-    {
-        $this->update();
-    }
-
-    #[
-        DELETE('/api/country/{id}', ['Country'], 'Delete country with ID'),
-        PathParameter('id', Type::INT, required: true, example: 1),
-        Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'Country'),
-    ]
-    public function test_delete(): void
-    {
-        $this->destroy();
-    }
-
-    public function test_fail_update_country()
-    {
-        $this->actingAs(LegacyUserFactory::new()->institutional()->create());
-        $model = $this->createCountryIntoBrasil();
-        $updatedModel = $this->newFactory()->make();
-        $response = $this->patch(
-            $this->getUri([$model->getKey()]),
-            $updatedModel->toArray()
-        );
-        $response->assertStatus(403);
-        $response->assertJson(['message' => 'This action is unauthorized.']);
-    }
-
-    public function test_fail_create_country()
-    {
-        $this->actingAs(LegacyUserFactory::new()->institutional()->create());
-        $model = $this->makeCountryIntoBrasil();
-        $response = $this->post(
-            $this->getUri(),
-            $model->toArray()
-        );
-        $response->assertStatus(403);
-        $response->assertJson(['message' => 'This action is unauthorized.']);
-    }
-
-    public function test_fail_destroy_country()
-    {
-        $user = LegacyUserFactory::new()->institutional()->withAccess(753)->create();
-        $this->actingAs($user);
-        $model = $this->createCountryIntoBrasil();
-        $response = $this->delete(
-            $this->getUri([$model->getKey()])
-        );
-        $response->assertStatus(422);
-        $response->assertJson(['message' => 'Não é permitido exclusão do Brasil, pois já está previamente cadastrado.']);
-        $this->assertCount(1, $response->json('errors'));
-    }
-
-    private function createCountryIntoBrasil(): Country
-    {
+    $this->createCountryIntoBrasil = function (): Country {
         return (new CountryFactory)->create(['id' => Country::BRASIL]);
-    }
+    };
 
-    private function makeCountryIntoBrasil(): Country
-    {
+    $this->makeCountryIntoBrasil = function (): Country {
         return (new CountryFactory)->make(['id' => Country::BRASIL]);
-    }
-}
+    };
+});
+
+test('index', #[
+    GET('/api/country', ['Country'], 'Get all countries'),
+    Response(200, schemaType: SchemaType::ARRAY, ref: 'Country')
+] function () {
+    $this->index();
+});
+
+test('store', #[
+    POST('/api/country', ['Country'], 'Create a country'),
+    Property(Type::STRING, 'name', 'Name of the country', 'Brasil'),
+    Property(Type::INT, 'ibge_code', 'IBGE code of the country', 12345),
+    Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'Country')
+] function () {
+    $this->store();
+});
+
+test('show', #[
+    GET('/api/country/{id}', ['Country'], 'Get country with ID'),
+    PathParameter('id', Type::INT, required: true, example: 1),
+    Response(200, ref: 'Country')
+] function () {
+    $this->show();
+});
+
+test('update', #[
+    PUT('/api/country/{id}', ['Country'], 'Update country with ID'),
+    Property(Type::STRING, 'name', 'Name of the country', 'Brasil'),
+    Property(Type::INT, 'ibge_code', 'IBGE code of the country', 12345),
+    PathParameter('id', Type::INT, required: true, example: 1),
+    Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'Country')
+] function () {
+    $this->update();
+});
+
+test('delete', #[
+    DELETE('/api/country/{id}', ['Country'], 'Delete country with ID'),
+    PathParameter('id', Type::INT, required: true, example: 1),
+    Response(200, 'Success', schemaType: SchemaType::OBJECT, ref: 'Country')
+] function () {
+    $this->destroy();
+});
+
+test('fail update country', function () {
+    $this->actingAs(LegacyUserFactory::new()->institutional()->create());
+    $model = ($this->createCountryIntoBrasil)();
+    $updatedModel = $this->newFactory()->make();
+    $response = $this->patch(
+        $this->getUri([$model->getKey()]),
+        $updatedModel->toArray()
+    );
+    $response->assertStatus(403);
+    $response->assertJson(['message' => 'This action is unauthorized.']);
+});
+
+test('fail create country', function () {
+    $this->actingAs(LegacyUserFactory::new()->institutional()->create());
+    $model = ($this->makeCountryIntoBrasil)();
+    $response = $this->post(
+        $this->getUri(),
+        $model->toArray()
+    );
+    $response->assertStatus(403);
+    $response->assertJson(['message' => 'This action is unauthorized.']);
+});
+
+test('fail destroy country', function () {
+    $user = LegacyUserFactory::new()->institutional()->withAccess(753)->create();
+    $this->actingAs($user);
+    $model = ($this->createCountryIntoBrasil)();
+    $response = $this->delete(
+        $this->getUri([$model->getKey()])
+    );
+    $response->assertStatus(422);
+    $response->assertJson(['message' => 'Não é permitido exclusão do Brasil, pois já está previamente cadastrado.']);
+    $this->assertCount(1, $response->json('errors'));
+});

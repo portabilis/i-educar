@@ -58,6 +58,11 @@ class FileService
 
     public function getFiles($relation, $type = null)
     {
+        // Os chamadores passam o resultado de Model::find(), nulo quando o id da requisição não existe
+        if (is_null($relation)) {
+            return collect();
+        }
+
         $files = $relation->files;
 
         if (!is_null($type)) {

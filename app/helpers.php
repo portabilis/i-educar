@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+// Carregado pelo autoload do Composer, antes de a cobertura começar a medir.
+// @codeCoverageIgnoreStart
 if (function_exists('asset') === false) {
     function asset($path)
     {
@@ -12,3 +14,4 @@ if (function_exists('asset') === false) {
         return asset($path);
     }
 }
+// @codeCoverageIgnoreEnd

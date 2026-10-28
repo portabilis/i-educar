@@ -1,21 +1,13 @@
 <?php
 
-namespace Tests\Unit\Support\Database;
-
 use App\Support\Database\DateSerializer;
 use Carbon\Carbon;
 use Tests\TestCase;
 
-class DateSerializerTest extends TestCase
-{
-    use DateSerializer;
+uses(TestCase::class, DateSerializer::class);
 
-    private $instance;
+test('trait', function () {
+    $expect = '2022-01-01 23:01:00';
 
-    public function test_trait(): void
-    {
-        $expect = '2022-01-01 23:01:00';
-
-        $this->assertEquals($expect, $this->serializeDate(Carbon::parse($expect)));
-    }
-}
+    $this->assertEquals($expect, $this->serializeDate(Carbon::parse($expect)));
+});

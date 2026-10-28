@@ -6,6 +6,7 @@ use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacyStageType;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Carbon;
 
 class LegacyAcademicYearStageFactory extends Factory
 {
@@ -27,8 +28,10 @@ class LegacyAcademicYearStageFactory extends Factory
             'ref_ref_cod_escola' => fn (array $attributes) => LegacySchoolAcademicYear::query()->find($attributes['escola_ano_letivo_id'])->ref_cod_escola,
             'sequencial' => 1,
             'ref_cod_modulo' => fn () => LegacyStageTypeFactory::new()->unique()->make(),
-            'data_inicio' => now()->subMonths(3),
+            // O início parte do fim: quem informa só o fim não fica com uma
+            // etapa que termina antes de começar
             'data_fim' => now()->addMonths(3),
+            'data_inicio' => fn (array $attributes) => Carbon::make($attributes['data_fim'])->subMonths(6),
             'dias_letivos' => $this->faker->numberBetween(150, 200),
         ];
     }

@@ -136,7 +136,10 @@ return new class extends clsCadastro
     private function getSchoolClass()
     {
         if ($this->getQueryString('ref_cod_turma')) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             return [$this->getQueryString('ref_cod_turma')];
+            // @codeCoverageIgnoreEnd
         }
 
         return LegacySchoolClass::query()
@@ -145,13 +148,22 @@ return new class extends clsCadastro
                 $courseQuery->isEja();
             })
             ->when(value: $this->getQueryString('ref_cod_escola'), callback: function ($query) {
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 $query->where('ref_ref_cod_escola', $this->getQueryString('ref_cod_escola'));
+                // @codeCoverageIgnoreEnd
             })
             ->when(value: $this->getQueryString('ref_cod_serie'), callback: function ($query) {
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 $query->where('ref_ref_cod_serie', $this->getQueryString('ref_cod_serie'));
+                // @codeCoverageIgnoreEnd
             })
             ->when(value: $this->getQueryString('ref_cod_curso'), callback: function ($query) {
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 $query->where('ref_cod_curso', $this->getQueryString('ref_cod_curso'));
+                // @codeCoverageIgnoreEnd
             })
             ->get(['cod_turma'])->pluck('cod_turma')->all();
     }

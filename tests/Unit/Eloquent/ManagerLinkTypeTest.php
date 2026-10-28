@@ -1,19 +1,13 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\ManagerLinkType;
 use App\Models\SchoolManager;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class ManagerLinkTypeTest extends EloquentTestCase
-{
-    protected $relations = [
-        'schoolManagers' => SchoolManager::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return ManagerLinkType::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(ManagerLinkType::class, relations: [
+    'schoolManagers' => SchoolManager::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

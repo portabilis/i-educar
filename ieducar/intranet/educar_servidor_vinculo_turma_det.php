@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyPerson;
 use App\Models\LegacySchoolClassTeacher;
 
 return new class extends clsDetalhe
@@ -28,7 +29,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Servidor Vínculo Turma - Detalhe';
+        $this->titulo = 'Vínculo com turma - Detalhe';
 
         $this->id = $_GET['id'];
 
@@ -36,7 +37,11 @@ return new class extends clsDetalhe
         $registro = $professorTurma?->getAttributes();
 
         if (!$registro) {
-            $this->simpleRedirect(url: 'educar_servidor_professor_vinculo_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_servidor_professor_vinculo_lst.php',
+                registro: 'vínculo com turma',
+                codigo: $this->id,
+            );
         }
 
         $turma = $professorTurma->schoolClass;
@@ -137,14 +142,17 @@ return new class extends clsDetalhe
 
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Detalhe do vínculo', breadcrumbs: [
-            url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
+        // Início > Servidores > Nome > Vínculos com turmas > Vínculo
+        $this->breadcrumb(currentPage: 'Vínculo', breadcrumbs: [
+            url(path: 'intranet/educar_servidor_lst.php') => 'Servidores',
+            url(path: "intranet/educar_servidor_det.php?cod_servidor={$registro['servidor_id']}&ref_cod_instituicao={$registro['instituicao_id']}") => LegacyPerson::whereKey($registro['servidor_id'])->value('nome'),
+            url(path: "intranet/{$this->url_cancelar}") => 'Vínculos com turmas',
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'Servidores - Servidor Formação';
+        $this->title = 'Servidores - Vínculo com turma';
         $this->processoAp = 635;
     }
 };

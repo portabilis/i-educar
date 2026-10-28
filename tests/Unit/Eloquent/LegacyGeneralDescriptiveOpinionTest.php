@@ -1,22 +1,13 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyGeneralDescriptiveOpinion;
 use App\Models\LegacyStudentDescriptiveOpinion;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyGeneralDescriptiveOpinionTest extends EloquentTestCase
-{
-    protected $relations = [
-        'studentDescriptiveOpinion' => LegacyStudentDescriptiveOpinion::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyGeneralDescriptiveOpinion::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyGeneralDescriptiveOpinion::class, relations: [
+    'studentDescriptiveOpinion' => LegacyStudentDescriptiveOpinion::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

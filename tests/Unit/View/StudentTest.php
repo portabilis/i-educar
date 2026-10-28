@@ -1,83 +1,71 @@
 <?php
 
-namespace Tests\Unit\View;
-
 use App\Models\GuardianType;
 use App\Models\Individual;
 use App\Models\LogUnification;
+use App\Models\Person;
 use App\Models\Registration;
 use App\Models\Religion;
 use App\Models\Student;
 use App\Models\TransportationProvider;
-use Tests\ViewTestCase;
+use Tests\ViewModelTestCase;
 
-class StudentTest extends ViewTestCase
-{
-    protected $relations = [
-        'individual' => Individual::class,
-        'religion' => Religion::class,
-        'registrations' => Registration::class,
-        'createdBy' => Individual::class,
-        'deletedBy' => Individual::class,
-        'unification' => LogUnification::class,
-    ];
+uses(ViewModelTestCase::class);
 
-    protected function getViewModelName(): string
-    {
-        return Student::class;
-    }
+beforeEach(fn () => $this->viewModel(Student::class, relations: [
+    'individual' => Individual::class,
+    'person' => Person::class,
+    'religion' => Religion::class,
+    'registrations' => Registration::class,
+    'createdBy' => Individual::class,
+    'deletedBy' => Individual::class,
+    'unification' => LogUnification::class,
+]));
 
-    public function test_get_guardian_type_attribute(): void
-    {
-        $this->assertEquals(3, $this->model->guardian_type);
-    }
+ViewModelTestCase::registerModelTests();
 
-    public function test_get_guardian_type_father_attribute(): void
-    {
-        $student = $this->factory->father()->make();
+test('get guardian type attribute', function () {
+    $this->assertEquals(3, $this->model->guardian_type);
+});
 
-        $this->assertEquals(1, $student->guardian_type);
-    }
+test('get guardian type father attribute', function () {
+    $student = $this->factory->father()->make();
 
-    public function test_get_guardian_type_mother_attribute(): void
-    {
-        $student = $this->factory->mother()->make();
+    $this->assertEquals(1, $student->guardian_type);
+});
 
-        $this->assertEquals(2, $student->guardian_type);
-    }
+test('get guardian type mother attribute', function () {
+    $student = $this->factory->mother()->make();
 
-    public function test_get_guardian_type_other_attribute(): void
-    {
-        $student = $this->factory->guardian()->make();
+    $this->assertEquals(2, $student->guardian_type);
+});
 
-        $this->assertEquals(4, $student->guardian_type);
-    }
+test('get guardian type other attribute', function () {
+    $student = $this->factory->guardian()->make();
 
-    public function test_get_null_guardian_type_attribute(): void
-    {
-        $student = $this->factory->noGuardian()->make();
+    $this->assertEquals(4, $student->guardian_type);
+});
 
-        $this->assertNull($student->guardian_type);
-    }
+test('get null guardian type attribute', function () {
+    $student = $this->factory->noGuardian()->make();
 
-    public function test_get_guardian_type_description_attribute(): void
-    {
-        $expected = (new GuardianType)->getDescriptiveValues()[(int) $this->model->guardian_type];
-        $this->assertNotNull($this->model->guardian_type_description);
-        $this->assertEquals($expected, $this->model->guardian_type_description);
-    }
+    $this->assertNull($student->guardian_type);
+});
 
-    public function test_get_transportation_provider_description_attribute(): void
-    {
-        $expected = (new TransportationProvider)->getDescriptiveValues()[(int) $this->model->transportation_provider];
+test('get guardian type description attribute', function () {
+    $expected = (new GuardianType)->getDescriptiveValues()[(int) $this->model->guardian_type];
+    $this->assertNotNull($this->model->guardian_type_description);
+    $this->assertEquals($expected, $this->model->guardian_type_description);
+});
 
-        $this->assertNotNull($this->model->transportation_provider_description);
-        $this->assertEquals($expected, $this->model->transportation_provider_description);
-    }
+test('get transportation provider description attribute', function () {
+    $expected = (new TransportationProvider)->getDescriptiveValues()[(int) $this->model->transportation_provider];
 
-    public function test_get_transportation_vehicle_type_description_attribute(): void
-    {
-        $this->assertNull($this->model->transportation_vehicle_type_description);
-        $this->assertEquals(0, $this->model->transportation_vehicle_type_description);
-    }
-}
+    $this->assertNotNull($this->model->transportation_provider_description);
+    $this->assertEquals($expected, $this->model->transportation_provider_description);
+});
+
+test('get transportation vehicle type description attribute', function () {
+    $this->assertNull($this->model->transportation_vehicle_type_description);
+    $this->assertEquals(0, $this->model->transportation_vehicle_type_description);
+});

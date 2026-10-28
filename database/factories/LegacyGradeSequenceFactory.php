@@ -22,7 +22,7 @@ class LegacyGradeSequenceFactory extends Factory
         return [
             'ref_serie_origem' => static fn () => LegacyGradeFactory::new()->create(),
             'ref_serie_destino' => static fn () => LegacyGradeFactory::new()->create(),
-            'ref_usuario_cad' => static fn () => LegacyUserFactory::new(),
+            'ref_usuario_cad' => static fn () => LegacyUserFactory::new()->current(),
         ];
     }
 }

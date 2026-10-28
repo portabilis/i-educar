@@ -110,12 +110,17 @@
     add: (type = 'error', msg = '') => {
       const date = new Date()
       const hourString = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-      const msgHtml = `<div class="flashMessages__message -${type}"><a href="#" class="close-msg">×</a><time>${hourString}</time>${msg}</div>`
-      const msgElm = $j(msgHtml).hide()
+      // O erro interrompe o leitor de tela; os demais avisos esperam ele terminar de falar.
+      const role = type === 'error' ? 'alert' : 'status'
+      const msgHtml = `<div class="flashMessages__message -${type}"><button type="button" class="close-msg" aria-label="Fechar aviso">×</button><time aria-hidden="true">${hourString}</time><div class="flashMessages__text" role="${role}">${msg}</div></div>`
+
+      // Entra transparente em vez de oculto: o leitor de tela ignora o que
+      // está com display none e pode não anunciar o aviso quando ele aparece.
+      const msgElm = $j(msgHtml).css('opacity', 0)
 
       flashMessages.overflowDisabled = false
 
-      msgElm.prependTo(flashMessages.containerElm).fadeIn(250)
+      msgElm.prependTo(flashMessages.containerElm).animate({ opacity: 1 }, 250)
 
       flashMessages.hideOverflow()
       flashMessages.showCloseAll()

@@ -25,21 +25,21 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Instituição<span class="campo_obrigatorio">*</span></td>
+                    <td><label for="ref_cod_instituicao">Instituição</label><span class="campo_obrigatorio">*</span></td>
                     <td>
                         @include('form.select-institution')
                     </td>
                 </tr>
                 <tr>
-                    <td>Escola<span class="campo_obrigatorio">*</span></td>
+                    <td><label for="ref_cod_escola">Escola</label><span class="campo_obrigatorio">*</span></td>
                     <td>
                         @include('form.select-school')
                     </td>
                 </tr>
                 <tr>
-                    <td>Registro<span class="campo_obrigatorio">*</span></td>
+                    <td><label for="record">Registro</label><span class="campo_obrigatorio">*</span></td>
                     <td>
-                        @include('layout.select.educacenso-records', ['records' => [20, 40, 50, 60]])
+                        @include('layout.select.educacenso-records', ['records' => [20, 40, 50, 60], 'selectId' => 'record'])
                     </td>
                 </tr>
                 <tr>

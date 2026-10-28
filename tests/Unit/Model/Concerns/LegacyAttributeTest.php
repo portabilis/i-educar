@@ -1,34 +1,29 @@
 <?php
 
-namespace Tests\Unit\Model\Concerns;
-
 use App\Models\Builders\LegacySchoolBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Tests\TestCase;
 
-class LegacyAttributeTest extends TestCase
-{
-    public function teste_builder_custom(): void
+uses(TestCase::class);
+
+test('builder custom', function () {
+    $class = new class extends Model
     {
-        $class = new class extends Model
-        {
-            use HasBuilder;
+        use HasBuilder;
 
-            public static string $builder = LegacySchoolBuilder::class;
-        };
+        public static string $builder = LegacySchoolBuilder::class;
+    };
 
-        $this->assertEquals(LegacySchoolBuilder::class, get_class($class->newQuery()));
-    }
+    $this->assertEquals(LegacySchoolBuilder::class, get_class($class->newQuery()));
+});
 
-    public function teste_builder_default(): void
+test('builder default', function () {
+    $class = new class extends Model
     {
-        $class = new class extends Model
-        {
-            use HasBuilder;
-        };
+        use HasBuilder;
+    };
 
-        $this->assertEquals(Builder::class, get_class($class->newQuery()));
-    }
-}
+    $this->assertEquals(Builder::class, get_class($class->newQuery()));
+});

@@ -22,7 +22,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="formmdtd" valign="top"><span class="form">Exportar dados de:</span></td>
+                <td class="formmdtd" valign="top"><span class="form"><label for="status">Exportar dados de:</label></span></td>
                 <td class="formmdtd" valign="top">
             <span class="form">
               <select class="geral" name="status" id="status" style="width: 308px;">
@@ -35,7 +35,7 @@
             </tr>
             <tr>
                 <td class="formlttd" valign="top">
-                    <span class="form">Instituição</span>
+                    <span class="form"><label for="ref_cod_instituicao">Instituição</label></span>
                 </td>
                 <td class="formlttd" valign="top">
             <span class="form">
@@ -45,7 +45,7 @@
             </tr>
             <tr>
                 <td class="formmdtd" valign="top">
-                    <span class="form">Escola</span>
+                    <span class="form"><label for="ref_cod_escola">Escola</label></span>
                 </td>
                 <td class="formmdtd" valign="top">
             <span class="form">
@@ -56,7 +56,7 @@
             @if(in_array(request('type', 1), [1,2]))
                 <tr>
                     <td class="formlttd" valign="top">
-                        <span class="form">Situação da Matrícula</span>
+                        <span class="form"><label for="situacao_matricula">Situação da Matrícula</label></span>
                     </td>
                     <td class="formlttd"  valign="top">
             <span class="form">

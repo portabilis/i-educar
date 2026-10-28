@@ -16,7 +16,11 @@ return new class extends clsDetalhe
         $motivo = DocumentAbsenceReason::withTrashed()->find(request()->integer('id'));
 
         if (!$motivo) {
-            $this->simpleRedirect(url: 'educar_motivo_ausencia_documentacao_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_motivo_ausencia_documentacao_lst.php',
+                registro: 'motivo de ausência de documentação',
+                codigo: request()->integer('id'),
+            );
         }
 
         $this->addDetalhe(detalhe: ['Motivo', e($motivo->name)]);
@@ -27,7 +31,10 @@ return new class extends clsDetalhe
 
         if ($obj_permissao->permissao_cadastra(int_processo_ap: Process::DOCUMENT_ABSENCE_REASON, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {
             $this->url_novo = 'educar_motivo_ausencia_documentacao_cad.php';
-            $this->url_editar = "educar_motivo_ausencia_documentacao_cad.php?id={$motivo->getKey()}";
+
+            if (!$motivo->from_system) {
+                $this->url_editar = "educar_motivo_ausencia_documentacao_cad.php?id={$motivo->getKey()}";
+            }
         }
 
         $this->url_cancelar = 'educar_motivo_ausencia_documentacao_lst.php';

@@ -126,6 +126,11 @@ class LegacySoftDeletesScope extends SoftDeletingScope
         });
     }
 
+    /**
+     * Não está em `$extensions`, então a macro nunca é registrada.
+     *
+     * @codeCoverageIgnore
+     */
     protected function addActive(Builder $builder)
     {
         $builder->macro('active', function (Builder $builder) {

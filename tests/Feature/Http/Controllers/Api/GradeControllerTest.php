@@ -1,30 +1,23 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\Api;
-
 use App\Models\LegacyGrade;
 use Database\Factories\LegacyGradeFactory;
-use OpenApiGenerator\Attributes\Controller;
 use OpenApiGenerator\Attributes\GET;
 use OpenApiGenerator\Attributes\Response;
 use OpenApiGenerator\Types\SchemaType;
 use Tests\ResourceTestCase;
 
-#[Controller]
-class GradeControllerTest extends ResourceTestCase
-{
-    protected string $uri = '/api/grade';
+uses(ResourceTestCase::class);
 
-    protected string $model = LegacyGrade::class;
+beforeEach(function () {
+    $this->uri = '/api/grade';
+    $this->model = LegacyGrade::class;
+    $this->factory = LegacyGradeFactory::class;
+});
 
-    protected string $factory = LegacyGradeFactory::class;
-
-    #[
-        GET('/api/grade', ['Grade'], 'Get all grades'),
-        Response(200, schemaType: SchemaType::ARRAY, ref: 'Grade')
-    ]
-    public function test_index(): void
-    {
-        $this->index();
-    }
-}
+test('index', #[
+    GET('/api/grade', ['Grade'], 'Get all grades'),
+    Response(200, schemaType: SchemaType::ARRAY, ref: 'Grade')
+] function () {
+    $this->index();
+});

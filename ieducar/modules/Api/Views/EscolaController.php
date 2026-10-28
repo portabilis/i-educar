@@ -99,6 +99,21 @@ class EscolaController extends ApiCoreController
         return $this->validatesPresenceOf('ano') && $this->validatesPresenceOf('instituicao_id');
     }
 
+    protected function sqlsForNumericSearch()
+    {
+        $sqls = [];
+
+        $sqls[] = 'SELECT e.cod_escola as id, j.fantasia as name
+               FROM pmieducar.escola e, cadastro.juridica j
+              WHERE j.idpes = e.ref_idpes
+                AND e.ativo = 1
+                AND e.cod_escola::varchar LIKE $1||\'%\'
+           ORDER BY e.cod_escola
+                LIMIT 8';
+
+        return $sqls;
+    }
+
     protected function sqlsForStringSearch()
     {
         $sqls = [];
@@ -297,48 +312,6 @@ class EscolaController extends ApiCoreController
                 $this->getRequest()->turma_turno_id,
             ]
         );
-    }
-
-    public function _getQtdMatriculaTurno($escolaId)
-    {
-        $obj_mt = new clsPmieducarMatriculaTurma;
-
-        return count(array_filter(($obj_mt->lista(
-            $int_ref_cod_matricula = null,
-            $int_ref_cod_turma = null,
-            $int_ref_usuario_exc = null,
-            $int_ref_usuario_cad = null,
-            $date_data_cadastro_ini = null,
-            $date_data_cadastro_fim = null,
-            $date_data_exclusao_ini = null,
-            $date_data_exclusao_fim = null,
-            $int_ativo = 1,
-            $int_ref_cod_serie = $this->getRequest()->serie_id,
-            $int_ref_cod_curso = $this->getRequest()->curso_id,
-            $int_ref_cod_escola = $escolaId,
-            $int_ref_cod_instituicao = $this->getRequest()->instituicao_id,
-            $int_ref_cod_aluno = null,
-            $mes = null,
-            $aprovado = null,
-            $mes_menor_que = null,
-            $int_sequencial = null,
-            $int_ano_matricula = $this->getRequest()->ano,
-            $tem_avaliacao = null,
-            $bool_get_nome_aluno = false,
-            $bool_aprovados_reprovados = null,
-            $int_ultima_matricula = null,
-            $bool_matricula_ativo = true,
-            $bool_escola_andamento = true,
-            $mes_matricula_inicial = false,
-            $get_serie_mult = false,
-            $int_ref_cod_serie_mult = null,
-            $int_semestre = null,
-            $pegar_ano_em_andamento = false,
-            $parar = null,
-            $diario = false,
-            $int_turma_turno_id = $this->getRequest()->turma_turno_id,
-            $int_ano_turma = $this->getRequest()->ano
-        ))));
     }
 
     public function _getMaxAlunoTurno($escolaId)
