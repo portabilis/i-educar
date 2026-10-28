@@ -1,9 +1,13 @@
 <?php
 
+use App\Models\LegacySchoolAcademicYear;
+use App\Models\LegacySchoolClass;
 use Database\Factories\EmployeeFactory;
 use Database\Factories\LegacyEmployeeRoleFactory;
 use Database\Factories\LegacyRoleFactory;
+use Database\Factories\LegacySchoolAcademicYearFactory;
 use Database\Factories\LegacySchoolClassFactory;
+use Database\Factories\LegacySchoolClassTeacherFactory;
 use Database\Factories\LegacyUserFactory;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -13,6 +17,49 @@ uses(TestCase::class, DatabaseTransactions::class);
 
 beforeEach(function () {
     $this->actingAs(LegacyUserFactory::new()->admin()->create());
+
+    $this->serverClassAssignmentUrl = '/intranet/educar_servidor_vinculo_turma_cad.php?';
+
+    $this->createClassWithFinalizedAcademicYear = function (): LegacySchoolClass {
+        $schoolClass = LegacySchoolClassFactory::new()->create(['ano' => 2024]);
+        LegacySchoolAcademicYearFactory::new()->create([
+            'ref_cod_escola' => $schoolClass->ref_ref_cod_escola,
+            'ano' => $schoolClass->ano,
+            'andamento' => LegacySchoolAcademicYear::FINALIZED,
+            'ativo' => 1,
+        ]);
+
+        return $schoolClass;
+    };
+
+    $this->createAssignmentWithFinalizedAcademicYear = function (): array {
+        $schoolClass = ($this->createClassWithFinalizedAcademicYear)();
+        $assignment = LegacySchoolClassTeacherFactory::new()->create([
+            'ano' => $schoolClass->ano,
+            'instituicao_id' => $schoolClass->ref_cod_instituicao,
+            'turma_id' => $schoolClass->getKey(),
+        ]);
+        $query = http_build_query([
+            'id' => $assignment->getKey(),
+            'ref_cod_servidor' => $assignment->servidor_id,
+            'ref_cod_instituicao' => $schoolClass->ref_cod_instituicao,
+        ]);
+
+        return compact('schoolClass', 'assignment', 'query');
+    };
+
+    $this->assertForbiddenPost = function (string $uri, array $payload): void {
+        $initialOutputBufferLevel = ob_get_level();
+
+        try {
+            $this->post($uri, $payload)->assertForbidden();
+        } finally {
+            while (ob_get_level() > $initialOutputBufferLevel) {
+                ob_end_clean();
+            }
+        }
+    };
+
 });
 
 test('role form saves class assignment permission', function (string $action, bool $checked) {
@@ -140,5 +187,71 @@ test('permitted non teacher can be assigned to a class', function () {
         'instituicao_id' => $employee->ref_cod_instituicao,
         'ano' => $schoolClass->ano,
         'funcao_exercida' => FuncaoExercida::INTERPRETE_LIBRAS,
+    ]);
+});
+
+test('cannot create teacher class assignment for finalized academic year', function () {
+    $employee = EmployeeFactory::new()->create();
+    $schoolClass = ($this->createClassWithFinalizedAcademicYear)();
+    $query = http_build_query([
+        'ref_cod_servidor' => $employee->getKey(),
+        'ref_cod_instituicao' => $schoolClass->ref_cod_instituicao,
+    ]);
+
+    ($this->assertForbiddenPost)($this->serverClassAssignmentUrl .$query, [
+        'tipoacao' => 'Novo',
+        'servidor_id' => $employee->getKey(),
+        'ref_cod_instituicao' => $schoolClass->ref_cod_instituicao,
+        'ref_cod_escola' => $schoolClass->ref_ref_cod_escola,
+        'ref_cod_turma' => $schoolClass->getKey(),
+        'ano' => $schoolClass->ano,
+    ]);
+
+    $this->assertDatabaseMissing('modules.professor_turma', [
+        'servidor_id' => $employee->getKey(),
+        'turma_id' => $schoolClass->getKey(),
+    ]);
+});
+
+test('cannot edit teacher class assignment for finalized academic year', function () {
+    [
+        'schoolClass' => $schoolClass,
+        'assignment' => $assignment,
+        'query' => $query,
+    ] = ($this->createAssignmentWithFinalizedAcademicYear)();
+
+    ($this->assertForbiddenPost)($this->serverClassAssignmentUrl .$query, [
+        'tipoacao' => 'Editar',
+        'id' => $assignment->getKey(),
+        'servidor_id' => $assignment->servidor_id,
+        'ref_cod_instituicao' => $schoolClass->ref_cod_instituicao,
+        'ref_cod_escola' => $schoolClass->ref_ref_cod_escola,
+        'ref_cod_turma' => $schoolClass->getKey(),
+        'ano' => $schoolClass->ano,
+        'tipo_vinculo' => 1,
+    ]);
+
+    $this->assertDatabaseHas('modules.professor_turma', [
+        'id' => $assignment->getKey(),
+        'tipo_vinculo' => $assignment->tipo_vinculo,
+    ]);
+});
+
+test('cannot delete teacher class assignment for finalized academic year', function () {
+    [
+        'schoolClass' => $schoolClass,
+        'assignment' => $assignment,
+        'query' => $query,
+    ] = ($this->createAssignmentWithFinalizedAcademicYear)();
+
+    ($this->assertForbiddenPost)($this->serverClassAssignmentUrl .$query, [
+        'tipoacao' => 'Excluir',
+        'id' => $assignment->getKey(),
+        'servidor_id' => $assignment->servidor_id,
+        'ref_cod_instituicao' => $schoolClass->ref_cod_instituicao,
+    ]);
+
+    $this->assertDatabaseHas('modules.professor_turma', [
+        'id' => $assignment->getKey(),
     ]);
 });

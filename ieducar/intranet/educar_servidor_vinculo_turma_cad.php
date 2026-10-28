@@ -18,6 +18,8 @@ use iEducar\Support\View\SelectOptions;
 
 return new class extends clsCadastro
 {
+    private const ANO_ENCERRADO_MENSAGEM = 'Não é permitido alterar ou excluir vínculos de professores em turmas de anos letivos já encerrados.';
+
     public $pessoa_logada;
 
     public $id;
@@ -153,6 +155,10 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'servidor_id', valor: $this->servidor_id);
         $this->campoOculto(nome: 'copia', valor: (int) $this->copia);
 
+        $vinculo = $this->id && !$this->copia ? LegacySchoolClassTeacher::find($this->id) : null;
+        $this->campoOculto(nome: 'vinculo_ano_encerrado', valor: (int) ($vinculo?->schoolClass?->isAcademicYearFinalized() ?? false));
+        $this->campoOculto(nome: 'ano_encerrado_mensagem', valor: self::ANO_ENCERRADO_MENSAGEM);
+
         $this->inputsHelper()->dynamic(helperNames: 'ano', inputOptions: ['value' => (is_null(value: $ano) ? date(format: 'Y') : $ano)]);
         $this->inputsHelper()->dynamic(helperNames: ['instituicao', 'escola', 'curso', 'serie', 'turma']);
 
@@ -281,6 +287,8 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: $backUrl);
 
+        $this->validaAlteracaoAnoLetivo();
+
         if (!isset($this->ref_cod_turma)) {
             $this->mensagem = 'É necessário selecionar uma turma';
 
@@ -393,6 +401,8 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: $backUrl);
 
+        $this->validaAlteracaoAnoLetivo(verificarVinculo: true);
+
         $dataInicial = $this->data_inicial ? Carbon::createFromFormat('d/m/Y', $this->data_inicial)->format('Y-m-d') : null;
         $dataFim = $this->data_fim ? Carbon::createFromFormat('d/m/Y', $this->data_fim)->format('Y-m-d') : null;
 
@@ -461,6 +471,9 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_excluir(int_processo_ap: 635, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7, str_pagina_redirecionar: $backUrl);
 
+        $vinculo = LegacySchoolClassTeacher::findOrFail($this->id);
+        abort_if($vinculo->schoolClass->isAcademicYearFinalized(), 403, self::ANO_ENCERRADO_MENSAGEM);
+
         DB::beginTransaction();
 
         try {
@@ -481,6 +494,19 @@ return new class extends clsCadastro
 
         $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
         $this->simpleRedirect(url: $backUrl);
+    }
+
+    private function validaAlteracaoAnoLetivo(bool $verificarVinculo = false): void
+    {
+        if ($verificarVinculo) {
+            $vinculo = LegacySchoolClassTeacher::find($this->id);
+            abort_if($vinculo?->schoolClass?->isAcademicYearFinalized() ?? false, 403, self::ANO_ENCERRADO_MENSAGEM);
+        }
+
+        if ($this->ref_cod_turma) {
+            $turma = LegacySchoolClass::find($this->ref_cod_turma);
+            abort_if($turma?->isAcademicYearFinalized() ?? false, 403, self::ANO_ENCERRADO_MENSAGEM);
+        }
     }
 
     private function validaCamposCenso()

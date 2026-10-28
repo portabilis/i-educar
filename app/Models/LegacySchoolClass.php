@@ -331,6 +331,16 @@ class LegacySchoolClass extends Model
         return $this->hasMany(LegacySchoolAcademicYear::class, 'ref_cod_escola', 'ref_ref_cod_escola')->whereColumn('escola_ano_letivo.ano', 'ano');
     }
 
+    public function isAcademicYearFinalized(): bool
+    {
+        return LegacySchoolAcademicYear::query()
+            ->whereSchool($this->ref_ref_cod_escola)
+            ->whereYearEq($this->ano)
+            ->active()
+            ->notInProgress()
+            ->exists();
+    }
+
     /**
      * @return BelongsTo<LegacyCourse, $this>
      */
