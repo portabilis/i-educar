@@ -241,7 +241,7 @@ class AcademicYearBatchController extends Controller
         $processedData = $this->processAcademicYearData($request);
 
         $params = [
-            'year' => $request->get('ano'),
+            'year' => $request->integer('ano'),
             'schools' => $processedData['allSchools']->toArray(),
             'periodos' => $processedData['periodos'],
             'moduleId' => $request->get('ref_cod_modulo'),
@@ -259,7 +259,7 @@ class AcademicYearBatchController extends Controller
     private function processAcademicYearAction(Request $request, string $action): JsonResponse
     {
         $params = [
-            'year' => $request->get('ano'),
+            'year' => $request->integer('ano'),
             'schools' => $request->get('escola'),
             'user' => $request->user(),
         ];

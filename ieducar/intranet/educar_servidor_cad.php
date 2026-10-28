@@ -111,7 +111,11 @@ return new class extends clsCadastro
             $registro = $servidor ? $servidor->getAttributes() : [];
 
             if (empty($registro)) {
-                $this->simpleRedirect(url('intranet/educar_servidor_lst.php'));
+                $this->redirectNotFound(
+                    url: url('intranet/educar_servidor_lst.php'),
+                    registro: 'servidor',
+                    codigo: $this->cod_servidor,
+                );
             }
 
             if ($registro) {
@@ -206,9 +210,15 @@ return new class extends clsCadastro
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb('Funções do servidor', [
-            url('intranet/educar_servidores_index.php') => 'Servidores',
-        ]);
+        // Novo é um nível abaixo da listagem; Editar é um modo do servidor,
+        // que entra no caminho: Início > Servidores > Nome > Editar
+        $caminho = [url('intranet/educar_servidor_lst.php') => 'Servidores'];
+
+        if ($retorno == 'Editar') {
+            $caminho[$this->url_cancelar] = LegacyPerson::whereKey($this->cod_servidor)->value('nome');
+        }
+
+        $this->breadcrumb($retorno == 'Editar' ? 'Editar' : 'Novo servidor', $caminho);
 
         return $retorno;
     }
@@ -232,7 +242,7 @@ return new class extends clsCadastro
          */
         $opcoes = ['' => 'Para procurar, clique na lupa ao lado.'];
         if ($this->cod_servidor) {
-            $this->campoRotulo('nm_servidor', 'Pessoa', LegacyPerson::whereKey($this->cod_servidor)->value('nome'));
+            $this->campoRotulo('nm_servidor', 'Pessoa', e(LegacyPerson::whereKey($this->cod_servidor)->value('nome')));
             $this->campoOculto('cod_servidor', $this->cod_servidor);
             $this->campoOculto(
                 'ref_cod_instituicao_original',
@@ -537,9 +547,12 @@ JS;
                 $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
             }
         }
+        // Inalcançável: gravar o servidor só falha sem código ou carga numéricos, e os dois acabaram de ser convertidos em número.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
@@ -583,89 +596,42 @@ JS;
             }
         } else {
             $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
-            $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                $this->cod_servidor,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                $this->ref_cod_instituicao
-            );
 
-            if ($obj_quadro_horario->detalhe()) {
-                $this->mensagem = 'Edição não realizada. O servidor está vinculado a um quadro de horários.<br>';
+            $editou = $this->editaServidor($this->ref_cod_instituicao_original, 0, $this->camposCenso());
 
-                return false;
-            } else {
-                $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    $this->cod_servidor,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    1,
-                    null,
-                    $this->ref_cod_instituicao
-                );
+            if ($editou) {
+                $existeNaInstituicao = is_numeric($this->cod_servidor)
+                    && is_numeric($this->ref_cod_instituicao)
+                    && Employee::query()
+                        ->whereEmployee($this->cod_servidor)
+                        ->whereInstitution($this->ref_cod_instituicao)
+                        ->exists();
 
-                if ($obj_quadro_horario->detalhe()) {
-                    $this->mensagem = 'Edição não realizada. O servidor está vinculado a um quadro de horários.<br>';
+                $cadastrou = $existeNaInstituicao
+                    ? $this->editaServidor($this->ref_cod_instituicao, 1)
+                    : $this->cadastraServidor($this->ref_cod_instituicao);
 
-                    return false;
-                } else {
-                    $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
+                if ($cadastrou) {
+                    $this->cadastraFuncoes();
+                    $this->createOrUpdateInep();
+                    $this->createOrUpdateDeficiencias();
 
-                    $editou = $this->editaServidor($this->ref_cod_instituicao_original, 0, $this->camposCenso());
+                    $this->storeGraduations($this->cod_servidor);
+                    $this->storePosgraduate($this->cod_servidor);
 
-                    if ($editou) {
-                        $existeNaInstituicao = is_numeric($this->cod_servidor)
-                            && is_numeric($this->ref_cod_instituicao)
-                            && Employee::query()
-                                ->whereEmployee($this->cod_servidor)
-                                ->whereInstitution($this->ref_cod_instituicao)
-                                ->exists();
+                    include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
-                        $cadastrou = $existeNaInstituicao
-                            ? $this->editaServidor($this->ref_cod_instituicao, 1)
-                            : $this->cadastraServidor($this->ref_cod_instituicao);
-
-                        if ($cadastrou) {
-                            $this->cadastraFuncoes();
-                            $this->createOrUpdateInep();
-                            $this->createOrUpdateDeficiencias();
-
-                            $this->storeGraduations($this->cod_servidor);
-                            $this->storePosgraduate($this->cod_servidor);
-
-                            include 'educar_limpa_sessao_curso_disciplina_servidor.php';
-
-                            $this->mensagem = 'Edição efetuada com sucesso.<br>';
-                            $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-                        }
-                    }
+                    $this->mensagem = 'Edição efetuada com sucesso.<br>';
+                    $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
                 }
             }
         }
+        // Não testável: só com o código do servidor adulterado, e nesse caso a consulta das funções dá erro 500 antes.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()
@@ -675,30 +641,6 @@ JS;
 
         if (!$this->validaExclusaoFuncoes()) {
             $this->mensagem = 'Exclusão não realizada. O servidor possui funções vinculadas a falta/atrasos!';
-
-            return false;
-        }
-
-        $obj_quadro_horario = new clsPmieducarQuadroHorarioHorarios(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $this->cod_servidor,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            $this->ref_cod_instituicao
-        );
-
-        if ($obj_quadro_horario->detalhe()) {
-            $this->mensagem = 'Exclusão não realizada. O servidor está vinculado a um quadro de horários.<br>';
 
             return false;
         }
@@ -741,7 +683,10 @@ JS;
     private function editaServidor($instituicao, $ativo, array $censo = []): bool
     {
         if (!is_numeric($this->cod_servidor) || !is_numeric($instituicao)) {
+            // Não testável: só com o código do servidor adulterado, e nesse caso a consulta das funções dá erro 500 antes.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $valores = [
@@ -772,7 +717,10 @@ JS;
     private function cadastraServidor($instituicao, array $censo = []): bool
     {
         if (!is_numeric($this->cod_servidor) || !is_numeric($this->carga_horaria) || !is_numeric($instituicao)) {
+            // Inalcançável: o código e a carga horária acabaram de ser convertidos em número.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $valores = [
@@ -975,7 +923,10 @@ JS;
     private function deletaFuncoesDoServidor(?array $funcoesMantidasIds = null)
     {
         if (!is_numeric($this->ref_cod_instituicao) || !is_numeric($this->cod_servidor)) {
+            // Inalcançável: quem chama já gravou o servidor, com instituição e código numéricos.
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         LegacyEmployeeRole::query()
@@ -1039,7 +990,10 @@ JS;
     protected function createOrUpdateDeficiencias()
     {
         if (!is_numeric($this->cod_servidor)) {
+            // Inalcançável: quem chama já gravou o servidor, com o código numérico.
+            // @codeCoverageIgnoreStart
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         $individual = LegacyIndividual::find($this->cod_servidor, ['idpes']);

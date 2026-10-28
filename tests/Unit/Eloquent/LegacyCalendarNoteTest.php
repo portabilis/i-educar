@@ -1,14 +1,10 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyCalendarNote;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyCalendarNoteTest extends EloquentTestCase
-{
-    protected function getEloquentModelName()
-    {
-        return LegacyCalendarNote::class;
-    }
-}
+uses(EloquentModelTestCase::class);
+
+beforeEach(fn () => $this->eloquent(LegacyCalendarNote::class));
+
+EloquentModelTestCase::registerModelTests();

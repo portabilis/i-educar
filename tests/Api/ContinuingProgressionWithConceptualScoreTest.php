@@ -1,38 +1,23 @@
 <?php
 
-namespace Tests\Api;
-
 use App\Models\LegacyEnrollment;
 use Database\Factories\LegacyEvaluationRuleFactory;
 use Database\Factories\LegacyRoundingTableFactory;
 use Database\Factories\LegacyValueRoundingTableFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\Api\DiarioApiFakeDataTestTrait;
+use Tests\Api\DiarioApiRequestTestTrait;
 use Tests\TestCase;
 
-class ContinuingProgressionWithConceptualScoreTest extends TestCase
-{
-    use DatabaseTransactions;
-    use DiarioApiFakeDataTestTrait;
-    use DiarioApiRequestTestTrait;
+uses(TestCase::class, DatabaseTransactions::class, DiarioApiFakeDataTestTrait::class, DiarioApiRequestTestTrait::class);
 
-    /**
-     * @var LegacyEnrollment
-     */
-    private $enrollment;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->enrollment = $this->getContinuingProgressionWithConceptualScoreTest();
-    }
-
+beforeEach(function () {
     /**
      * Cria dados base para testes das regras de avaliação não continuada
      *
      * @return LegacyEnrollment
      */
-    public function getContinuingProgressionWithConceptualScoreTest()
-    {
+    $this->getContinuingProgressionWithConceptualScoreTest = function () {
         $roundingTable = LegacyRoundingTableFactory::new()->conceitual()->create();
 
         $valuesRoundingTable = [
@@ -89,198 +74,194 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
         $this->createDisciplines($schoolClass, 2);
 
         return $enrollment;
+    };
+
+    $this->enrollment = ($this->getContinuingProgressionWithConceptualScoreTest)();
+});
+
+test('continuing progression after all score and absence posted', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $disciplines = $schoolClass->disciplines;
+
+    $score = [
+        1 => 10,
+        2 => 10,
+        3 => 10,
+        4 => 10,
+    ];
+
+    $absence = [
+        1 => 3,
+        2 => 3,
+        3 => 3,
+        4 => 3,
+    ];
+
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
+
+        $this->assertEquals('Aprovado', $response->situacao);
     }
 
-    public function test_continuing_progression_after_all_score_and_absence_posted()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $disciplines = $schoolClass->disciplines;
+    $registration = $this->enrollment->registration;
+    $this->assertEquals(1, $registration->refresh()->aprovado);
+});
 
-        $score = [
-            1 => 10,
-            2 => 10,
-            3 => 10,
-            4 => 10,
-        ];
+test('continuing progression after all insufficient score and absence posted', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $disciplines = $schoolClass->disciplines;
 
-        $absence = [
-            1 => 3,
-            2 => 3,
-            3 => 3,
-            4 => 3,
-        ];
+    $score = [
+        1 => 1.9,
+        2 => 1.9,
+        3 => 1.9,
+        4 => 1.9,
+    ];
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $absence = [
+        1 => 3,
+        2 => 3,
+        3 => 3,
+        4 => 3,
+    ];
 
-            $this->assertEquals('Aprovado', $response->situacao);
-        }
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        $registration = $this->enrollment->registration;
-        $this->assertEquals(1, $registration->refresh()->aprovado);
+        $this->assertEquals('Aprovado', $response->situacao);
     }
 
-    public function test_continuing_progression_after_all_insufficient_score_and_absence_posted()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $disciplines = $schoolClass->disciplines;
+    $registration = $this->enrollment->registration;
+    $this->assertEquals(1, $registration->refresh()->aprovado);
+});
 
-        $score = [
-            1 => 1.9,
-            2 => 1.9,
-            3 => 1.9,
-            4 => 1.9,
-        ];
+/**
+ * Regra com progressão continuada
+ *
+ * Após o lançamentos das notas, não deverá reprovar mesmo com número de presenças insuficiente
+ */
+test('continuing progression more than absence limit after all score and absence posted', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $disciplines = $schoolClass->disciplines;
 
-        $absence = [
-            1 => 3,
-            2 => 3,
-            3 => 3,
-            4 => 3,
-        ];
+    $score = [
+        1 => 8,
+        2 => 8,
+        3 => 8,
+        4 => 8,
+    ];
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $absence = [
+        1 => 40,
+        2 => 40,
+        3 => 40,
+        4 => 40,
+    ];
 
-            $this->assertEquals('Aprovado', $response->situacao);
-        }
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        $registration = $this->enrollment->registration;
-        $this->assertEquals(1, $registration->refresh()->aprovado);
+        $this->assertEquals('Aprovado', $response->situacao);
     }
 
-    /**
-     * Regra com progressão continuada
-     *
-     * Após o lançamentos das notas, não deverá reprovar mesmo com número de presenças insuficiente
-     */
-    public function test_continuing_progression_more_than_absence_limit_after_all_score_and_absence_posted()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $disciplines = $schoolClass->disciplines;
+    $registration = $this->enrollment->registration;
+    $this->assertEquals(1, $registration->refresh()->aprovado);
+});
 
-        $score = [
-            1 => 8,
-            2 => 8,
-            3 => 8,
-            4 => 8,
-        ];
+test('continuing progression after score and absence stages posted', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $disciplines = $schoolClass->disciplines;
 
-        $absence = [
-            1 => 40,
-            2 => 40,
-            3 => 40,
-            4 => 40,
-        ];
+    $score = [
+        1 => 1.9,
+        2 => 1.9,
+    ];
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $absence = [
+        1 => 3,
+        2 => 3,
+    ];
 
-            $this->assertEquals('Aprovado', $response->situacao);
-        }
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        $registration = $this->enrollment->registration;
-        $this->assertEquals(1, $registration->refresh()->aprovado);
-    }
-
-    public function test_continuing_progression_after_score_and_absence_stages_posted()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $disciplines = $schoolClass->disciplines;
-
-        $score = [
-            1 => 1.9,
-            2 => 1.9,
-        ];
-
-        $absence = [
-            1 => 3,
-            2 => 3,
-        ];
-
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
-
-            $this->assertEquals('Cursando', $response->situacao);
-        }
-
-        $registration = $this->enrollment->registration;
-        $this->assertEquals(3, $registration->refresh()->aprovado);
-    }
-
-    public function test_continuing_progression_after_absence_remove_in_last_stages_returns_to_studying()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $disciplines = $schoolClass->disciplines;
-
-        $score = [
-            1 => 10,
-            2 => 10,
-            3 => 10,
-            4 => 10,
-        ];
-
-        $absence = [
-            1 => 3,
-            2 => 3,
-            3 => 3,
-            4 => 3,
-        ];
-
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
-
-            $this->assertEquals('Aprovado', $response->situacao);
-        }
-
-        $registration = $this->enrollment->registration;
-        $this->assertEquals(1, $registration->refresh()->aprovado);
-
-        $randomDiscipline = $schoolClass->disciplines->random()->id;
-        $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 4);
         $this->assertEquals('Cursando', $response->situacao);
-
-        $this->assertEquals(3, $registration->refresh()->aprovado);
     }
 
-    public function test_continuing_progression_after_remove_absence_when_not_is_last_stages_returns_to_studying()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $disciplines = $schoolClass->disciplines;
+    $registration = $this->enrollment->registration;
+    $this->assertEquals(3, $registration->refresh()->aprovado);
+});
 
-        $score = [
-            1 => 10,
-            2 => 10,
-            3 => 10,
-            4 => 10,
-        ];
+test('continuing progression after absence remove in last stages returns to studying', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $disciplines = $schoolClass->disciplines;
 
-        $absence = [
-            1 => 3,
-            2 => 3,
-            3 => 3,
-            4 => 3,
-        ];
+    $score = [
+        1 => 10,
+        2 => 10,
+        3 => 10,
+        4 => 10,
+    ];
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $absence = [
+        1 => 3,
+        2 => 3,
+        3 => 3,
+        4 => 3,
+    ];
 
-            $this->assertEquals('Aprovado', $response->situacao);
-        }
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        $registration = $this->enrollment->registration;
-        $this->assertEquals(1, $registration->refresh()->aprovado);
-
-        $randomDiscipline = $schoolClass->disciplines->random()->id;
-        $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 3);
-        $this->assertTrue($response->any_error_msg);
-
-        $this->assertEquals(1, $registration->refresh()->aprovado);
+        $this->assertEquals('Aprovado', $response->situacao);
     }
-}
+
+    $registration = $this->enrollment->registration;
+    $this->assertEquals(1, $registration->refresh()->aprovado);
+
+    $randomDiscipline = $schoolClass->disciplines->random()->id;
+    $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 4);
+    $this->assertEquals('Cursando', $response->situacao);
+
+    $this->assertEquals(3, $registration->refresh()->aprovado);
+});
+
+test('continuing progression after remove absence when not is last stages returns to studying', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $disciplines = $schoolClass->disciplines;
+
+    $score = [
+        1 => 10,
+        2 => 10,
+        3 => 10,
+        4 => 10,
+    ];
+
+    $absence = [
+        1 => 3,
+        2 => 3,
+        3 => 3,
+        4 => 3,
+    ];
+
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
+
+        $this->assertEquals('Aprovado', $response->situacao);
+    }
+
+    $registration = $this->enrollment->registration;
+    $this->assertEquals(1, $registration->refresh()->aprovado);
+
+    $randomDiscipline = $schoolClass->disciplines->random()->id;
+    $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 3);
+    $this->assertTrue($response->any_error_msg);
+
+    $this->assertEquals(1, $registration->refresh()->aprovado);
+});

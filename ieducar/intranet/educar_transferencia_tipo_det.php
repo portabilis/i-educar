@@ -1,8 +1,6 @@
 <?php
 
 use App\Models\LegacyTransferType;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\RedirectResponse;
 
 return new class extends clsDetalhe
 {
@@ -35,8 +33,10 @@ return new class extends clsDetalhe
         $registro = LegacyTransferType::find(id: $this->cod_transferencia_tipo)?->getAttributes();
 
         if (!$registro) {
-            throw new HttpResponseException(
-                response: new RedirectResponse(url: 'educar_transferencia_tipo_lst.php')
+            $this->redirectNotFound(
+                url: 'educar_transferencia_tipo_lst.php',
+                registro: 'tipo de transferência',
+                codigo: $this->cod_transferencia_tipo,
             );
         }
 
@@ -48,14 +48,14 @@ return new class extends clsDetalhe
         $nivel_usuario = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe(detalhe: ['Instituição', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe(detalhe: ['Instituição', e($registro['ref_cod_instituicao'])]);
             }
         }
         if ($registro['nm_tipo']) {
-            $this->addDetalhe(detalhe: ['Motivo Transferência', "{$registro['nm_tipo']}"]);
+            $this->addDetalhe(detalhe: ['Motivo Transferência', e($registro['nm_tipo'])]);
         }
         if ($registro['desc_tipo']) {
-            $this->addDetalhe(detalhe: ['Descrição', "{$registro['desc_tipo']}"]);
+            $this->addDetalhe(detalhe: ['Descrição', e($registro['desc_tipo'])]);
         }
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 575, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {

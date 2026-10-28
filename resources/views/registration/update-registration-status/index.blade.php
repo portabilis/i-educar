@@ -25,7 +25,7 @@
             </tr>
             <tr id="tr_nm_instituicao">
                 <td class="formlttd" valign="top">
-                    <span class="form">Instituição</span>
+                    <span class="form"><label for="ref_cod_instituicao">Instituição</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
@@ -33,13 +33,13 @@
                 </td>
             </tr>
             <tr id="tr_nm_escola">
-                <td class="formmdtd" valign="top"><span class="form">Escola</span></td>
+                <td class="formmdtd" valign="top"><span class="form"><label for="ref_cod_escola">Escola</label></span></td>
                 <td class="formmdtd" valign="top">
                     @include('form.select-school')
                 </td>
             </tr>
             <tr id="tr_nm_curso">
-                <td class="formlttd" valign="top"><span class="form">Curso</span></td>
+                <td class="formlttd" valign="top"><span class="form"><label for="ref_cod_curso">Curso</label></span></td>
                 <td class="formlttd" valign="top">
                     <span class="form">
                         <select class="geral" name="ref_cod_curso" id="ref_cod_curso" style="width: 308px;">
@@ -67,7 +67,7 @@
                 </td>
             </tr>
             <tr id="tr_nm_serie">
-                <td class="formmdtd" valign="top"><span class="form">Série</span></td>
+                <td class="formmdtd" valign="top"><span class="form"><label for="ref_cod_serie">Série</label></span></td>
                 <td class="formmdtd" valign="top">
                     <span class="form">
                         <select class="geral" name="ref_cod_serie" id="ref_cod_serie" style="width: 308px;">
@@ -95,14 +95,14 @@
                 </td>
             </tr>
             <tr id="tr_nm_turma">
-                <td class="formlttd" valign="top"><span class="form">Turma</span></td>
+                <td class="formlttd" valign="top"><span class="form"><label for="ref_cod_turma">Turma</label></span></td>
                 <td class="formlttd" valign="top">
                     @include('form.select-school-class')
                 </td>
             </tr>
-            <tr id="tr_nm_serie">
+            <tr id="tr_situacao">
                 <td class="formmdtd" valign="top">
-                    <span class="form">Situação</span>
+                    <span class="form"><label for="situacao">Situação</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formmdtd" valign="top">
@@ -120,9 +120,9 @@
                     </span>
                 </td>
             </tr>
-            <tr id="tr_nm_serie">
+            <tr id="tr_nova_situacao">
                 <td class="formlttd" valign="top">
-                    <span class="form">Nova situação</span>
+                    <span class="form"><label for="nova_situacao">Nova situação</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
@@ -143,7 +143,7 @@
 
             <tr id="tr_nm_motivo" class="field-transfer">
                 <td class="formlttd" valign="top">
-                    <span class="form">Motivo da Transferência</span>
+                    <span class="form"><label for="transferencia_tipo">Motivo da Transferência</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
@@ -160,9 +160,9 @@
                 </td>
             </tr>
 
-            <tr id="tr_nm_data" class="field-transfer">
+            <tr id="tr_transferencia_data" class="field-transfer">
                 <td class="formlttd" valign="top">
-                    <span class="form">Data da Transferência</span>
+                    <span class="form"><label for="transferencia_data">Data da Transferência</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
@@ -172,9 +172,9 @@
                 </td>
             </tr>
 
-            <tr id="tr_nm_data" class="field-transfer">
+            <tr id="tr_transferencia_observacoes" class="field-transfer">
                 <td class="formlttd" valign="top">
-                    <span class="form">Obsercações da Transferência</span>
+                    <span class="form"><label for="transferencia_observacoes">Obsercações da Transferência</label></span>
                 </td>
                 <td class="formlttd" valign="top">
                    <span class="form">

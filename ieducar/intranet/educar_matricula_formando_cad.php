@@ -52,8 +52,11 @@ return new class extends clsCadastro
             $registro = $obj->detalhe();
             if ($registro) {
                 if (!$obj->edita()) {
+                    // Inalcançável: `edita()` só falha sem código, e o detalhe acabou de encontrar a matrícula.
+                    // @codeCoverageIgnoreStart
                     echo 'erro ao cadastrar';
                     exit;
+                    // @codeCoverageIgnoreEnd
                 }
                 $des = '';
                 if (!$this->formando) {
@@ -68,14 +71,20 @@ return new class extends clsCadastro
 
     public function Gerar()
     {
+        // Não testável: o `Inicializar()` sempre redireciona antes; por POST o `exit` encerraria a suíte de testes.
+        // @codeCoverageIgnoreStart
         exit;
+        // @codeCoverageIgnoreEnd
     }
 
+    // Não testável: só rodam por POST, que em seguida cai no `exit` do `Gerar()`.
+    // @codeCoverageIgnoreStart
     public function Novo() {}
 
     public function Editar() {}
 
     public function Excluir() {}
+    // @codeCoverageIgnoreEnd
 
     public function Formular()
     {

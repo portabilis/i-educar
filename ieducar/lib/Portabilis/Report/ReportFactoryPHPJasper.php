@@ -97,6 +97,9 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
             }
         }
 
+        // Fora dos testes: o pacote JasperPHP não faz parte das dependências do
+        // projeto, então a geração para aqui sem ele.
+        // @codeCoverageIgnoreStart
         $builder = new JasperPHP;
 
         // Compila o arquivo .jrxml caso o arquivo .jasper não exista.
@@ -159,6 +162,7 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
         $this->destroyPDF($outputFile);
 
         return $result;
+        // @codeCoverageIgnoreEnd
     }
 
     /**

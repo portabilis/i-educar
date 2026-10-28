@@ -24,7 +24,7 @@
             </tr>
             <tr id="tr_nm_instituicao">
                 <th scope="row" class="formlttd" valign="top">
-                    <span class="form">Instituição</span>
+                    <span class="form"><label for="ref_cod_instituicao">Instituição</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </th>
                 <td class="formlttd" valign="top">
@@ -32,13 +32,13 @@
                 </td>
             </tr>
             <tr id="tr_nm_escola">
-                <th scope="row" class="formmdtd" valign="top"><span class="form">Escola</span></th>
+                <th scope="row" class="formmdtd" valign="top"><span class="form"><label for="ref_cod_escola">Escola</label></span></th>
                 <td class="formmdtd" valign="top">
                     @include('form.select-school')
                 </td>
             </tr>
             <tr id="tr_nm_curso">
-                <th scope="row" class="formlttd" valign="top"><span class="form">Curso</span></th>
+                <th scope="row" class="formlttd" valign="top"><span class="form"><label for="ref_cod_curso">Curso</label></span></th>
                 <td class="formlttd" valign="top">
                     <span class="form">
                         <select class="geral" name="ref_cod_curso" id="ref_cod_curso" data-refresh-ano="false" style="width: 308px;">
@@ -66,7 +66,7 @@
                 </td>
             </tr>
             <tr id="tr_nm_serie">
-                <th scope="row" class="formmdtd" valign="top"><span class="form">Série</span></th>
+                <th scope="row" class="formmdtd" valign="top"><span class="form"><label for="ref_cod_serie">Série</label></span></th>
                 <td class="formmdtd" valign="top">
                     @include('form.select-grade-multiple')
                 </td>
@@ -74,7 +74,7 @@
 
             <tr id="tr_nm_tipo_boletim">
                 <th scope="row" class="formlttd" valign="top">
-                    <span class="form">Modelo de boletim antigo</span>
+                    <span class="form"><label for="old_report_card">Modelo de boletim antigo</label></span>
                     <br>
                     <sub style="vertical-align:top;">Deixe em branco para atualizar em todas as turmas</sub>
                 </th>
@@ -101,9 +101,9 @@
                 </td>
             </tr>
 
-            <tr id="tr_nm_tipo_boletim">
+            <tr id="tr_new_report_card">
                 <th scope="row" class="formmdtd" valign="top">
-                    <span class="form">Novo modelo de boletim</span>
+                    <span class="form"><label for="new_report_card">Novo modelo de boletim</label></span>
                     <br>
                     <sub style="vertical-align:top;">Deixe em branco para não alterar</sub>
                 </th>
@@ -130,9 +130,9 @@
                 </td>
             </tr>
 
-            <tr id="tr_nm_tipo_boletim">
+            <tr id="tr_new_alternative_report_card">
                 <th scope="row" class="formlttd" valign="top">
-                    <span class="form">Novo modelo de boletim (diferenciado)</span>
+                    <span class="form"><label for="new_alternative_report_card">Novo modelo de boletim (diferenciado)</label></span>
                     <br>
                     <sub style="vertical-align:top;">Deixe em branco para não alterar</sub>
                 </th>

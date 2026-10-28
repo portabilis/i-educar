@@ -1,24 +1,17 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacySchool;
 use App\Models\SchoolInep;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class SchoolInepTest extends EloquentTestCase
-{
-    protected $relations = [
-        'school' => LegacySchool::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return SchoolInep::class;
-    }
+beforeEach(fn () => $this->eloquent(SchoolInep::class, relations: [
+    'school' => LegacySchool::class,
+]));
 
-    public function test_number_attribute(): void
-    {
-        $this->assertEquals($this->model->cod_escola_inep, $this->model->number);
-    }
-}
+EloquentModelTestCase::registerModelTests();
+
+test('number attribute', function () {
+    $this->assertEquals($this->model->cod_escola_inep, $this->model->number);
+});

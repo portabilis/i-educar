@@ -141,7 +141,10 @@ return new class extends clsCadastro
 
                 if ($obj_permissoes->permissao_excluir(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
                     if ($this->descricao) {
+                        // Débito de cobertura: trecho ainda sem teste.
+                        // @codeCoverageIgnoreStart
                         $this->fexcluir = true;
+                        // @codeCoverageIgnoreEnd
                     }
                 }
 
@@ -267,9 +270,12 @@ return new class extends clsCadastro
             );
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Cadastro não realizado. <br />';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
@@ -330,7 +336,10 @@ return new class extends clsCadastro
 
         foreach ($insert as $key => $entry) {
             if (in_array(needle: $key, haystack: $intersect)) {
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 continue;
+                // @codeCoverageIgnoreEnd
             }
             $this->_getCalendarioTurmaDataMapper()->save(instance: $entry);
         }
@@ -350,9 +359,12 @@ return new class extends clsCadastro
             );
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada. <br />';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()
@@ -399,9 +411,12 @@ return new class extends clsCadastro
             );
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada. <br />';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Formular()

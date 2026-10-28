@@ -4,6 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
+/**
+ * @codeCoverageIgnore
+ */
 class LegacyCreateTestsCommand extends Command
 {
     /**
@@ -312,7 +315,6 @@ class LegacyCreateTestsCommand extends Command
             'EducarPagamentoMultaDet',
             'EducarPreRequisitoDet',
             'EducarProjetoDet',
-            'EducarQuadroHorarioHorariosCad',
             'EducarRacaDet',
             'EducarReligiaoDet',
             'EducarReservaVagaDet',

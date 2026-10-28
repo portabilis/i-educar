@@ -63,7 +63,7 @@
             </tr>
             <tr id="tr_nm_ano">
                 <td class="formmdtd" valign="top">
-                    <label for="year" class="form">Ano <span class="campo_obrigatorio">*</span></label> <br>
+                    <label for="ano" class="form">Ano <span class="campo_obrigatorio">*</span></label> <br>
                     <sub>Somente números</sub>
                 </td>
                 <td class="formmdtd" valign="top" style="width: 45%">
@@ -72,7 +72,7 @@
             </tr>
             <tr id="tr_bloquear_enturmacao">
                 <td class="formmdtd" valign="top">
-                    <span class="form">Bloquear enturmacão após atingir limite de vagas</span>
+                    <span class="form"><label for="bloquear_enturmacao_sem_vagas">Bloquear enturmacão após atingir limite de vagas</label></span>
                 </td>
                 <td class="formmdtd" valign="top">
                         <span class="form">
@@ -82,7 +82,7 @@
             </tr>
             <tr id="tr_bloquear_cadastro">
                 <td class="formmdtd" valign="top">
-                    <span class="form">Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)</span>
+                    <span class="form"><label for="bloquear_cadastro_turma">Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)</label></span>
                 </td>
                 <td class="formmdtd" valign="top">
                         <span class="form">
@@ -98,8 +98,8 @@
                             <th id="th-series" colspan="3" style="text-align: left">Escola/Série</th>
                         </tr>
                         <tr class="formmdtd" style="font-weight: bold; text-align: center;">
-                            <th id="th-escola" style="text-align: left">Escola</th>
-                            <th id="th-serie" style="text-align: left">Série</th>
+                            <th id="th-escola" style="text-align: left"><label for="escola">Escola</label></th>
+                            <th id="th-serie" style="text-align: left"><label for="series">Série</label></th>
                             <th id="th-acoes" style="text-align: center; width: 100px;">Ações</th>
                         </tr>
                         </thead>
@@ -229,13 +229,13 @@
                             <tr class="formmdtd dd" id="${rowId}">
                                 <td>
                                     <span class="form">
-                                    <select name="escola_serie[${this.counter}][escolas][]" id="${selectId}" multiple="multiple" style="width: 100%;">
+                                    <select name="escola_serie[${this.counter}][escolas][]" id="${selectId}" aria-labelledby="th-escola" multiple="multiple" style="width: 100%;">
                                             <option value="">Selecione as escolas</option>
                                         </select>
                                     </span>
                                 </td>
                                 <td>
-                                <select name="escola_serie[${this.counter}][series][]" id="${serieId}" multiple="multiple" class="geral" style="width: 100%;">
+                                <select name="escola_serie[${this.counter}][series][]" id="${serieId}" aria-labelledby="th-serie" multiple="multiple" class="geral" style="width: 100%;">
                                         <option value="">Selecione as séries</option>
                                     </select>
                                 </td>

@@ -1,23 +1,17 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyDisciplinaryOccurrenceType;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyRegistrationDisciplinaryOccurrenceType;
 use App\Models\LegacyUser;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyRegistrationDisciplinaryOccurrenceTypeTest extends EloquentTestCase
-{
-    protected $relations = [
-        'registration' => LegacyRegistration::class,
-        'disciplinarOccurrenceType' => LegacyDisciplinaryOccurrenceType::class,
-        'createdByUser' => LegacyUser::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return LegacyRegistrationDisciplinaryOccurrenceType::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyRegistrationDisciplinaryOccurrenceType::class, relations: [
+    'registration' => LegacyRegistration::class,
+    'disciplinarOccurrenceType' => LegacyDisciplinaryOccurrenceType::class,
+    'createdByUser' => LegacyUser::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

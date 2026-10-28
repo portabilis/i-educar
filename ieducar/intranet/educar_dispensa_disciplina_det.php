@@ -1,6 +1,11 @@
 <?php
 
+use App\Models\LegacyCourse;
+use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyExemptionType;
+use App\Models\LegacyGrade;
+use App\Models\LegacyRegistration;
+use App\Models\LegacyStudent;
 
 return new class extends clsDetalhe
 {
@@ -41,35 +46,45 @@ return new class extends clsDetalhe
         $this->ref_cod_serie = $_GET['ref_cod_serie'];
         $this->ref_cod_disciplina = $_GET['ref_cod_disciplina'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
+        $urlListagem = 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
 
-        $tmp_obj = new clsPmieducarDispensaDisciplina(
-            ref_cod_matricula: $this->ref_cod_matricula,
-            ref_cod_serie: $this->ref_cod_serie,
-            ref_cod_escola: $this->ref_cod_escola,
-            ref_cod_disciplina: $this->ref_cod_disciplina
-        );
-
-        $registro = $tmp_obj->detalhe();
-
-        if (!$registro) {
-            $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
+        if (!is_numeric($this->ref_cod_matricula) || !is_numeric($this->ref_cod_serie)
+            || !is_numeric($this->ref_cod_escola) || !is_numeric($this->ref_cod_disciplina)) {
+            $this->redirectNotFound(
+                url: $urlListagem,
+                registro: 'dispensa de componente curricular',
+                feminino: true,
+                dica: 'Confira os registros listados abaixo.',
+            );
         }
 
-        $obj_serie = new clsPmieducarSerie($this->ref_cod_serie);
-        $det_serie = $obj_serie->detalhe();
-        $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
+        $dispensa = LegacyDisciplineExemption::query()
+            ->withTrashed()
+            ->whereExemptionKey(
+                $this->ref_cod_matricula,
+                $this->ref_cod_serie,
+                $this->ref_cod_escola,
+                $this->ref_cod_disciplina
+            )
+            ->first();
+
+        if (!$dispensa) {
+            $this->redirectNotFound(
+                url: $urlListagem,
+                registro: 'dispensa de componente curricular',
+                feminino: true,
+                dica: 'Confira os registros listados abaixo.',
+            );
+        }
+
+        $registro = $dispensa->getAttributes();
+
+        $registro['ref_ref_cod_serie'] = LegacyGrade::query()->whereKey($this->ref_cod_serie)->value('nm_serie');
 
         // Dados da matrícula
         $obj_ref_cod_matricula = new clsPmieducarMatricula;
         $matricula = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
         $detalhe_aluno = array_shift($matricula);
-
-        $obj_aluno = new clsPmieducarAluno;
-        $aluno = $obj_aluno->lista(
-            int_cod_aluno: $detalhe_aluno['ref_cod_aluno'],
-            int_ativo: 1
-        );
-        $det_aluno = array_shift($aluno);
 
         $obj_escola = new clsPmieducarEscola(
             cod_escola: $this->ref_cod_escola,
@@ -77,12 +92,16 @@ return new class extends clsDetalhe
         );
         $obj_escola->detalhe();
 
-        $nm_aluno = $det_aluno['nome_aluno'];
+        $nm_aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($detalhe_aluno['ref_cod_aluno'])
+            ->joinPerson()
+            ->value('pessoa.nome');
 
         // Dados do curso
-        $obj_ref_cod_curso = new clsPmieducarCurso($detalhe_aluno['ref_cod_curso']);
-        $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-        $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
+        $registro['ref_cod_curso'] = LegacyCourse::query()
+            ->whereKey($detalhe_aluno['ref_cod_curso'])
+            ->value('nm_curso');
 
         // Tipo de dispensa
         $det_ref_cod_tipo_dispensa = LegacyExemptionType::find($registro['ref_cod_tipo_dispensa'])?->getAttributes();
@@ -132,11 +151,17 @@ return new class extends clsDetalhe
             );
         }
 
-        $this->url_cancelar = 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
+        $this->url_cancelar = $urlListagem;
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Dispensa de componentes curriculares', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Matrícula > Dispensa de componentes curriculares > Dispensa
+        $registration = LegacyRegistration::find($this->ref_cod_matricula);
+        $this->breadcrumb(currentPage: 'Dispensa', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url("intranet/educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}") => 'Matrícula',
+            url("intranet/educar_dispensa_disciplina_lst.php?ref_cod_matricula={$this->ref_cod_matricula}") => 'Dispensa de componentes curriculares',
         ]);
     }
 

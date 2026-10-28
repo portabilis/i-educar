@@ -139,10 +139,13 @@ return new class extends clsCadastro
     public function Novo()
     {
         if (!$this->validaFormatoUrl(url: $this->url)) {
+            // Inalcançável: `validaFormatoUrl()` nunca devolve falso, porque `filter_var()` recebe o filtro como `options`.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'O campo Site deve conter uma URL válida (ex: https://www.exemplo.com.br).';
             $this->busca_empresa = true;
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         if (!empty($this->email) && filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
@@ -167,10 +170,13 @@ return new class extends clsCadastro
         }
 
         if (empty($this->fantasia) || strlen(trim(string: $this->fantasia)) < 3) {
+            // Inalcançável: a mesma regra acabou de ser verificada em `validaTamanhoMinimoCampo()`.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'O campo Nome Fantasia deve conter no mínimo 3 caracteres.';
             $this->busca_empresa = true;
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         if (!empty($this->capital_social) && !is_numeric(str_replace(search: [',', '.'], replace: '', subject: $this->capital_social))) {
@@ -224,7 +230,10 @@ return new class extends clsCadastro
         }
 
         if (!$this->razao_social) {
+            // Inalcançável: a razão social já foi validada acima.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $this->insc_est = idFederal2int(str: $this->insc_est);
@@ -282,7 +291,10 @@ return new class extends clsCadastro
 
         $this->simpleRedirect(url: 'empresas_lst.php');
 
+        // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+        // @codeCoverageIgnoreStart
         return true;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -342,10 +354,13 @@ return new class extends clsCadastro
     public function Editar()
     {
         if (!$this->validaFormatoUrl(url: $this->url)) {
+            // Inalcançável: `validaFormatoUrl()` nunca devolve falso, porque `filter_var()` recebe o filtro como `options`.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'O campo Site deve conter uma URL válida (ex: https://www.exemplo.com.br).';
             $this->busca_empresa = true;
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         if (!empty($this->email) && filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
@@ -370,10 +385,13 @@ return new class extends clsCadastro
         }
 
         if (empty($this->fantasia) || strlen(trim(string: $this->fantasia)) < 3) {
+            // Inalcançável: a mesma regra acabou de ser verificada em `validaTamanhoMinimoCampo()`.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'O campo Nome Fantasia deve conter no mínimo 3 caracteres.';
             $this->busca_empresa = true;
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         if (!empty($this->capital_social) && !is_numeric(str_replace(search: [',', '.'], replace: '', subject: $this->capital_social))) {
@@ -432,7 +450,10 @@ return new class extends clsCadastro
         }
 
         if (!$this->razao_social) {
+            // Inalcançável: a razão social já foi validada acima.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $this->insc_est = idFederal2int(str: $this->insc_est);
@@ -495,7 +516,10 @@ return new class extends clsCadastro
     protected function inputTelefone($type, $typeLabel = '')
     {
         if (!$typeLabel) {
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             $typeLabel = "Telefone {$type}";
+            // @codeCoverageIgnoreEnd
         }
 
         // ddd

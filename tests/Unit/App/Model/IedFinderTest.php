@@ -1,18 +1,20 @@
 <?php
 
+use Database\Factories\LegacyCourseFactory;
+use Database\Factories\LegacyGradeFactory;
+use Database\Factories\LegacyInstitutionFactory;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
-use Mockery\MockInterface;
-use PHPUnit\Framework\Attributes\Depends;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class App_Model_IedFinderTest extends UnitBaseTest
-{
+uses(UnitBaseTest::class, DatabaseTransactions::class);
+
+beforeEach(function () {
     /**
      * @todo Refatorar método para uma classe stub, no diretório do módulo
      *   TabelaArredondamento
      * @todo Está copiado em modules/Avaliacao/_tests/BoletimTest.php
      */
-    protected function _getTabelaArredondamento()
-    {
+    $this->_getTabelaArredondamento = function () {
         $data = [
             'tabelaArredondamento' => 1,
             'nome' => null,
@@ -47,7 +49,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
         $tabela->setDataMapper($tabelaDataMapper);
 
         return $tabela;
-    }
+    };
 
     /**
      * Configura mocks para ComponenteCurricular_Model_ComponenteDataMapper e
@@ -55,8 +57,7 @@ class App_Model_IedFinderTest extends UnitBaseTest
      *
      * @return array ('componenteMock', 'turmaMock', 'expected')
      */
-    protected function _getComponentesTurmaMock()
-    {
+    $this->_getComponentesTurmaMock = function () {
         $returnComponenteMock = [
             1 => new ComponenteCurricular_Model_Componente(
                 ['id' => 1, 'nome' => 'Matemática', 'cargaHoraria' => 100]
@@ -100,336 +101,206 @@ class App_Model_IedFinderTest extends UnitBaseTest
             'turmaMock' => $turmaMock,
             'expected' => $expected,
         ];
-    }
+    };
+});
 
-    public function test_get_curso()
-    {
-        $returnValue = [
-            'nm_curso' => 'Ensino Fundamental',
-        ];
+test('get curso', function () {
+    $curso = LegacyCourseFactory::new()->create([
+        'nm_curso' => 'Ensino Fundamental',
+        'descricao' => null,
+    ]);
 
-        $mock = $this->getCleanMock('clsPmieducarCurso');
-        $mock->expects($this->once())
-            ->method('detalhe')
-            ->willReturn($returnValue);
+    $this->assertEquals(
+        'Ensino Fundamental',
+        App_Model_IedFinder::getCurso($curso->getKey()),
+        '::getCurso() retorna o nome do curso através de uma busca pelo código.'
+    );
 
-        // Registra a instância no repositório de classes de CoreExt_Entity
-        $instance = App_Model_IedFinder::addClassToStorage(
-            'clsPmieducarCurso',
-            $mock,
-            null,
-            true
-        );
+    $cursoComDescricao = LegacyCourseFactory::new()->create([
+        'nm_curso' => 'Ensino Médio',
+        'descricao' => 'Integrado',
+    ]);
 
-        $curso = App_Model_IedFinder::getCurso(1);
-        $this->assertEquals(
-            $returnValue['nm_curso'],
-            $curso,
-            '::getCurso() retorna o nome do curso através de uma busca pelo código.'
-        );
-    }
+    $this->assertEquals(
+        'Ensino Médio (Integrado)',
+        App_Model_IedFinder::getCurso($cursoComDescricao->getKey()),
+        '::getCurso() concatena a descrição ao nome do curso.'
+    );
 
-    public function test_get_instituicoes()
-    {
-        $returnValue = [['cod_instituicao' => 1, 'nm_instituicao' => 'Instituição']];
-        $expected = [1 => 'INSTITUIÇÃO'];
+    $this->assertNull(
+        App_Model_IedFinder::getCurso(0),
+        '::getCurso() retorna nulo quando o curso não existe.'
+    );
+});
 
-        $mock = $this->getCleanMock('clsPmieducarInstituicao');
-        $mock->expects($this->once())
-            ->method('lista')
-            ->willReturn($returnValue);
+test('get instituicoes', function () {
+    $returnValue = [['cod_instituicao' => 1, 'nm_instituicao' => 'Instituição']];
+    $expected = [1 => 'INSTITUIÇÃO'];
 
-        // Registra a instância no repositório de classes de CoreExt_Entity
-        $instance = App_Model_IedFinder::addClassToStorage(
-            'clsPmieducarInstituicao',
-            $mock
-        );
+    $mock = $this->getCleanMock('clsPmieducarInstituicao');
+    $mock->expects($this->once())
+        ->method('lista')
+        ->willReturn($returnValue);
 
-        $instituicoes = App_Model_IedFinder::getInstituicoes();
-        $this->assertEquals(
-            $expected,
-            $instituicoes,
-            '::getInstituicoes() retorna todas as instituições cadastradas.'
-        );
-    }
+    // Registra a instância no repositório de classes de CoreExt_Entity
+    $instance = App_Model_IedFinder::addClassToStorage(
+        'clsPmieducarInstituicao',
+        $mock
+    );
 
-    public function test_get_series()
-    {
-        $this->instance(
-            clsPmieducarSerie::class,
-            Mockery::mock(clsPmieducarSerie::class, function (MockInterface $mock) {
-                $returnValue = [
-                    1 => ['cod_serie' => 1, 'ref_ref_cod_instituicao' => 1, 'nm_serie' => 'pré'],
-                    2 => ['cod_serie' => 2, 'ref_ref_cod_instituicao' => 2, 'nm_serie' => 'ser'],
-                ];
-                $mock
-                    ->shouldReceive('setOrderby')
-                    ->twice();
-                $mock
-                    ->shouldReceive('lista')
-                    ->once()
-                    ->andReturn($returnValue);
-                $mock
-                    ->shouldReceive('lista')
-                    ->with(
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        1,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                    )
-                    ->once()
-                    ->andReturn([$returnValue[1]]);
-            })
-        );
+    $instituicoes = App_Model_IedFinder::getInstituicoes();
+    $this->assertEquals(
+        $expected,
+        $instituicoes,
+        '::getInstituicoes() retorna todas as instituições cadastradas.'
+    );
+});
 
-        $series = App_Model_IedFinder::getSeries();
-        $test = [
-            1 => 'PRÉ',
-            2 => 'SER',
-        ];
+test('get series', function () {
+    $instituicao = LegacyInstitutionFactory::new()->create();
+    $outraInstituicao = LegacyInstitutionFactory::new()->create();
 
-        $this->assertEquals(
-            $test,
-            $series,
-            '::getSeries() retorna todas as séries cadastradas.'
-        );
+    $serie = LegacyGradeFactory::new()->create([
+        'nm_serie' => 'pré',
+        'descricao' => '',
+        'ref_cod_curso' => LegacyCourseFactory::new()->create([
+            'ref_cod_instituicao' => $instituicao,
+        ]),
+    ]);
 
-        $series = App_Model_IedFinder::getSeries(1);
-        $testFilter = [
-            1 => 'PRÉ',
-        ];
+    $serieDeOutraInstituicao = LegacyGradeFactory::new()->create([
+        'nm_serie' => 'ser',
+        'descricao' => '',
+        'ref_cod_curso' => LegacyCourseFactory::new()->create([
+            'ref_cod_instituicao' => $outraInstituicao,
+        ]),
+    ]);
 
-        $this->assertEquals(
-            $testFilter,
-            $series,
-            '::getSeries() retorna todas as séries cadastradas por instituição'
-        );
-    }
+    $series = App_Model_IedFinder::getSeries();
 
-    public function test_get_turmas()
-    {
-        $returnValue = [1 => ['cod_turma' => 1, 'nm_turma' => 'Primeiro ano', 'ano' => null]];
-        $expected = [1 => 'Primeiro ano - Sem ano'];
+    $this->assertSame(
+        'PRÉ',
+        $series[$serie->getKey()],
+        '::getSeries() retorna o nome da série em caixa alta.'
+    );
+    $this->assertArrayHasKey(
+        $serieDeOutraInstituicao->getKey(),
+        $series,
+        '::getSeries() sem filtro retorna as séries de todas as instituições.'
+    );
 
-        $mock = $this->getCleanMock('clsPmieducarTurma');
-        $mock->expects($this->once())
-            ->method('lista')
-            ->with(null, null, null, null, 1)
-            ->willReturn($returnValue);
+    $seriesDaInstituicao = App_Model_IedFinder::getSeries($instituicao->getKey());
 
-        $instance = CoreExt_Entity::addClassToStorage(
-            'clsPmieducarTurma',
-            $mock,
-            null,
-            true
-        );
+    $this->assertArrayHasKey(
+        $serie->getKey(),
+        $seriesDaInstituicao,
+        '::getSeries() filtra pela instituição informada.'
+    );
+    $this->assertArrayNotHasKey(
+        $serieDeOutraInstituicao->getKey(),
+        $seriesDaInstituicao,
+        '::getSeries() não retorna série de outra instituição.'
+    );
+});
 
-        $turmas = App_Model_IedFinder::getTurmas(1);
-        $this->assertEquals(
-            $expected,
-            $turmas,
-            '::getTurmas() retorna todas as turmas de uma escola.'
-        );
-    }
+test('get turmas', function () {
+    $returnValue = [1 => ['cod_turma' => 1, 'nm_turma' => 'Primeiro ano', 'ano' => null]];
+    $expected = [1 => 'Primeiro ano - Sem ano'];
 
-    public function test_get_escola_serie_disciplina()
-    {
-        // Método foi alterado. Terá que ser escrito um novo teste
-        $this->markTestSkipped();
-        $returnAnoEscolar = [
-            1 => new ComponenteCurricular_Model_Componente(
-                ['id' => 1, 'nome' => 'Matemática', 'cargaHoraria' => 100]
-            ),
-            2 => new ComponenteCurricular_Model_Componente(
-                ['id' => 2, 'nome' => 'Português', 'cargaHoraria' => 100]
-            ),
-            3 => new ComponenteCurricular_Model_Componente(
-                ['id' => 3, 'nome' => 'Ciências', 'cargaHoraria' => 60]
-            ),
-            4 => new ComponenteCurricular_Model_Componente(
-                ['id' => 4, 'nome' => 'Física', 'cargaHoraria' => 60]
-            ),
-        ];
+    $mock = $this->getCleanMock('clsPmieducarTurma');
+    $mock->expects($this->once())
+        ->method('lista')
+        ->with(null, null, null, null, 1)
+        ->willReturn($returnValue);
 
-        $expected = $returnAnoEscolar;
+    $instance = CoreExt_Entity::addClassToStorage(
+        'clsPmieducarTurma',
+        $mock,
+        null,
+        true
+    );
 
-        $anoEscolarMock = $this->getCleanMock('ComponenteCurricular_Model_ComponenteDataMapper');
-        $anoEscolarMock->expects($this->exactly(4))
-            ->method('findComponenteCurricularAnoEscolar')
-            ->willReturnOnConsecutiveCalls(
-                $returnAnoEscolar[1],
-                $returnAnoEscolar[2],
-                $returnAnoEscolar[3],
-                $returnAnoEscolar[4]
-            );
+    $turmas = App_Model_IedFinder::getTurmas(1);
+    $this->assertEquals(
+        $expected,
+        $turmas,
+        '::getTurmas() retorna todas as turmas de uma escola.'
+    );
+});
 
-        // Retorna para clsPmieducarEscolaSerieDisciplina
-        $returnEscolaSerieDisciplina = [
-            ['ref_cod_serie' => 1, 'ref_cod_disciplina' => 1, 'carga_horaria' => 80],
-            ['ref_cod_serie' => 1, 'ref_cod_disciplina' => 2, 'carga_horaria' => null],
-            ['ref_cod_serie' => 1, 'ref_cod_disciplina' => 3, 'carga_horaria' => null],
-            ['ref_cod_serie' => 1, 'ref_cod_disciplina' => 4, 'carga_horaria' => null],
-        ];
+test('get escola serie disciplina', function () {
+    // Método foi alterado. Terá que ser escrito um novo teste
+    $this->markTestSkipped();
+});
 
-        // Mock para clsPmieducarEscolaSerieDisciplina
-        $escolaMock = $this->getCleanMock('clsPmieducarEscolaSerieDisciplina');
-        $escolaMock->expects($this->any())
-            ->method('lista')
-            ->with(1, 1, null, 1)
-            ->willReturn($returnEscolaSerieDisciplina);
+test('get componentes turma', function () {
+    // Método foi alterado. Terá que ser escrito um novo teste
+    $this->markTestSkipped();
+    $mocks = ($this->_getComponentesTurmaMock)();
 
-        App_Model_IedFinder::addClassToStorage('clsPmieducarEscolaSerieDisciplina', $escolaMock, null, true);
+    $componentes = App_Model_IedFinder::getComponentesTurma(
+        1,
+        1,
+        1,
+        $mocks['turmaMock'],
+        $mocks['componenteMock']
+    );
 
-        // O primeiro componente tem uma carga horária definida em escola-série.
-        $expected[1] = clone $returnAnoEscolar[1];
-        $expected[1]->cargaHoraria = 80;
+    $this->assertEquals(
+        $mocks['expected'],
+        $componentes,
+        '::getComponentesTurma() retorna os componentes de uma turma.'
+    );
+});
 
-        $componentes = App_Model_IedFinder::getEscolaSerieDisciplina(1, 1, $anoEscolarMock);
-        $this->assertEquals(
-            $expected,
-            $componentes,
-            '::getEscolaSerieDisciplina() retorna os componentes de um escola-série.'
-        );
-    }
+test('get matricula aluno nao enturmado', function () {
+    $this->expectException(StudentNotEnrolledInSchoolClass::class);
+    $this->expectExceptionMessage('Aluno não enturmado.');
+    App_Model_IedFinder::getMatricula(1);
+});
 
-    public function test_get_componentes_turma()
-    {
-        // Método foi alterado. Terá que ser escrito um novo teste
-        $this->markTestSkipped();
-        $mocks = $this->_getComponentesTurmaMock();
+test('get regra avaliacao por matricula', function () {
+    $expected = new RegraAvaliacao_Model_Regra([
+        'id' => 1,
+        'nome' => 'Regra geral',
+        'tipoNota' => RegraAvaliacao_Model_Nota_TipoValor::NUMERICA,
+        'tipoProgressao' => RegraAvaliacao_Model_TipoProgressao::CONTINUADA,
+        'tipoPresenca' => RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE,
+        'media' => 6,
+        'tabelaArredondamento' => ($this->_getTabelaArredondamento)(),
+    ]);
 
-        $componentes = App_Model_IedFinder::getComponentesTurma(
-            1,
-            1,
-            1,
-            $mocks['turmaMock'],
-            $mocks['componenteMock']
-        );
+    // Marca como "old", para indicar que foi recuperado via CoreExt_DataMapper
+    $expected->markOld();
 
-        $this->assertEquals(
-            $mocks['expected'],
-            $componentes,
-            '::getComponentesTurma() retorna os componentes de uma turma.'
-        );
-    }
+    // Retorna para matrícula
+    $returnMatricula = [
+        'cod_matricula' => 1,
+        'ref_ref_cod_escola' => 1,
+        'ref_ref_cod_serie' => 1,
+        'ref_cod_curso' => 1,
+        'aprovado' => 1,
+        'serie_regra_avaliacao_id' => 1,
+        'ref_cod_aluno' => 1,
+        'escola_utiliza_regra_diferenciada' => null,
+    ];
 
-    public function test_get_matricula_aluno_nao_enturmado()
-    {
-        $this->expectException(StudentNotEnrolledInSchoolClass::class);
-        $this->expectExceptionMessage('Aluno não enturmado.');
-        App_Model_IedFinder::getMatricula(1);
-    }
+    // Mock para RegraAvaliacao_Model_DataMapper
+    $mapperMock = $this->getCleanMock('RegraAvaliacao_Model_RegraDataMapper');
+    $mapperMock->expects($this->once())
+        ->method('find')
+        ->with(1)
+        ->willReturn($expected);
 
-    public function test_get_regra_avaliacao_por_matricula()
-    {
-        $expected = new RegraAvaliacao_Model_Regra([
-            'id' => 1,
-            'nome' => 'Regra geral',
-            'tipoNota' => RegraAvaliacao_Model_Nota_TipoValor::NUMERICA,
-            'tipoProgressao' => RegraAvaliacao_Model_TipoProgressao::CONTINUADA,
-            'tipoPresenca' => RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE,
-            'media' => 6,
-            'tabelaArredondamento' => $this->_getTabelaArredondamento(),
-        ]);
+    $regraAvaliacao = App_Model_IedFinder::getRegraAvaliacaoPorMatricula(1, $mapperMock, $returnMatricula);
+    $this->assertEquals(
+        $expected,
+        $regraAvaliacao,
+        '::getRegraAvaliacaoPorMatricula() retorna a regra de avaliação de uma matrícula.'
+    );
+});
 
-        // Marca como "old", para indicar que foi recuperado via CoreExt_DataMapper
-        $expected->markOld();
-
-        // Retorna para matrícula
-        $returnMatricula = [
-            'cod_matricula' => 1,
-            'ref_ref_cod_escola' => 1,
-            'ref_ref_cod_serie' => 1,
-            'ref_cod_curso' => 1,
-            'aprovado' => 1,
-            'serie_regra_avaliacao_id' => 1,
-            'ref_cod_aluno' => 1,
-            'escola_utiliza_regra_diferenciada' => null,
-        ];
-
-        // Mock para RegraAvaliacao_Model_DataMapper
-        $mapperMock = $this->getCleanMock('RegraAvaliacao_Model_RegraDataMapper');
-        $mapperMock->expects($this->once())
-            ->method('find')
-            ->with(1)
-            ->willReturn($expected);
-
-        $regraAvaliacao = App_Model_IedFinder::getRegraAvaliacaoPorMatricula(1, $mapperMock, $returnMatricula);
-        $this->assertEquals(
-            $expected,
-            $regraAvaliacao,
-            '::getRegraAvaliacaoPorMatricula() retorna a regra de avaliação de uma matrícula.'
-        );
-    }
-
-    #[Depends('test_get_regra_avaliacao_por_matricula')]
-    public function test_get_componentes_por_matricula()
-    {
-        // Método foi alterado. Terá que ser escrito um novo teste
-        $this->markTestSkipped();
-        // A turma possui apenas 2 componentes, com os ids: 1 e 2
-        $mocks = $this->_getComponentesTurmaMock();
-
-        // Retorna para clsPmieducarDispensaDisciplina
-        $returnDispensa = [
-            ['ref_cod_matricula' => 1, 'ref_cod_disciplina' => 2],
-        ];
-
-        // Mock para clsPmieducarDispensaDisciplina
-        $dispensaMock = $this->getCleanMock('clsPmieducarDispensaDisciplina');
-        $dispensaMock->expects($this->once())
-            ->method('disciplinaDispensadaEtapa')
-            ->with(1, 1, 1)
-            ->willReturn($returnDispensa);
-
-        CoreExt_Entity::addClassToStorage(
-            'clsPmieducarDispensaDisciplina',
-            $dispensaMock,
-            null,
-            true
-        );
-
-        $matricula = [
-            'ref_ref_cod_serie' => 1,
-            'ref_ref_cod_escola' => 1,
-            'ref_cod_turma' => 1,
-            'ano' => null,
-            'dependencia' => null,
-        ];
-
-        $componentes = App_Model_IedFinder::getComponentesPorMatricula(
-            1,
-            $mocks['componenteMock'],
-            $mocks['turmaMock'],
-            null,
-            null,
-            null,
-            $matricula
-        );
-
-        $expected = $mocks['expected'];
-        $expected = [1 => clone $expected[1]];
-
-        $this->assertEquals(
-            $expected,
-            $componentes,
-            '::getComponentesPorMatricula() retorna os componentes curriculares de uma matrícula, descartando aqueles em regime de dispensa (dispensa de componente)'
-        );
-    }
-}
+test('get componentes por matricula', function () {
+    // Método foi alterado. Terá que ser escrito um novo teste
+    $this->markTestSkipped();
+})->depends('get regra avaliacao por matricula');

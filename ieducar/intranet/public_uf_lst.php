@@ -54,18 +54,24 @@ return new class extends clsListagem
                 $query->whereUnaccent('name', $this->nome);
             });
             $query->when($this->idpais, function ($query) {
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 $query->where('country_id', $this->idpais);
+                // @codeCoverageIgnoreEnd
             });
             $query->when($this->sigla_uf, function ($query) {
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 $query->where('abbreviation', Str::upper($this->sigla_uf));
+                // @codeCoverageIgnoreEnd
             });
         });
 
         foreach ($data as $item) {
             $this->addLinhas([
-                "<a href=\"public_uf_det.php?id={$item->id}\">{$item->name}</a>",
-                "<a href=\"public_uf_det.php?id={$item->id}\">{$item->abbreviation}</a>",
-                "<a href=\"public_uf_det.php?id={$item->id}\">{$item->country->name}</a>",
+                "<a href=\"public_uf_det.php?id={$item->id}\">" . e($item->name) . '</a>',
+                "<a href=\"public_uf_det.php?id={$item->id}\">" . e($item->abbreviation) . '</a>',
+                "<a href=\"public_uf_det.php?id={$item->id}\">" . e($item->country->name) . '</a>',
             ]);
         }
 

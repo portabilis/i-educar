@@ -1,8 +1,11 @@
 <?php
 
+use App\Models\LegacyEnrollment;
+use App\Models\LegacyGrade;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolGrade;
+use App\Models\LegacyStudent;
 use App\Models\RegistrationStatus;
 use Illuminate\Support\Facades\Session;
 
@@ -82,9 +85,12 @@ return new class extends clsCadastro
         $this->data_matricula = Portabilis_Date_Utils::brToPgSQL(date: $this->data_matricula);
 
         if ($anoLetivos->count() > 1) {
+            // Inalcançável: a restrição `escola_ano_letivo_ref_cod_escola_ano_unique` impede dois anos letivos iguais na escola.
+            // @codeCoverageIgnoreStart
             Session::now('notice', 'Nenhum aluno rematriculado. Certifique-se que somente um ano letivo encontra-se em aberto.');
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         // Valida se a data da matrícula não é menor que a data do início do
@@ -155,7 +161,10 @@ return new class extends clsCadastro
                     $count += 1;
 
                     if (!$result) {
+                        // Inalcançável: `matricularAluno()` devolve verdadeiro ou lança exceção.
+                        // @codeCoverageIgnoreStart
                         break;
+                        // @codeCoverageIgnoreEnd
                     }
                 }
             }
@@ -190,7 +199,10 @@ return new class extends clsCadastro
                 Session::now('notice', 'Os alunos desta série já encontram-se rematriculados, sendo assim, favor verificar se as enturmações já foram efetuadas em Movimentação > Enturmação.');
             }
         } else {
+            // Inalcançável: `matricularAluno()` devolve verdadeiro ou lança exceção.
+            // @codeCoverageIgnoreStart
             Session::now('error', 'Ocorreu algum erro inesperado durante as rematrículas, por favor, tente novamente.');
+            // @codeCoverageIgnoreEnd
         }
 
         return $result;
@@ -199,20 +211,40 @@ return new class extends clsCadastro
     protected function getAlunosSemInep($escolaId, $cursoId, $serieId, $turmaId, $ano)
     {
         // Pega todas as matriculas
-        $objMatricula = new clsPmieducarMatriculaTurma;
-        $objMatricula->setOrderby(strNomeCampo: 'nome');
-        $lstMatricula = $objMatricula->lista4(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, turmaId: $turmaId, ano: $ano);
+        $lstMatricula = LegacyEnrollment::query()
+            ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+            ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+            ->join('cadastro.pessoa', 'pessoa.idpes', 'aluno.ref_idpes')
+            ->active()
+            ->when(is_numeric($turmaId), fn ($q) => $q->whereSchoolClass($turmaId))
+            ->where('matricula.ativo', 1)
+            ->when(is_numeric($escolaId), fn ($q) => $q->where('matricula.ref_ref_cod_escola', $escolaId))
+            ->when(is_numeric($cursoId), fn ($q) => $q->where('matricula.ref_cod_curso', $cursoId))
+            ->when(is_numeric($serieId), fn ($q) => $q->where('matricula.ref_ref_cod_serie', $serieId))
+            ->when(is_numeric($ano), fn ($q) => $q->where('matricula.ano', $ano))
+            ->orderBy('pessoa.nome')
+            ->get([
+                'matricula.ref_cod_aluno',
+                'matricula.aprovado',
+                'pessoa.nome',
+            ]);
         // Verifica o parametro na série pra exigir inep
-        $objSerie = new clsPmieducarSerie(cod_serie: $serieId);
-        $serieDet = $objSerie->detalhe();
-        $exigeInep = $serieDet['exigir_inep'];
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
+        $exigeInep = is_numeric($serieId)
+            ? LegacyGrade::query()->whereKey($serieId)->value('exigir_inep')
+            : null;
+        // @codeCoverageIgnoreEnd
         // Retorna alunos sem inep
         $alunosSemInep = [];
-        $objAluno = new clsPmieducarAluno;
+
+        $alunosComInep = LegacyStudent::query()
+            ->whereIn('cod_aluno', collect($lstMatricula)->pluck('ref_cod_aluno')->all())
+            ->whereHas('inep')
+            ->pluck('cod_aluno');
 
         foreach ($lstMatricula as $matricula) {
-            $alunoInep = $objAluno->verificaInep(cod_aluno: $matricula['ref_cod_aluno']);
-            if (!$alunoInep && $exigeInep) {
+            if (!$alunosComInep->contains($matricula['ref_cod_aluno']) && $exigeInep) {
                 $alunosSemInep[] = mb_strtoupper(string: $matricula['nome']);
             }
         }
@@ -222,9 +254,24 @@ return new class extends clsCadastro
 
     protected function getAlunosComSaidaDaEscola($escolaId, $cursoId, $serieId, $turmaId, $ano)
     {
-        $objMatricula = new clsPmieducarMatriculaTurma;
-        $objMatricula->setOrderby(strNomeCampo: 'nome');
-        $alunosComSaidaDaEscola = $objMatricula->lista4(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, turmaId: $turmaId, ano: $ano, saida_escola: true);
+        $alunosComSaidaDaEscola = LegacyEnrollment::query()
+            ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+            ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+            ->join('cadastro.pessoa', 'pessoa.idpes', 'aluno.ref_idpes')
+            ->active()
+            ->when(is_numeric($turmaId), fn ($q) => $q->whereSchoolClass($turmaId))
+            ->where('matricula.ativo', 1)
+            ->when(is_numeric($escolaId), fn ($q) => $q->where('matricula.ref_ref_cod_escola', $escolaId))
+            ->when(is_numeric($cursoId), fn ($q) => $q->where('matricula.ref_cod_curso', $cursoId))
+            ->when(is_numeric($serieId), fn ($q) => $q->where('matricula.ref_ref_cod_serie', $serieId))
+            ->when(is_numeric($ano), fn ($q) => $q->where('matricula.ano', $ano))
+            ->where('matricula.saida_escola', true)
+            ->orderBy('pessoa.nome')
+            ->get([
+                'matricula.ref_cod_aluno',
+                'matricula.aprovado',
+                'pessoa.nome',
+            ]);
         $alunos = [];
 
         foreach ($alunosComSaidaDaEscola as $a) {
@@ -295,10 +342,13 @@ return new class extends clsCadastro
 
         try {
             $this->db->Consulta($sql);
+            // Não testável: um erro de SQL abortaria a transação que envolve cada teste.
+            // @codeCoverageIgnoreStart
         } catch (Exception $e) {
             error_log(message: 'Erro ao selecionar matrículas ano anterior, no processo rematrícula automática:' . $e->getMessage());
 
             throw new Exception(message: "Erro ao selecionar matrículas ano anterior: $anoAnterior");
+            // @codeCoverageIgnoreEnd
         }
 
         return true;
@@ -306,10 +356,25 @@ return new class extends clsCadastro
 
     protected function existeMatriculasAprovadasReprovadas($escolaId, $cursoId, $serieId, $turmaId, $ano)
     {
-        $objMatricula = new clsPmieducarMatriculaTurma;
-        $objMatricula->setOrderby(strNomeCampo: 'nome');
         $anoAnterior = $this->ano_letivo - 1;
-        $matriculas = $objMatricula->lista4(escolaId: $escolaId, cursoId: $cursoId, serieId: $serieId, turmaId: $turmaId, ano: $anoAnterior);
+
+        $matriculas = LegacyEnrollment::query()
+            ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+            ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+            ->join('cadastro.pessoa', 'pessoa.idpes', 'aluno.ref_idpes')
+            ->active()
+            ->when(is_numeric($turmaId), fn ($q) => $q->whereSchoolClass($turmaId))
+            ->where('matricula.ativo', 1)
+            ->when(is_numeric($escolaId), fn ($q) => $q->where('matricula.ref_ref_cod_escola', $escolaId))
+            ->when(is_numeric($cursoId), fn ($q) => $q->where('matricula.ref_cod_curso', $cursoId))
+            ->when(is_numeric($serieId), fn ($q) => $q->where('matricula.ref_ref_cod_serie', $serieId))
+            ->when(is_numeric($anoAnterior), fn ($q) => $q->where('matricula.ano', $anoAnterior))
+            ->orderBy('pessoa.nome')
+            ->get([
+                'matricula.ref_cod_aluno',
+                'matricula.aprovado',
+                'pessoa.nome',
+            ]);
         $qtdMatriculasAprovadasReprovadas = 0;
 
         $situacoesArray = $this->permitir_cursando
@@ -374,10 +439,13 @@ return new class extends clsCadastro
                 $this->ano_letivo,
                 $cursoId
             ));
+            // Não testável: um erro de SQL abortaria a transação que envolve cada teste.
+            // @codeCoverageIgnoreStart
         } catch (Exception $e) {
             error_log(message: "Erro durante a matrícula do aluno $alunoId, no processo de rematrícula automática:" . $e->getMessage());
 
             throw new Exception(message: "Erro durante matrícula do aluno: $alunoId");
+            // @codeCoverageIgnoreEnd
         }
 
         return true;

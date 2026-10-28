@@ -1,6 +1,10 @@
 <?php
 
 use App\Models\LegacyAbandonmentType;
+use App\Models\LegacyCourse;
+use App\Models\LegacyEnrollment;
+use App\Models\LegacyGrade;
+use App\Models\LegacyStudent;
 use App\Models\LegacyTransferRequest;
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
@@ -64,6 +68,16 @@ return new class extends clsDetalhe
         }
 
         if (!$registro) {
+            $this->redirectNotFound(
+                url: 'educar_aluno_lst.php',
+                registro: 'matrícula',
+                feminino: true,
+                codigo: $this->ref_cod_matricula,
+                dica: 'Acesse a matrícula pela ficha do aluno.',
+            );
+        }
+
+        if (!Portabilis_Utils_User::canAccessEscola(id: $registro['ref_ref_cod_escola'])) {
             $this->simpleRedirect(url: 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno']);
         }
 
@@ -72,16 +86,12 @@ return new class extends clsDetalhe
         $existeSaidaEscola = $obj_matricula->existeSaidaEscola(codMatricula: $registro['cod_matricula']);
 
         // Curso
-        $obj_ref_cod_curso = new clsPmieducarCurso(cod_curso: $registro['ref_cod_curso']);
-        $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
         $curso_id = $registro['ref_cod_curso'];
-        $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
+        $registro['ref_cod_curso'] = LegacyCourse::query()->whereKey($curso_id)->value('nm_curso');
 
         // Série
-        $obj_serie = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
-        $det_serie = $obj_serie->detalhe();
         $serie_id = $registro['ref_ref_cod_serie'];
-        $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
+        $registro['ref_ref_cod_serie'] = LegacyGrade::query()->whereKey($serie_id)->value('nm_serie');
 
         // Nome da instituição
         $obj_cod_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
@@ -95,16 +105,17 @@ return new class extends clsDetalhe
         $registro['ref_ref_cod_escola'] = $det_ref_cod_escola['nome'];
 
         // Nome do aluno
-        $obj_aluno = new clsPmieducarAluno;
-        $lst_aluno = $obj_aluno->lista(
-            int_cod_aluno: $registro['ref_cod_aluno'],
-            int_ativo: 1
-        );
+        $aluno = LegacyStudent::query()
+            ->active()
+            ->whereStudent($registro['ref_cod_aluno'])
+            ->joinPerson()
+            ->joinIndividual()
+            ->first([
+                'pessoa.nome',
+                'fisica.nome_social',
+            ]);
 
-        if (is_array(value: $lst_aluno)) {
-            $det_aluno = array_shift(array: $lst_aluno);
-            $nm_aluno = $det_aluno['nome_aluno'];
-        }
+        $nm_aluno = $aluno?->nome;
 
         if ($registro['cod_matricula']) {
             $this->addDetalhe(detalhe: ['Número Matrícula', $registro['cod_matricula']]);
@@ -135,12 +146,19 @@ return new class extends clsDetalhe
         }
 
         // Nome da turma
-        $enturmacoes = new clsPmieducarMatriculaTurma;
-
-        $enturmacoes = $enturmacoes->lista(
-            int_ref_cod_matricula: $this->ref_cod_matricula,
-            int_ativo: 3
-        );
+        $enturmacoes = LegacyEnrollment::query()
+            ->when(is_numeric($this->ref_cod_matricula), fn ($q) => $q->whereRegistration($this->ref_cod_matricula))
+            ->whereValid(includeDependency: false)
+            ->whereHas('registration', function ($q) {
+                $q->whereHas('student', fn ($q) => $q->active());
+            })
+            ->with('schoolClass:cod_turma,nm_turma,etapa_educacenso,tipo_atendimento,turma_turno_id')
+            ->get([
+                'ref_cod_turma',
+                'ativo',
+                'data_enturmacao',
+                'turno_id',
+            ]);
 
         $existeTurma = false;
         $existeTurmaMulti = false;
@@ -155,8 +173,7 @@ return new class extends clsDetalhe
                 continue;
             }
 
-            $turma = new clsPmieducarTurma(cod_turma: $enturmacao['ref_cod_turma']);
-            $turma = $turma->detalhe() ?? [];
+            $turma = $enturmacao->schoolClass;
             $turma_id = $enturmacao['ref_cod_turma'];
 
             if (in_array(needle: $turma['etapa_educacenso'], haystack: App_Model_Educacenso::etapas_multisseriadas())) {
@@ -167,7 +184,7 @@ return new class extends clsDetalhe
             $etapasItinerario = [25, 26, 27, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 67, 71, 74];
 
             $nomesTurmas[] = $turma['nm_turma'];
-            $datasEnturmacoes[] = Portabilis_Date_Utils::pgSQLToBr(timestamp: $enturmacao['data_enturmacao']);
+            $datasEnturmacoes[] = $enturmacao->data_enturmacao->format('d/m/Y');
 
             if ($turma['turma_turno_id'] == clsPmieducarTurma::TURNO_INTEGRAL) {
                 $existeTurmaTurnoIntegral = true;
@@ -432,8 +449,11 @@ return new class extends clsDetalhe
         $this->url_cancelar = 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno'];
         $this->largura = '100%';
 
+        // Início > Escola > Alunos > Nome (social, se houver) > Matrícula
         $this->breadcrumb(currentPage: 'Matrícula', breadcrumbs: [
-            'educar_index.php' => 'Escola',
+            url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_aluno_lst.php') => 'Alunos',
+            url(path: "intranet/educar_aluno_det.php?cod_aluno={$registro['ref_cod_aluno']}") => $aluno?->nome_social ?: $nm_aluno,
         ]);
 
         // js
@@ -564,7 +584,10 @@ return new class extends clsDetalhe
 
     public function permissaoDesenturmar()
     {
+        // Inalcançável: nada chama este método.
+        // @codeCoverageIgnoreStart
         return $this->getPermissaoVisualizar(Process::UNENROLLMENT);
+        // @codeCoverageIgnoreEnd
     }
 
     public function Formular()

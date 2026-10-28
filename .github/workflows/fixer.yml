@@ -14,7 +14,9 @@ jobs:
       contents: write # for stefanzweifel/git-auto-commit-action to push code in repo
     name: Style code fixer
 
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
+
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v7
@@ -24,6 +26,8 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: "8.5"
+        env:
+          runner: self-hosted
 
       - name: Composer
         run: composer install

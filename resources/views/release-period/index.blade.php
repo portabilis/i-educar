@@ -8,10 +8,10 @@
             <table cellspacing="0" id="dates-table" class="tabela-adicao" role="presentation">
                 <tbody>
                 <tr align="center" style="font-weight:bold" id="tr_gestores_cab">
-                    <td class="formmdtd" align="center"><span class="form">Instituição</span></td>
-                    <td class="formmdtd" align="center"><span class="form">Escola</span></td>
-                    <td class="formmdtd" align="center"><span class="form">Ano</span></td>
-                    <td class="formmdtd" align="center"><span class="form">Etapa</span></td>
+                    <td class="formmdtd" align="center"><span class="form"><label for="instituicao_busca">Instituição</label></span></td>
+                    <td class="formmdtd" align="center"><span class="form"><label for="escola_busca">Escola</label></span></td>
+                    <td class="formmdtd" align="center"><span class="form"><label for="ano_busca">Ano</label></span></td>
+                    <td class="formmdtd" align="center"><span class="form"><label for="stage_busca">Etapa</label></span></td>
                     <td class="formmdtd">&nbsp;</td>
                 </tr>
                 <tr class="formmdtd dd">
@@ -65,7 +65,7 @@
 <table class="table-default">
 
     <tr class="table-header">
-        @if($canRemove)<th><input type="checkbox" id="check-delete-all"></th>@endif
+        @if($canRemove)<th><input type="checkbox" id="check-delete-all" aria-label="Selecionar todos os períodos"></th>@endif
         <th>Escolas</th>
         <th>Ano</th>
         <th>Etapa</th>
@@ -75,7 +75,7 @@
     <tbody>
     @forelse($data as $releasePeriod)
         <tr>
-            @if($canRemove)<td><input type="checkbox" name="check-delete" data-id="{{ $releasePeriod->id }}"></td>@endif
+            @if($canRemove)<td><input type="checkbox" name="check-delete" aria-label="Selecionar período" data-id="{{ $releasePeriod->id }}"></td>@endif
             <td>
                 <a href="{{ route('release-period.show', ['releasePeriod' => $releasePeriod->id]) }}">
                     {{ $releasePeriod->schools()->limit(3)->get()->pluck('name')->implode(', ')  }}@if($releasePeriod->schools->count() > 3)...@endif

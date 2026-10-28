@@ -35,7 +35,11 @@ return new class extends clsDetalhe
         $registro = LegacyDisciplinaryOccurrenceType::find($this->cod_tipo_ocorrencia_disciplinar)?->getAttributes();
 
         if (!$registro) {
-            $this->simpleRedirect('educar_tipo_ocorrencia_disciplinar_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_tipo_ocorrencia_disciplinar_lst.php',
+                registro: 'tipo de ocorrência disciplinar',
+                codigo: $this->cod_tipo_ocorrencia_disciplinar,
+            );
         }
 
         $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
@@ -46,17 +50,17 @@ return new class extends clsDetalhe
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe(['Instituição', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe(['Instituição', e($registro['ref_cod_instituicao'])]);
             }
         }
         if ($registro['nm_tipo']) {
-            $this->addDetalhe(['Tipo Ocorrência Disciplinar', "{$registro['nm_tipo']}"]);
+            $this->addDetalhe(['Tipo Ocorrência Disciplinar', e($registro['nm_tipo'])]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe(['Descrição', "{$registro['descricao']}"]);
+            $this->addDetalhe(['Descrição', e($registro['descricao'])]);
         }
         if ($registro['max_ocorrencias']) {
-            $this->addDetalhe(['Máximo Ocorrências', "{$registro['max_ocorrencias']}"]);
+            $this->addDetalhe(['Máximo Ocorrências', e($registro['max_ocorrencias'])]);
         }
 
         if ($obj_permissao->permissao_cadastra(580, $this->pessoa_logada, 3)) {

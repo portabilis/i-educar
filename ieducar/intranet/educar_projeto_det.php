@@ -26,17 +26,21 @@ return new class extends clsDetalhe
         $registro = LegacyProject::find(id: $this->cod_projeto)?->getAttributes();
 
         if (!$registro) {
-            $this->simpleRedirect(url: 'educar_projeto_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_projeto_lst.php',
+                registro: 'projeto',
+                codigo: $this->cod_projeto,
+            );
         }
 
         if ($registro['cod_projeto']) {
-            $this->addDetalhe(detalhe: ['Código projeto', "{$registro['cod_projeto']}"]);
+            $this->addDetalhe(detalhe: ['Código projeto', e($registro['cod_projeto'])]);
         }
         if ($registro['nome']) {
-            $this->addDetalhe(detalhe: ['Nome do projeto', "{$registro['nome']}"]);
+            $this->addDetalhe(detalhe: ['Nome do projeto', e($registro['nome'])]);
         }
         if ($registro['observacao']) {
-            $this->addDetalhe(detalhe: ['Observação', nl2br(string: "{$registro['observacao']}")]);
+            $this->addDetalhe(detalhe: ['Observação', nl2br(string: e($registro['observacao']))]);
         }
 
         // ** Verificacao de permissao para cadastro

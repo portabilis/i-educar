@@ -13,14 +13,18 @@ class LegacyOrganizationFactory extends Factory
     public function definition(): array
     {
         return [
+            // Quem está em cadastro.juridica é sempre pessoa jurídica, e as
+            // buscas das telas filtram por tipo = 'J'. O factory da pessoa sorteia
+            // o tipo entre F e J, então aqui ele é fixado.
             'idpes' => fn () => LegacyPersonFactory::new()->create([
                 'nome' => $this->faker->company(),
+                'tipo' => 'J',
             ]),
-            'cnpj' => $this->faker->numerify('##############'),
+            'cnpj' => $this->faker->cnpj(formatted: false),
             'insc_estadual' => $this->faker->numerify('########'),
-            'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),
+            'origem_gravacao' => 'M',
             'idpes_cad' => fn () => LegacyUserFactory::new()->current(),
-            'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
+            'operacao' => 'I',
             'fantasia' => fn (array $attributes) => LegacyPerson::query()->find($attributes['idpes'])->nome,
         ];
     }

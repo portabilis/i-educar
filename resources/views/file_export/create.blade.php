@@ -22,7 +22,7 @@
             </tr>
             <tr id="tr_nm_instituicao">
                 <td class="formlttd" valign="top">
-                    <span class="form">Instituição</span>
+                    <span class="form"><label for="ref_cod_instituicao">Instituição</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
@@ -31,7 +31,7 @@
             </tr>
             <tr id="tr_nm_escola">
                 <td class="formmdtd" valign="top">
-                    <span class="form">Escola</span>
+                    <span class="form"><label for="ref_cod_escola">Escola</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formmdtd" valign="top">
@@ -40,7 +40,7 @@
             </tr>
             <tr id="tr_nm_curso">
                 <td class="formlttd" valign="top">
-                    <span class="form">Curso</span>
+                    <span class="form"><label for="ref_cod_curso">Curso</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
@@ -49,7 +49,7 @@
             </tr>
             <tr id="tr_nm_serie">
                 <td class="formmdtd" valign="top">
-                    <span class="form">Série</span>
+                    <span class="form"><label for="ref_cod_serie">Série</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formmdtd" valign="top">
@@ -58,7 +58,7 @@
             </tr>
             <tr id="tr_nm_turma">
                 <td class="formlttd" valign="top">
-                    <span class="form">Turma</span>
+                    <span class="form"><label for="ref_cod_turma">Turma</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
@@ -66,9 +66,9 @@
                 </td>
             </tr>
 
-            <tr id="tr_nm_turma">
+            <tr id="tr_matricula">
                 <td class="formlttd" valign="top">
-                    <span class="form">Matrícula</span>
+                    <span class="form"><label for="matricula">Matrícula</label></span>
                 </td>
                 <td class="formlttd" valign="top">
                     @include('form.select-registration')

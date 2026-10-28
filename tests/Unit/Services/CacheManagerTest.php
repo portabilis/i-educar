@@ -1,43 +1,47 @@
 <?php
 
-namespace Tests\Unit\Services;
-
 use App\Services\CacheManager;
 use Illuminate\Support\Facades\Cache;
-use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use Tests\TestCase;
 
-class CacheManagerTest extends TestCase
-{
-    protected function setUp(): void
-    {
-        parent::setUp();
+uses(TestCase::class);
 
-        Cache::swap(new CacheManager(app()));
-        Cache::flush();
-    }
+beforeEach(function () {
+    Cache::swap(new CacheManager(app()));
+    Cache::flush();
+});
 
-    public function test_flushed_tags_should_returns_empty()
-    {
-        Cache::tags(['testTag'])->put('test-key', 'Test value', 10);
+test('flushed tags should returns empty', function () {
+    Cache::tags(['testTag'])->put('test-key', 'Test value', 10);
 
-        Cache::invalidateByTags(['testTag']);
+    Cache::invalidateByTags(['testTag']);
 
-        $this->assertFalse(Cache::has('test-key'));
-    }
+    $this->assertFalse(Cache::has('test-key'));
+});
 
-    #[DoesNotPerformAssertions]
-    public function test_driver_not_support_tags_does_not_throw_exception()
-    {
-        Cache::tags(['testTag'])->put('test-key', 'Test value', 10);
+test('driver not support tags does not throw exception', function () {
+    $this->expectNotToPerformAssertions();
 
-        Cache::invalidateByTags(['testTag']);
-    }
+    Cache::tags(['testTag'])->put('test-key', 'Test value', 10);
 
-    public function test_driver_supports_prefix_does_not_throw_exception()
-    {
-        $this->assertFalse(Cache::has('test-key'));
+    Cache::invalidateByTags(['testTag']);
+});
 
-        Cache::invalidateByTags(['testTag']);
-    }
-}
+test('driver supports prefix does not throw exception', function () {
+    $this->assertFalse(Cache::has('test-key'));
+
+    Cache::invalidateByTags(['testTag']);
+});
+
+test('store sem suporte a tags ignora as tags', function () {
+    config(['cache.default' => 'file']);
+    $manager = new CacheManager(app());
+
+    $this->assertSame($manager->store(), $manager->tags(['qualquer']));
+});
+
+test('redis usa o apelido do cliente como prefixo', function () {
+    config(['cache.default' => 'redis', 'app.nickname' => 'cliente-teste']);
+
+    $this->assertSame('cliente-teste', (new CacheManager(app()))->getPrefix());
+});

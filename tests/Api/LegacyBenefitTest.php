@@ -1,71 +1,64 @@
 <?php
 
-namespace Tests\Api;
-
 use Database\Factories\LegacyBenefitFactory;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class LegacyBenefitTest extends TestCase
-{
-    use DatabaseTransactions;
+uses(TestCase::class, DatabaseTransactions::class);
 
-    public function test_save_success(): void
-    {
-        $user = LegacyUserFactory::new()->admin()->create();
-        $this->actingAs($user);
+test('save success', function () {
+    $user = LegacyUserFactory::new()->admin()->create();
+    $this->actingAs($user);
 
-        $benefit = LegacyBenefitFactory::new()->make();
-        $request = [
-            'tipoacao' => 'Novo',
-        ];
+    $benefit = LegacyBenefitFactory::new()->make();
+    $request = [
+        'tipoacao' => 'Novo',
+    ];
 
-        $data = [
-            'nm_beneficio' => $benefit->name,
-            'desc_beneficio' => $benefit->description,
-        ];
+    $data = [
+        'nm_beneficio' => $benefit->name,
+        'desc_beneficio' => $benefit->description,
+    ];
 
-        $payload = array_merge($request, $data);
-        $this->post('/intranet/educar_aluno_beneficio_cad.php', $payload)
-            ->assertRedirectContains('educar_aluno_beneficio_lst.php');
+    $payload = array_merge($request, $data);
+    $this->post('/intranet/educar_aluno_beneficio_cad.php', $payload)
+        ->assertRedirectContains('educar_aluno_beneficio_lst.php');
 
-        $this->assertDatabaseHas($benefit->getTable(), [
-            'nm_beneficio' => $benefit->name,
-            'desc_beneficio' => $benefit->description,
-            'ref_usuario_cad' => $user->getKey(),
-            'ativo' => 1,
-        ]);
-    }
+    $this->assertDatabaseHas($benefit->getTable(), [
+        'nm_beneficio' => $benefit->name,
+        'desc_beneficio' => $benefit->description,
+        'ref_usuario_cad' => $user->getKey(),
+        'ativo' => 1,
+    ]);
+});
 
-    public function test_edit_success(): void
-    {
-        $user = LegacyUserFactory::new()->admin()->create();
-        $this->actingAs($user);
+test('edit success', function () {
+    $user = LegacyUserFactory::new()->admin()->create();
+    $this->actingAs($user);
 
-        $benefitOrignal = LegacyBenefitFactory::new()->create();
-        $editBenefit = LegacyBenefitFactory::new()->make();
+    $benefitOrignal = LegacyBenefitFactory::new()->create();
+    $editBenefit = LegacyBenefitFactory::new()->make();
 
-        $request = [
-            'tipoacao' => 'Editar',
-        ];
+    $request = [
+        'tipoacao' => 'Editar',
+    ];
 
-        $data = [
-            'cod_aluno_beneficio' => $benefitOrignal->getKey(),
-            'nm_beneficio' => $editBenefit->name,
-            'desc_beneficio' => $editBenefit->description,
-        ];
+    $data = [
+        'cod_aluno_beneficio' => $benefitOrignal->getKey(),
+        'nm_beneficio' => $editBenefit->name,
+        'desc_beneficio' => $editBenefit->description,
+    ];
 
-        $payload = array_merge($request, $data);
-        $this->post('/intranet/educar_aluno_beneficio_cad.php', $payload)
-            ->assertRedirectContains('educar_aluno_beneficio_lst.php');
+    $payload = array_merge($request, $data);
+    $this->post('/intranet/educar_aluno_beneficio_cad.php', $payload)
+        ->assertRedirectContains('educar_aluno_beneficio_lst.php');
 
-        $this->assertDatabaseHas($editBenefit, [
-            'cod_aluno_beneficio' => $benefitOrignal->getKey(),
-            'nm_beneficio' => $editBenefit->name,
-            'desc_beneficio' => $editBenefit->description,
-            'ref_usuario_cad' => $user->getKey(),
-            'ativo' => 1,
-        ]);
-    }
-}
+    $this->assertDatabaseHas($editBenefit, [
+        'cod_aluno_beneficio' => $benefitOrignal->getKey(),
+        'nm_beneficio' => $editBenefit->name,
+        'desc_beneficio' => $editBenefit->description,
+        'ref_usuario_cad' => $user->getKey(),
+        'ativo' => 1,
+    ]);
+});

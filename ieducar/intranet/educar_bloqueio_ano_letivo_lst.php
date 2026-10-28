@@ -28,7 +28,17 @@ return new class extends clsListagem
             $this->$var = ($val === '') ? null : $val;
         }
 
+        // Sem ano na URL o campo já mostrava o ano atual, mas a consulta vinha
+        // sem filtro. O padrão é o ano atual de verdade; "Limpar" traz todos.
+        if (!array_key_exists('ano', $_GET)) {
+            $this->ano = date('Y');
+            $this->filtrosPadrao[] = 'ano';
+        }
+
         $this->ref_ano = $this->ano;
+
+        // Ano é filtro, não busca: fica só na gaveta, sem cópia no toolbar
+        $this->buscaRapida = false;
 
         $this->addCabecalhos(coluna: [
             'Instituição',

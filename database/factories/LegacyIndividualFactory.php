@@ -14,19 +14,19 @@ class LegacyIndividualFactory extends Factory
 
     public function definition(): array
     {
-        $male = $this->faker->boolean();
-        $name = $male ? $this->faker->firstNameMale() : $this->faker->firstNameFemale();
-        $gender = $male ? 'M' : 'F';
-
         return [
+            // Pelo mesmo motivo da jurídica: quem está em cadastro.fisica é
+            // sempre pessoa física, e as buscas das telas filtram por tipo = 'F'.
             'idpes' => fn () => LegacyPersonFactory::new()->create([
-                'nome' => $name,
+                'nome' => $this->faker->firstNameFemale(),
+                'tipo' => 'F',
             ]),
-            'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
-            'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),
+            'operacao' => 'I',
+            'origem_gravacao' => 'M',
             'zona_localizacao_censo' => App_Model_ZonaLocalizacao::URBANA,
-            'data_nasc' => $this->faker->dateTimeBetween(),
-            'sexo' => $gender,
+            // Adulta, para não cair em nenhuma regra de idade sem o teste pedir
+            'data_nasc' => now()->subYears(30),
+            'sexo' => 'F',
             'ideciv' => fn () => LegacyMaritalStatusFactory::new()->current(),
             'pais_residencia' => PaisResidencia::BRASIL,
             'idmun_nascimento' => City::query()->inRandomOrder()->first(),
