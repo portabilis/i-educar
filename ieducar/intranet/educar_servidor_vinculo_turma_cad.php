@@ -499,13 +499,13 @@ return new class extends clsCadastro
     private function validaAlteracaoAnoLetivo(bool $verificarVinculo = false): void
     {
         if ($verificarVinculo) {
-            $vinculo = LegacySchoolClassTeacher::findOrFail($this->id);
-            abort_if($vinculo->schoolClass->isAcademicYearFinalized(), 403, self::ANO_ENCERRADO_MENSAGEM);
+            $vinculo = LegacySchoolClassTeacher::find($this->id);
+            abort_if($vinculo?->schoolClass?->isAcademicYearFinalized() ?? false, 403, self::ANO_ENCERRADO_MENSAGEM);
         }
 
         if ($this->ref_cod_turma) {
-            $turma = LegacySchoolClass::findOrFail($this->ref_cod_turma);
-            abort_if($turma->isAcademicYearFinalized(), 403, self::ANO_ENCERRADO_MENSAGEM);
+            $turma = LegacySchoolClass::find($this->ref_cod_turma);
+            abort_if($turma?->isAcademicYearFinalized() ?? false, 403, self::ANO_ENCERRADO_MENSAGEM);
         }
     }
 
