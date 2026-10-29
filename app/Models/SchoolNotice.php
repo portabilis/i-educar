@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SchoolNotice extends Model
 {
+    use HasFactory;
     use SoftDeletes;
 
     public const PROCESS = 1027;
@@ -22,7 +25,6 @@ class SchoolNotice extends Model
     protected $fillable = [
         'institution_id',
         'user_id',
-        'school_id',
         'title',
         'description',
         'date',
@@ -55,10 +57,15 @@ class SchoolNotice extends Model
     }
 
     /**
-     * @return BelongsTo<LegacySchool, $this>
+     * @return BelongsToMany<LegacySchool, $this>
      */
-    public function school(): BelongsTo
+    public function schools(): BelongsToMany
     {
-        return $this->belongsTo(LegacySchool::class, 'school_id');
+        return $this->belongsToMany(
+            LegacySchool::class,
+            'school_notice_schools',
+            'school_notice_id',
+            'school_id'
+        );
     }
 }

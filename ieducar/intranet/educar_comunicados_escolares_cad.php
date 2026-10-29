@@ -24,6 +24,8 @@ return new class extends clsCadastro
 
     public string $date = '';
 
+    public array $escolas = [];
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -37,9 +39,12 @@ return new class extends clsCadastro
         if (is_numeric($this->id) && $this->id > 0) {
             $registro = SchoolNotice::findOrFail($this->id);
             if ($registro) {
+                if (!$this->usuarioPodeGerenciarAviso($registro)) {
+                    $this->simpleRedirect("educar_comunicados_escolares_det.php?id={$registro->getKey()}");
+                }
 
                 $this->ref_cod_instituicao = $registro->institution_id;
-                $this->ref_cod_escola = $registro->school_id;
+                $this->escolas = $registro->schools()->pluck('cod_escola')->all();
                 $this->titulo = $registro->title;
                 $this->descricao = $registro->description;
                 $this->local = $registro->local;
@@ -68,7 +73,8 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'id', valor: $this->id);
 
         $this->inputsHelper()->dynamic(helperNames: 'instituicao', inputOptions: ['value' => $this->ref_cod_instituicao]);
-        $this->inputsHelper()->dynamic(helperNames: 'escola', inputOptions: ['value' => $this->ref_cod_escola]);
+        $this->campoLista(nome: 'escolas', campo: 'Escola(s)', valor: ['all' => 'Todas as escolas'] + $this->escolasDisponiveis(), multiple: 10);
+        $this->campoOculto(nome: 'escolas_selecionadas', valor: implode(',', $this->escolas));
 
         // text
         $this->campoTexto(nome: 'titulo', campo: 'Título', valor: $this->titulo, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
@@ -77,17 +83,76 @@ return new class extends clsCadastro
         $this->inputsHelper()->date(attrName: 'data', inputOptions: ['label' => 'Data', 'placeholder' => 'dd/mm/yyyy', 'value' => $this->date]);
         $this->campoHora(nome: 'hora', campo: 'Hora', valor: $this->hora, obrigatorio: true);
 
+        Portabilis_View_Helper_Application::loadChosenLib(viewInstance: $this);
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
             '/vendor/legacy/Cadastro/Assets/Javascripts/ComunicadosEscolares.js',
         ]);
     }
 
+    private function usuarioPodeGerenciarAviso(SchoolNotice $notice): bool
+    {
+        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
+            $escolasDoAviso = $notice->schools()->pluck('cod_escola')->all();
+            $escolasPermitidas = array_map('intval', array_keys($this->escolasDisponiveis()));
+
+            return array_diff($escolasDoAviso, $escolasPermitidas) === [];
+        }
+
+        return true;
+    }
+
+    private function escolasDisponiveis(): array
+    {
+        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
+            $escolas = [];
+            foreach (App_Model_IedFinder::getEscolasUser(cod_usuario: $this->pessoa_logada) as $escola) {
+                $escolas[$escola['ref_cod_escola']] = $escola['nome'];
+            }
+
+            return $escolas;
+        }
+
+        $instituicao = request()->integer('ref_cod_instituicao') ?: ($this->ref_cod_instituicao ?: (new clsPermissoes)->getInstituicao(int_idpes_usuario: $this->pessoa_logada));
+
+        return App_Model_IedFinder::getEscolas(instituicaoId: $instituicao);
+    }
+
+    private function obterEscolasValidadas(): ?array
+    {
+        $escolas = request()->input('escolas', []);
+        if (!is_array($escolas)) {
+            $escolas = [$escolas];
+        }
+
+        $selecionadas = array_values(array_filter(array_map('intval', $escolas)));
+
+        if (empty($selecionadas)) {
+            $this->mensagem = 'Selecione ao menos uma escola.<br>';
+
+            return null;
+        }
+
+        $permitidas = array_map('intval', array_keys($this->escolasDisponiveis()));
+
+        if (array_diff($selecionadas, $permitidas) !== []) {
+            $this->mensagem = 'Você não tem permissão para publicar comunicados para uma ou mais escolas selecionadas.<br>';
+
+            return null;
+        }
+
+        return $selecionadas;
+    }
+
     public function Novo()
     {
+        $escolas = $this->obterEscolasValidadas();
+        if ($escolas === null) {
+            return false;
+        }
+
         $notice = SchoolNotice::create([
             'institution_id' => request()->integer('ref_cod_instituicao'),
             'user_id' => $this->pessoa_logada,
-            'school_id' => request()->integer('ref_cod_escola'),
             'title' => request()->string('titulo'),
             'description' => request()->string('descricao'),
             'date' => Carbon::createFromFormat('d/m/Y', request()->string('data')),
@@ -96,6 +161,7 @@ return new class extends clsCadastro
         ]);
 
         if ($notice) {
+            $notice->schools()->sync($escolas);
             $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_comunicados_escolares_lst.php');
         }
@@ -110,36 +176,46 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $notice = SchoolNotice::query()
-            ->whereKey($this->id)
-            ->update([
-                'institution_id' => request()->integer('ref_cod_instituicao'),
-                'school_id' => request()->integer('ref_cod_escola'),
-                'title' => request()->string('titulo'),
-                'description' => request()->string('descricao'),
-                'date' => Carbon::createFromFormat('d/m/Y', request()->string('data')),
-                'hour' => request()->string('hora'),
-                'local' => request()->string('local'),
-            ]);
+        $notice = SchoolNotice::find($this->id);
 
-        if ($notice) {
-            $this->mensagem = 'Edição efetuada com sucesso.<br>';
-            $this->simpleRedirect('educar_comunicados_escolares_lst.php');
+        if (!$notice || !$this->usuarioPodeGerenciarAviso($notice)) {
+            $this->mensagem = 'Você não tem permissão para editar este comunicado.<br>';
+
+            return false;
         }
 
-        // Débito de cobertura: trecho ainda sem teste.
-        // @codeCoverageIgnoreStart
-        $this->mensagem = 'Edição não realizada.<br>';
+        $escolas = $this->obterEscolasValidadas();
+        if ($escolas === null) {
+            return false;
+        }
 
-        return false;
-        // @codeCoverageIgnoreEnd
+        $notice->fill([
+            'institution_id' => request()->integer('ref_cod_instituicao'),
+            'title' => request()->string('titulo'),
+            'description' => request()->string('descricao'),
+            'date' => Carbon::createFromFormat('d/m/Y', request()->string('data')),
+            'hour' => request()->string('hora'),
+            'local' => request()->string('local'),
+        ]);
+
+        $notice->save();
+        $notice->schools()->sync($escolas);
+
+        $this->mensagem = 'Edição efetuada com sucesso.<br>';
+        $this->simpleRedirect('educar_comunicados_escolares_lst.php');
     }
 
     public function Excluir()
     {
-        $return = SchoolNotice::query()
-            ->whereKey($this->id)
-            ->delete();
+        $notice = SchoolNotice::find($this->id);
+
+        if (!$notice || !$this->usuarioPodeGerenciarAviso($notice)) {
+            $this->mensagem = 'Você não tem permissão para excluir este comunicado.<br>';
+
+            return false;
+        }
+
+        $return = $notice->delete();
 
         if ($return) {
             $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
