@@ -152,6 +152,35 @@ return new class extends clsCadastro
             ->toArray();
     }
 
+    
+    // REFACTOR: centraliza a validacao de horas e minutos
+    private function validarTempoNaoNegativo(): bool
+    {
+        if ($this->tipo != 1) {
+            return true;
+        }
+
+        $validator = Validator::make(
+            [
+                'qtd_horas' => $this->qtd_horas,
+                'qtd_min' => $this->qtd_min,
+            ],
+            [
+                'qtd_horas' => [new NonNegativeTimeRule()],
+                'qtd_min' => [new NonNegativeTimeRule()],
+            ]
+        );
+
+        if ($validator->fails()) {
+            $this->mensagem = implode('<br>', $validator->errors()->all()) . '<br>';
+
+            return false;
+        }
+
+        return true;
+    }
+
+
     public function Novo()
     {
         $obj_permissoes = new clsPermissoes;
@@ -185,24 +214,9 @@ return new class extends clsCadastro
         }
 
         
-        // Impede o cadastro com horas ou minutos negativos
-        if ($this->tipo == 1) {
-            $validator = Validator::make(
-                [
-                    'qtd_horas' => $this->qtd_horas,
-                    'qtd_min' => $this->qtd_min,
-                ],
-                [
-                    'qtd_horas' => [new NonNegativeTimeRule()],
-                    'qtd_min' => [new NonNegativeTimeRule()],
-                ]
-            );
-
-            if ($validator->fails()) {
-                $this->mensagem = implode('<br>', $validator->errors()->all()) . '<br>';
-
-                return false;
-            }
+        // REFACTOR: utiliza a validação compartilhada
+        if (!$this->validarTempoNaoNegativo()) {
+            return false;
         }
 
 
@@ -295,25 +309,10 @@ return new class extends clsCadastro
             return false;
         }
 
-        // Impede a edição com horas ou minutos negativos
-        if ($this->tipo == 1) {
-            $validator = Validator::make(
-                [
-                    'qtd_horas' => $this->qtd_horas,
-                    'qtd_min' => $this->qtd_min,
-                ],
-                [
-                    'qtd_horas' => [new NonNegativeTimeRule()],
-                    'qtd_min' => [new NonNegativeTimeRule()],
-                ]
-         );
-
-            if ($validator->fails()) {
-             $this->mensagem = implode('<br>', $validator->errors()->all()) . '<br>';
-
-        return false;
-    }
-}
+       // REFACTOR: utiliza a validação compartilhada
+        if (!$this->validarTempoNaoNegativo()) {
+            return false;
+        }
 
         $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
         if ($this->tipo == 1) {
