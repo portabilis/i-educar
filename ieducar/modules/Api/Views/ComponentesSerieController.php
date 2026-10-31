@@ -63,6 +63,10 @@ class ComponentesSerieController extends ApiCoreController
             }
         });
 
+        if ($this->getRequest()->series === null) {
+            return ['update' => $retorno[0]['update'], 'insert' => $retorno[0]['insert']];
+        }
+
         return ['series' => $retorno];
     }
 
