@@ -17,6 +17,15 @@ if(modoEdicao){
     getSeries();
 }
 
+if (comboSerie.prop('multiple')) {
+    comboSerie.empty();
+    initChosenSerie();
+    if (modoCadastro && $j('#ref_cod_curso').val()) {
+        curso_id = $j('#ref_cod_curso').val();
+        getSeriesSemComponentesViculados();
+    }
+}
+
 $j("#ref_cod_instituicao").change(function() {
     instituicao_id = $j('#ref_cod_instituicao').val();
     if (instituicao_id != '') {
@@ -34,7 +43,11 @@ $j("#ref_cod_curso").change(function() {
         getSeriesSemComponentesViculados();
     }else{
         comboSerie.empty();
-        comboSerie.append('<option value="">Selecione uma série</option>');
+        if (comboSerie.prop('multiple')) {
+            comboSerie.trigger('chosen:updated');
+        } else {
+            comboSerie.append('<option value="">Selecione uma série</option>');
+        }
     }
 });
 
@@ -304,22 +317,56 @@ function getSeriesSemComponentesViculados(){
     getResources(options);
 }
 
+function initChosenSerie() {
+    if (comboSerie.prop('multiple') && !comboSerie.data('chosen')) {
+        comboSerie.chosen({
+            no_results_text: 'Sem resultados para ',
+            placeholder_text_multiple: 'Selecione as séries',
+            search_contains: true,
+            width: '231px',
+        });
+
+        comboSerie.change(function () {
+            if ((comboSerie.val() || []).indexOf('all') === -1) {
+                return;
+            }
+            comboSerie.find('option').each(function () {
+                this.selected = this.value !== 'all';
+            });
+            comboSerie.trigger('chosen:updated');
+        });
+    }
+}
+
 function handleGetSeries(response){
     var series   = response.series;
     var selected = '';
     comboSerie.empty();
-    if(series === undefined || series.length == 0){
-        comboSerie.append('<option value="">Sem opções</option>');
-    }else{
-        comboSerie.append('<option value="">Selecione uma série</option>');
-    }
-    for (var i = 0; i <= series.length - 1; i++) {
-        if (series[i].id == serie_id) {
-            selected = 'selected';
-        }else{
-            selected = ''
+
+    if (comboSerie.prop('multiple')) {
+        if (series && series.length > 0) {
+            comboSerie.append('<option value="all">Todas as séries</option>');
+            for (var i = 0; i <= series.length - 1; i++) {
+                comboSerie.append('<option value="' + series[i].id + '">' + series[i].nome + '</option>');
+            }
         }
-        comboSerie.append('<option value="' + series[i].id + '"' + selected + '>' + series[i].nome + '</option>');
+
+        initChosenSerie();
+        comboSerie.trigger('chosen:updated');
+    } else {
+        if(series === undefined || series.length == 0){
+            comboSerie.append('<option value="">Sem opções</option>');
+        }else{
+            comboSerie.append('<option value="">Selecione uma série</option>');
+        }
+        for (var i = 0; i <= series.length - 1; i++) {
+            if (series[i].id == serie_id) {
+                selected = 'selected';
+            }else{
+                selected = ''
+            }
+            comboSerie.append('<option value="' + series[i].id + '"' + selected + '>' + series[i].nome + '</option>');
+        }
     }
 
     updateAreaConhecimento();

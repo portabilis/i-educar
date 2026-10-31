@@ -16,7 +16,14 @@ class ComponentesSerieController extends ApiCoreController
 {
     public function atualizaComponentesDaSerie()
     {
-        $serieId = $this->getRequest()->serie_id;
+        $series = $this->getRequest()->series;
+        $series = $series ? json_decode($series) : [$this->getRequest()->serie_id];
+        $series = array_values(array_unique(array_filter(array_map('intval', (array) $series))));
+
+        if (!$series) {
+            return ['msgErro' => 'Nenhuma série válida foi informada.'];
+        }
+
         $componentes = json_decode($this->getRequest()->componentes);
         $arrayComponentes = [];
 
@@ -28,24 +35,39 @@ class ComponentesSerieController extends ApiCoreController
             $arrayComponentes[$key]['anos_letivos'] = $componente->anos_letivos;
         }
 
-        $updateInfo = $this->buildUpdateInfo($serieId, $arrayComponentes);
+        $atualizacoes = [];
 
-        try {
-            $valido = $this->validaAtualizacao($serieId, $updateInfo);
-        } catch (Exception $e) {
-            return ['msgErro' => $e->getMessage()];
+        foreach ($series as $serieId) {
+            $updateInfo = $this->buildUpdateInfo($serieId, $arrayComponentes);
+
+            try {
+                $this->validaAtualizacao($serieId, $updateInfo);
+            } catch (Exception $e) {
+                return ['msgErro' => $e->getMessage()];
+            }
+
+            $atualizacoes[$serieId] = $updateInfo;
         }
 
-        if ($valido) {
-            $this->executaAtualizacaoComponentes($serieId, $updateInfo);
+        $retorno = [];
 
-            return [
-                'update' => $updateInfo['update'],
-                'insert' => $updateInfo['insert'],
-            ];
+        DB::transaction(function () use ($atualizacoes, &$retorno) {
+            foreach ($atualizacoes as $serieId => $updateInfo) {
+                $this->executaAtualizacaoComponentes($serieId, $updateInfo);
+
+                $retorno[] = [
+                    'id' => $serieId,
+                    'update' => $updateInfo['update'],
+                    'insert' => $updateInfo['insert'],
+                ];
+            }
+        });
+
+        if ($this->getRequest()->series === null) {
+            return ['update' => $retorno[0]['update'], 'insert' => $retorno[0]['insert']];
         }
 
-        return ['msgErro' => 'Erro ao alterar componentes da série.'];
+        return ['series' => $retorno];
     }
 
     protected function validaAtualizacao($serieId, $updateInfo)
