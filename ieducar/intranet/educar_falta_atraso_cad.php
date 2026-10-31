@@ -6,6 +6,8 @@ use App\Services\EmployeeService;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 use Illuminate\Support\Facades\DB;
+use App\Rules\NonNegativeTimeRule;
+use Illuminate\Support\Facades\Validator;
 
 return new class extends clsCadastro
 {
@@ -182,6 +184,28 @@ return new class extends clsCadastro
             return false;
         }
 
+        
+        // Impede o cadastro com horas ou minutos negativos
+        if ($this->tipo == 1) {
+            $validator = Validator::make(
+                [
+                    'qtd_horas' => $this->qtd_horas,
+                    'qtd_min' => $this->qtd_min,
+                ],
+                [
+                    'qtd_horas' => [new NonNegativeTimeRule()],
+                    'qtd_min' => [new NonNegativeTimeRule()],
+                ]
+            );
+
+            if ($validator->fails()) {
+                $this->mensagem = implode('<br>', $validator->errors()->all()) . '<br>';
+
+                return false;
+            }
+        }
+
+
         if ($this->tipo == 1) {
             $obj = new LegacyAbsenceDelay;
             $obj->ref_cod_escola = $this->ref_cod_escola;
@@ -270,6 +294,26 @@ return new class extends clsCadastro
 
             return false;
         }
+
+        // Impede a edição com horas ou minutos negativos
+        if ($this->tipo == 1) {
+            $validator = Validator::make(
+                [
+                    'qtd_horas' => $this->qtd_horas,
+                    'qtd_min' => $this->qtd_min,
+                ],
+                [
+                    'qtd_horas' => [new NonNegativeTimeRule()],
+                    'qtd_min' => [new NonNegativeTimeRule()],
+                ]
+         );
+
+            if ($validator->fails()) {
+             $this->mensagem = implode('<br>', $validator->errors()->all()) . '<br>';
+
+        return false;
+    }
+}
 
         $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
         if ($this->tipo == 1) {
