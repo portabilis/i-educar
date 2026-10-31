@@ -51,15 +51,17 @@ class ComponentesSerieController extends ApiCoreController
 
         $retorno = [];
 
-        foreach ($atualizacoes as $serieId => $updateInfo) {
-            $this->executaAtualizacaoComponentes($serieId, $updateInfo);
+        DB::transaction(function () use ($atualizacoes, &$retorno) {
+            foreach ($atualizacoes as $serieId => $updateInfo) {
+                $this->executaAtualizacaoComponentes($serieId, $updateInfo);
 
-            $retorno[] = [
-                'id' => $serieId,
-                'update' => $updateInfo['update'],
-                'insert' => $updateInfo['insert'],
-            ];
-        }
+                $retorno[] = [
+                    'id' => $serieId,
+                    'update' => $updateInfo['update'],
+                    'insert' => $updateInfo['insert'],
+                ];
+            }
+        });
 
         return ['series' => $retorno];
     }
