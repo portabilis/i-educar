@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\LegacyRole;
+use App\Rules\FunctionAbbreviationRule;
+use Illuminate\Support\Facades\Validator;
 
 return new class extends clsCadastro
 {
@@ -91,6 +93,23 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 634, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_funcao_lst.php');
 
+        // Valida os campos antes de salvar
+        $validator = Validator::make(
+            [   'nm_funcao' => $this->nm_funcao,
+                'abreviatura' => $this->abreviatura,
+            ],
+            [
+                'nm_funcao' => ['required', 'string', 'max:255'],
+                'abreviatura' => ['required', 'string', 'max:30', new FunctionAbbreviationRule()],
+            ]
+        );
+
+        // Impede o cadastro caso a validacao falhe  
+        if ($validator->fails()) {
+            $this->mensagem =implode('<br>', $validator->errors()->all()) .'<br>';
+
+            return false;
+        }
         if ($this->professor == 'N') {
             $this->professor = '0';
         } elseif ($this->professor == 'S') {
@@ -116,14 +135,31 @@ return new class extends clsCadastro
 
     public function Editar()
     {
+        $obj_permissoes = new clsPermissoes;
+        $obj_permissoes->permissao_cadastra(int_processo_ap: 634, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_funcao_lst.php');
+
+        // Aplica a mesma validacao na edicao  
+        $validator = Validator::make(
+            [   'nm_funcao' => $this->nm_funcao,
+                'abreviatura' => $this->abreviatura,
+            ],
+            [
+                'nm_funcao' => ['required', 'string', 'max:255'],
+                'abreviatura' => ['required', 'string', 'max:30', new FunctionAbbreviationRule()],
+            ]
+        );
+         // Impede o cadastro caso a validacao falhe  
+        if ($validator->fails()) {
+            $this->mensagem =implode('<br>', $validator->errors()->all()) .'<br>';
+
+            return false;
+        }
+
         if ($this->professor == 'N') {
             $this->professor = '0';
         } elseif ($this->professor == 'S') {
             $this->professor = '1';
         }
-
-        $obj_permissoes = new clsPermissoes;
-        $obj_permissoes->permissao_cadastra(int_processo_ap: 634, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_funcao_lst.php');
 
         $obj = LegacyRole::find($this->cod_funcao);
         $obj->nm_funcao = $this->nm_funcao;
@@ -164,4 +200,6 @@ return new class extends clsCadastro
         $this->title = 'Servidores -  Funções do servidor';
         $this->processoAp = '634';
     }
+    
+
 };
