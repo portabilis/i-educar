@@ -17,7 +17,9 @@ class FunctionAbbreviationRule implements DataAwareRule, ValidationRule
     }
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-
-        
+        $nomeFuncao = $this->data['nm_funcao'] ?? '';
+        if (mb_strlen((string) $value) > mb_strlen((string) $nomeFuncao)) {
+            $fail('A abreviatura não pode ser maior que o nome da função.');
+        }
     }
 }
