@@ -18,6 +18,12 @@ class ComponentesSerieController extends ApiCoreController
     {
         $series = $this->getRequest()->series;
         $series = $series ? json_decode($series) : [$this->getRequest()->serie_id];
+        $series = array_values(array_unique(array_filter(array_map('intval', (array) $series))));
+
+        if (!$series) {
+            return ['msgErro' => 'Nenhuma série válida foi informada.'];
+        }
+
         $componentes = json_decode($this->getRequest()->componentes);
         $arrayComponentes = [];
 
