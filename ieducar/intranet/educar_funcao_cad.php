@@ -93,23 +93,11 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 634, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_funcao_lst.php');
 
-        // Valida os campos antes de salvar
-        $validator = Validator::make(
-            [   'nm_funcao' => $this->nm_funcao,
-                'abreviatura' => $this->abreviatura,
-            ],
-            [
-                'nm_funcao' => ['required', 'string', 'max:255'],
-                'abreviatura' => ['required', 'string', 'max:30', new FunctionAbbreviationRule()],
-            ]
-        );
-
-        // Impede o cadastro caso a validacao falhe  
-        if ($validator->fails()) {
-            $this->mensagem =implode('<br>', $validator->errors()->all()) .'<br>';
-
+        // REFACTOR: utiliza o metodo de validacao compartilhado
+        if (!$this->validarDados()) {
             return false;
         }
+
         if ($this->professor == 'N') {
             $this->professor = '0';
         } elseif ($this->professor == 'S') {
@@ -138,20 +126,8 @@ return new class extends clsCadastro
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(int_processo_ap: 634, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_funcao_lst.php');
 
-        // Aplica a mesma validacao na edicao  
-        $validator = Validator::make(
-            [   'nm_funcao' => $this->nm_funcao,
-                'abreviatura' => $this->abreviatura,
-            ],
-            [
-                'nm_funcao' => ['required', 'string', 'max:255'],
-                'abreviatura' => ['required', 'string', 'max:30', new FunctionAbbreviationRule()],
-            ]
-        );
-         // Impede o cadastro caso a validacao falhe  
-        if ($validator->fails()) {
-            $this->mensagem =implode('<br>', $validator->errors()->all()) .'<br>';
-
+        // REFACTOR: utiliza a validacao compartilhada
+        if (!$this->validarDados()) {
             return false;
         }
 
@@ -200,6 +176,26 @@ return new class extends clsCadastro
         $this->title = 'Servidores -  Funções do servidor';
         $this->processoAp = '634';
     }
-    
 
+    private function validarDados(): bool
+    {
+        $validator = Validator::make(
+            [
+                'nm_funcao' => $this->nm_funcao,
+                'abreviatura' => $this->abreviatura,
+            ],
+            [
+                'nm_funcao' => ['required', 'string', 'max:255'],
+                'abreviatura' => ['required', 'string', 'max:30', new FunctionAbbreviationRule()],
+            ]
+        );
+
+        if ($validator->fails()) {
+            $this->mensagem = implode('<br>', $validator->errors()->all()) . '<br>';
+
+            return false;
+        }
+
+        return true;
+    }
 };
