@@ -9,6 +9,7 @@ use App\Models\LegacySchoolGrade;
 use App\Models\LegacySchoolGradeDiscipline;
 use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
+use App\Services\SchoolGradeDisciplineService;
 use Illuminate\Support\Facades\DB;
 
 class ComponentesSerieController extends ApiCoreController
@@ -155,29 +156,22 @@ class ComponentesSerieController extends ApiCoreController
             return [];
         }
 
+        $componenteService = new SchoolGradeDisciplineService;
+
+        $anosLetivosGravados = $componenteService->getAcademicYearsByGrade(gradeId: $serieId, schoolIds: $escolas);
+
         foreach ($escolas as $escola) {
             foreach ($componentes as $componente) {
-                $objEscolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina(
-                    $serieId,
-                    $escola,
-                    $componente['id'],
-                    null,
-                    null,
-                    null,
-                    null,
-                    $componente['anos_letivos']
+                $gravados = $anosLetivosGravados->get($escola . '-' . $componente['id']);
+
+                $componenteService->store(
+                    gradeId: $serieId,
+                    schoolId: $escola,
+                    disciplineId: $componente['id'],
+                    academicYears: $gravados === null
+                        ? $componente['anos_letivos']
+                        : array_merge($componente['anos_letivos'], $gravados)
                 );
-
-                $escolaSerieDisciplina = $objEscolaSerieDisciplina->detalhe();
-
-                if ($escolaSerieDisciplina === false) {
-                    $objEscolaSerieDisciplina->cadastra();
-
-                    continue;
-                }
-
-                $objEscolaSerieDisciplina->anos_letivos = array_merge($componente['anos_letivos'], json_decode($escolaSerieDisciplina['anos_letivos'], true));
-                $objEscolaSerieDisciplina->edita();
             }
         }
     }
@@ -210,13 +204,11 @@ class ComponentesSerieController extends ApiCoreController
 
     public function excluiEscolaSerieDisciplina($escolaId, $serieId, $disciplinaId)
     {
-        $objEscolaSerieDisiciplina = new clsPmieducarEscolaSerieDisciplina($serieId, $escolaId, $disciplinaId);
-
-        if ($objEscolaSerieDisiciplina->excluir()) {
-            return true;
-        }
-
-        return false;
+        return (new SchoolGradeDisciplineService)->delete(
+            gradeId: $serieId,
+            schoolId: $escolaId,
+            disciplineId: $disciplinaId
+        );
     }
 
     public function excluiComponenteDaTurma($componenteId, $turmaId)
@@ -267,12 +259,9 @@ class ComponentesSerieController extends ApiCoreController
 
     public function excluiTodasDisciplinasEscolaSerie($serieId)
     {
-        $escolas = $this->getEscolasSerieBySerie($serieId);
+        $escolas = $this->getEscolasSerieBySerie($serieId)->pluck('ref_cod_escola');
 
-        foreach ($escolas as $escola) {
-            $objEscolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina($serieId, $escola['ref_cod_escola']);
-            $objEscolaSerieDisciplina->excluirTodos();
-        }
+        (new SchoolGradeDisciplineService)->deleteAll(gradeId: $serieId, schoolIds: $escolas);
     }
 
     public function excluiTodosComponenteDaTurma($serieId)
@@ -300,9 +289,14 @@ class ComponentesSerieController extends ApiCoreController
         $escola = $this->getRequest()->escola_id;
         $disciplinas = $this->getRequest()->disciplinas;
         $disciplinas = explode(',', $disciplinas);
-        $obj = new clsPmieducarEscolaSerieDisciplina($serie, $escola, null, 1);
 
-        return ['existe_dependencia' => $obj->existeDependencia($disciplinas)];
+        $existeDependencia = (new SchoolGradeDisciplineService)->hasDependency(
+            gradeId: $serie,
+            schoolId: $escola,
+            disciplines: $disciplinas
+        );
+
+        return ['existe_dependencia' => $existeDependencia];
     }
 
     public function existeDispensa()

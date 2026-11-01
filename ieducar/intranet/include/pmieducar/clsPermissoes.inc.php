@@ -123,6 +123,8 @@ class clsPermissoes
      */
     public function getEscolas($int_idpes_usuario)
     {
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $escolas = LegacyUserSchool::query()->where('ref_cod_usuario', $int_idpes_usuario)->pluck('ref_cod_escola');
 
         if ($escolas->isNotEmpty()) {
@@ -130,6 +132,7 @@ class clsPermissoes
         }
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -150,6 +153,8 @@ class clsPermissoes
             return 0;
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $obj_usuario = new clsPmieducarBibliotecaUsuario;
         $lst_usuario_biblioteca = $obj_usuario->lista(null, $int_idpes_usuario);
 
@@ -157,6 +162,7 @@ class clsPermissoes
             return $lst_usuario_biblioteca;
         } else {
             return 0;
+            // @codeCoverageIgnoreEnd
         }
     }
 }

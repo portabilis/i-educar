@@ -20,7 +20,7 @@ class EmployeeFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => fn () => LegacyPersonFactory::new()->create(),
+            'id' => fn () => LegacyIndividualFactory::new()->create(),
             'institution_id' => fn () => LegacyInstitutionFactory::new()->current(),
             'workload' => 40,
             'ref_idesco' => fn () => LegacySchoolingDegreeFactory::new()->unique()->make(),

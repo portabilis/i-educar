@@ -1,24 +1,17 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolAcademicYear;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacySchoolAcademicYearTest extends EloquentTestCase
-{
-    protected $relations = [
-        'school' => LegacySchool::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return LegacySchoolAcademicYear::class;
-    }
+beforeEach(fn () => $this->eloquent(LegacySchoolAcademicYear::class, relations: [
+    'school' => LegacySchool::class,
+]));
 
-    public function test_year_attribute(): void
-    {
-        $this->assertEquals($this->model->ano, $this->model->year);
-    }
-}
+EloquentModelTestCase::registerModelTests();
+
+test('year attribute', function () {
+    $this->assertEquals($this->model->ano, $this->model->year);
+});

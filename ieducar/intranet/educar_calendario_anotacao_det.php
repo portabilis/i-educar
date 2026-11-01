@@ -1,8 +1,6 @@
 <?php
 
 use App\Models\LegacyCalendarNote;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\RedirectResponse;
 
 return new class extends clsDetalhe
 {
@@ -42,22 +40,26 @@ return new class extends clsDetalhe
 
         $this->cod_calendario_anotacao = $_GET['cod_calendario_anotacao'];
 
-        $registro = LegacyCalendarNote::find($this->cod_calendario_anotacao)->getAttributes();
+        $registro = LegacyCalendarNote::find($this->cod_calendario_anotacao)?->getAttributes();
 
         if (!$registro) {
-            throw new HttpResponseException(
-                response: new RedirectResponse(url: 'educar_calendario_ano_letivo_lst.php')
+            $this->redirectNotFound(
+                url: 'educar_calendario_ano_letivo_lst.php',
+                registro: 'anotação do calendário',
+                feminino: true,
+                codigo: $this->cod_calendario_anotacao,
+                dica: 'Acesse a anotação pelo calendário do ano letivo.',
             );
         }
 
         if ($registro['cod_calendario_anotacao']) {
-            $this->addDetalhe(detalhe: ['Calendario Anotacão', "{$registro['cod_calendario_anotacao']}"]);
+            $this->addDetalhe(detalhe: ['Calendario Anotacão', e($registro['cod_calendario_anotacao'])]);
         }
         if ($registro['nm_anotacao']) {
-            $this->addDetalhe(detalhe: ['Nome Anotacão', "{$registro['nm_anotacao']}"]);
+            $this->addDetalhe(detalhe: ['Nome Anotacão', e($registro['nm_anotacao'])]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe(detalhe: ['Descricão', "{$registro['descricao']}"]);
+            $this->addDetalhe(detalhe: ['Descricão', e($registro['descricao'])]);
         }
 
         $obj_permissoes = new clsPermissoes;

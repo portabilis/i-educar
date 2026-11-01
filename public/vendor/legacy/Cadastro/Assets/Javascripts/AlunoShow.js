@@ -507,3 +507,185 @@ $j(document).ready(function() {
   getMatriculas();
 
 }); // ready
+
+var ajustaMotivosInativos = function ($motivo, motivo) {
+  $motivo
+    .find("option")
+    .filter(function () {
+      return motivosInativos.hasOwnProperty(this.value) && this.value !== motivo;
+    })
+    .remove();
+
+  if (motivosInativos.hasOwnProperty(motivo) && !$motivo.find('option[value="' + motivo + '"]').length) {
+    var $opcao = $j("<option>").val(motivo).text(motivosInativos[motivo]);
+    var $seguinte = $motivo
+      .find("option")
+      .filter(function () {
+        return this.value !== "" && this.text.localeCompare($opcao.text(), "pt-BR") > 0;
+      })
+      .first();
+
+    if ($seguinte.length) {
+      $opcao.insertBefore($seguinte);
+    } else {
+      $opcao.appendTo($motivo);
+    }
+  }
+
+  if (motivo && !$motivo.find('option[value="' + motivo + '"]').length) {
+    return "";
+  }
+
+  return motivo;
+};
+
+$j(document).ready(function () {
+  if (!$j(".atualizar-cpf").length) {
+    return;
+  }
+
+  $j("body").append(
+    '<div id="dialog-form-pessoa-cpf"><table><tr><td valign="top"><fieldset><label for="nome-pessoa-cpf">Nome</label> <input type="text" name="nome-pessoa-cpf" id="nome-pessoa-cpf" size="49" class="text" disabled> <label for="data-nasc-pessoa-cpf">Data de nascimento</label> <input type="text" name="data-nasc-pessoa-cpf" id="data-nasc-pessoa-cpf" size="11" class="text" disabled> <label for="cpf-pessoa-cpf">CPF <span style="color:#cc0000">*</span></label> <label><input type="radio" name="possui-cpf-pessoa-cpf" value="1"> Possui CPF</label> <label><input type="radio" name="possui-cpf-pessoa-cpf" value="0"> Não possui / não informado</label> <input type="text" name="cpf-pessoa-cpf" id="cpf-pessoa-cpf" size="16" maxlength="14" class="text" placeholder="000.000.000-00"> <div id="motivo-pessoa-cpf-campo"><label for="motivo-pessoa-cpf">Motivo <span style="color:#cc0000">*</span></label> <select class="select ui-widget-content ui-corner-all" name="motivo-pessoa-cpf" id="motivo-pessoa-cpf"></select> <label for="observacao-motivo-pessoa-cpf">Observações <span id="observacao-motivo-pessoa-cpf-obrigatorio" style="color:#cc0000">*</span></label> <input type="text" name="observacao-motivo-pessoa-cpf" id="observacao-motivo-pessoa-cpf" size="49" maxlength="255" class="text"></div></fieldset></td></tr></table></div>'
+  );
+
+  $j("#dialog-form-pessoa-cpf").find(":input").css("display", "block");
+  $j("input[name=possui-cpf-pessoa-cpf]").css("display", "inline");
+
+  var pessoaIdCpf = null,
+    nomePessoaCpf = $j("#nome-pessoa-cpf"),
+    dataNascPessoaCpf = $j("#data-nasc-pessoa-cpf"),
+    cpfPessoaCpf = $j("#cpf-pessoa-cpf"),
+    motivoPessoaCpf = $j("#motivo-pessoa-cpf"),
+    observacaoMotivoPessoaCpf = $j("#observacao-motivo-pessoa-cpf"),
+    allFields = $j([]).add(cpfPessoaCpf).add(motivoPessoaCpf).add(observacaoMotivoPessoaCpf);
+
+  if ($j.fn.mask) {
+    cpfPessoaCpf.mask("000.000.000-00");
+  }
+
+  $j.each(motivosAusenciaCpf, function (index, motivo) {
+    motivoPessoaCpf.append($j("<option>").val(motivo[0]).text(motivo[1]));
+  });
+
+  var $motivoPessoaCpfNotice = $j("<span>")
+    .html("")
+    .addClass("error resource-notice")
+    .hide()
+    .insertAfter(motivoPessoaCpf);
+
+  var possuiCpfPessoaCpf = function () {
+    return $j("input[name=possui-cpf-pessoa-cpf]:checked").val() == "1";
+  };
+
+  var motivoPessoaCpfExigeObservacao = function () {
+    return motivosExigemObservacao.indexOf(parseInt(motivoPessoaCpf.val(), 10)) > -1;
+  };
+
+  var checkMotivoExigeObservacaoPessoaCpf = function () {
+    $j("#observacao-motivo-pessoa-cpf-obrigatorio").toggle(motivoPessoaCpfExigeObservacao());
+  };
+
+  var checkMotivoInativoPessoaCpf = function () {
+    if (motivosInativos.hasOwnProperty(motivoPessoaCpf.val())) {
+      $motivoPessoaCpfNotice.html("Motivo inativo. Recomenda-se escolher um motivo ativo.").slideDown("fast");
+    } else {
+      $motivoPessoaCpfNotice.hide();
+    }
+  };
+
+  var checkPossuiCpfPessoaCpf = function () {
+    cpfPessoaCpf.toggle(possuiCpfPessoaCpf());
+    $j("#motivo-pessoa-cpf-campo").toggle(!possuiCpfPessoaCpf());
+
+    if (!possuiCpfPessoaCpf()) {
+      cpfPessoaCpf.val("");
+    }
+
+    checkMotivoExigeObservacaoPessoaCpf();
+    checkMotivoInativoPessoaCpf();
+  };
+
+  $j("input[name=possui-cpf-pessoa-cpf]").on("change", checkPossuiCpfPessoaCpf);
+  motivoPessoaCpf.on("change", checkMotivoExigeObservacaoPessoaCpf);
+  motivoPessoaCpf.on("change", checkMotivoInativoPessoaCpf);
+
+  $j("#dialog-form-pessoa-cpf").dialog({
+    autoOpen: false,
+    height: "auto",
+    width: "auto",
+    modal: true,
+    resizable: false,
+    draggable: false,
+    title: "Atualizar CPF",
+    buttons: {
+      Gravar: function () {
+        var bValid = true;
+        allFields.removeClass("error");
+
+        var cpfValPessoaCpf = cpfPessoaCpf.val().trim();
+        if (possuiCpfPessoaCpf() && cpfValPessoaCpf === "") {
+          bValid = false;
+          cpfPessoaCpf.addClass("error");
+          messageUtils.error("O campo CPF é obrigatório.");
+        } else if (cpfValPessoaCpf !== "" && !validationUtils.validatesCpf(cpfValPessoaCpf)) {
+          bValid = false;
+          cpfPessoaCpf.addClass("error");
+          messageUtils.error("CPF inválido.");
+        } else if (!possuiCpfPessoaCpf() && !motivoPessoaCpf.val()) {
+          bValid = false;
+          motivoPessoaCpf.addClass("error");
+          messageUtils.error("É necessário informar o motivo da ausência do CPF.");
+        } else if (!possuiCpfPessoaCpf() && motivoPessoaCpfExigeObservacao() && !observacaoMotivoPessoaCpf.val().trim()) {
+          bValid = false;
+          observacaoMotivoPessoaCpf.addClass("error");
+          messageUtils.error("Este motivo exige o preenchimento das observações.");
+        }
+
+        if (bValid) {
+          postResource({
+            url: postResourceUrlBuilder.buildUrl("/module/Api/pessoa", "pessoa-cpf"),
+            dataType: "json",
+            data: {
+              pessoa_id: pessoaIdCpf,
+              possui_cpf: possuiCpfPessoaCpf() ? 1 : 0,
+              cpf: cpfValPessoaCpf,
+              document_absence_reason_id: motivoPessoaCpf.val(),
+              document_absence_observation: observacaoMotivoPessoaCpf.val()
+            },
+            success: function (dataResponse) {
+              handleMessages(dataResponse.msgs);
+
+              if (!dataResponse.any_error_msg) {
+                window.location.reload();
+              }
+            }
+          });
+        }
+      },
+      Cancelar: function () {
+        $j(this).dialog("close");
+      }
+    },
+    create: function () {
+      $j(this).closest(".ui-dialog").find(".ui-button-text:first").addClass("btn-green");
+    },
+    close: function () {
+      allFields.val("").removeClass("error");
+    }
+  });
+
+  $j(".atualizar-cpf").on("click", function () {
+    var $botao = $j(this);
+    var motivoAtual = ajustaMotivosInativos(motivoPessoaCpf, String($botao.attr("data-motivo") || ""));
+
+    pessoaIdCpf = $botao.attr("data-pessoa-id");
+    nomePessoaCpf.val($botao.attr("data-nome"));
+    dataNascPessoaCpf.val($botao.attr("data-data-nascimento"));
+    $j('input[name=possui-cpf-pessoa-cpf][value="1"]').prop("checked", true);
+    motivoPessoaCpf.val(motivoAtual);
+    observacaoMotivoPessoaCpf.val($botao.attr("data-observacao") || "");
+    checkPossuiCpfPessoaCpf();
+
+    $j("#dialog-form-pessoa-cpf").dialog("open");
+  });
+});

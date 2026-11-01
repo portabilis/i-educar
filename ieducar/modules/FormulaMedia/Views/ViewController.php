@@ -1,6 +1,6 @@
 <?php
 
-class ViewController extends Core_Controller_Page_ViewController
+class FormulaMedia_Views_ViewController extends Core_Controller_Page_ViewController
 {
     protected $_dataMapper = 'FormulaMedia_Model_FormulaDataMapper';
 

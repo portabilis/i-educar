@@ -145,12 +145,12 @@ class FileExportService
                 'cod_aluno',
                 'ref_idpes',
                 'url_documento',
-                'url_laudo_medico',
             ])
             ->active()
             ->with([
                 'person:idpes,nome',
                 'picture',
+                'medicalReports',
                 'registrations' => function ($q) {
                     $q->with(['school:cod_escola,ref_cod_instituicao']);
                     $q->filter([
@@ -194,7 +194,8 @@ class FileExportService
                         ];
                     });
                 // laudos
-                $files = $files->merge(collect(json_decode($student->url_laudo_medico, false))
+                $files = $files->merge($student->medicalReports
+                    ->values()
                     ->map(function ($file, $index) {
                         $number = sprintf('%02d', $index + 1);
 

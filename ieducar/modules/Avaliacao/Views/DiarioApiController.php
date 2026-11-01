@@ -310,9 +310,31 @@ class DiarioApiController extends ApiCoreController
 
     // responders validations
 
+    protected function canAcceptRequest()
+    {
+        return parent::canAcceptRequest()
+            && $this->validatesAccessToRequestedSchool();
+    }
+
+    protected function validatesAccessToRequestedSchool()
+    {
+        $request = $this->getRequest();
+
+        if (!empty($request->turma_id) && !$this->validatesAccessToSchoolClassSchool($request->turma_id)) {
+            return false;
+        }
+
+        if (!empty($request->matricula_id) && !$this->validatesAccessToRegistrationSchool($request->matricula_id)) {
+            return false;
+        }
+
+        return true;
+    }
+
     protected function canGetMatriculas()
     {
-        return $this->validatesPresenceOf(['instituicao_id',
+        return $this->validatesAuthorizationToView() &&
+        $this->validatesPresenceOf(['instituicao_id',
             'escola_id',
             'curso_id',
             'curso_id',
@@ -364,7 +386,19 @@ class DiarioApiController extends ApiCoreController
 
     protected function canDelete()
     {
-        return $this->validatesPresenceOf('etapa');
+        return $this->validatesPresenceOf('etapa') &&
+        $this->validatesAuthorizationToChangeDiario();
+    }
+
+    protected function validatesAuthorizationToChangeDiario()
+    {
+        if ($this->canChange()) {
+            return true;
+        }
+
+        $this->messenger->append("Usuário sem permissão para alterar '{$this->getRequest()->resource}'.");
+
+        return false;
     }
 
     protected function canDeleteNota()
@@ -510,6 +544,8 @@ class DiarioApiController extends ApiCoreController
                 $this->serviceBoletim()->updateMediaComponente(0, $this->getRequest()->componente_curricular_id, $this->getRequest()->etapa);
                 $this->messenger->append('Média matrícula ' . $this->getRequest()->matricula_id . ' removida com sucesso.', 'success');
             }
+        } else {
+            $this->messenger->append('Usuário não possui permissão para alterar a média do aluno.', 'error');
         }
 
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
@@ -524,7 +560,7 @@ class DiarioApiController extends ApiCoreController
 
     protected function canDeleteMedia()
     {
-        return true;
+        return $this->canPostSituacaoAndNota();
     }
 
     /**
@@ -1890,6 +1926,8 @@ class DiarioApiController extends ApiCoreController
     {
         if (!$this->canPostSituacaoAndNota()) {
             $this->messenger->append('Usuário não possui permissão para alterar a situação da matrícula.', 'error');
+
+            return;
         }
 
         $newStatus = $this->getRequest()->new_status;

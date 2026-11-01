@@ -59,23 +59,19 @@ class Controller extends BaseController
         $user = Auth::user();
         $menu = $this->getMenuCacheServiceInstance()->getMenuByUser($user);
 
-        $topmenu = Menu::query()
-            ->where('process', $process)
-            ->first();
+        $processMenu = $this->getMenuCacheServiceInstance()->getProcessMenuData($process);
 
-        $ancestors = $topmenu === null ? [] : Menu::getMenuAncestors($topmenu);
-
-        if ($topmenu) {
+        if ($processMenu !== false) {
             View::share([
-                'mainmenu' => $topmenu->root()->getKey(),
-                'currentMenu' => $topmenu,
-                'menuPaths' => $ancestors,
+                'mainmenu' => $processMenu['root_id'],
+                'currentMenu' => (new Menu)->newFromBuilder($processMenu['attributes']),
+                'menuPaths' => $processMenu['ancestor_ids'],
             ]);
         }
 
         View::share([
             'menu' => $menu,
-            'root' => $topmenu?->root()->getKey(),
+            'root' => $processMenu === false ? null : $processMenu['root_id'],
         ]);
         View::share('title', $this->getPageTitle());
 

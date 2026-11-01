@@ -78,7 +78,12 @@
 }
 
 .flashMessages__message .close-msg {
+  background: none;
+  border: 0;
   color: #999;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
   display: block;
   font-size: 16px;
   font-weight: bold;

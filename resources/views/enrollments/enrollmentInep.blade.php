@@ -61,7 +61,7 @@
                 <tr style="min-height: 45px">
                     <td class="formmdtd" valign="top">
                         <span class="form">
-                            Código INEP da Matrícula
+                            <label for="matricula_inep">Código INEP da Matrícula</label>
                         </span>
                         <span class="campo_obrigatorio">*</span>
                         <br>
@@ -85,7 +85,7 @@
                 <tr style="min-height: 45px">
                     <td class="formlttd" valign="top">
                         <span class="form">
-                            Carga horária integralizada pelo(a) aluno(a) (em horas)
+                            <label for="carga_horaria_integralizada">Carga horária integralizada pelo(a) aluno(a) (em horas)</label>
                         </span>
                         @unless ($podePreencherCargaHoraria)
                             <br>
@@ -112,7 +112,7 @@
                 <tr>
                     <td class="formmdtd" valign="top">
                         <span class="form">
-                            Desconsiderar matrícula
+                            <label for="desconsiderar_educacenso">Desconsiderar matrícula</label>
                         </span>
                         <br>
                         <sub style="vertical-align:top;">

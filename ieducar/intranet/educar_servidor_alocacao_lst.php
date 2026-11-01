@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Employee;
 use App\Models\EmployeeAllocation;
 use App\Models\LegacyPerson;
 
@@ -29,17 +30,21 @@ return new class extends clsListagem
 
     public function Gerar()
     {
-        $this->titulo = 'Alocação servidor - Listagem';
+        $this->titulo = 'Alocações - Listagem';
 
         // passa todos os valores obtidos no GET para atributos do objeto
         foreach ($_GET as $var => $val) {
             $this->$var = ($val === '') ? null : $val;
         }
 
-        $tmp_obj = new clsPmieducarServidor($this->ref_cod_servidor, null, null, null, null, null, null, $this->ref_cod_instituicao);
-        $registro = $tmp_obj->detalhe();
+        $servidorExiste = is_numeric($this->ref_cod_servidor)
+            && is_numeric($this->ref_cod_instituicao)
+            && Employee::query()
+                ->whereEmployee($this->ref_cod_servidor)
+                ->whereInstitution($this->ref_cod_instituicao)
+                ->exists();
 
-        if (!$registro) {
+        if (!$servidorExiste) {
             $this->simpleRedirect('educar_servidor_lst.php');
         }
 
@@ -62,9 +67,6 @@ return new class extends clsListagem
         $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao]);
         $this->inputsHelper()->dynamic('escola', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola]);
         $this->inputsHelper()->dynamic('anoLetivo', ['required' => false, 'show-select' => true, 'value' => $this->ano_letivo]);
-
-        $parametros = new clsParametrosPesquisas;
-        $parametros->setSubmit(0);
 
         // Paginador
         $this->limite = 20;
@@ -153,14 +155,17 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Registro de alocações do servidor', [
-            url('intranet/educar_servidores_index.php') => 'Servidores',
+        // As alocações são do servidor, então ele é um nível do caminho:
+        // Início > Servidores > Nome > Alocações
+        $this->breadcrumb('Alocações', [
+            url('intranet/educar_servidor_lst.php') => 'Servidores',
+            url("intranet/educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}") => $nome,
         ]);
     }
 
     public function Formular()
     {
-        $this->title = 'Servidores - Servidor';
+        $this->title = 'Alocações';
         $this->processoAp = 635;
     }
 };

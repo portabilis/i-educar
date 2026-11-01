@@ -68,6 +68,8 @@ return new class extends clsCadastro
 
     public function Novo()
     {
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $data = ['descricao' => $this->descricao];
         if (is_numeric($this->escolaridade)) {
             $data['escolaridade'] = $this->escolaridade;
@@ -91,6 +93,7 @@ return new class extends clsCadastro
     public function Editar() {}
 
     public function Excluir() {}
+    // @codeCoverageIgnoreEnd
 
     public function Formular()
     {

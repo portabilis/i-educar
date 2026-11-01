@@ -1,16 +1,27 @@
 <?php
 
 use App\Models\LegacyInstitutionDocument;
+use Illuminate\Support\Facades\Auth;
 
 class InstituicaoDocumentacaoController extends ApiCoreController
 {
+    /**
+     * Processo da tela de documentação padrão, que inclui e exclui os documentos.
+     */
+    private const PROCESSO_DOCUMENTACAO = 578;
+
+    protected function validatesAuthorizationToChangeDocuments()
+    {
+        return $this->validatesAuthorizationToAnyProcess([self::PROCESSO_DOCUMENTACAO], 'modify');
+    }
+
     protected function insertDocuments()
     {
         LegacyInstitutionDocument::create([
             'instituicao_id' => request()->integer('instituicao_id'),
             'titulo_documento' => request()->string('titulo_documento'),
             'url_documento' => request()->string('url_documento'),
-            'ref_usuario_cad' => request()->integer('ref_usuario_cad'),
+            'ref_usuario_cad' => Auth::id() ?? request()->integer('ref_usuario_cad'),
             'ref_cod_escola' => request()->integer('ref_cod_escola'),
         ]);
 
@@ -51,11 +62,15 @@ class InstituicaoDocumentacaoController extends ApiCoreController
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'insertDocuments')) {
-            $this->appendResponse($this->insertDocuments());
+            if ($this->validatesAuthorizationToChangeDocuments()) {
+                $this->appendResponse($this->insertDocuments());
+            }
         } elseif ($this->isRequestFor('get', 'getDocuments')) {
             $this->appendResponse($this->getDocuments());
         } elseif ($this->isRequestFor('get', 'deleteDocuments')) {
-            $this->appendResponse($this->deleteDocuments());
+            if ($this->validatesAuthorizationToChangeDocuments()) {
+                $this->appendResponse($this->deleteDocuments());
+            }
         }
     }
 }

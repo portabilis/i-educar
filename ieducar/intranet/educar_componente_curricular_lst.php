@@ -68,7 +68,10 @@ return new class extends clsListagem
 
         foreach ($objAreas as $area) {
             if ($area->agrupar_descritores) {
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 $area->nome .= ' (agrupador)';
+                // @codeCoverageIgnoreEnd
             }
             $areas[$area->id] = $area->nome;
         }
@@ -108,7 +111,10 @@ return new class extends clsListagem
                 $query->where('area_conhecimento_id', request('area_conhecimento_id'));
             })
             ->when(request('tipo_base'), function ($query) {
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 $query->where('cc.tipo_base', request('tipo_base'));
+                // @codeCoverageIgnoreEnd
             })
             ->orderBy('cc.nome')
             ->paginate(

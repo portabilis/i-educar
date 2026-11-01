@@ -22,31 +22,31 @@
                 </td>
             </tr>
             <tr id="tr_nm_instituicao">
-                <td class="formlttd" valign="top"><span class="form">Instituição</span></td>
+                <td class="formlttd" valign="top"><span class="form"><label for="ref_cod_instituicao">Instituição</label></span></td>
                 <td class="formlttd" valign="top">
                     @include('form.select-institution')
                 </td>
             </tr>
             <tr id="tr_nm_escola">
-                <td class="formmdtd" valign="top"><span class="form">Escola</span></td>
+                <td class="formmdtd" valign="top"><span class="form"><label for="ref_cod_escola">Escola</label></span></td>
                 <td class="formmdtd" valign="top">
                     @include('form.select-school')
                 </td>
             </tr>
             <tr id="tr_nm_curso">
-                <td class="formlttd" valign="top"><span class="form">Curso</span></td>
+                <td class="formlttd" valign="top"><span class="form"><label for="ref_cod_curso">Curso</label></span></td>
                 <td class="formlttd" valign="top">
                     @include('form.select-course')
                 </td>
             </tr>
             <tr id="tr_nm_serie">
-                <td class="formmdtd" valign="top"><span class="form">Serie</span></td>
+                <td class="formmdtd" valign="top"><span class="form"><label for="ref_cod_serie">Série</label></span></td>
                 <td class="formmdtd" valign="top">
                     @include('form.select-grade')
                 </td>
             </tr>
-            <tr id="tr_nm_serie">
-                <td class="formlttd" valign="top"><span class="form">Componente curricular</span></td>
+            <tr id="tr_componente_curricular">
+                <td class="formlttd" valign="top"><span class="form"><label for="ref_cod_componente_curricular">Componente curricular</label></span></td>
                 <td class="formlttd" valign="top">
                     @include('form.select-discipline-school-grade')
                 </td>

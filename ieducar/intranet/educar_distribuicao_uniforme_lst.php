@@ -47,6 +47,8 @@ return new class extends clsListagem
             $this->campoRotulo(nome: 'nm_aluno', campo: 'Aluno', valor: "{$nm_aluno}");
         }
 
+        // Ano é filtro, não busca: fica só na gaveta, sem cópia no toolbar
+        $this->buscaRapida = false;
         $this->campoNumero(nome: 'ano', campo: 'Ano', valor: $this->ano, tamanhovisivel: 4, tamanhomaximo: 4, obrigatorio: false);
 
         $query = UniformDistribution::orderBy('year', 'ASC');
@@ -88,8 +90,11 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Distribuições de uniforme escolar', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Distribuições de uniforme
+        $this->breadcrumb(currentPage: 'Distribuições de uniforme', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_aluno_lst.php') => 'Alunos',
+            url(path: "intranet/educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}") => $student?->real_name,
         ]);
     }
 

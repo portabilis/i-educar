@@ -102,9 +102,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_escolaridade_lst.php');
         }
 
+        // Inalcançável: `create()` devolve o registro com o código ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()

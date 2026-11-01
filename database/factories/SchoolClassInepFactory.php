@@ -21,7 +21,7 @@ class SchoolClassInepFactory extends Factory
     {
         return [
             'cod_turma' => fn () => LegacySchoolClassFactory::new()->create(),
-            'cod_turma_inep' => $this->faker->numerify('########'),
+            'cod_turma_inep' => $this->faker->numberBetween(10000000, 99999999),
         ];
     }
 }

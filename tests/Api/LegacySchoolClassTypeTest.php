@@ -1,77 +1,70 @@
 <?php
 
-namespace Tests\Api;
-
 use Database\Factories\LegacySchoolClassTypeFactory;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class LegacySchoolClassTypeTest extends TestCase
-{
-    use DatabaseTransactions;
+uses(TestCase::class, DatabaseTransactions::class);
 
-    public function test_save_success(): void
-    {
-        $user = LegacyUserFactory::new()->admin()->create();
-        $this->actingAs($user);
+test('save success', function () {
+    $user = LegacyUserFactory::new()->admin()->create();
+    $this->actingAs($user);
 
-        $type = LegacySchoolClassTypeFactory::new()->make();
+    $type = LegacySchoolClassTypeFactory::new()->make();
 
-        $request = [
-            'tipoacao' => 'Novo',
-        ];
+    $request = [
+        'tipoacao' => 'Novo',
+    ];
 
-        $data = [
-            'ref_cod_instituicao' => $type->ref_cod_instituicao,
-            'nm_tipo' => $type->nm_tipo,
-            'sgl_tipo' => $type->sgl_tipo,
-        ];
+    $data = [
+        'ref_cod_instituicao' => $type->ref_cod_instituicao,
+        'nm_tipo' => $type->nm_tipo,
+        'sgl_tipo' => $type->sgl_tipo,
+    ];
 
-        $payload = array_merge($request, $data);
-        $this->post('/intranet/educar_turma_tipo_cad.php', $payload)
-            ->assertRedirectContains('educar_turma_tipo_lst.php');
+    $payload = array_merge($request, $data);
+    $this->post('/intranet/educar_turma_tipo_cad.php', $payload)
+        ->assertRedirectContains('educar_turma_tipo_lst.php');
 
-        $this->assertDatabaseHas($type->getTable(), [
-            'ref_cod_instituicao' => $type->ref_cod_instituicao,
-            'ref_usuario_cad' => $user->getKey(),
-            'nm_tipo' => $type->nm_tipo,
-            'sgl_tipo' => $type->sgl_tipo,
-            'ativo' => 1,
-        ]);
-    }
+    $this->assertDatabaseHas($type->getTable(), [
+        'ref_cod_instituicao' => $type->ref_cod_instituicao,
+        'ref_usuario_cad' => $user->getKey(),
+        'nm_tipo' => $type->nm_tipo,
+        'sgl_tipo' => $type->sgl_tipo,
+        'ativo' => 1,
+    ]);
+});
 
-    public function test_edit_success(): void
-    {
-        $user = LegacyUserFactory::new()->admin()->create();
-        $this->actingAs($user);
+test('edit success', function () {
+    $user = LegacyUserFactory::new()->admin()->create();
+    $this->actingAs($user);
 
-        $typeOrignal = LegacySchoolClassTypeFactory::new()->create();
+    $typeOrignal = LegacySchoolClassTypeFactory::new()->create();
 
-        $editType = LegacySchoolClassTypeFactory::new()->make();
+    $editType = LegacySchoolClassTypeFactory::new()->make();
 
-        $request = [
-            'tipoacao' => 'Editar',
-        ];
+    $request = [
+        'tipoacao' => 'Editar',
+    ];
 
-        $data = [
-            'cod_turma_tipo' => $typeOrignal->getKey(),
-            'ref_cod_instituicao' => $editType->ref_cod_instituicao,
-            'nm_tipo' => $editType->nm_tipo,
-            'sgl_tipo' => $editType->sgl_tipo,
-        ];
+    $data = [
+        'cod_turma_tipo' => $typeOrignal->getKey(),
+        'ref_cod_instituicao' => $editType->ref_cod_instituicao,
+        'nm_tipo' => $editType->nm_tipo,
+        'sgl_tipo' => $editType->sgl_tipo,
+    ];
 
-        $payload = array_merge($request, $data);
-        $this->post('/intranet/educar_turma_tipo_cad.php', $payload)
-            ->assertRedirectContains('educar_turma_tipo_lst.php');
+    $payload = array_merge($request, $data);
+    $this->post('/intranet/educar_turma_tipo_cad.php', $payload)
+        ->assertRedirectContains('educar_turma_tipo_lst.php');
 
-        $this->assertDatabaseHas($editType, [
-            'cod_turma_tipo' => $typeOrignal->getKey(),
-            'ref_cod_instituicao' => $editType->ref_cod_instituicao,
-            'ref_usuario_cad' => $user->getKey(),
-            'nm_tipo' => $editType->nm_tipo,
-            'sgl_tipo' => $editType->sgl_tipo,
-            'ativo' => 1,
-        ]);
-    }
-}
+    $this->assertDatabaseHas($editType, [
+        'cod_turma_tipo' => $typeOrignal->getKey(),
+        'ref_cod_instituicao' => $editType->ref_cod_instituicao,
+        'ref_usuario_cad' => $user->getKey(),
+        'nm_tipo' => $editType->nm_tipo,
+        'sgl_tipo' => $editType->sgl_tipo,
+        'ativo' => 1,
+    ]);
+});

@@ -21,7 +21,7 @@ class EmployeeInepFactory extends Factory
     {
         return [
             'cod_servidor' => EmployeeFactory::new()->create(),
-            'cod_docente_inep' => $this->faker->randomNumber(3),
+            'cod_docente_inep' => $this->faker->numberBetween(100000000000, 999999999999),
             'nome_inep' => $this->faker->name(),
             'fonte' => 'U',
         ];

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyCourse;
+use App\Models\LegacyGrade;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolGrade;
 use App\Models\LegacyUser;
@@ -162,13 +163,17 @@ if ($get_serie) {
     $opcoes_serie = ['' => 'Selecione'];
     // EDITAR
     if ($this->ref_cod_curso) {
-        $obj_serie = new clsPmieducarSerie;
-        $obj_serie->setOrderby('nm_serie ASC');
-        $lst_serie = $obj_serie->lista(null, null, null, $this->ref_cod_curso, null, null, null, null, null, null, null, null, 1);
-        if (is_array($lst_serie) && count($lst_serie)) {
-            foreach ($lst_serie as $serie) {
-                $opcoes_serie["{$serie['cod_serie']}"] = $serie['nm_serie'];
-            }
+        $lst_serie = LegacyGrade::query()
+            ->active()
+            ->when(is_numeric($this->ref_cod_curso), fn ($q) => $q->whereCourse($this->ref_cod_curso))
+            ->orderBy('nm_serie')
+            ->get([
+                'cod_serie',
+                'nm_serie',
+            ]);
+
+        foreach ($lst_serie as $serie) {
+            $opcoes_serie["{$serie['cod_serie']}"] = $serie['nm_serie'];
         }
     }
     $this->campoLista('ref_cod_serie', 'Série', $opcoes_serie, $this->ref_cod_serie, null, null, null, null, $serie_desabilitado, $serie_obrigatorio);

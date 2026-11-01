@@ -147,7 +147,10 @@ class Portabilis_View_Helper_Input_Core
         if (isset($this->viewInstance->ref_cod_biblioteca) && is_numeric($this->viewInstance->ref_cod_biblioteca)) {
             $biblioteca = App_Model_IedFinder::getBiblioteca($this->viewInstance->ref_cod_biblioteca);
 
+            // Sem o pacote da biblioteca a busca acima não devolve uma biblioteca.
+            // @codeCoverageIgnoreStart
             return $biblioteca['ref_cod_instituicao'];
+            // @codeCoverageIgnoreEnd
         }
 
         return $this->getPermissoes()->getInstituicao($this->getCurrentUserId());
@@ -167,7 +170,10 @@ class Portabilis_View_Helper_Input_Core
         if (isset($this->viewInstance->ref_cod_biblioteca) && is_numeric($this->viewInstance->ref_cod_biblioteca)) {
             $biblioteca = App_Model_IedFinder::getBiblioteca($this->viewInstance->ref_cod_biblioteca);
 
+            // Sem o pacote da biblioteca a busca acima não devolve uma biblioteca.
+            // @codeCoverageIgnoreStart
             return $biblioteca['ref_cod_escola'];
+            // @codeCoverageIgnoreEnd
         }
 
         return null;
@@ -187,7 +193,10 @@ class Portabilis_View_Helper_Input_Core
         $biblioteca = $this->getPermissoes()->getBiblioteca($this->getCurrentUserId());
 
         if (is_array($biblioteca) && count($biblioteca) > 0) {
+            // Sem o pacote da biblioteca a busca acima não devolve uma biblioteca.
+            // @codeCoverageIgnoreStart
             return $biblioteca[0]['ref_cod_biblioteca'];
+            // @codeCoverageIgnoreEnd
         }
 
         return null;

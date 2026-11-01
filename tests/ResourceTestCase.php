@@ -32,6 +32,8 @@ class ResourceTestCase extends TestCase
     {
         parent::setUp();
 
+        $this->freezeSecond();
+
         $this->actingAs(LegacyUserFactory::new()->admin()->create());
     }
 

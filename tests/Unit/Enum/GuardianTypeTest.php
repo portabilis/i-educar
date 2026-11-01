@@ -1,24 +1,17 @@
 <?php
 
-namespace Tests\Unit\Enum;
-
 use App\Models\GuardianType;
-use Tests\EnumTestCase;
+use Tests\TestCase;
 
-class GuardianTypeTest extends EnumTestCase
-{
-    public function getDescriptiveValues(): array
-    {
-        return [
-            1 => 'Pai',
-            2 => 'Mãe',
-            3 => 'Pai e Mãe',
-            4 => 'Outra pessoa',
-        ];
-    }
+uses(TestCase::class);
 
-    protected function getEnumName(): string
-    {
-        return GuardianType::class;
-    }
-}
+test('descriptive values', function () {
+    $values = (new GuardianType)->getDescriptiveValues();
+    $this->assertIsArray($values);
+    $this->assertJsonStringEqualsJsonString(collect([
+        1 => 'Pai',
+        2 => 'Mãe',
+        3 => 'Pai e Mãe',
+        4 => 'Outra pessoa',
+    ]), collect($values));
+});

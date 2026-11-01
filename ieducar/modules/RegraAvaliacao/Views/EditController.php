@@ -5,7 +5,7 @@ use App\Models\LegacyRemedialRule;
 use iEducar\Modules\EvaluationRules\Models\ParallelRemedialCalculationType;
 use Illuminate\Support\Facades\DB;
 
-class EditController extends Core_Controller_Page_EditController
+class RegraAvaliacao_Views_EditController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper = 'RegraAvaliacao_Model_RegraDataMapper';
 

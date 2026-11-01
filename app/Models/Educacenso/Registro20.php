@@ -298,20 +298,30 @@ class Registro20 implements RegistroEducacenso
     {
         $tiposMediacao = App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums();
 
+        // A cobertura não registra a passagem por estes `case` com constantes de
+        // classe, mesmo quando o `return` de cada um roda nos testes.
         switch ($this->modalidadeCurso) {
+            // @codeCoverageIgnoreStart
             case ModalidadeCurso::ENSINO_REGULAR:
+                // @codeCoverageIgnoreEnd
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
 
                 break;
+                // @codeCoverageIgnoreStart
             case ModalidadeCurso::EDUCACAO_ESPECIAL:
+                // @codeCoverageIgnoreEnd
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL]}";
 
                 break;
+                // @codeCoverageIgnoreStart
             case ModalidadeCurso::EJA:
+                // @codeCoverageIgnoreEnd
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
 
                 break;
+                // @codeCoverageIgnoreStart
             case ModalidadeCurso::EDUCACAO_PROFISSIONAL:
+                // @codeCoverageIgnoreEnd
                 return "{$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL]}, {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL]} ou {$tiposMediacao[App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA]}";
 
                 break;
@@ -376,14 +386,20 @@ class Registro20 implements RegistroEducacenso
 
                 break;
             case 39:
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
             case 40:
             case 64:
             case 68:
+                // @codeCoverageIgnoreEnd
                 return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 23, 25, 26, 27, 28, 29, 30, 31, 99];
 
                 break;
             default:
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 return [];
+                // @codeCoverageIgnoreEnd
 
                 break;
         }

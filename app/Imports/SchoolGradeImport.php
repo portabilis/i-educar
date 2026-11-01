@@ -26,10 +26,7 @@ class SchoolGradeImport implements ToModel, WithHeadingRow, WithProgressBar
         $this->school = $school;
     }
 
-    /**
-     * @return Model
-     */
-    public function model(array $row)
+    public function model(array $row): Model
     {
         return LegacySchoolGrade::query()->firstOrNew([
             'ref_cod_serie' => $row['grade_id'],

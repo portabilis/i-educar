@@ -27,8 +27,10 @@ class LegacyInstitutionFactory extends Factory
             'data_base_remanejamento' => $date,
             'data_base_transferencia' => $date,
             'data_expiracao_reserva_vaga' => $date,
-            'data_base_matricula' => $date->year(1990),
-            'data_fechamento' => $date->year(1990),
+            // Cópias: o Carbon é mutável, e mudar o ano no próprio $date arrastaria
+            // para 1990 as três datas acima.
+            'data_base_matricula' => $date->copy()->year(1990),
+            'data_fechamento' => $date->copy()->year(1990),
             'data_educacenso' => now()->month(5)->day(31),
         ];
     }

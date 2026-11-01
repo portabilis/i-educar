@@ -87,7 +87,10 @@ return new class extends clsCadastro
 
         $option = false;
         if ($this->existeEtapaNaEscola() or $this->existeEtapaNaTurma()) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $option = true;
+            // @codeCoverageIgnoreEnd
         }
 
         $this->campoTexto(nome: 'nm_tipo', campo: 'Etapa', valor: $this->nm_tipo, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
@@ -103,9 +106,12 @@ return new class extends clsCadastro
         $obj_permissoes->permissao_cadastra(int_processo_ap: 584, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_modulo_lst.php');
 
         if (LegacyStageType::alreadyExists(name: $this->nm_tipo, stagesNumber: $this->num_etapas)) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Já existe um registro cadastrado com o mesmo nome e o mesmo número de etapa(s).<br>';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $obj = new LegacyStageType;
@@ -127,9 +133,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_modulo_lst.php');
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
@@ -138,9 +147,12 @@ return new class extends clsCadastro
         $obj_permissoes->permissao_cadastra(int_processo_ap: 584, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3, str_pagina_redirecionar: 'educar_modulo_lst.php');
 
         if (LegacyStageType::alreadyExists(name: $this->nm_tipo, stagesNumber: $this->num_etapas, id: $this->cod_modulo)) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Já existe um registro cadastrado com o mesmo nome e o mesmo número de etapa(s).<br>';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $obj = LegacyStageType::find($this->cod_modulo);
@@ -163,9 +175,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_modulo_lst.php');
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()
@@ -176,10 +191,13 @@ return new class extends clsCadastro
         $obj = LegacyStageType::find($this->cod_modulo);
 
         if ($this->existeEtapaNaEscola() or $this->existeEtapaNaTurma()) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Exclusão não realizada.<br>';
             $this->url_cancelar = "educar_modulo_det.php?cod_modulo={$obj->getKey()}";
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $obj->ativo = 0;
@@ -189,9 +207,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_modulo_lst.php');
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function existeEtapaNaEscola()

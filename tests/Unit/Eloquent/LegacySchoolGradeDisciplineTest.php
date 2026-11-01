@@ -1,44 +1,35 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyDiscipline;
 use App\Models\LegacySchoolGradeDiscipline;
 use Database\Factories\LegacySchoolGradeDisciplineFactory;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacySchoolGradeDisciplineTest extends EloquentTestCase
-{
-    protected $relations = [
+uses(EloquentModelTestCase::class);
+
+beforeEach(fn () => $this->eloquent(
+    LegacySchoolGradeDiscipline::class,
+    relations: [
         'discipline' => LegacyDiscipline::class,
-    ];
+    ],
+    legacyAttributes: [
+        'id' => 'ref_cod_disciplina',
+        'workload' => 'carga_horaria',
+    ],
+    factoryModifier: function (LegacySchoolGradeDisciplineFactory $factory) {
+        return $factory->withLegacyDefinition();
+    },
+));
 
-    protected function getEloquentModelName(): string
-    {
-        return LegacySchoolGradeDiscipline::class;
-    }
+EloquentModelTestCase::registerModelTests();
 
-    protected function getLegacyAttributes(): array
-    {
-        return [
-            'id' => 'ref_cod_disciplina',
-            'workload' => 'carga_horaria',
-        ];
-    }
+test('attributes', function () {
+    $this->assertEquals($this->model->discipline->name ?? null, $this->model->name);
+    $this->assertEquals($this->model->carga_horaria, $this->model->workload);
+});
 
-    protected function setUp(): void
-    {
-        $this->factoryModifier = function (LegacySchoolGradeDisciplineFactory $factory) {
-            return $factory->withLegacyDefinition();
-        };
-
-        parent::setUp();
-    }
-
-    public function test_attributes()
-    {
-        $this->assertEquals($this->model->ref_cod_disciplina, $this->model->id);
-        $this->assertEquals($this->model->discipline->name ?? null, $this->model->name);
-        $this->assertEquals($this->model->carga_horaria, $this->model->workload);
-    }
-}
+test('chave primaria identifica o vinculo e nao o componente', function () {
+    $this->assertEquals('id', $this->model->getKeyName());
+    $this->assertEquals($this->model->getAttributes()['id'], $this->model->getKey());
+    $this->assertNotEquals('ref_cod_disciplina', $this->model->getKeyName());
+});

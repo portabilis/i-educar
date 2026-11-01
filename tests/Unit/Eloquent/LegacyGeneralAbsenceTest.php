@@ -1,22 +1,13 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyGeneralAbsence;
 use App\Models\LegacyStudentAbsence;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyGeneralAbsenceTest extends EloquentTestCase
-{
-    protected $relations = [
-        'studentAbsence' => LegacyStudentAbsence::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyGeneralAbsence::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyGeneralAbsence::class, relations: [
+    'studentAbsence' => LegacyStudentAbsence::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

@@ -56,7 +56,7 @@
                 </tr>
                 <tr>
                     <td class="formlttd" valign="top">
-                        <span class="form">Arquivo CSV:</span><br>
+                        <span class="form"><label for="file">Arquivo CSV:</label></span><br>
                         <sub style="vertical-align:top;">Máximo 20MB</sub>
                     </td>
                     <td class="formlttd" valign="top">

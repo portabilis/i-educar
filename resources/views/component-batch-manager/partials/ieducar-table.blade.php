@@ -10,8 +10,8 @@
         </tr>
     @else
         <tr>
-            <td class="formdktd" style="vertical-align: top; text-align: left; width: 60%">Tipo</td>
-            <td class="formdktd" style="vertical-align: top; text-align: left; width: 40%">Quantidade</td>
+            <th scope="col" class="formdktd" style="vertical-align: top; text-align: left; width: 60%">Tipo</th>
+            <th scope="col" class="formdktd" style="vertical-align: top; text-align: left; width: 40%">Quantidade</th>
         </tr>
         @php $rowClass = 'formlttd'; @endphp
         @if($data['remove_records'] ?? false)

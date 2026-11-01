@@ -1,8 +1,5 @@
 <?php
 
-namespace Tests\Api;
-
-use App\Models\LegacyStudent;
 use App\Models\LogUnification;
 use App\Models\LogUnificationOldData;
 use Database\Factories\LegacyStudentFactory;
@@ -10,82 +7,71 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\LoginFirstUser;
 use Tests\TestCase;
 
-class LegacyUnificationStudentNotRegistrationAndNotHistoryTest extends TestCase
-{
-    use DatabaseTransactions;
-    use LoginFirstUser;
+uses(TestCase::class, DatabaseTransactions::class, LoginFirstUser::class);
 
-    private LegacyStudent $studentOne;
+beforeEach(function () {
+    $this->loginWithFirstUser();
 
-    private LegacyStudent $studentTwo;
+    $this->studentOne = LegacyStudentFactory::new()->create();
+    $this->studentTwo = LegacyStudentFactory::new()->create();
+});
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->loginWithFirstUser();
+test('unification not registration and not history', function () {
+    $request = [
+        'tipoacao' => 'Novo',
+    ];
 
-        $this->studentOne = LegacyStudentFactory::new()->create();
-        $this->studentTwo = LegacyStudentFactory::new()->create();
-    }
+    $data = [
+        'alunos' => collect([
+            [
+                'codAluno' => $this->studentOne->getKey(),
+                'aluno_principal' => true,
+            ],
+            [
+                'codAluno' => $this->studentTwo->getKey(),
+                'aluno_principal' => false,
+            ],
+        ]),
+    ];
 
-    public function test_unification_not_registration_and_not_history(): void
-    {
-        $request = [
-            'tipoacao' => 'Novo',
-        ];
+    $payload = array_merge($request, $data);
 
-        $data = [
-            'alunos' => collect([
-                [
-                    'codAluno' => $this->studentOne->getKey(),
-                    'aluno_principal' => true,
-                ],
-                [
-                    'codAluno' => $this->studentTwo->getKey(),
-                    'aluno_principal' => false,
-                ],
-            ]),
-        ];
+    $this->post('/intranet/educar_unifica_aluno.php', $payload)
+        ->assertRedirectContains(route('student-log-unification.index'));
 
-        $payload = array_merge($request, $data);
+    $log = LogUnification::query()
+        ->where('main_id', $this->studentOne->getKey())
+        ->where('type', 'App\Models\Student')
+        ->where('active', true)
+        ->first();
 
-        $this->post('/intranet/educar_unifica_aluno.php', $payload)
-            ->assertRedirectContains(route('student-log-unification.index'));
+    $this->assertNotNull($log);
+    $this->assertEquals($log->duplicates_id, [$this->studentTwo->getKey()]);
+    $this->assertTrue($log->created_at->isToday());
+    $this->assertTrue($log->updated_at->isToday());
 
-        $log = LogUnification::query()
-            ->where('main_id', $this->studentOne->getKey())
-            ->where('type', 'App\Models\Student')
-            ->where('active', true)
-            ->first();
+    $logOldDataStudent = LogUnificationOldData::query()
+        ->where('unification_id', $log->getKey())
+        ->where('table', $this->studentTwo->getTable())
+        ->get();
 
-        $this->assertNotNull($log);
-        $this->assertEquals($log->duplicates_id, [$this->studentTwo->getKey()]);
-        $this->assertTrue($log->created_at->isToday());
-        $this->assertTrue($log->updated_at->isToday());
+    $this->assertNotNull($logOldDataStudent);
+    $this->assertCount(1, $logOldDataStudent);
+    $logOldDataStudent = $logOldDataStudent->first();
+    $this->assertEquals($logOldDataStudent->keys[0], [
+        'cod_aluno' => $this->studentTwo->getKey(),
+    ]);
 
-        $logOldDataStudent = LogUnificationOldData::query()
-            ->where('unification_id', $log->getKey())
-            ->where('table', $this->studentTwo->getTable())
-            ->get();
-
-        $this->assertNotNull($logOldDataStudent);
-        $this->assertCount(1, $logOldDataStudent);
-        $logOldDataStudent = $logOldDataStudent->first();
-        $this->assertEquals($logOldDataStudent->keys[0], [
-            'cod_aluno' => $this->studentTwo->getKey(),
-        ]);
-
-        $this->assertDatabaseHas($log, [
-            'id' => $log->getKey(),
-            'type' => 'App\Models\Student',
-            'main_id' => $this->studentOne->getKey(),
-            'active' => true,
-        ])->assertDatabaseHas($this->studentOne, [
-            'cod_aluno' => $this->studentOne->getKey(),
-            'ativo' => 1,
-        ])->assertDatabaseHas($this->studentTwo, [
-            'cod_aluno' => $this->studentTwo->getKey(),
-            'ativo' => 0,
-        ]);
-    }
-}
+    $this->assertDatabaseHas($log, [
+        'id' => $log->getKey(),
+        'type' => 'App\Models\Student',
+        'main_id' => $this->studentOne->getKey(),
+        'active' => true,
+    ])->assertDatabaseHas($this->studentOne, [
+        'cod_aluno' => $this->studentOne->getKey(),
+        'ativo' => 1,
+    ])->assertDatabaseHas($this->studentTwo, [
+        'cod_aluno' => $this->studentTwo->getKey(),
+        'ativo' => 0,
+    ]);
+});

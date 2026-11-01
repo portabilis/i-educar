@@ -35,6 +35,7 @@ return new class extends clsListagem
     public function Gerar()
     {
         $this->titulo = 'Função - Listagem';
+        $this->buscaRapida = 'nm_funcao';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;
@@ -43,7 +44,7 @@ return new class extends clsListagem
         $lista_busca = [
             'Nome Funcão',
             'Abreviatura',
-            'Professor',
+            'Permitir vincular a turmas?',
         ];
 
         $obj_permissoes = new clsPermissoes;
@@ -66,7 +67,7 @@ return new class extends clsListagem
             'S' => 'Sim',
         ];
 
-        $this->campoLista(nome: 'professor', campo: 'Professor', valor: $opcoes, default: $this->professor, obrigatorio: false);
+        $this->campoLista(nome: 'professor', campo: 'Permitir vincular a turmas?', valor: $opcoes, default: $this->professor, obrigatorio: false);
 
         if ($this->professor == 'N') {
             $this->professor = '0';
@@ -110,13 +111,13 @@ return new class extends clsListagem
                 $nm_instituicao = $det_ref_cod_instituicao['nm_instituicao'];
 
                 $lista_busca = [
-                    "<a href=\"educar_funcao_det.php?cod_funcao={$registro['cod_funcao']}&ref_cod_instituicao={$registro['ref_cod_instituicao']}\">{$registro['nm_funcao']}</a>",
-                    "<a href=\"educar_funcao_det.php?cod_funcao={$registro['cod_funcao']}&ref_cod_instituicao={$registro['ref_cod_instituicao']}\">{$registro['abreviatura']}</a>",
-                    "<a href=\"educar_funcao_det.php?cod_funcao={$registro['cod_funcao']}&ref_cod_instituicao={$registro['ref_cod_instituicao']}\">{$registro['professor']}</a>",
+                    "<a href=\"educar_funcao_det.php?cod_funcao={$registro['cod_funcao']}&ref_cod_instituicao={$registro['ref_cod_instituicao']}\">" . e($registro['nm_funcao']) . '</a>',
+                    "<a href=\"educar_funcao_det.php?cod_funcao={$registro['cod_funcao']}&ref_cod_instituicao={$registro['ref_cod_instituicao']}\">" . e($registro['abreviatura']) . '</a>',
+                    "<a href=\"educar_funcao_det.php?cod_funcao={$registro['cod_funcao']}&ref_cod_instituicao={$registro['ref_cod_instituicao']}\">" . e($registro['professor']) . '</a>',
                 ];
 
                 if ($nivel_usuario == 1) {
-                    $lista_busca[] = "<a href=\"educar_funcao_det.php?cod_funcao={$registro['cod_funcao']}&ref_cod_instituicao={$registro['ref_cod_instituicao']}\">{$nm_instituicao}</a>";
+                    $lista_busca[] = "<a href=\"educar_funcao_det.php?cod_funcao={$registro['cod_funcao']}&ref_cod_instituicao={$registro['ref_cod_instituicao']}\">" . e($nm_instituicao) . '</a>';
                 }
                 $this->addLinhas($lista_busca);
             }

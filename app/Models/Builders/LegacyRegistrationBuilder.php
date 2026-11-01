@@ -50,6 +50,26 @@ class LegacyRegistrationBuilder extends LegacyBuilder
         ]);
     }
 
+    /**
+     * Filtra por situação regular: aprovado, reprovado ou em andamento
+     */
+    public function validStatus(): self
+    {
+        return $this->whereIn('aprovado', [
+            RegistrationStatus::APPROVED,
+            RegistrationStatus::REPROVED,
+            RegistrationStatus::ONGOING,
+        ]);
+    }
+
+    /**
+     * Filtra por última matrícula do aluno
+     */
+    public function whereLastRegistration(): self
+    {
+        return $this->where('ultima_matricula', 1);
+    }
+
     public function whereName(string $name): self
     {
         return $this->whereHas('student.person', fn ($q) => $q->whereRaw('unaccent(pessoa.nome) ~* unaccent(?)', $name));
@@ -147,7 +167,7 @@ class LegacyRegistrationBuilder extends LegacyBuilder
     }
 
     /**
-     * Filtra por Matricula
+     * Filtra por Matrícula
      */
     public function whereRegistration(int $registration): self
     {

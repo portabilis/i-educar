@@ -1248,10 +1248,12 @@ class clsPmieducarMatricula extends Model
         $matricula = new clsPmieducarMatricula($this->cod_matricula);
         $matricula = $this->detalhe();
 
-        $aluno = new clsPmieducarAluno($matricula['ref_cod_aluno']);
-        $aluno = $aluno->detalhe();
-
-        $individual = LegacyIndividual::find($aluno['ref_idpes'], ['idpes', 'falecido']);
+        $individual = LegacyIndividual::query()
+            ->whereHas('student', fn ($q) => $q->whereStudent($matricula['ref_cod_aluno']))
+            ->first([
+                'idpes',
+                'falecido',
+            ]);
         $individual?->update(['falecido' => true]);
     }
 

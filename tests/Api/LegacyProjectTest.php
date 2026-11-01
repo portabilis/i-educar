@@ -1,68 +1,60 @@
 <?php
 
-namespace Tests\Api;
-
 use Database\Factories\LegacyProjectFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\LoginFirstUser;
 use Tests\TestCase;
 
-class LegacyProjectTest extends TestCase
-{
-    use DatabaseTransactions;
-    use LoginFirstUser;
+uses(TestCase::class, DatabaseTransactions::class, LoginFirstUser::class);
 
-    public function test_save_success(): void
-    {
-        $this->loginWithFirstUser();
+test('save success', function () {
+    $this->loginWithFirstUser();
 
-        $project = LegacyProjectFactory::new()->make();
+    $project = LegacyProjectFactory::new()->make();
 
-        $request = [
-            'tipoacao' => 'Novo',
-        ];
+    $request = [
+        'tipoacao' => 'Novo',
+    ];
 
-        $data = [
-            'nome' => $project->nome,
-            'observacao' => $project->observacao,
-        ];
+    $data = [
+        'nome' => $project->nome,
+        'observacao' => $project->observacao,
+    ];
 
-        $payload = array_merge($request, $data);
-        $this->post('/intranet/educar_projeto_cad.php', $payload)
-            ->assertRedirectContains('educar_projeto_lst.php');
+    $payload = array_merge($request, $data);
+    $this->post('/intranet/educar_projeto_cad.php', $payload)
+        ->assertRedirectContains('educar_projeto_lst.php');
 
-        $this->assertDatabaseHas($project->getTable(), [
-            'nome' => $project->nome,
-            'observacao' => $project->observacao,
-        ]);
-    }
+    $this->assertDatabaseHas($project->getTable(), [
+        'nome' => $project->nome,
+        'observacao' => $project->observacao,
+    ]);
+});
 
-    public function test_edit_success(): void
-    {
-        $this->loginWithFirstUser();
+test('edit success', function () {
+    $this->loginWithFirstUser();
 
-        $projectOrignal = LegacyProjectFactory::new()->create();
+    $projectOrignal = LegacyProjectFactory::new()->create();
 
-        $editProject = LegacyProjectFactory::new()->make();
+    $editProject = LegacyProjectFactory::new()->make();
 
-        $request = [
-            'tipoacao' => 'Editar',
-        ];
+    $request = [
+        'tipoacao' => 'Editar',
+    ];
 
-        $data = [
-            'cod_projeto' => $projectOrignal->getKey(),
-            'nome' => $editProject->nome,
-            'observacao' => $editProject->observacao,
-        ];
+    $data = [
+        'cod_projeto' => $projectOrignal->getKey(),
+        'nome' => $editProject->nome,
+        'observacao' => $editProject->observacao,
+    ];
 
-        $payload = array_merge($request, $data);
-        $this->post('/intranet/educar_projeto_cad.php', $payload)
-            ->assertRedirectContains('educar_projeto_lst.php');
+    $payload = array_merge($request, $data);
+    $this->post('/intranet/educar_projeto_cad.php', $payload)
+        ->assertRedirectContains('educar_projeto_lst.php');
 
-        $this->assertDatabaseHas($editProject, [
-            'cod_projeto' => $projectOrignal->getKey(),
-            'nome' => $editProject->nome,
-            'observacao' => $editProject->observacao,
-        ]);
-    }
-}
+    $this->assertDatabaseHas($editProject, [
+        'cod_projeto' => $projectOrignal->getKey(),
+        'nome' => $editProject->nome,
+        'observacao' => $editProject->observacao,
+    ]);
+});

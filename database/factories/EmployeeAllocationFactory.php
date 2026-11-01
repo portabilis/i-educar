@@ -21,7 +21,7 @@ class EmployeeAllocationFactory extends Factory
     {
         return [
             'carga_horaria' => $this->faker->randomNumber(3),
-            'periodo' => fn () => LegacyPeriodFactory::new()->create(),
+            'periodo' => fn () => LegacyPeriodFactory::new()->morning(),
             'hora_inicial' => '07:45',
             'hora_final' => '11:45',
             'dia_semana' => $this->faker->numberBetween(0, 7),
@@ -29,9 +29,13 @@ class EmployeeAllocationFactory extends Factory
             'data_admissao' => $this->faker->date(),
             'ref_ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
             'ref_cod_escola' => fn () => LegacySchoolFactory::new()->create(),
-            'ref_cod_servidor' => EmployeeFactory::new()->create(),
-            'ref_cod_servidor_funcao' => fn () => LegacyEmployeeRoleFactory::new()->create(),
-            'ref_cod_funcionario_vinculo' => $this->faker->randomDigitNotZero(),
+            'ref_cod_servidor' => fn () => EmployeeFactory::new()->create(),
+            // A função da lotação é uma das funções do próprio servidor
+            'ref_cod_servidor_funcao' => fn (array $attributes) => LegacyEmployeeRoleFactory::new()->create([
+                'ref_cod_servidor' => $attributes['ref_cod_servidor'],
+                'ref_ref_cod_instituicao' => $attributes['ref_ref_cod_instituicao'],
+            ]),
+            'ref_cod_funcionario_vinculo' => fn () => LegacyBondTypeFactory::new()->current(),
             'hora_atividade' => $this->faker->time(),
             'horas_excedentes' => $this->faker->time(),
             'data_saida' => null,

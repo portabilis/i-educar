@@ -27,6 +27,13 @@ let $cpfNotice  = $j('<span>')
   .width($j('#nm_pessoa').outerWidth() - 12)
   .appendTo($cpfField.parent());
 
+let $motivoNotice = $j('<span>')
+  .html('')
+  .addClass('error resource-notice')
+  .hide()
+  .width($j('#nm_pessoa').outerWidth() - 12)
+  .appendTo($j('#document_absence_reason_id').parent());
+
 let campoCadeiraSUSNotice = $j('<span>')
   .html('')
   .addClass('error resource-notice')
@@ -146,6 +153,73 @@ var checkTipoCertidaoCivil = function() {
   }
 }
 
+var possuiCpf = function() {
+  return $j('input[name=possui_cpf]:checked').val() == '1';
+}
+
+var checkMotivoExigeObservacao = function() {
+  var motivo = parseInt($j('#document_absence_reason_id').val(), 10);
+  if (motivosExigemObservacao.indexOf(motivo) > -1) {
+    $j('#document_absence_observation').makeRequired();
+  } else {
+    $j('#document_absence_observation').makeUnrequired();
+  }
+}
+
+var checkMotivoInativo = function() {
+  if (motivosInativos.hasOwnProperty($j('#document_absence_reason_id').val())) {
+    $motivoNotice.html('Motivo inativo. Recomenda-se escolher um motivo ativo.').slideDown('fast');
+  } else {
+    $motivoNotice.hide();
+  }
+}
+
+var agrupaLinhasDoCpf = function() {
+  var classe = $j('#tr_possui_cpf td:first').attr('class');
+  var $linhasDoCpf = $j('#tr_id_federal, #tr_document_absence_reason_id, #tr_document_absence_observation, #tr_cpf_timeline');
+
+  $linhasDoCpf
+    .find('td')
+    .removeClass('formmdtd formlttd')
+    .addClass(classe);
+
+  if ($linhasDoCpf.length % 2 === 1) {
+    $j('#tr_possui_cpf').nextAll('tr[id^="tr_"]').not($linhasDoCpf).not('#tr_file')
+      .find('td.formmdtd, td.formlttd')
+      .toggleClass('formmdtd formlttd');
+  }
+}
+
+var checkPossuiCpf = function() {
+  var $motivo = $j('#document_absence_reason_id');
+  var $observacao = $j('#document_absence_observation');
+
+  if (possuiCpf()) {
+    $j('#tr_id_federal').show();
+    $j('#tr_document_absence_reason_id, #tr_document_absence_observation').hide();
+
+    $motivo.makeUnrequired();
+    $observacao.makeUnrequired();
+
+    $cpfField.makeRequired();
+
+    return;
+  }
+
+  $j('#tr_id_federal').hide();
+  $j('#tr_document_absence_reason_id, #tr_document_absence_observation').show();
+
+  $cpfField.val('');
+  $cpfNotice.hide();
+  $cpfField.siblings('font[color=red]').prev('br').remove();
+  $cpfField.siblings('font[color=red]').remove();
+  $cpfField.makeUnrequired();
+
+  $motivo.makeRequired();
+  checkMotivoExigeObservacao();
+  checkMotivoInativo();
+}
+
 var validatesCpf = function() {
   var valid = true;
   var cpf   = $cpfField.val();
@@ -171,7 +245,7 @@ var validatesUniquenessOfCpf = function() {
 
   $cpfNotice.hide();
 
-  if ((obrigarCPF.val() == 1 || !ignoreValidation.includes(cpf)) && cpf && validatesCpf())
+  if (possuiCpf() && (obrigarCPF.val() == 1 || !ignoreValidation.includes(cpf)) && cpf && validatesCpf())
     getPersonByCpf(cpf);
 }
 
@@ -202,7 +276,7 @@ var submitForm = function(event) {
     validateFieldSUS();
   }
 
-  if ( !ignoreValidation.includes($cpfField.val()) && $cpfField.val()) {
+  if (possuiCpf() && !ignoreValidation.includes($cpfField.val()) && $cpfField.val()) {
     $j(document).data('submit_form_after_ajax_validation', true);
     validatesUniquenessOfCpf();
   }
@@ -251,20 +325,15 @@ $j(document).ready(function() {
 
   changeVisibilityOfLinksToPessoaPai();
   changeVisibilityOfLinksToPessoaMae();
+
+  agrupaLinhasDoCpf();
+  checkPossuiCpf();
+  $j('input[name=possui_cpf]').on('change', checkPossuiCpf);
+  $j('#document_absence_reason_id').on('change', checkMotivoExigeObservacao);
+  $j('#document_absence_reason_id').on('change', checkMotivoInativo);
+  $j('input[type=hidden]#cpf_timeline').remove();
   verificaCampoZonaResidencia();
   $j('#pais_residencia').on('change', verificaCampoZonaResidencia);
-
-  // CPF obrigatório quando o parâmetro da instituição "Exigir CPF" está ativo
-  if (obrigarCPF.val() == 1) {
-    $cpfField.makeRequired();
-  }
-
-  // style fixup
-
-  // agrupado zebra por tipo documento, branco => .formlttd, colorido => .formmdtd
-
-  $j('#tr_uf_emissao_certidao_civil td').removeClass('formmdtd');
-  $j('#tr_carteira_trabalho td').removeClass('formlttd').addClass('formmdtd');
 
   // bind events
 

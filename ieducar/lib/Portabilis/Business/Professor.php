@@ -48,92 +48,50 @@ class Portabilis_Business_Professor
         return count($funcoes) == 1 && $funcoes[0]['professor'];
     }
 
-    public static function escolasAlocado($instituicaoId, $userId)
+    public static function cursosAlocado($instituicaoId, $escolaId, $userId, $ano = null)
     {
         if (self::necessarioVinculoTurma($instituicaoId)) {
-            $sql = '
-                SELECT
-                    e.cod_escola as id,
-                    (
-                        select juridica.fantasia
-                        from pmieducar.escola, cadastro.juridica
-                        where cod_escola = e.cod_escola
-                        and escola.ref_idpes = juridica.idpes limit 1
-                    ) as nome,
-                    ref_servidor as servidor_id,
-                    e.ref_cod_instituicao AS instituicao_id
-                FROM pmieducar.quadro_horario qh
-                INNER JOIN pmieducar.quadro_horario_horarios qhh
-                ON (qh.cod_quadro_horario = qhh.ref_cod_quadro_horario)
-                INNER JOIN pmieducar.escola e
-                ON (e.cod_escola = qhh.ref_cod_escola)
-                WHERE e.ref_cod_instituicao = $1
-                AND qhh.ref_servidor = $2
-                AND qh.ativo = 1
-                AND qhh.ativo = 1
-                ORDER BY nome
-                ';
-        } else {
-            $sql = '
-                select
-                    ref_cod_escola as id,
-                    ref_cod_servidor as servidor_id,
-                    ref_ref_cod_instituicao as instituicao_id,
-                    (
-                        select juridica.fantasia
-                        from escola, cadastro.juridica
-                        where cod_escola = ref_cod_escola
-                        and escola.ref_idpes = juridica.idpes
-                        limit 1
-                    ) as nome,
-                    carga_horaria,
-                    periodo,
-                    hora_final,
-                    hora_inicial,
-                    dia_semana
-                from pmieducar.servidor_alocacao
-                where ref_ref_cod_instituicao = $1
-                and ref_cod_servidor  = $2
-                and ativo = 1
-            ';
-        }
+            $ano = self::anoDoVinculo($ano);
 
-        $options = ['params' => [$instituicaoId, $userId]];
+            if ($ano === false) {
+                return [];
+            }
 
-        return self::fetchPreparedQuery($sql, $options);
-    }
-
-    public static function cursosAlocado($instituicaoId, $escolaId, $userId)
-    {
-        if (self::necessarioVinculoTurma($instituicaoId)) {
             $sql = '
-                SELECT
+                SELECT DISTINCT
                     c.cod_curso as id,
-                    CASE WHEN (c.descricao is not null or c.descricao <> \'\')
+                    CASE WHEN (c.descricao is not null and c.descricao <> \'\')
                         THEN c.nm_curso||\' (\'||c.descricao||\')\'
                     ELSE c.nm_curso END as nome
-                FROM pmieducar.quadro_horario qh
-                INNER JOIN pmieducar.quadro_horario_horarios qhh
-                ON (qh.cod_quadro_horario = qhh.ref_cod_quadro_horario)
+                FROM modules.professor_turma pt
                 INNER JOIN pmieducar.turma t
-                ON (t.cod_turma = qh.ref_cod_turma)
+                ON (t.cod_turma = pt.turma_id)
+                LEFT JOIN pmieducar.turma_serie ts
+                ON (ts.turma_id = t.cod_turma)
                 INNER JOIN pmieducar.serie s
-                ON (t.ref_ref_cod_serie = s.cod_serie)
+                ON (s.cod_serie = COALESCE(ts.serie_id, t.ref_ref_cod_serie))
                 INNER JOIN pmieducar.curso c
                 ON (c.cod_curso = s.ref_cod_curso)
-                WHERE qhh.ref_cod_escola = $1
-                AND qhh.ref_servidor = $2
-                AND qhh.ativo = 1
-                AND qh.ativo = 1
-                ORDER BY c.nm_curso
+                WHERE t.ref_ref_cod_escola = $1
+                AND pt.servidor_id = $2
+                AND t.ativo = 1
+                AND t.visivel != \'f\'
             ';
 
-            $options = ['params' => [$escolaId, $userId]];
+            $params = [$escolaId, $userId];
+
+            if ($ano !== null) {
+                $params[] = $ano;
+                $sql .= ' AND pt.ano = $3';
+            }
+
+            $sql .= ' ORDER BY nome';
+            $options = ['params' => $params];
         } else {
             $sql = '
                 select
                     cod_curso as id,
-                    CASE WHEN (curso.descricao is not null or curso.descricao <> \'\')
+                    CASE WHEN (curso.descricao is not null and curso.descricao <> \'\')
                         THEN curso.nm_curso||\' (\'||curso.descricao||\')\'
                     ELSE curso.nm_curso END as nome
                 from
@@ -155,36 +113,50 @@ class Portabilis_Business_Professor
         return self::fetchPreparedQuery($sql, $options);
     }
 
-    public static function seriesAlocado($instituicaoId, $escolaId, $cursoId, $userId)
+    public static function seriesAlocado($instituicaoId, $escolaId, $cursoId, $userId, $ano = null)
     {
         $instituicaoId = $instituicaoId ?: 0;
         $escolaId = $escolaId ?: 0;
         $cursoId = $cursoId ?: 0;
 
         if (self::canLoadSeriesAlocado($instituicaoId)) {
+            $ano = self::anoDoVinculo($ano);
+
+            if ($ano === false) {
+                return [];
+            }
+
             $sql = '
-                SELECT
+                SELECT DISTINCT
                     s.cod_serie as id,
-                    CASE WHEN (s.descricao is not null or s.descricao <> \'\')
+                    CASE WHEN (s.descricao is not null and s.descricao <> \'\')
                     THEN s.nm_serie||\' (\'||s.descricao||\')\'
                     ELSE s.nm_serie END as nome
-                FROM pmieducar.quadro_horario qh
-                INNER JOIN pmieducar.quadro_horario_horarios qhh
-                ON (qh.cod_quadro_horario = qhh.ref_cod_quadro_horario)
+                FROM modules.professor_turma pt
                 INNER JOIN pmieducar.turma t
-                ON (t.cod_turma = qh.ref_cod_turma)
+                ON (t.cod_turma = pt.turma_id)
+                LEFT JOIN pmieducar.turma_serie ts
+                ON (ts.turma_id = t.cod_turma)
                 INNER JOIN pmieducar.serie s
-                ON (t.ref_ref_cod_serie = s.cod_serie)
-                INNER JOIN pmieducar.escola e
-                ON (e.cod_escola = qhh.ref_cod_escola)
-                WHERE e.ref_cod_instituicao = $1
-                AND e.cod_escola = $2
+                ON (s.cod_serie = COALESCE(ts.serie_id, t.ref_ref_cod_serie))
+                WHERE pt.instituicao_id = $1
+                AND t.ref_ref_cod_escola = $2
                 AND s.ref_cod_curso = $3
-                AND qhh.ref_servidor = $4
-                ORDER BY s.nm_serie
+                AND pt.servidor_id = $4
+                AND t.ativo = 1
+                AND t.visivel != \'f\'
             ';
 
-            return self::fetchPreparedQuery($sql, ['params' => [$instituicaoId, $escolaId, $cursoId, $userId]]);
+            $params = [$instituicaoId, $escolaId, $cursoId, $userId];
+
+            if ($ano !== null) {
+                $params[] = $ano;
+                $sql .= ' AND pt.ano = $5';
+            }
+
+            $sql .= ' ORDER BY nome';
+
+            return self::fetchPreparedQuery($sql, ['params' => $params]);
         }
     }
 
@@ -193,26 +165,45 @@ class Portabilis_Business_Professor
         return self::necessarioVinculoTurma($instituicaoId);
     }
 
-    public static function turmasAlocado($instituicaoId, $escolaId, $serieId, $userId)
+    public static function turmasAlocado($instituicaoId, $escolaId, $serieId, $userId, $ano = null)
     {
         if (self::necessarioVinculoTurma($instituicaoId)) {
+            $ano = self::anoDoVinculo($ano);
+
+            if ($ano === false) {
+                return [];
+            }
+
             $sql = '
-                SELECT
+                SELECT DISTINCT
                     t.cod_turma as id,
                     t.nm_turma as nome,
                     t.ano
-                FROM pmieducar.quadro_horario qh
-                INNER JOIN pmieducar.quadro_horario_horarios qhh
-                ON (qh.cod_quadro_horario = qhh.ref_cod_quadro_horario)
+                FROM modules.professor_turma pt
                 INNER JOIN pmieducar.turma t
-                ON (t.cod_turma = qh.ref_cod_turma)
-                WHERE qhh.ref_cod_escola = $1
-                AND qhh.ref_cod_serie = $2
-                AND qhh.ref_servidor = $3
-                AND qhh.ativo = 1
-                AND qh.ativo = 1
-                ORDER BY t.nm_turma ASC
+                ON (t.cod_turma = pt.turma_id)
+                LEFT JOIN pmieducar.turma_serie ts
+                ON (ts.turma_id = t.cod_turma)
+                WHERE t.ref_ref_cod_escola = $1
+                AND (
+                    t.ref_ref_cod_serie = $2
+                    OR ts.serie_id = $2
+                )
+                AND pt.servidor_id = $3
+                AND t.ativo = 1
+                AND t.visivel != \'f\'
             ';
+
+            $params = [$escolaId, $serieId, $userId];
+
+            if ($ano !== null) {
+                $params[] = $ano;
+                $sql .= ' AND pt.ano = $4';
+            }
+
+            $sql .= ' ORDER BY t.nm_turma ASC';
+
+            return self::fetchPreparedQuery($sql, ['params' => $params]);
         } else {
             // Feito gambiarra para que quando professor tenha alocação liste todas turmas do turno integral
             $sql = '
@@ -259,21 +250,19 @@ class Portabilis_Business_Professor
     {
         if (self::necessarioVinculoTurma($instituicaoId)) {
             $sql = '
-                SELECT
+                SELECT DISTINCT
                     cc.id, cc.nome,
                     ac.nome as area_conhecimento,
                     ac.secao as secao_area_conhecimento
-                FROM pmieducar.quadro_horario qh
-                INNER JOIN pmieducar.quadro_horario_horarios qhh
-                ON (qh.cod_quadro_horario = qhh.ref_cod_quadro_horario)
+                FROM modules.professor_turma pt
+                INNER JOIN modules.professor_turma_disciplina ptd
+                ON (ptd.professor_turma_id = pt.id)
                 INNER JOIN modules.componente_curricular cc
-                ON (cc.id = qhh.ref_cod_disciplina)
+                ON (cc.id = ptd.componente_curricular_id)
                 INNER JOIN modules.area_conhecimento ac
                 ON (cc.area_conhecimento_id = ac.id)
-                WHERE qh.ref_cod_turma = $1
-                AND qhh.ref_servidor = $2
-                AND qhh.ativo = 1
-                AND qh.ativo = 1
+                WHERE pt.turma_id = $1
+                AND pt.servidor_id = $2
                 ORDER BY ac.secao, ac.nome, cc.nome
             ';
 
@@ -365,6 +354,18 @@ class Portabilis_Business_Professor
     protected static function fetchPreparedQuery($sql, $options = [])
     {
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+    }
+
+    /**
+     * null quando a tela não informa o ano; false quando ele não é um ano válido para a coluna (inteiro de 1 a 32767) e a lista volta vazia.
+     */
+    private static function anoDoVinculo($ano)
+    {
+        if ($ano === null || $ano === '') {
+            return null;
+        }
+
+        return filter_var($ano, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 32767]]);
     }
 
     private static function necessarioVinculoTurma($instituicaoId)

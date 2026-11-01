@@ -36,11 +36,16 @@ return new class extends clsDetalhe
         $race = LegacyRace::query()->find(id: $this->cod_raca);
 
         if (!$race) {
-            $this->simpleRedirect(url: 'educar_raca_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_raca_lst.php',
+                registro: 'raça',
+                feminino: true,
+                codigo: $this->cod_raca,
+            );
         }
 
         if ($race->nm_raca) {
-            $this->addDetalhe(detalhe: ['Raça', $race->nm_raca]);
+            $this->addDetalhe(detalhe: ['Raça', e($race->nm_raca)]);
         }
 
         $obj_permissao = new clsPermissoes;

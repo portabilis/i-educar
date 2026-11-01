@@ -5,9 +5,11 @@ use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyGrade;
 use App\Models\LegacySchoolCourse;
 use App\Models\LegacySchoolGrade;
+use App\Models\LegacySchoolGradeDiscipline;
 use App\Process;
 use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
+use App\Services\SchoolGradeDisciplineService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
 
@@ -85,8 +87,11 @@ return new class extends clsCadastro
                 ->first();
 
             if (!$registro) {
-                $this->mensagem .= 'Registro não localizado.<br>';
-                $this->simpleRedirect('educar_escola_serie_lst.php');
+                $this->redirectNotFound(
+                    url: 'educar_escola_serie_lst.php',
+                    registro: 'série da escola',
+                    feminino: true,
+                );
             }
 
             $this->hora_inicial = $registro['hora_inicial'];
@@ -174,19 +179,17 @@ return new class extends clsCadastro
 
         // Editar
         if ($this->ref_cod_curso) {
-            $obj_serie = new clsPmieducarSerie;
-            $obj_serie->setOrderby('nm_serie ASC');
-            $lst_serie = $obj_serie->lista(
-                [
-                    'ref_cod_curso' => $this->ref_cod_curso,
-                    'ativo' => 1,
-                ]
-            );
+            $lst_serie = LegacyGrade::query()
+                ->active()
+                ->when(is_numeric($this->ref_cod_curso), fn ($q) => $q->whereCourse($this->ref_cod_curso))
+                ->orderBy('nm_serie')
+                ->get([
+                    'cod_serie',
+                    'nm_serie',
+                ]);
 
-            if (is_array($lst_serie) && count($lst_serie)) {
-                foreach ($lst_serie as $serie) {
-                    $opcoes_serie[$serie['cod_serie']] = $serie['nm_serie'];
-                }
+            foreach ($lst_serie as $serie) {
+                $opcoes_serie[$serie['cod_serie']] = $serie['nm_serie'];
             }
         }
 
@@ -231,23 +234,25 @@ return new class extends clsCadastro
 
         // Inclui disciplinas
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
-            $obj = new clsPmieducarEscolaSerieDisciplina;
-            $registros = $obj->lista(int_ref_ref_cod_serie: $this->ref_cod_serie, int_ref_ref_cod_escola: $this->ref_cod_escola, int_ativo: 1);
-
-            if ($registros) {
-                $registros = array_map(callback: function ($item) {
-                    foreach ($item as $k => $v) {
-                        if (is_numeric($k)) {
-                            unset($item[$k]);
-                        }
-                    }
-
+            $registros = LegacySchoolGradeDiscipline::query()
+                ->whereGrade($this->ref_cod_serie)
+                ->whereSchool($this->ref_cod_escola)
+                ->active()
+                ->selectRaw('
+                    ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina, carga_horaria,
+                    etapas_especificas, etapas_utilizadas, hora_falta, aulas_por_semana,
+                    array_to_json(anos_letivos) AS anos_letivos
+                ')
+                ->get()
+                ->map(function ($registro) {
+                    $item = $registro->getAttributes();
                     $item['anos_letivos'] = json_decode($item['anos_letivos']);
                     $item['carga_horaria'] = (float) $item['carga_horaria'];
 
                     return $item;
-                }, array: $registros);
+                });
 
+            if ($registros->isNotEmpty()) {
                 $this->campoOculto(nome: 'componentes_sombra', valor: json_encode($registros));
 
                 foreach ($registros as $campo) {
@@ -411,7 +416,10 @@ return new class extends clsCadastro
                 $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $conteudo);
                 $disciplinas .= '</table>';
             } else {
+                // Inalcançável: `$lista` é sempre uma Collection, portanto iterável.
+                // @codeCoverageIgnoreStart
                 $disciplinas = 'A série/ano escolar não possui componentes curriculares cadastrados.';
+                // @codeCoverageIgnoreEnd
             }
 
             $this->campoLista(
@@ -489,25 +497,21 @@ return new class extends clsCadastro
 
         if ($cadastrou) {
             if ($this->disciplinas) {
-                foreach ($this->disciplinas as $key => $campo) {
-                    $obj = new clsPmieducarEscolaSerieDisciplina(
-                        ref_ref_cod_serie: $this->ref_cod_serie,
-                        ref_ref_cod_escola: $this->ref_cod_escola,
-                        ref_cod_disciplina: $campo,
-                        ativo: 1,
-                        carga_horaria: $this->carga_horaria[$key],
-                        etapas_especificas: $this->etapas_especificas[$key],
-                        etapas_utilizadas: $this->etapas_utilizadas[$key],
-                        anos_letivos: $this->componente_anos_letivos[$key] ?: [],
-                        hora_falta: empty($this->hora_falta[$key]) ? null : $this->hora_falta[$key] / 60,
-                        aulas_por_semana: empty($this->aulas_semana[$key]) ? null : $this->aulas_semana[$key]
-                    );
+                $componenteService = new SchoolGradeDisciplineService;
 
-                    if ($obj->existe()) {
-                        $cadastrou1 = $obj->edita();
-                    } else {
-                        $cadastrou1 = $obj->cadastra();
-                    }
+                foreach ($this->disciplinas as $key => $campo) {
+                    $cadastrou1 = $componenteService->store(
+                        gradeId: $this->ref_cod_serie,
+                        schoolId: $this->ref_cod_escola,
+                        disciplineId: $campo,
+                        active: 1,
+                        workload: $this->carga_horaria[$key],
+                        specificStages: $this->etapas_especificas[$key],
+                        usedStages: $this->etapas_utilizadas[$key],
+                        academicYears: $this->componente_anos_letivos[$key] ?: [],
+                        absenceHour: empty($this->hora_falta[$key]) ? null : $this->hora_falta[$key] / 60,
+                        weeklyClasses: empty($this->aulas_semana[$key]) ? null : $this->aulas_semana[$key]
+                    );
 
                     if (!$cadastrou1) {
                         $this->mensagem = 'Cadastro não realizado.<br>';
@@ -521,9 +525,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_escola_serie_lst.php');
         }
 
+        // Inalcançável: a gravação do vínculo acima devolve o model ou a quantidade de linhas de um registro que existe, ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Cadastro não rrealizado.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
@@ -573,14 +580,12 @@ return new class extends clsCadastro
                 'anos_letivos' => $anosLetivos,
             ], $this->montaHorarios()));
 
-        $obj = new clsPmieducarEscolaSerieDisciplina(
-            ref_ref_cod_serie: $this->ref_cod_serie,
-            ref_ref_cod_escola: $this->ref_cod_escola,
-            ref_cod_disciplina: null,
-            ativo: 1
+        $componenteService = new SchoolGradeDisciplineService;
+        $componenteService->deleteNotIn(
+            gradeId: $this->ref_cod_serie,
+            schoolId: $this->ref_cod_escola,
+            keepDisciplines: $this->disciplinas
         );
-
-        $obj->excluirNaoSelecionados($this->disciplinas);
 
         if ($editou) {
             if ($this->disciplinas) {
@@ -597,40 +602,23 @@ return new class extends clsCadastro
                         $hora_falta = $this->hora_falta[$key];
                     }
 
-                    $etapas_especificas = $this->etapas_especificas[$key];
-                    $etapas_utilizadas = $this->etapas_utilizadas[$key];
-
-                    $obj = new clsPmieducarEscolaSerieDisciplina(
-                        ref_ref_cod_serie: $this->ref_cod_serie,
-                        ref_ref_cod_escola: $this->ref_cod_escola,
-                        ref_cod_disciplina: $campo,
-                        ativo: 1,
-                        carga_horaria: $carga_horaria,
-                        etapas_especificas: $etapas_especificas,
-                        etapas_utilizadas: $etapas_utilizadas,
-                        anos_letivos: $this->componente_anos_letivos[$key] ?: [],
-                        hora_falta: empty($hora_falta) ? null : $hora_falta / 60,
-                        aulas_por_semana: empty($this->aulas_semana[$key]) ? null : $this->aulas_semana[$key]
+                    $gravou = $componenteService->store(
+                        gradeId: $this->ref_cod_serie,
+                        schoolId: $this->ref_cod_escola,
+                        disciplineId: $campo,
+                        active: 1,
+                        workload: $carga_horaria,
+                        specificStages: $this->etapas_especificas[$key],
+                        usedStages: $this->etapas_utilizadas[$key],
+                        academicYears: $this->componente_anos_letivos[$key] ?: [],
+                        absenceHour: empty($hora_falta) ? null : $hora_falta / 60,
+                        weeklyClasses: empty($this->aulas_semana[$key]) ? null : $this->aulas_semana[$key]
                     );
 
-                    $existe = $obj->existe();
+                    if (!$gravou) {
+                        $this->mensagem = 'Edição não realizada.<br>';
 
-                    if ($existe) {
-                        $editou1 = $obj->edita();
-
-                        if (!$editou1) {
-                            $this->mensagem = 'Edição não realizada.<br>';
-
-                            return false;
-                        }
-                    } else {
-                        $cadastrou = $obj->cadastra();
-
-                        if (!$cadastrou) {
-                            $this->mensagem = 'Cadastro não realizada.<br>';
-
-                            return false;
-                        }
+                        return false;
                     }
                 }
             }
@@ -652,20 +640,23 @@ return new class extends clsCadastro
             return false;
         }
 
-        $objEscolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina(
-            ref_ref_cod_serie: $this->ref_cod_serie_,
-            ref_ref_cod_escola: $this->ref_cod_escola_,
-            ref_cod_disciplina: null,
-            ativo: 1
-        );
+        $componenteService = new SchoolGradeDisciplineService;
 
-        $existeDependencia = $objEscolaSerieDisciplina->existeDependencia(listaComponentesSelecionados: $this->disciplinas, exclusao: true);
+        $existeDependencia = $componenteService->hasDependency(
+            gradeId: $this->ref_cod_serie_,
+            schoolId: $this->ref_cod_escola_,
+            disciplines: $this->disciplinas,
+            deleting: true
+        );
 
         if ($existeDependencia) {
             $this->mensagem = 'Não foi possível remover o componente. Existe registros de dependência neste componente.<br>';
             $this->simpleRedirect("educar_escola_serie_cad.php?ref_cod_escola={$this->ref_cod_escola_}&ref_cod_serie={$this->ref_cod_serie_}");
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $excluiu = LegacySchoolGrade::query()
@@ -679,8 +670,10 @@ return new class extends clsCadastro
             ]);
 
         if ($excluiu) {
-            $obj = new clsPmieducarEscolaSerieDisciplina(ref_ref_cod_serie: $this->ref_cod_serie_, ref_ref_cod_escola: $this->ref_cod_escola_, ref_cod_disciplina: null, ativo: 0);
-            $excluiu1 = $obj->excluirTodos();
+            $excluiu1 = $componenteService->deleteAll(
+                gradeId: $this->ref_cod_serie_,
+                schoolIds: $this->ref_cod_escola_
+            );
 
             if ($excluiu1) {
                 $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';

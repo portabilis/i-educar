@@ -1,32 +1,22 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\EmployeeAllocation;
 use App\Models\LegacyPeriod;
 use App\Models\LegacySchool;
 use App\Models\LegacyUser;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class EmployeeAllocationTest extends EloquentTestCase
-{
-    protected $relations = [
-        'school' => LegacySchool::class,
-        'deletedByUser' => LegacyUser::class,
-        'createdByUser' => LegacyUser::class,
-        'period' => LegacyPeriod::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return EmployeeAllocation::class;
-    }
+beforeEach(fn () => $this->eloquent(EmployeeAllocation::class, relations: [
+    'school' => LegacySchool::class,
+    'deletedByUser' => LegacyUser::class,
+    'createdByUser' => LegacyUser::class,
+    'period' => LegacyPeriod::class,
+]));
 
-    public function test_attributes()
-    {
-        $this->assertEquals($this->model->period->nome, $this->model->periodName);
-    }
-}
+EloquentModelTestCase::registerModelTests();
+
+test('attributes', function () {
+    $this->assertEquals($this->model->period->nome, $this->model->periodName);
+});

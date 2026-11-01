@@ -38,7 +38,11 @@ return new class extends clsDetalhe
         $registro = LegacyEducationLevel::find(id: $this->cod_nivel_ensino)?->getAttributes();
 
         if (!$registro) {
-            $this->simpleRedirect(url: 'educar_nivel_ensino_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_nivel_ensino_lst.php',
+                registro: 'nível de ensino',
+                codigo: $this->cod_nivel_ensino,
+            );
         }
 
         $obj_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
@@ -49,14 +53,14 @@ return new class extends clsDetalhe
         $nivel_usuario = $obj_permissoes->nivel_acesso(int_idpes_usuario: $this->pessoa_logada);
         if ($nivel_usuario == 1) {
             if ($registro['ref_cod_instituicao']) {
-                $this->addDetalhe(detalhe: ['Instituição', "{$registro['ref_cod_instituicao']}"]);
+                $this->addDetalhe(detalhe: ['Instituição', e($registro['ref_cod_instituicao'])]);
             }
         }
         if ($registro['nm_nivel']) {
-            $this->addDetalhe(detalhe: ['Nível Ensino', "{$registro['nm_nivel']}"]);
+            $this->addDetalhe(detalhe: ['Nível Ensino', e($registro['nm_nivel'])]);
         }
         if ($registro['descricao']) {
-            $this->addDetalhe(detalhe: ['Descrição', "{$registro['descricao']}"]);
+            $this->addDetalhe(detalhe: ['Descrição', e($registro['descricao'])]);
         }
 
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 571, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 3)) {

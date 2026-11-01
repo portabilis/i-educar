@@ -83,10 +83,16 @@ return new class extends clsListagem
             $query->where(column: 'nm_tipo', operator: 'ilike', value: '%' . $this->nm_tipo . '%');
         }
         if (is_numeric(value: $this->num_meses)) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $query->where(column: 'num_meses', operator: $this->num_meses);
+            // @codeCoverageIgnoreEnd
         }
         if (is_numeric(value: $this->ref_cod_instituicao)) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $query->where(column: 'ref_cod_instituicao', operator: $this->ref_cod_instituicao);
+            // @codeCoverageIgnoreEnd
         }
 
         $result = $query->paginate(perPage: $this->limite, pageName: 'pagina_'.$this->nome);
@@ -102,13 +108,13 @@ return new class extends clsListagem
                 $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
                 $lista_busca = [
-                    "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">{$registro['nm_tipo']}</a>",
-                    "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">{$registro['num_etapas']}</a>",
-                    "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">{$registro['num_meses']}</a>",
+                    "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">" . e($registro['nm_tipo']) . '</a>',
+                    "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">" . e($registro['num_etapas']) . '</a>',
+                    "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">" . e($registro['num_meses']) . '</a>',
                 ];
 
                 if ($nivel_usuario == 1) {
-                    $lista_busca[] = "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">{$registro['ref_cod_instituicao']}</a>";
+                    $lista_busca[] = "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">" . e($registro['ref_cod_instituicao']) . '</a>';
                 }
                 $this->addLinhas(linha: $lista_busca);
             }

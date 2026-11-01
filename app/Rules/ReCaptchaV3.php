@@ -10,6 +10,16 @@ use Throwable;
 class ReCaptchaV3 implements Rule
 {
     /**
+     * @var mixed
+     */
+    private $client;
+
+    public function __construct($client = null)
+    {
+        $this->client = $client ?? app(Client::class);
+    }
+
+    /**
      * Create a new rule instance.
      *
      * @return bool
@@ -20,10 +30,8 @@ class ReCaptchaV3 implements Rule
             return true;
         }
 
-        $client = new Client;
-
         try {
-            $response = $client->post('https://www.google.com/recaptcha/api/siteverify', [
+            $response = $this->client->post('https://www.google.com/recaptcha/api/siteverify', [
                 'query' => [
                     'secret' => config('legacy.app.recaptcha_v3.private_key'),
                     'response' => $value,

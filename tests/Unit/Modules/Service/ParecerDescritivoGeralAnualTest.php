@@ -1,49 +1,41 @@
 <?php
 
-class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Service_ParecerDescritivoCommon
-{
-    protected function setUp(): void
-    {
-        $this->_setRegraOption('parecerDescritivo', RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL);
-        parent::setUp();
-    }
+uses(Avaliacao_Service_ParecerDescritivoCommon::class);
 
-    protected function _getTestInstanciaDeParecerERegistradaApenasUmaVezNoBoletim()
-    {
+beforeEach(function () {
+    $this->configuraRegra(['parecerDescritivo' => RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL]);
+
+    $this->getTestInstanciaDeParecerERegistradaApenasUmaVezNoBoletim = function () {
         return new Avaliacao_Model_ParecerDescritivoGeral([
             'parecer' => 'Ok.',
         ]);
-    }
+    };
 
-    protected function _getTestAdicionaParecerNoBoletim()
-    {
+    $this->getTestAdicionaParecerNoBoletim = function () {
         return new Avaliacao_Model_ParecerDescritivoGeral([
             'parecer' => 'N/D.',
         ]);
-    }
+    };
 
-    protected function _getTestSalvarPareceresNoBoletimInstanciasDePareceres()
-    {
+    $this->getTestSalvarPareceresNoBoletimInstanciasDePareceres = function () {
         return [
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'parecer' => 'N/D.',
                 'etapa' => 'An',
             ]),
         ];
-    }
+    };
 
-    protected function _getTestSalvarPareceresNoBoletimComEtapasJaLancadasInstancias()
-    {
+    $this->getTestSalvarPareceresNoBoletimComEtapasJaLancadasInstancias = function () {
         return [
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'parecer' => 'N/D.',
                 'etapa' => 'An',
             ]),
         ];
-    }
+    };
 
-    protected function _getTestSalvarPareceresNoBoletimComEtapasJaLancadasInstanciasJaLancadas()
-    {
+    $this->getTestSalvarPareceresNoBoletimComEtapasJaLancadasInstanciasJaLancadas = function () {
         return [
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'id' => 1,
@@ -51,19 +43,17 @@ class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Servic
                 'etapa' => 'An',
             ]),
         ];
-    }
+    };
 
-    protected function _getTestSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadasInstancias()
-    {
+    $this->getTestSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadasInstancias = function () {
         return [
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'parecer' => 'N/D.',
             ]),
         ];
-    }
+    };
 
-    protected function _getTestSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadasInstanciasLancadas()
-    {
+    $this->getTestSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadasInstanciasLancadas = function () {
         return [
             new Avaliacao_Model_ParecerDescritivoGeral([
                 'id' => 1,
@@ -71,10 +61,9 @@ class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Servic
                 'etapa' => 'An',
             ]),
         ];
-    }
+    };
 
-    protected function _testAdicionaParecerNoBoletimVerificaValidadores(Avaliacao_Model_ParecerDescritivoAbstract $parecer)
-    {
+    $this->testAdicionaParecerNoBoletimVerificaValidadores = function (Avaliacao_Model_ParecerDescritivoAbstract $parecer) {
         $this->markTestSkipped();
         $this->assertEquals(1, $parecer->etapa);
         $this->assertEquals('N/D.', $parecer->parecer);
@@ -83,10 +72,11 @@ class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Servic
 
         $this->assertEquals($this->_getEtapasPossiveisParecer(), $validators['etapa']->getOption('choices'));
         $this->assertFalse(isset($validators['componenteCurricular']));
-    }
+    };
+});
 
-    public function test_salvas_pareceres_atualizando_etapa_da_ultima_instancia_adicionada_no_boletim_com_etapas_lancadas()
-    {
-        $this->markTestSkipped();
-    }
-}
+Avaliacao_Service_ParecerDescritivoCommon::registerParecerDescritivoTests();
+
+test('salvas pareceres atualizando etapa da ultima instancia adicionada no boletim com etapas lancadas (teste do próprio arquivo)', function () {
+    $this->markTestSkipped();
+});

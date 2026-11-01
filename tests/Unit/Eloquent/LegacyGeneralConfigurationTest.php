@@ -1,22 +1,13 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyInstitution;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyGeneralConfigurationTest extends EloquentTestCase
-{
-    public $relations = [
-        'institution' => LegacyInstitution::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyGeneralConfiguration::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyGeneralConfiguration::class, relations: [
+    'institution' => LegacyInstitution::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

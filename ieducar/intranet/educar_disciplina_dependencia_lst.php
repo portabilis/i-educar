@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\LegacyDisciplineDependence;
+use App\Models\LegacyEnrollment;
+use App\Models\LegacyRegistration;
 
 return new class extends clsListagem
 {
@@ -35,7 +37,10 @@ return new class extends clsListagem
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -66,18 +71,19 @@ return new class extends clsListagem
             $this->ref_cod_escola = $det_matricula['ref_ref_cod_escola'];
             $this->ref_cod_serie = $det_matricula['ref_ref_cod_serie'];
 
-            $obj_matricula_turma = new clsPmieducarMatriculaTurma;
-            $lst_matricula_turma = $obj_matricula_turma->lista(
-                $this->ref_cod_matricula,
-                int_ativo: 1,
-                int_ref_cod_serie: $this->ref_cod_serie,
-                int_ref_cod_escola: $this->ref_cod_escola
-            );
+            $enturmacao = LegacyEnrollment::query()
+                ->active()
+                ->when(is_numeric($this->ref_cod_matricula), fn ($q) => $q->whereRegistration($this->ref_cod_matricula))
+                ->whereHas('registration', function ($q) {
+                    $q->whereHas('student', fn ($q) => $q->active());
+                    $q->when(is_numeric($this->ref_cod_serie), fn ($q) => $q->whereGrade($this->ref_cod_serie));
+                    $q->when(is_numeric($this->ref_cod_escola), fn ($q) => $q->whereSchool($this->ref_cod_escola));
+                })
+                ->first(['ref_cod_turma', 'sequencial']);
 
-            if (is_array($lst_matricula_turma)) {
-                $det = array_shift($lst_matricula_turma);
-                $this->ref_cod_turma = $det['ref_cod_turma'];
-                $this->ref_sequencial = $det['sequencial'];
+            if ($enturmacao) {
+                $this->ref_cod_turma = $enturmacao->ref_cod_turma;
+                $this->ref_sequencial = $enturmacao->sequencial;
             }
         }
 
@@ -167,8 +173,13 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
+        // Início > Escola > Alunos > Nome > Matrícula > Disciplinas de dependência
+        $registration = LegacyRegistration::find($this->ref_cod_matricula);
         $this->breadcrumb(currentPage: 'Disciplinas de dependência', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url("intranet/educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}") => 'Matrícula',
         ]);
     }
 

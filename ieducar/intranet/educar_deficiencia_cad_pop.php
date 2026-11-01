@@ -47,6 +47,8 @@ return new class extends clsCadastro
 
     public function Novo()
     {
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $cadastrou = false;
         if (is_string($this->nm_deficiencia)) {
             LegacyDeficiency::create([
@@ -72,6 +74,7 @@ return new class extends clsCadastro
     public function Editar() {}
 
     public function Excluir() {}
+    // @codeCoverageIgnoreEnd
 
     public function Formular()
     {

@@ -1,22 +1,13 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyAbandonmentType;
 use App\Models\LegacyInstitution;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyAbandonmentTypeTest extends EloquentTestCase
-{
-    public $relations = [
-        'institution' => LegacyInstitution::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyAbandonmentType::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyAbandonmentType::class, relations: [
+    'institution' => LegacyInstitution::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

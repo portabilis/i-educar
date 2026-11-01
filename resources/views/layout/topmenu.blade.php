@@ -4,7 +4,7 @@
         $topmenu = $menu->where('id', $mainmenu)->first();
     @endphp
     <div class="ieducar-menu-container">
-        @if($topmenu->children && $topmenu->children->count())
+        @if($topmenu?->children && $topmenu->children->count())
             @if($topmenu->hasLinkInSubmenu())
                 <ul class="ieducar-menu clearfix">
                     @foreach($topmenu->children->sortBy('order') as $submenu)

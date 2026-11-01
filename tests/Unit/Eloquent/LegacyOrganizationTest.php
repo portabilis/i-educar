@@ -1,24 +1,17 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyOrganization;
 use App\Models\LegacyPerson;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyOrganizationTest extends EloquentTestCase
-{
-    protected $relations = [
-        'person' => LegacyPerson::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return LegacyOrganization::class;
-    }
+beforeEach(fn () => $this->eloquent(LegacyOrganization::class, relations: [
+    'person' => LegacyPerson::class,
+]));
 
-    public function test_get_name_attribute(): void
-    {
-        $this->assertEquals($this->model->name, $this->model->fantasia);
-    }
-}
+EloquentModelTestCase::registerModelTests();
+
+test('get name attribute', function () {
+    $this->assertEquals($this->model->name, $this->model->fantasia);
+});

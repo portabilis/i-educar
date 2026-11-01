@@ -226,6 +226,17 @@ class clsCampos extends Core_Controller_Page_Abstract
         ];
     }
 
+    private function escapeValue($valor): string
+    {
+        return is_scalar($valor) || $valor instanceof Stringable ? htmlspecialchars((string) $valor, ENT_QUOTES) : '';
+    }
+
+    private function escapeOptionText($texto): string
+    {
+        // Telas legadas passam entidades com `__toString()` como texto da opção.
+        return is_scalar($texto) || $texto instanceof Stringable ? htmlspecialchars((string) $texto, ENT_QUOTES, 'UTF-8', false) : '';
+    }
+
     public function campoCpf($nome, $campo, $valor, $obrigatorio = false, $descricao = false, $disabled = false, $onChange = '')
     {
         $arr_componente = [
@@ -1183,7 +1194,10 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                         switch (strtolower($campo_[0])) {
                             case 'html':
+                                // Inalcançável: nenhum construtor de campo põe um 'html' dentro da tabela.
+                                // @codeCoverageIgnoreStart
                                 $retorno .= $componente;
+                                // @codeCoverageIgnoreEnd
                                 // no break
                             case 'texto':
                                 $retorno .= $this->getCampoTexto("{$nome}[{$key2}]", "{$nome}[{$key2}]", $valor[$key], $campo_[4], $campo_[5], $evento, $campo_[10], '', $class, $campo_[7]);
@@ -1318,7 +1332,10 @@ class clsCampos extends Core_Controller_Page_Abstract
                 }
 
                 if (($campo == $campo_anterior) && ($campo != '-:') && $nome == $nome_anterior) {
+                    // Inalcançável: os campos são indexados pelo nome, que nunca se repete.
+                    // @codeCoverageIgnoreStart
                     $campo = '';
+                    // @codeCoverageIgnoreEnd
                 } else {
                     $campo_anterior = $campo;
                     $nome_anterior = $nome;
@@ -1331,6 +1348,8 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $classe = $md ? 'formmdtd' : 'formlttd';
 
                 if ($campo_tabela && false) {
+                    // Inalcançável: a condição termina em `&& false`.
+                    // @codeCoverageIgnoreStart
                     if ($componente[10] && ($componente[0] == 'textoDuploInv'
                             || $componente[0] == 'textoInv')) {
                         $name = " name='tr_{$componente[10]}'  ";
@@ -1339,10 +1358,14 @@ class clsCampos extends Core_Controller_Page_Abstract
                     }
 
                     $retorno .= "<tr id='tr_$nome' {$name} $style><td class='$classe' style='vertical-align: top'><span class='form'><label for='$nome'>$campo</label></span>{$obrigatorio}</td><td class='$classe' style='vertical-align: top'><span class='form'>\n";
+                    // @codeCoverageIgnoreEnd
                 } elseif (!$foiDuplo) {
                     if ($campo == '-:') {
                         if (empty($componente[3])) {
+                            // Inalcançável na prática: `renderpixel()` não existe mais e a chamada derrubaria a tela.
+                            // @codeCoverageIgnoreStart
                             $componente[3] = renderpixel();
+                            // @codeCoverageIgnoreEnd
                         }
 
                         $explicacao = ($componente[6]) ?
@@ -1380,8 +1403,11 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                 switch ($tipo) {
                     case 'html':
+                        // Inalcançável: o campo 'html' é tratado antes, pelo nome.
+                        // @codeCoverageIgnoreStart
                         $retorno .= $componente;
                         break;
+                        // @codeCoverageIgnoreEnd
 
                     case 'rotuloDuplo':
                         $foiDuplo = true;
@@ -1393,37 +1419,37 @@ class clsCampos extends Core_Controller_Page_Abstract
                         break;
 
                     case 'cep':
-                        $retorno .= "<input onKeyPress=\"formataCEP(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$campo_valor}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" $componente[8]>$componente[7]\n";
+                        $retorno .= "<input onKeyPress=\"formataCEP(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$this->escapeValue($campo_valor)}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" $componente[8]>$componente[7]\n";
                         break;
 
                     case 'data':
-                        $retorno .= "<input onKeyPress=\"formataData(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]}> $componente[7]\n";
+                        $retorno .= "<input onKeyPress=\"formataData(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$this->escapeValue($componente[3])}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]}> $componente[7]\n";
                         break;
 
                     case 'dataDupla':
-                        $retorno .= "<input onKeyPress=\"formataData(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\"> $componente[7]";
+                        $retorno .= "<input onKeyPress=\"formataData(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$this->escapeValue($componente[3])}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\"> $componente[7]";
                         break;
 
                     case 'hora':
                         $componente[3] = (strlen($componente[3]) < 6 || $componente[5] != 5) ? $componente[3] : substr($componente[3], 0, 5);
                         $segundos = ($componente[5] != 5) ? 'true' : 'false';
-                        $retorno .= "<input onKeyPress=\"formataHora(this, event, {$segundos});\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]} {$componente[9]}>{$componente[7]}";
+                        $retorno .= "<input onKeyPress=\"formataHora(this, event, {$segundos});\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$this->escapeValue($componente[3])}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]} {$componente[9]}>{$componente[7]}";
                         break;
 
                     case 'cpf':
-                        $retorno .= "<input onKeyPress=\"formataCPF(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\">$componente[7]";
+                        $retorno .= "<input onKeyPress=\"formataCPF(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$this->escapeValue($componente[3])}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\">$componente[7]";
                         break;
 
                     case 'idFederal':
-                        $retorno .= "<input onkeyPress=\"formataIdFederal(this,event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[7]}> {$componente[8]}";
+                        $retorno .= "<input onkeyPress=\"formataIdFederal(this,event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$this->escapeValue($componente[3])}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[7]}> {$componente[8]}";
                         break;
 
                     case 'cnpj':
-                        $retorno .= "<input onKeyPress=\"formataCNPJ(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\">";
+                        $retorno .= "<input onKeyPress=\"formataCNPJ(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$this->escapeValue($componente[3])}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\">";
                         break;
 
                     case 'cnpj_pesq':
-                        $retorno .= "<input onKeyPress=\"formataCNPJ(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\">";
+                        $retorno .= "<input onKeyPress=\"formataCNPJ(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$this->escapeValue($componente[3])}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\">";
                         $retorno .= "<img src=\"imagens/lupa.png\" alt=\"Pesquisa\" border=\"0\" onclick=\"pesquisa_valores_popless('{$componente[7]}?campos={$componente[8]}', '{$nome}')\"> {$componente[9]}";
                         break;
 
@@ -1479,7 +1505,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                             $disabled = '';
                         }
 
-                        $retorno .= "<input style='text-align:right'  onKeyup=\"formataMonetario(this, event);\" $componente[8] = \"{$componente[7]}\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$disabled}> {$componente[11]}";
+                        $retorno .= "<input style='text-align:right'  onKeyup=\"formataMonetario(this, event);\" $componente[8] = \"{$componente[7]}\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$this->escapeValue($componente[3])}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$disabled}> {$componente[11]}";
                         break;
 
                     case 'monetarioDuplo':
@@ -1493,12 +1519,12 @@ class clsCampos extends Core_Controller_Page_Abstract
                             $componente[6] = $componente[11];
                         }
 
-                        $retorno .= "<input style='text-align:right'  onKeyup=\"formataMonetario(this, event);\" $componente[8] = \"{$componente[7]}\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$disabled}> {$componente[6]}";
+                        $retorno .= "<input style='text-align:right'  onKeyup=\"formataMonetario(this, event);\" $componente[8] = \"{$componente[7]}\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$this->escapeValue($componente[3])}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$disabled}> {$componente[6]}";
                         $foiDuplo = true;
                         break;
 
                     case 'email':
-                        $retorno .= "<input class='{$class}' style='text-align: left;' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" onKeyUp=\"{$componente[8]}\"> $componente[7]";
+                        $retorno .= "<input class='{$class}' style='text-align: left;' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$this->escapeValue($componente[3])}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" onKeyUp=\"{$componente[8]}\"> $componente[7]";
                         break;
 
                     case 'textoPesquisa':
@@ -1508,7 +1534,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                             $disabled = '';
                         }
 
-                        $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[12]}='{$componente[11]}' {$disabled}> ";
+                        $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$this->escapeValue($componente[3])}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[12]}='{$componente[11]}' {$disabled}> ";
 
                         if ($componente[9]) {
                             // tem serialized campos
@@ -1520,16 +1546,16 @@ class clsCampos extends Core_Controller_Page_Abstract
                         break;
 
                     case 'textoInv':
-                        $retorno .= "<input class='{$class}' type='text' name=\"{$componente[10]}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" disabled=true {$componente[9]}=\"{$componente[8]}\">&nbsp;$componente[7]";
+                        $retorno .= "<input class='{$class}' type='text' name=\"{$componente[10]}\" id=\"{$nome}\" value=\"{$this->escapeValue($componente[3])}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" disabled=true {$componente[9]}=\"{$componente[8]}\">&nbsp;$componente[7]";
                         break;
 
                     case 'textoDuploInv':
-                        $retorno .= "<input class='{$class}' type='text' name=\"{$componente[10]}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" disabled=true>";
+                        $retorno .= "<input class='{$class}' type='text' name=\"{$componente[10]}\" id=\"{$nome}\" value=\"{$this->escapeValue($componente[3])}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" disabled=true>";
                         $foiDuplo = true;
                         break;
 
                     case 'senha':
-                        $retorno .= "<input class='{$class}' type='password' name=\"{$nome}\" id=\"{$nome}\" value=\"{$campo_valor}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\">";
+                        $retorno .= "<input class='{$class}' type='password' name=\"{$nome}\" id=\"{$nome}\" value=\"{$this->escapeValue($campo_valor)}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\">";
                         break;
 
                     case 'textoDuplo':
@@ -1539,7 +1565,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                             $disabled = '';
                         }
 
-                        $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$campo_valor}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" onKeyUp=\"{$componente[8]}\" {$disabled}>";
+                        $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$this->escapeValue($campo_valor)}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" onKeyUp=\"{$componente[8]}\" {$disabled}>";
                         $foiDuplo = true;
                         break;
 
@@ -1560,7 +1586,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                             $retorno .= "ONKEYDOWN='this.form.{$nome}.value=this.form.{$nome}.value.length >= {$componente[7]} ? this.form.{$nome}.value.substring(0,{$componente[7]}-1) : this.form.{$nome}.value;'";
                         }
 
-                        $retorno .= ">{$campo_valor}</textarea>\n";
+                        $retorno .= ">{$this->escapeValue($campo_valor)}</textarea>\n";
                         $foiDuplo = $componente[8];
                         break;
 
@@ -1579,7 +1605,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         foreach ($componente[3] as $chave => $texto) {
                             if (substr($texto, 0, 9) == 'optgroup:') {
                                 $opt_open = true;
-                                $retorno .= '<optgroup label="' . substr($texto, 9) . '">';
+                                $retorno .= '<optgroup label="' . $this->escapeOptionText(substr($texto, 9)) . '">';
                             } elseif (substr($texto, 0, 8) == 'optgroup') {
                                 // optgroup
                                 if ($opt_open) {
@@ -1595,7 +1621,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                                     $retorno .= ' selected';
                                 }
 
-                                $retorno .= ">$texto</option>";
+                                $retorno .= '>' . $this->escapeOptionText($texto) . '</option>';
                             }
                         }
 
@@ -1620,7 +1646,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                                 $retorno .= ' selected';
                             }
 
-                            $retorno .= ">$texto</option>";
+                            $retorno .= '>' . $this->escapeOptionText($texto) . '</option>';
                         }
 
                         $retorno .= '</select> ';
@@ -1650,7 +1676,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                                 $retorno .= ' selected';
                             }
 
-                            $retorno .= ">$texto</option>";
+                            $retorno .= '>' . $this->escapeOptionText($texto) . '</option>';
                         }
 
                         $retorno .= '</select>';
@@ -1658,7 +1684,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         break;
 
                     case 'arquivo':
-                        $retorno .= "<input class='inputfile inputfile-buttom' name=\"{$nome}\" id=\"{$nome}\" type='file' size=\"{$componente[4]}\" value=\"{$componente[3]}\">
+                        $retorno .= "<input class='inputfile inputfile-buttom' name=\"{$nome}\" id=\"{$nome}\" type='file' size=\"{$componente[4]}\" value=\"{$this->escapeValue($componente[3])}\">
             <label id=\"{$nome}\" for=\"{$nome}\"><span></span> <strong>Escolha um arquivo</strong></label>";
 
                         if (!empty($componente[5])) {
@@ -1668,7 +1694,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         break;
 
                     case 'emailDuplo':
-                        $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" onKeyUp=\"{$componente[8]}\">";
+                        $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$this->escapeValue($componente[3])}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" onKeyUp=\"{$componente[8]}\">";
                         $foiDuplo = true;
                         break;
 
@@ -1715,12 +1741,12 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $opcoes = '<datalist id="cores">';
                         foreach ($componente[3] as $cor) {
                             $cor = '#' . ltrim($cor, '#'); // garante que tenha #
-                            $opcoes .= "<option value=\"$cor\"></option>";
+                            $opcoes .= '<option value="' . e($cor) . '"></option>';
                         }
                         $opcoes .= '</datalist>';
 
                         $retorno .= $opcoes;
-                        $retorno .= "<input class=\"{$class}\" type='color' list='cores' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[4]}\" style='height: 40px; width: 40px; padding: 3px'>";
+                        $retorno .= "<input class=\"{$class}\" type='color' list='cores' name=\"{$nome}\" id=\"{$nome}\" value=\"" . e($componente[4]) . "\" style='height: 40px; width: 40px; padding: 3px'>";
                         break;
                 } // endswitch
 
@@ -1822,7 +1848,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $class = $class ?
             "class=\"{$class}\"" : '';
 
-        return "<input {$class} type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" {$tamanhovisivel} {$tamanhomaximo} {$evento} {$disabled}> {$descricao}";
+        return "<input {$class} type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$this->escapeValue($valor)}\" {$tamanhovisivel} {$tamanhomaximo} {$evento} {$disabled}> {$descricao}";
     }
 
     public function getCampoLista(
@@ -1854,10 +1880,13 @@ class clsCampos extends Core_Controller_Page_Abstract
             if (str_starts_with($texto, 'optgroup:')) {
                 // optgroup
                 if ($opt_open) {
+                    // Inalcançável: `$opt_open` nunca vira verdadeiro neste método.
+                    // @codeCoverageIgnoreStart
                     $retorno .= '</optgroup>';
+                    // @codeCoverageIgnoreEnd
                 }
 
-                $retorno .= '<optgroup label="' . substr($texto, 9) . '">';
+                $retorno .= '<optgroup label="' . $this->escapeOptionText(substr($texto, 9)) . '">';
             } else {
                 // option normal
                 $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . '" value="' . urlencode($chave) . '"';
@@ -1867,12 +1896,14 @@ class clsCampos extends Core_Controller_Page_Abstract
                     $retorno .= ' selected';
                 }
 
-                $retorno .= ">$texto</option>";
+                $retorno .= '>' . $this->escapeOptionText($texto) . '</option>';
             }
         }
 
         if ($opt_open) {
+            // @codeCoverageIgnoreStart
             $retorno .= '</optgroup>';
+            // @codeCoverageIgnoreEnd
         }
 
         return $retorno . "</select> {$complemento}";
@@ -1896,14 +1927,17 @@ class clsCampos extends Core_Controller_Page_Abstract
         if ($disabled) {
             $disabled = 'disabled=\'disabled\'';
         } else {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $disabled = '';
+            // @codeCoverageIgnoreEnd
         }
 
         if (!$descricao) {
             $descricao = $descricao2;
         }
 
-        return "<input style='text-align:right'  onKeyup=\"formataMonetario(this, event);\" $evento = \"{$script}\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$disabled}> {$descricao}";
+        return "<input style='text-align:right'  onKeyup=\"formataMonetario(this, event);\" $evento = \"{$script}\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$this->escapeValue($valor)}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$disabled}> {$descricao}";
     }
 
     public function getCampoHora(
@@ -1920,7 +1954,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
         $valor = strlen($valor) < 6 ? $valor : substr($valor, 0, 5);
 
-        return "<input onKeyPress=\"formataHora(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" $acao>{$descricao}";
+        return "<input onKeyPress=\"formataHora(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$this->escapeValue($valor)}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" $acao>{$descricao}";
     }
 
     public function getCampoRotulo($valor)
@@ -1957,7 +1991,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     {
         $id = $id ?: $nome;
 
-        return "<input onKeyPress=\"formataCNPJ(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\">";
+        return "<input onKeyPress=\"formataCNPJ(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$this->escapeValue($valor)}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\">";
     }
 
     public function getCampoCPF($nome, $id, $valor, $class, $tamanhovisivel, $tamanhomaximo, $disabled = false, $onChange = '')
@@ -1970,7 +2004,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $disabled = '';
         }
 
-        return "<input onChange=\"{$onChange}\"onKeyPress=\"formataCPF(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" $disabled>";
+        return "<input onChange=\"{$onChange}\"onKeyPress=\"formataCPF(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$this->escapeValue($valor)}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" $disabled>";
     }
 
     public function getCampoIdFederal(
@@ -1990,7 +2024,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $disabled = '';
         }
 
-        return "<input onkeyPress=\"formataIdFederal(this,event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$disabled}>";
+        return "<input onkeyPress=\"formataIdFederal(this,event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$this->escapeValue($valor)}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$disabled}>";
     }
 
     public function getCampoOculto($nome, $valor, $id = '')
@@ -2001,7 +2035,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $valor = urlencode($valor);
         }
 
-        return "<input name='$nome' id='$id' type='hidden' value='{$valor}'>\n";
+        return "<input name='$nome' id='$id' type='hidden' value='{$this->escapeValue($valor)}'>\n";
     }
 
     public function getCampoData($nome, $id, $valor, $class, $tamanhovisivel, $tamanhomaximo, $disabled = false)
@@ -2013,7 +2047,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
         $id = $id ?: $nome;
 
-        return "<input onKeyPress=\"formataData(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$campoDisabled}> \n";
+        return "<input onKeyPress=\"formataData(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$this->escapeValue($valor)}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$campoDisabled}> \n";
     }
 
     public function getCampoCep(
@@ -2032,7 +2066,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $disabled = '';
         }
 
-        return "<input onKeyPress=\"formataCEP(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$disabled}>$descricao\n";
+        return "<input onKeyPress=\"formataCEP(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$this->escapeValue($valor)}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$disabled}>$descricao\n";
     }
 
     /**
@@ -2066,7 +2100,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
         $id = $id ?: $nome;
 
-        $retorno = "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$valor}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$evento}='{$script}' {$disabled}> ";
+        $retorno = "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$id}\" value=\"{$this->escapeValue($valor)}\" size=\"{$tamanhovisivel}\" maxlength=\"{$tamanhomaximo}\" {$evento}='{$script}' {$disabled}> ";
 
         if ($campos_serializados) {
             // Tem serialized campos

@@ -124,12 +124,22 @@ trait LegacyAddressingFields
             'max_length' => $complementMaxLength,
         ]);
 
-        $this->inputsHelper()->text('neighborhood', [
-            'label' => 'Bairro',
-            'disabled' => $disabled,
-            'value' => $this->neighborhood,
-            'required' => $enderecamentoObrigatorio,
-        ]);
+        $this->inputsHelper()->simpleSearchBairro(
+            attrName: '',
+            inputOptions: [
+                'label' => 'Bairro',
+                'disabled' => $disabled,
+                'value' => $this->neighborhood,
+                'required' => $enderecamentoObrigatorio,
+            ],
+            helperOptions: [
+                'hiddenInputOptions' => [
+                    'options' => [
+                        'value' => $this->neighborhood,
+                    ],
+                ],
+            ]
+        );
 
         $this->inputsHelper()->simpleSearchMunicipio('city', [
             'required' => $enderecamentoObrigatorio,

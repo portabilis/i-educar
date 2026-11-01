@@ -14,7 +14,7 @@
 
             <tr>
                 <td class="formmdtd" valign="top">
-                    <span class="form">Nome</span>
+                    <span class="form"><label for="name">Nome</label></span>
                 </td>
                 <td class="formmdtd" valign="top">
                     <span class="form">
@@ -24,7 +24,7 @@
             </tr>
             <tr>
                 <td class="formlttd" valign="top">
-                    <span class="form">CPF</span><br>
+                    <span class="form"><label for="cpf">CPF</label></span><br>
                     <sub style="vertical-align:top;">nnn.nnn.nnn-nn</sub>
                 </td>
                 <td class="formlttd" valign="top">

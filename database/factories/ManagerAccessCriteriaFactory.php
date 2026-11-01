@@ -16,8 +16,20 @@ class ManagerAccessCriteriaFactory extends Factory
         ];
     }
 
-    public function current(): ManagerAccessCriteria
+    /**
+     * O critério "Exclusivamente por indicação/escolha da gestão", aceito em
+     * escola pública e em escola privada.
+     *
+     * O id é fixo porque o validador dos gestores lê significado nele: 1 é
+     * "proprietário", vetado em escola pública; 4, 5 e 6 são vetados em escola
+     * privada. Um id vindo da sequência cairia num desses conforme o estado do
+     * banco, e o teste passaria ou não dependendo de quem rodou antes.
+     */
+    public function indication(): ManagerAccessCriteria
     {
-        return ManagerAccessCriteria::query()->first() ?? $this->create();
+        return ManagerAccessCriteria::query()->find(2) ?? ManagerAccessCriteria::query()->forceCreate([
+            'id' => 2,
+            'name' => 'Exclusivamente por indicação/escolha da gestão',
+        ]);
     }
 }

@@ -40,7 +40,7 @@ return new class extends clsListagem
 
         while ($db->ProximoRegistro()) {
             [$cod_func_vinculo, $nome] = $db->Tupla();
-            $this->addLinhas(["<img src='imagens/noticia.jpg' border=0> <a href='funcionario_vinculo_det.php?cod_func=$cod_func_vinculo'>$nome</a>"]);
+            $this->addLinhas(["<img src='imagens/noticia.jpg' border=0> <a href='funcionario_vinculo_det.php?cod_func=$cod_func_vinculo'>" . e($nome) . '</a>']);
         }
 
         $this->largura = '100%';

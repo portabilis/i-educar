@@ -27,10 +27,7 @@ class DisciplineImport implements ToModel, WithHeadingRow, WithProgressBar
         $this->collection = new Collection;
     }
 
-    /**
-     * @return Model
-     */
-    public function model(array $row)
+    public function model(array $row): Model
     {
         $discipline = LegacyDiscipline::query()->firstOrNew([
             'instituicao_id' => $row['institution_id'],

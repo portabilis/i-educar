@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyGrade;
+use App\Services\GradeService;
 
 class SerieController extends ApiCoreController
 {
@@ -258,10 +259,15 @@ class SerieController extends ApiCoreController
             $dataNascimento = $this->getRequest()->data_nascimento;
             $ano = isset($this->getRequest()->ano) ? $this->getRequest()->ano : date('Y');
 
-            $objSerie = new clsPmieducarSerie($serieId);
-            $detSerie = $objSerie->detalhe();
+            $detSerie = is_numeric($serieId) ? LegacyGrade::query()->find($serieId, [
+                'cod_serie',
+                'alerta_faixa_etaria',
+                'bloquear_matricula_faixa_etaria',
+            ]) : null;
 
-            $permiteFaixaEtaria = $objSerie->verificaPeriodoCorteEtarioDataNascimento($dataNascimento, $ano);
+            $permiteFaixaEtaria = is_numeric($serieId)
+                ? app(GradeService::class)->isAgeWithinRange($serieId, $dataNascimento, $ano)
+                : true;
 
             $alertaFaixaEtaria = $detSerie['alerta_faixa_etaria'];
             $bloquearMatriculaFaixaEtaria = $detSerie['bloquear_matricula_faixa_etaria'];

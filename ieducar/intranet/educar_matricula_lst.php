@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyCourse;
+use App\Models\LegacyEnrollment;
+use App\Models\LegacyGrade;
 use App\Models\RegistrationStatus;
 
 return new class extends clsListagem
@@ -59,11 +62,12 @@ return new class extends clsListagem
     {
         $this->titulo = 'Matrícula - Listagem';
 
-        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === '') ? null : $val;
-        }
+        $this->ref_cod_aluno = request()->integer('ref_cod_aluno') ?: null;
+        $this->ref_cod_escola = request()->integer('ref_cod_escola') ?: null;
 
         if (!$this->ref_cod_aluno) {
+            // Repassa a mensagem de quem redirecionou para cá, senão ela se perde no segundo redirecionamento
+            session()->reflash();
             $this->simpleRedirect(url: 'educar_aluno_lst.php');
         }
 
@@ -120,16 +124,33 @@ return new class extends clsListagem
 
         $total = $obj_matricula->_total;
 
+        $nomesSeries = LegacyGrade::query()
+            ->whereIn('cod_serie', array_filter(array_column(is_array(value: $lista) ? $lista : [], 'ref_ref_cod_serie'), 'is_numeric'))
+            ->pluck('nm_serie', 'cod_serie');
+
+        $turmasPorMatricula = LegacyEnrollment::query()
+            ->active()
+            ->whereIn('ref_cod_matricula', array_filter(array_column(is_array($lista) ? $lista : [], 'cod_matricula'), 'is_numeric'))
+            ->whereHas('registration', function ($q) {
+                $q->whereHas('student', fn ($q) => $q->active());
+            })
+            ->with('schoolClass:cod_turma,nm_turma')
+            ->get([
+                'ref_cod_matricula',
+                'ref_cod_turma',
+            ])
+            ->groupBy('ref_cod_matricula');
+
         // monta a lista
         if (is_array(value: $lista) && count(value: $lista)) {
-            foreach ($lista as $registro) {
-                $obj_ref_cod_curso = new clsPmieducarCurso(cod_curso: $registro['ref_cod_curso']);
-                $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-                $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
+            $nomesCursos = LegacyCourse::query()
+                ->whereIn('cod_curso', array_column($lista, 'ref_cod_curso'))
+                ->pluck('nm_curso', 'cod_curso');
 
-                $obj_serie = new clsPmieducarSerie(cod_serie: $registro['ref_ref_cod_serie']);
-                $det_serie = $obj_serie->detalhe();
-                $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
+            foreach ($lista as $registro) {
+                $registro['ref_cod_curso'] = $nomesCursos[$registro['ref_cod_curso']] ?? null;
+
+                $registro['ref_ref_cod_serie'] = $nomesSeries[$registro['ref_ref_cod_serie']] ?? null;
 
                 $obj_cod_instituicao = new clsPmieducarInstituicao(cod_instituicao: $registro['ref_cod_instituicao']);
                 $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
@@ -139,21 +160,9 @@ return new class extends clsListagem
                 $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
                 $registro['ref_ref_cod_escola'] = $det_ref_cod_escola['nome'];
 
-                $enturmacoes = new clsPmieducarMatriculaTurma;
-                $enturmacoes = $enturmacoes->lista(
-                    int_ref_cod_matricula: $registro['cod_matricula'],
-                    int_ativo: 1
-                );
-
-                $nomesTurmas = [];
-
-                foreach ($enturmacoes as $enturmacao) {
-                    $turma = new clsPmieducarTurma(cod_turma: $enturmacao['ref_cod_turma']);
-                    $turma = $turma->detalhe();
-                    $nomesTurmas[] = $turma['nm_turma'];
-                }
-
-                $nomesTurmas = implode(separator: '<br />', array: $nomesTurmas);
+                $nomesTurmas = $turmasPorMatricula->get($registro['cod_matricula'], collect())
+                    ->map(fn ($enturmacao) => $enturmacao->schoolClass->nm_turma)
+                    ->implode('<br />');
 
                 $situacao = RegistrationStatus::getRegistrationStatus()[$registro['aprovado']];
 

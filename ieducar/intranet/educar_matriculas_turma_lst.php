@@ -57,6 +57,9 @@ return new class extends clsListagem
 
         $this->addCabecalhos(coluna: $lista_busca);
 
+        // Ano é filtro, não busca: fica só na gaveta, sem cópia no toolbar
+        $this->buscaRapida = false;
+
         $this->inputsHelper()->dynamic(helperNames: ['ano', 'instituicao'], inputOptions: ['required' => true]);
         $this->inputsHelper()->dynamic(helperNames: ['escola', 'curso', 'serie', 'turma'], inputOptions: ['required' => false]);
 
@@ -78,6 +81,7 @@ return new class extends clsListagem
 
         if (empty($this->ano)) {
             $this->ano = date(format: 'Y');
+            $this->filtrosPadrao[] = 'ano';
         }
 
         if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {

@@ -1,41 +1,31 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyBenefit;
 use App\Models\LegacyStudent;
 use App\Models\LegacyStudentBenefit;
 use App\Models\LegacyUser;
 use Database\Factories\LegacyBenefitFactory;
 use Database\Factories\LegacyStudentFactory;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyBenefitTest extends EloquentTestCase
-{
-    public $relations = [
-        'deletedByUser' => LegacyUser::class,
-        'createdByUser' => LegacyUser::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyBenefit::class;
-    }
+beforeEach(fn () => $this->eloquent(LegacyBenefit::class, relations: [
+    'deletedByUser' => LegacyUser::class,
+    'createdByUser' => LegacyUser::class,
+]));
 
-    public function test_students()
-    {
-        $benefit = LegacyBenefitFactory::new()->create();
-        $student = LegacyStudentFactory::new()->create();
+EloquentModelTestCase::registerModelTests();
 
-        LegacyStudentBenefit::create([
-            'aluno_id' => $student->cod_aluno,
-            'aluno_beneficio_id' => $benefit->id,
-        ]);
+test('students', function () {
+    $benefit = LegacyBenefitFactory::new()->create();
+    $student = LegacyStudentFactory::new()->create();
 
-        $this->assertCount(1, $benefit->students);
-        $this->assertInstanceOf(LegacyStudent::class, $benefit->students->first());
-    }
-}
+    LegacyStudentBenefit::create([
+        'aluno_id' => $student->cod_aluno,
+        'aluno_beneficio_id' => $benefit->id,
+    ]);
+
+    $this->assertCount(1, $benefit->students);
+    $this->assertInstanceOf(LegacyStudent::class, $benefit->students->first());
+});

@@ -51,9 +51,9 @@
                 </tr>
                 @if($enableCancelButton && $enrollments->count())
                 <tr>
-                    <th scope="row">Turma de origem<span class="campo_obrigatorio">*</span>:</th>
+                    <th scope="row"><label for="enrollment_from_id">Turma de origem<span class="campo_obrigatorio">*</span>:</label></th>
                     <td>
-                        <select name="enrollment_from_id" class="select-default" required>
+                        <select name="enrollment_from_id" id="enrollment_from_id" class="select-default" required>
                             <option value="">Selecione a turma de origem</option>
                             @foreach($enrollments as $enrollment)
                                 @if($enrollment->schoolClass->id == $schoolClass->id)
@@ -66,16 +66,18 @@
                 @endif
                 <tr>
                     <th scope="row">
-                        @if($enableCancelButton)
-                            Data da saída<span class="campo_obrigatorio">*</span>
-                        @else
-                            Data da enturmação<span class="campo_obrigatorio">*</span>
-                        @endif
+                        <label for="enrollment_date">
+                            @if($enableCancelButton)
+                                Data da saída<span class="campo_obrigatorio">*</span>
+                            @else
+                                Data da enturmação<span class="campo_obrigatorio">*</span>
+                            @endif
+                        </label>
                         <br>
                         <small class="text-muted">dd/mm/aaaa</small>
                     </th>
                     <td>
-                        <input name="enrollment_date" value="{{ old('enrollment_date') }}" onkeypress="formataData(this, event);" class="form-input {{ $errors->has('enrollment_date') ? 'error' : '' }}" type="text" maxlength="10">
+                        <input name="enrollment_date" id="enrollment_date" value="{{ old('enrollment_date') }}" onkeypress="formataData(this, event);" class="form-input {{ $errors->has('enrollment_date') ? 'error' : '' }}" type="text" maxlength="10">
                     </td>
                 </tr>
             </tbody>

@@ -1,76 +1,61 @@
 <?php
 
-namespace Tests\Api;
-
-use App\Models\LegacyIndividual;
 use Database\Factories\LegacyIndividualFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\LoginFirstUser;
 use Tests\TestCase;
 
-class LegacyUnificationPersonJsonInvalidTest extends TestCase
-{
-    use DatabaseTransactions;
-    use LoginFirstUser;
+uses(TestCase::class, DatabaseTransactions::class, LoginFirstUser::class);
 
-    private LegacyIndividual $individualOne;
+beforeEach(function () {
+    $this->loginWithFirstUser();
 
-    private LegacyIndividual $individualTwo;
+    $this->individualOne = LegacyIndividualFactory::new()->create();
+    $this->individualTwo = LegacyIndividualFactory::new()->create();
+});
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->loginWithFirstUser();
+test('unification person json invalid', function () {
+    $request = [
+        'tipoacao' => 'Novo',
+    ];
 
-        $this->individualOne = LegacyIndividualFactory::new()->create();
-        $this->individualTwo = LegacyIndividualFactory::new()->create();
-    }
-
-    public function test_unification_person_json_invalid(): void
-    {
-        $request = [
-            'tipoacao' => 'Novo',
-        ];
-
-        $data = [
-            'pessoas' => [
-                [
-                    'idpes' => $this->individualOne->getKey(),
-                    'pessoa_principal' => true,
-                ],
-                [
-                    'idpes' => $this->individualTwo->getKey(),
-                    'pessoa_principal' => false,
-                ],
+    $data = [
+        'pessoas' => [
+            [
+                'idpes' => $this->individualOne->getKey(),
+                'pessoa_principal' => true,
             ],
-        ];
+            [
+                'idpes' => $this->individualTwo->getKey(),
+                'pessoa_principal' => false,
+            ],
+        ],
+    ];
 
-        $payload = array_merge($request, $data);
+    $payload = array_merge($request, $data);
 
-        $this->post('/intranet/educar_unifica_pessoa.php', $payload)
-            ->assertSuccessful()
-            ->assertSee('Informações inválidas para unificação');
-    }
+    $this->post('/intranet/educar_unifica_pessoa.php', $payload)
+        ->assertSuccessful()
+        ->assertSee('Informações inválidas para unificação');
+});
 
-    public function test_unification_person_count(): void
-    {
-        $request = [
-            'tipoacao' => 'Novo',
-        ];
+test('unification person count', function () {
+    $request = [
+        'tipoacao' => 'Novo',
+    ];
 
-        $data = [
-            'pessoas' => collect([
-                [
-                    'idpes' => $this->individualOne->getKey(),
-                    'pessoa_principal' => true,
-                ],
-            ]),
-        ];
+    $data = [
+        'pessoas' => collect([
+            [
+                'idpes' => $this->individualOne->getKey(),
+                'pessoa_principal' => true,
+            ],
+        ]),
+    ];
 
-        $payload = array_merge($request, $data);
+    $payload = array_merge($request, $data);
 
-        $this->post('/intranet/educar_unifica_pessoa.php', $payload)
-            ->assertSuccessful()
-            ->assertSee('Informe no mínimo duas pessoas para unificação.');
-    }
-}
+    $this->post('/intranet/educar_unifica_pessoa.php', $payload)
+        ->assertSuccessful()
+        ->assertSee('Informe no mínimo duas pessoas para unificação.');
+});

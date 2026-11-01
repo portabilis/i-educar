@@ -1,6 +1,6 @@
 <?php
 
-class ViewController extends Core_Controller_Page_ViewController
+class RegraAvaliacao_Views_ViewController extends Core_Controller_Page_ViewController
 {
     /**
      * @var string

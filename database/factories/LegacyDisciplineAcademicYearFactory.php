@@ -18,7 +18,8 @@ class LegacyDisciplineAcademicYearFactory extends Factory
             'carga_horaria' => 40,
             'tipo_nota' => ComponenteSerie_Model_TipoNota::NUMERICA,
             'anos_letivos' => '{' . now()->year . '}',
-            'hora_falta' => 45,
+            // Em horas, como a tela grava: 45 minutos
+            'hora_falta' => 0.75,
         ];
     }
 }

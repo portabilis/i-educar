@@ -15,7 +15,7 @@ class LegacyCalendarDayNoteFactory extends Factory
             'ref_dia' => now()->day,
             'ref_mes' => now()->month,
             'ref_ref_cod_calendario_ano_letivo' => fn () => LegacyCalendarYearFactory::new()->create(),
-            'ref_cod_calendario_anotacao' => fn () => LegacyCalendarDayNoteFactory::new()->create(),
+            'ref_cod_calendario_anotacao' => fn () => LegacyCalendarNoteFactory::new()->create(),
         ];
     }
 }

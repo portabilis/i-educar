@@ -35,15 +35,15 @@
                     <th scope="row" class="formlttd" valign="top"><span class="form">Ano:</span></th>
                     <td class="formlttd" valign="top"><span class="form">{{ $schoolClass->year ?? null }}</span></td>
                 </tr>
-                <tr id="tr_ano">
+                <tr id="tr_vagas">
                     <th scope="row" class="formmdtd" valign="top"><span class="form">Total de vagas na turma:</span></th>
                     <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->max_aluno }}</span></td>
                 </tr>
-                <tr id="tr_ano">
+                <tr id="tr_vagas_disponiveis">
                     <th scope="row" class="formlttd" valign="top"><span class="form">Vagas disponíveis na turma:</span></th>
                     <td class="formlttd" valign="top"><span class="form">{{ $schoolClass->vacancies }}</span></td>
                 </tr>
-                <tr id="tr_ano">
+                <tr id="tr_calendario_letivo">
                     <th scope="row" class="formmdtd" valign="top"><span class="form">Calendário letivo:</span></th>
                     <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->begin_academic_year->format('d/m/Y') }} à {{ $schoolClass->end_academic_year->format('d/m/Y') }}</span></td>
                 </tr>
@@ -67,13 +67,13 @@
 
         <div class="form-row">
             <div class="form-col">
-                <label for="">
+                <label for="date">
                     <div>Data da saída<span class="campo_obrigatorio">*</span></div>
                     <div><small class="text-muted">dd/mm/aaaa</small></div>
                 </label>
             </div>
             <div class="form-col">
-                <input name="date" value="{{ old('date') }}" onkeypress="formataData(this, event);" class="form-input {{ $errors->has('date') ? 'error' : '' }}" type="text" maxlength="10" placeholder="Data da saída">
+                <input name="date" id="date" value="{{ old('date') }}" onkeypress="formataData(this, event);" class="form-input {{ $errors->has('date') ? 'error' : '' }}" type="text" maxlength="10" placeholder="Data da saída">
             </div>
             <div class="form-col">
             </div>
@@ -82,7 +82,7 @@
         <table class="table-default">
             <thead>
             <tr>
-                <th width="25"><input class="enrollment-check-master" type="checkbox" /></th>
+                <th width="25"><input class="enrollment-check-master" type="checkbox" aria-label="Selecionar todas as enturmações" /></th>
                 <th width="100">Matrícula</th>
                 <th>Nome</th>
                 <th>Data da enturmação</th>

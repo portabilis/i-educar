@@ -1,22 +1,13 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\EducacensoImport;
 use App\Models\Individual;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class EducacensoImportTest extends EloquentTestCase
-{
-    public $relations = [
-        'user' => Individual::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return EducacensoImport::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(EducacensoImport::class, relations: [
+    'user' => Individual::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

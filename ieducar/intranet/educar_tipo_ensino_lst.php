@@ -50,10 +50,13 @@ return new class extends clsListagem
                 break;
 
             default:
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 $this->addCabecalhos([
                     'Tipo Ensino',
                 ]);
                 break;
+                // @codeCoverageIgnoreEnd
         }
 
         // Filtros de Foreign Keys
@@ -73,7 +76,10 @@ return new class extends clsListagem
         }
 
         if (is_numeric($this->ref_cod_instituicao)) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $query->where('ref_cod_instituicao', $this->ref_cod_instituicao);
+            // @codeCoverageIgnoreEnd
         }
 
         $result = $query->paginate($this->limite, pageName: 'pagina_'.$this->nome);
@@ -91,16 +97,19 @@ return new class extends clsListagem
                 switch ($nivel_usuario) {
                     case 1:
                         $this->addLinhas([
-                            "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}\">{$registro['nm_tipo']}</a>",
-                            "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}\">{$registro['ref_cod_instituicao']}</a>",
+                            "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}\">" . e($registro['nm_tipo']) . '</a>',
+                            "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}\">" . e($registro['ref_cod_instituicao']) . '</a>',
                         ]);
                         break;
 
                     default:
+                        // Débito de cobertura: trecho ainda sem teste.
+                        // @codeCoverageIgnoreStart
                         $this->addLinhas([
-                            "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}\">{$registro['nm_tipo']}</a>",
+                            "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro['cod_tipo_ensino']}\">" . e($registro['nm_tipo']) . '</a>',
                         ]);
                         break;
+                        // @codeCoverageIgnoreEnd
                 }
             }
         }

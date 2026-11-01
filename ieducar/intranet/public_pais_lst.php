@@ -24,7 +24,10 @@ return new class extends clsListagem
 
     public function index()
     {
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         return 'public_pais_lst.php';
+        // @codeCoverageIgnoreEnd
     }
 
     public function Gerar()

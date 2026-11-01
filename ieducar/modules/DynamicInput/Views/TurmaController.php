@@ -15,7 +15,11 @@ class TurmaController extends ApiCoreController
 
     protected function turmasPorAno($escolaId, $ano)
     {
-        $turmasPorAno = LegacySchoolAcademicYear::query()->whereSchool($escolaId)->whereYearEq($ano)->value('turmas_por_ano');
+        if (!is_numeric($ano)) {
+            return false;
+        }
+
+        $turmasPorAno = LegacySchoolAcademicYear::query()->whereSchool($escolaId)->whereYearEq((int) $ano)->value('turmas_por_ano');
 
         return $turmasPorAno === 1;
     }
@@ -33,7 +37,7 @@ class TurmaController extends ApiCoreController
             $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicaoId, $userId);
 
             if ($isOnlyProfessor) {
-                $turmas = Portabilis_Business_Professor::turmasAlocado($instituicaoId, $escolaId, $serieId, $userId);
+                $turmas = Portabilis_Business_Professor::turmasAlocado($instituicaoId, $escolaId, $serieId, $userId, $ano);
             } else {
                 if (is_numeric($ano)) {
                     $sql = '

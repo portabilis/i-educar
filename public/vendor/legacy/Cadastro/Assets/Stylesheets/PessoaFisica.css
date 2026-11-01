@@ -22,6 +22,10 @@ select {
   width: 133px !important;
 }
 
+#motivo-pessoa-parent {
+  width: 381px !important;
+}
+
 #data_emissao_rg, #uf_emissao_rg {
   width: 135px !important;
 }

@@ -1,26 +1,20 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\Employee;
 use App\Models\EmployeeWithdrawal;
 use App\Models\File;
 use App\Models\LegacyUser;
 use App\Models\WithdrawalReason;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class EmployeeWithdrawalTest extends EloquentTestCase
-{
-    protected $relations = [
-        'employee' => Employee::class,
-        'reason' => WithdrawalReason::class,
-        'deletedByUser' => LegacyUser::class,
-        'createdByUser' => LegacyUser::class,
-        'files' => [File::class, ['relation_type' => EmployeeWithdrawal::class]],
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return EmployeeWithdrawal::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(EmployeeWithdrawal::class, relations: [
+    'employee' => Employee::class,
+    'reason' => WithdrawalReason::class,
+    'deletedByUser' => LegacyUser::class,
+    'createdByUser' => LegacyUser::class,
+    'files' => [File::class, ['relation_type' => EmployeeWithdrawal::class]],
+]));
+
+EloquentModelTestCase::registerModelTests();

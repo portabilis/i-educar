@@ -54,7 +54,7 @@ getDocumento();
 
 function addDocumento(id, titulo, url, display){
   console.log(display);
-  $arrayDocumento[$arrayDocumento.length] = $j('<div>').attr('id', id).append($j('<div>').html(stringUtils.toUtf8(titulo + ':'))
+  $arrayDocumento[$arrayDocumento.length] = $j('<div>').attr('id', id).append($j('<div>').text(stringUtils.toUtf8(titulo + ':'))
                                                                           .css({ "text-align" : "right", "float" : "left"}))
                                                                           .append($j('<span>').append($j('<a>').html(stringUtils.toUtf8('Excluir'))
                                                                                            .addClass('decorated')

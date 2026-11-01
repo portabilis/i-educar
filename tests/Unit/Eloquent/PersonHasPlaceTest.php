@@ -1,21 +1,15 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\Person;
 use App\Models\PersonHasPlace;
 use App\Models\Place;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class PersonHasPlaceTest extends EloquentTestCase
-{
-    protected $relations = [
-        'place' => Place::class,
-        'person' => Person::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return PersonHasPlace::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(PersonHasPlace::class, relations: [
+    'place' => Place::class,
+    'person' => Person::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

@@ -44,7 +44,7 @@
                 @foreach($expectedColumns as $field => $label)
                     <tr>
                         <td class="formlttd" valign="top">
-                            <span class="form">{{ $label }}:</span>
+                            <span class="form"><label for="column_mapping_{{ $field }}">{{ $label }}:</label></span>
                             @if(in_array($field, ['registration_id', 'final_status', 'exit_date']))
                                 <span style="color: red; font-weight: bold;">*</span>
                             @endif
@@ -53,7 +53,7 @@
                             @endif
                         </td>
                         <td class="formlttd" valign="top">
-                            <select required name="column_mapping[{{ $field }}]" class="geral" style="width: 300px;">
+                            <select required name="column_mapping[{{ $field }}]" id="column_mapping_{{ $field }}" class="geral" style="width: 300px;">
                                 <option value="">-- Selecione --</option>
                                 @foreach($headers as $index => $header)
                                     @php
@@ -81,7 +81,7 @@
 
                 <tr>
                     <td class="formlttd" valign="top">
-                        <span class="form">Ignorar matrículas aprovadas do arquivo</span>
+                        <span class="form"><label for="ignore_approved">Ignorar matrículas aprovadas do arquivo</label></span>
                         <br>
                         <sub style="vertical-align:top;">Marque para pular matrículas com situação "Aprovado" e importar mais rapidamente</sub>
                     </td>

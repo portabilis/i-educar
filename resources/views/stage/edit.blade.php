@@ -37,7 +37,7 @@
             </tr>
             <tr id="tr_nm_ano">
                 <td class="formmdtd" valign="top">
-                    <label for="year" class="form">Ano <span class="campo_obrigatorio">*</span></label>
+                    <label for="ano" class="form">Ano <span class="campo_obrigatorio">*</span></label>
                     <sub>Somente números</sub>
                 </td>
                 <td class="formmdtd" valign="top">
@@ -46,7 +46,7 @@
             </tr>
             <tr id="tr_nm_instituicao">
                 <td class="formlttd" valign="top">
-                    <label for="institution" class="form">Instituição <span class="campo_obrigatorio">*</span></label>
+                    <label for="ref_cod_instituicao" class="form">Instituição <span class="campo_obrigatorio">*</span></label>
                 </td>
                 <td class="formlttd" valign="top">
                     @include('form.select-institution')
@@ -71,7 +71,7 @@
             </tr>
             <tr>
                 <td class="formmdtd" valign="top">
-                    <label for="schools" class="form">Escola</label>
+                    <label for="escola" class="form">Escola</label>
                 </td>
                 <td class="formmdtd" valign="top">
                     @include('form.select-school-multiple')
@@ -91,10 +91,10 @@
             </tr>
             <tr>
                 <td class="formmdtd" valign="top">
-                    <label for="cursos" class="form">Tipo de Etapa</label>
+                    <label for="ref_cod_modulo" class="form">Tipo de Etapa</label>
                 </td>
                 <td class="formmdtd" valign="top">
-                    <select class="geral" name="ref_cod_modulo" id="ref_cod_eref_cod_moduloscola" style="width: 308px;">
+                    <select class="geral" name="ref_cod_modulo" id="ref_cod_modulo" style="width: 308px;">
                         <option value="">Selecione as opções</option>
                         @foreach(App_Model_IedFinder::getStageTypes() as $id => $name)
                             <option value="{{$id}}" @if(old('ref_cod_modulo', Request::get('ref_cod_modulo')) == $id) selected @endif>{{ Str::upper($name) }}</option>
@@ -120,13 +120,13 @@
                         @for($i = 1; $i <= 4; $i++)
                             <tr class="formmdtd dd">
                                 <td>
-                                    <input type="text" name="etapas[{{ $i }}][data_inicio]" placeholder="Manter valor atual" maxlength="10" class="geral" size="9" onkeypress="formataData(this, event);">
+                                    <input type="text" name="etapas[{{ $i }}][data_inicio]" aria-label="Data inicial da etapa {{ $i }}" placeholder="Manter valor atual" maxlength="10" class="geral" size="9" onkeypress="formataData(this, event);">
                                 </td>
                                 <td>
-                                    <input type="text" name="etapas[{{ $i }}][data_fim]" placeholder="Manter valor atual" maxlength="10" class="geral" size="9" onkeypress="formataData(this, event);">
+                                    <input type="text" name="etapas[{{ $i }}][data_fim]" aria-label="Data final da etapa {{ $i }}" placeholder="Manter valor atual" maxlength="10" class="geral" size="9" onkeypress="formataData(this, event);">
                                 </td>
                                 <td>
-                                    <input type="text" name="etapas[{{ $i }}][dias_letivos]" placeholder="Manter valor atual" size="9" class="geral" maxlength="3" inputmode="numeric" oninput="this.value = this.value.replace(/\D/g, '')">
+                                    <input type="text" name="etapas[{{ $i }}][dias_letivos]" aria-label="Dias letivos da etapa {{ $i }}" placeholder="Manter valor atual" size="9" class="geral" maxlength="3" inputmode="numeric" oninput="this.value = this.value.replace(/\D/g, '')">
                                 </td>
                             </tr>
                         @endfor

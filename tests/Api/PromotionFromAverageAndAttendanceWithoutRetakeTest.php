@@ -1,298 +1,278 @@
 <?php
 
-namespace Tests\Api;
-
-use App\Models\LegacyEnrollment;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\Api\DiarioApiFakeDataTestTrait;
+use Tests\Api\DiarioApiRequestTestTrait;
 use Tests\TestCase;
 
-class PromotionFromAverageAndAttendanceWithoutRetakeTest extends TestCase
-{
-    use DatabaseTransactions;
-    use DiarioApiFakeDataTestTrait;
-    use DiarioApiRequestTestTrait;
+uses(TestCase::class, DatabaseTransactions::class, DiarioApiFakeDataTestTrait::class, DiarioApiRequestTestTrait::class);
 
-    /**
-     * @var LegacyEnrollment
-     */
-    private $enrollment;
+beforeEach(function () {
+    $this->enrollment = $this->getPromotionFromAverageAndAttendanceWithoutRetake();
+});
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->enrollment = $this->getPromotionFromAverageAndAttendanceWithoutRetake();
+test('aprove after all score and absence posted', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
+
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 2);
+
+    $disciplines = $schoolClass->disciplines;
+
+    $score = [
+        1 => 8,
+        2 => 8,
+        3 => 8,
+        4 => 8,
+    ];
+
+    $absence = [
+        1 => 3,
+        2 => 3,
+        3 => 3,
+        4 => 3,
+    ];
+
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
+
+        self::assertEquals('Aprovado', $response->situacao);
     }
 
-    public function test_aprove_after_all_score_and_absence_posted()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    $registration = $this->enrollment->registration;
+    self::assertEquals(1, $registration->refresh()->aprovado);
+});
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 2);
+test('failure after all score and absence posted', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
 
-        $disciplines = $schoolClass->disciplines;
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 2);
 
-        $score = [
-            1 => 8,
-            2 => 8,
-            3 => 8,
-            4 => 8,
-        ];
+    $disciplines = $schoolClass->disciplines;
 
-        $absence = [
-            1 => 3,
-            2 => 3,
-            3 => 3,
-            4 => 3,
-        ];
+    $score = [
+        1 => 4.3,
+        2 => 5.4,
+        3 => 6.7,
+        4 => 3,
+    ];
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $absence = [
+        1 => 4,
+        2 => 5,
+        3 => 1,
+        4 => 0,
+    ];
 
-            self::assertEquals('Aprovado', $response->situacao);
-        }
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        $registration = $this->enrollment->registration;
-        self::assertEquals(1, $registration->refresh()->aprovado);
+        self::assertEquals('Retido', $response->situacao);
     }
 
-    public function test_failure_after_all_score_and_absence_posted()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    $registration = $this->enrollment->registration;
+    self::assertEquals(2, $registration->refresh()->aprovado);
+});
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 2);
+test('failure for non attendance after all score and absence posted', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
 
-        $disciplines = $schoolClass->disciplines;
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 2);
 
-        $score = [
-            1 => 4.3,
-            2 => 5.4,
-            3 => 6.7,
-            4 => 3,
-        ];
+    $disciplines = $schoolClass->disciplines;
 
-        $absence = [
-            1 => 4,
-            2 => 5,
-            3 => 1,
-            4 => 0,
-        ];
+    $score = [
+        1 => 9.1,
+        2 => 7.8,
+        3 => 6.7,
+        4 => 6.9,
+    ];
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $absence = [
+        1 => 27,
+        2 => 58,
+        3 => 32,
+        4 => 29,
+    ];
 
-            self::assertEquals('Retido', $response->situacao);
-        }
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        $registration = $this->enrollment->registration;
-        self::assertEquals(2, $registration->refresh()->aprovado);
+        self::assertEquals('Reprovado por faltas', $response->situacao);
     }
 
-    public function test_failure_for_non_attendance_after_all_score_and_absence_posted()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    $registration = $this->enrollment->registration;
+    self::assertEquals(14, $registration->refresh()->aprovado);
+});
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 2);
+test('returns to studying after remove score in last stage', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
 
-        $disciplines = $schoolClass->disciplines;
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 2);
 
-        $score = [
-            1 => 9.1,
-            2 => 7.8,
-            3 => 6.7,
-            4 => 6.9,
-        ];
+    $disciplines = $schoolClass->disciplines;
 
-        $absence = [
-            1 => 27,
-            2 => 58,
-            3 => 32,
-            4 => 29,
-        ];
+    $score = [
+        1 => 9.7,
+        2 => 10,
+        3 => 7,
+        4 => 9,
+    ];
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $absence = [
+        1 => 7,
+        2 => 3,
+        3 => 1,
+        4 => 0,
+    ];
 
-            self::assertEquals('Reprovado por faltas', $response->situacao);
-        }
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        $registration = $this->enrollment->registration;
-        self::assertEquals(14, $registration->refresh()->aprovado);
+        self::assertEquals('Aprovado', $response->situacao);
     }
 
-    public function test_returns_to_studying_after_remove_score_in_last_stage()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    $registration = $this->enrollment->registration;
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 2);
+    self::assertEquals(1, $registration->refresh()->aprovado);
 
-        $disciplines = $schoolClass->disciplines;
+    $randomDiscipline = $schoolClass->disciplines->random()->id;
+    $response = $this->deleteScore($this->enrollment, $randomDiscipline, 4);
+    self::assertEquals('Cursando', $response->situacao);
 
-        $score = [
-            1 => 9.7,
-            2 => 10,
-            3 => 7,
-            4 => 9,
-        ];
+    self::assertEquals(3, $registration->refresh()->aprovado);
+});
 
-        $absence = [
-            1 => 7,
-            2 => 3,
-            3 => 1,
-            4 => 0,
-        ];
+test('remove score when not last stage', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 2);
 
-            self::assertEquals('Aprovado', $response->situacao);
-        }
+    $disciplines = $schoolClass->disciplines;
 
-        $registration = $this->enrollment->registration;
+    $score = [
+        1 => 9.7,
+        2 => 10,
+        3 => 7,
+        4 => 9,
+    ];
 
-        self::assertEquals(1, $registration->refresh()->aprovado);
+    $absence = [
+        1 => 7,
+        2 => 3,
+        3 => 1,
+        4 => 0,
+    ];
 
-        $randomDiscipline = $schoolClass->disciplines->random()->id;
-        $response = $this->deleteScore($this->enrollment, $randomDiscipline, 4);
-        self::assertEquals('Cursando', $response->situacao);
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        self::assertEquals(3, $registration->refresh()->aprovado);
+        self::assertEquals('Aprovado', $response->situacao);
     }
 
-    public function test_remove_score_when_not_last_stage()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    $registration = $this->enrollment->registration;
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 2);
+    self::assertEquals(1, $registration->refresh()->aprovado);
 
-        $disciplines = $schoolClass->disciplines;
+    $randomDiscipline = $schoolClass->disciplines->random()->id;
+    $response = $this->deleteScore($this->enrollment, $randomDiscipline, 2);
+    self::assertTrue($response->any_error_msg);
 
-        $score = [
-            1 => 9.7,
-            2 => 10,
-            3 => 7,
-            4 => 9,
-        ];
+    self::assertEquals(1, $registration->refresh()->aprovado);
+});
 
-        $absence = [
-            1 => 7,
-            2 => 3,
-            3 => 1,
-            4 => 0,
-        ];
+test('returns to studying after remove absence in last stage', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 2);
 
-            self::assertEquals('Aprovado', $response->situacao);
-        }
+    $disciplines = $schoolClass->disciplines;
 
-        $registration = $this->enrollment->registration;
+    $score = [
+        1 => 9.7,
+        2 => 10,
+        3 => 7,
+        4 => 9,
+    ];
 
-        self::assertEquals(1, $registration->refresh()->aprovado);
+    $absence = [
+        1 => 7,
+        2 => 3,
+        3 => 1,
+        4 => 0,
+    ];
 
-        $randomDiscipline = $schoolClass->disciplines->random()->id;
-        $response = $this->deleteScore($this->enrollment, $randomDiscipline, 2);
-        self::assertTrue($response->any_error_msg);
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        self::assertEquals(1, $registration->refresh()->aprovado);
+        self::assertEquals('Aprovado', $response->situacao);
     }
 
-    public function test_returns_to_studying_after_remove_absence_in_last_stage()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    $registration = $this->enrollment->registration;
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 2);
+    self::assertEquals(1, $registration->refresh()->aprovado);
 
-        $disciplines = $schoolClass->disciplines;
+    $randomDiscipline = $schoolClass->disciplines->random()->id;
+    $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 4);
+    self::assertEquals('Cursando', $response->situacao);
 
-        $score = [
-            1 => 9.7,
-            2 => 10,
-            3 => 7,
-            4 => 9,
-        ];
+    self::assertEquals(3, $registration->refresh()->aprovado);
+});
 
-        $absence = [
-            1 => 7,
-            2 => 3,
-            3 => 1,
-            4 => 0,
-        ];
+test('remove absence when not is last stage', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 2);
 
-            self::assertEquals('Aprovado', $response->situacao);
-        }
+    $disciplines = $schoolClass->disciplines;
 
-        $registration = $this->enrollment->registration;
+    $score = [
+        1 => 9.7,
+        2 => 10,
+        3 => 7,
+        4 => 9,
+    ];
 
-        self::assertEquals(1, $registration->refresh()->aprovado);
+    $absence = [
+        1 => 7,
+        2 => 3,
+        3 => 1,
+        4 => 0,
+    ];
 
-        $randomDiscipline = $schoolClass->disciplines->random()->id;
-        $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 4);
-        self::assertEquals('Cursando', $response->situacao);
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        self::assertEquals(3, $registration->refresh()->aprovado);
+        self::assertEquals('Aprovado', $response->situacao);
     }
 
-    public function test_remove_absence_when_not_is_last_stage()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    $registration = $this->enrollment->registration;
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 2);
+    self::assertEquals(1, $registration->refresh()->aprovado);
 
-        $disciplines = $schoolClass->disciplines;
+    $randomDiscipline = $schoolClass->disciplines->random()->id;
+    $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 2);
+    self::assertTrue($response->any_error_msg);
 
-        $score = [
-            1 => 9.7,
-            2 => 10,
-            3 => 7,
-            4 => 9,
-        ];
-
-        $absence = [
-            1 => 7,
-            2 => 3,
-            3 => 1,
-            4 => 0,
-        ];
-
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
-
-            self::assertEquals('Aprovado', $response->situacao);
-        }
-
-        $registration = $this->enrollment->registration;
-
-        self::assertEquals(1, $registration->refresh()->aprovado);
-
-        $randomDiscipline = $schoolClass->disciplines->random()->id;
-        $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 2);
-        self::assertTrue($response->any_error_msg);
-
-        self::assertEquals(1, $registration->refresh()->aprovado);
-    }
-}
+    self::assertEquals(1, $registration->refresh()->aprovado);
+});

@@ -1,22 +1,15 @@
 <?php
 
-namespace Tests\Unit\Enum;
-
 use App\Models\LocalizationZone;
-use Tests\EnumTestCase;
+use Tests\TestCase;
 
-class LocalizationZoneTest extends EnumTestCase
-{
-    public function getEnumName(): string
-    {
-        return LocalizationZone::class;
-    }
+uses(TestCase::class);
 
-    public function getDescriptiveValues(): array
-    {
-        return [
-            1 => 'Urbana',
-            2 => 'Rural',
-        ];
-    }
-}
+test('descriptive values', function () {
+    $values = (new LocalizationZone)->getDescriptiveValues();
+    $this->assertIsArray($values);
+    $this->assertJsonStringEqualsJsonString(collect([
+        1 => 'Urbana',
+        2 => 'Rural',
+    ]), collect($values));
+});

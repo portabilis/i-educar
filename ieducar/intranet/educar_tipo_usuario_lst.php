@@ -95,9 +95,9 @@ return new class extends clsListagem
                 $url = route(name: 'usertype.show', parameters: ['userType' => $registro['cod_tipo_usuario']]);
 
                 $this->addLinhas(linha: [
-                    "<a href=\"{$url}\">{$registro['cod_tipo_usuario']}</a>",
-                    "<a href=\"{$url}\">{$registro['nm_tipo']}</a>",
-                    "<a href=\"{$url}\">{$registro['descricao']}</a>",
+                    "<a href=\"{$url}\">" . e($registro['cod_tipo_usuario']) . '</a>',
+                    "<a href=\"{$url}\">" . e($registro['nm_tipo']) . '</a>',
+                    "<a href=\"{$url}\">" . e($registro['descricao']) . '</a>',
                     "<a href=\"{$url}\">{$array_nivel[$registro['nivel']]}</a>",
                 ]);
             }

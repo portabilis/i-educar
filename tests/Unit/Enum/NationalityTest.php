@@ -1,23 +1,16 @@
 <?php
 
-namespace Tests\Unit\Enum;
-
 use App\Models\Nationality;
-use Tests\EnumTestCase;
+use Tests\TestCase;
 
-class NationalityTest extends EnumTestCase
-{
-    public function getEnumName(): string
-    {
-        return Nationality::class;
-    }
+uses(TestCase::class);
 
-    public function getDescriptiveValues(): array
-    {
-        return [
-            1 => 'Brasileira',
-            2 => 'Naturalizado brasileiro',
-            3 => 'Estrangeira',
-        ];
-    }
-}
+test('descriptive values', function () {
+    $values = (new Nationality)->getDescriptiveValues();
+    $this->assertIsArray($values);
+    $this->assertJsonStringEqualsJsonString(collect([
+        1 => 'Brasileira',
+        2 => 'Naturalizado brasileiro',
+        3 => 'Estrangeira',
+    ]), collect($values));
+});

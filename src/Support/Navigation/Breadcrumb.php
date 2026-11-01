@@ -35,6 +35,13 @@ class Breadcrumb
     {
         $this->currentPage = html_entity_decode($currentPage);
 
+        // A trilha é redefinida junto com a página atual, e não acrescentada: a
+        // classe é singleton do container, e num processo reaproveitado — como o
+        // servidor in-process dos testes de browser, ou o Octane — o mesmo objeto
+        // atende várias requisições. Sem o reset a trilha só cresce, repetindo os
+        // mesmos itens ("Início / Escola / Escola / Escola / Configurações").
+        $this->pages = [];
+
         foreach ($pages as $link => $label) {
             $this->push($label, $link);
         }

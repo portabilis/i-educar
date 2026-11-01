@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\LegacyUserType;
+use App_Model_NivelTipoUsuario;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyUserTypeFactory extends Factory
@@ -21,9 +22,9 @@ class LegacyUserTypeFactory extends Factory
     {
         return [
             'nm_tipo' => $this->faker->firstName(),
-            'nivel' => $this->faker->randomElement([1, 2, 3, 4]),
+            'nivel' => App_Model_NivelTipoUsuario::INSTITUCIONAL,
             'ref_funcionario_cad' => fn () => LegacyEmployeeFactory::new()->current()->ref_cod_pessoa_fj,
-            'data_cadastro' => $this->faker->dateTime(),
+            'data_cadastro' => now(),
         ];
     }
 }

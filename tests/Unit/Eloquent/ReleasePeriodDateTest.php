@@ -1,19 +1,13 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\ReleasePeriod;
 use App\Models\ReleasePeriodDate;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class ReleasePeriodDateTest extends EloquentTestCase
-{
-    protected $relations = [
-        'releasePeriod' => ReleasePeriod::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return ReleasePeriodDate::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(ReleasePeriodDate::class, relations: [
+    'releasePeriod' => ReleasePeriod::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

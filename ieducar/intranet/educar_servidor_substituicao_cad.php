@@ -36,8 +36,6 @@ return new class extends clsCadastro
 
     public $alocacao_array = [];
 
-    public $professor;
-
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -55,18 +53,19 @@ return new class extends clsCadastro
         if (is_numeric(value: $this->ref_cod_servidor) && is_numeric(value: $this->ref_ref_cod_instituicao)) {
             $retorno = 'Novo';
 
-            $obj_servidor = new clsPmieducarServidor(
-                cod_servidor: $this->ref_cod_servidor,
-                ref_cod_instituicao: $this->ref_ref_cod_instituicao
-            );
-            $det_servidor = $obj_servidor->detalhe();
+            $cargaHoraria = Employee::query()
+                ->whereEmployee($this->ref_cod_servidor)
+                ->whereInstitution($this->ref_ref_cod_instituicao)
+                ->value('carga_horaria');
 
             // Nenhum servidor com o código de servidor e instituição
-            if (!$det_servidor) {
-                $this->simpleRedirect(url: 'educar_servidor_lst.php');
+            if ($cargaHoraria === null) {
+                $this->redirectNotFound(
+                    url: 'educar_servidor_lst.php',
+                    registro: 'servidor',
+                    codigo: $this->ref_cod_servidor,
+                );
             }
-
-            $this->professor = $obj_servidor->isProfessor() == true ? 'true' : 'false';
 
             $lista = EmployeeAllocation::query()
                 ->when(is_numeric($this->ref_ref_cod_instituicao), fn ($q) => $q->whereInstitution($this->ref_ref_cod_instituicao))
@@ -89,9 +88,12 @@ return new class extends clsCadastro
                 $retorno = 'Novo';
             }
 
-            $this->carga_horaria = $det_servidor['carga_horaria'];
+            $this->carga_horaria = $cargaHoraria;
         } else {
-            $this->simpleRedirect(url: 'educar_servidor_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_servidor_lst.php',
+                registro: 'servidor',
+            );
         }
 
         $this->url_cancelar = sprintf(
@@ -100,10 +102,6 @@ return new class extends clsCadastro
             $this->ref_ref_cod_instituicao
         );
         $this->nome_url_cancelar = 'Cancelar';
-
-        $this->breadcrumb(currentPage: 'Registro de substituição do servidor', breadcrumbs: [
-            url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
-        ]);
 
         return $retorno;
     }
@@ -116,22 +114,19 @@ return new class extends clsCadastro
         $this->campoRotulo(nome: 'nm_instituicao', campo: 'Instituição', valor: $inst_det['nm_instituicao']);
         $this->campoOculto(nome: 'ref_ref_cod_instituicao', valor: $this->ref_ref_cod_instituicao);
 
-        $objTemp = new clsPmieducarServidor(cod_servidor: $this->ref_cod_servidor);
-        $det = $objTemp->detalhe();
-        if ($det) {
-            foreach ($det as $key => $registro) {
-                $this->$key = $registro;
-            }
-        }
-
         if (is_numeric($this->ref_cod_servidor)) {
             $nm_servidor = LegacyPerson::query()->whereKey($this->ref_cod_servidor)->value('nome');
         }
 
         $this->campoRotulo(nome: 'nm_servidor', campo: 'Servidor', valor: $nm_servidor);
 
+        // Início > Servidores > Nome > Substituição de horário
+        $this->breadcrumb(currentPage: 'Substituição de horário', breadcrumbs: [
+            url(path: 'intranet/educar_servidor_lst.php') => 'Servidores',
+            url(path: "intranet/educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}") => $nm_servidor,
+        ]);
+
         $this->campoOculto(nome: 'ref_cod_servidor', valor: $this->ref_cod_servidor);
-        $this->campoOculto(nome: 'professor', valor: $this->professor);
 
         $url = sprintf(
             'educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_todos_&campo2=ref_cod_servidor_todos&ref_cod_instituicao=%d&ref_cod_servidor=%d',
@@ -162,7 +157,6 @@ return new class extends clsCadastro
 
     public function Novo()
     {
-        $professor = isset($_POST['professor']) ? strtolower(string: $_POST['professor']) : 'FALSE';
         $substituto = isset($_POST['ref_cod_servidor_todos']) ? $_POST['ref_cod_servidor_todos'] : null;
 
         $permissoes = new clsPermissoes;
@@ -203,16 +197,6 @@ return new class extends clsCadastro
                         return false;
                     }
                 }
-            }
-
-            // Substituição do servidor no quadro de horários (caso seja professor)
-            if ($professor == 'true') {
-                $quadroHorarios = new clsPmieducarQuadroHorarioHorarios(
-                    ref_cod_instituicao_servidor: $this->ref_ref_cod_instituicao,
-                    ref_servidor: $this->ref_cod_servidor,
-                    ativo: 1,
-                );
-                $quadroHorarios->substituir_servidor(int_ref_cod_servidor_substituto: $substituto);
             }
         }
 
