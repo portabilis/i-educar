@@ -338,6 +338,21 @@ class AgendaService
         return '';
     }
 
+    private function formatDateForDisplay(?string $date): ?string
+    {
+        if ($date === null) {
+            return null;
+        }
+
+        $parts = explode('-', $date);
+
+        if (count($parts) !== 3 || strlen($parts[0]) !== 4) {
+            return null;
+        }
+
+        return sprintf('%02d/%02d/%04d', $parts[2], $parts[1], $parts[0]);
+    }
+
     /**
      * Converte a data do formato dd/mm/aaaa para o formato do banco, retornando null quando inválida
      */
