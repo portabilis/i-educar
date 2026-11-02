@@ -55,6 +55,8 @@ return new class extends clsCadastro
 
     public $retorno;
 
+    private const ESQUEMAS_PERMITIDOS_SITE = ['http', 'https'];
+
     public function Inicializar()
     {
         $this->cod_pessoa_fj = is_numeric(value: $_GET['idpes']) ? (int) $_GET['idpes'] : null;
@@ -139,13 +141,10 @@ return new class extends clsCadastro
     public function Novo()
     {
         if (!$this->validaFormatoUrl(url: $this->url)) {
-            // Inalcançável: `validaFormatoUrl()` nunca devolve falso, porque `filter_var()` recebe o filtro como `options`.
-            // @codeCoverageIgnoreStart
             $this->mensagem = 'O campo Site deve conter uma URL válida (ex: https://www.exemplo.com.br).';
             $this->busca_empresa = true;
 
             return false;
-            // @codeCoverageIgnoreEnd
         }
 
         if (!empty($this->email) && filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
@@ -298,10 +297,14 @@ return new class extends clsCadastro
     }
 
     /**
-     * Valida se uma URL possui formato válido
+     * Valida o campo Site da pessoa jurídica.
      *
-     * @param string $url A URL a validar
-     * @return bool True se válida, false caso contrário
+     * O campo é opcional, então um valor vazio é aceito. Quando preenchido, a URL
+     * precisa ser bem formada e usar o esquema http ou https. O esquema é comparado
+     * sem diferenciar maiúsculas de minúsculas, como define a RFC 3986.
+     *
+     * @param string|null $url A URL informada no campo Site
+     * @return bool True se a URL for aceita, false caso contrário
      */
     private function validaFormatoUrl($url)
     {
@@ -309,7 +312,13 @@ return new class extends clsCadastro
             return true;
         }
 
-        return filter_var(value: $url, options: FILTER_VALIDATE_URL) !== false;
+        if (filter_var(value: $url, filter: FILTER_VALIDATE_URL) === false) {
+            return false;
+        }
+
+        $esquema = strtolower((string) parse_url($url, PHP_URL_SCHEME));
+
+        return in_array($esquema, self::ESQUEMAS_PERMITIDOS_SITE, true);
     }
 
     /**
@@ -354,13 +363,10 @@ return new class extends clsCadastro
     public function Editar()
     {
         if (!$this->validaFormatoUrl(url: $this->url)) {
-            // Inalcançável: `validaFormatoUrl()` nunca devolve falso, porque `filter_var()` recebe o filtro como `options`.
-            // @codeCoverageIgnoreStart
             $this->mensagem = 'O campo Site deve conter uma URL válida (ex: https://www.exemplo.com.br).';
             $this->busca_empresa = true;
 
             return false;
-            // @codeCoverageIgnoreEnd
         }
 
         if (!empty($this->email) && filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
