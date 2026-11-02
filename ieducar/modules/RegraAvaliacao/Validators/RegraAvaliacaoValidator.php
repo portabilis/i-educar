@@ -30,6 +30,14 @@ class RegraAvaliacao_Validators_RegraAvaliacaoValidator
             }
         }
 
+        // Validação 4: Quantidade máxima de casas decimais entre 0 e 4
+        if (isset($regra->qtdCasasDecimais) && $regra->qtdCasasDecimais !== '') {
+            $q = (int) $regra->qtdCasasDecimais;
+            if ($q < 0 || $q > 4) {
+                $this->messages[] = 'A quantidade máxima de casas decimais deve estar entre 0 e 4.';
+            }
+        }
+
         return empty($this->messages);
     }
 

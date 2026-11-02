@@ -18,4 +18,14 @@ class LegacyIndividualBuilder extends LegacyBuilder
     {
         return $this->where('data_nasc', $birthdate);
     }
+
+    public function whereVinculo(string $vinculo): self
+    {
+        return match (mb_strtolower($vinculo)) {
+            'aluno' => $this->whereHas('student'),
+            'servidor' => $this->whereHas('employee'),
+            'responsavel', 'responsável' => $this->whereHas('dependents'),
+            default => throw new \InvalidArgumentException("Vínculo inválido: {$vinculo}"),
+        };
+    }
 }

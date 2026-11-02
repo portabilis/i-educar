@@ -52,3 +52,64 @@ test('falta maxima menor ou igual falta minima', function () {
         $validator->getMessages()
     );
 });
+
+/**
+ * Testes referentes à Issue #1016:
+ * Validação da quantidade máxima de casas decimais na regra de avaliação.
+ */
+test('casas decimais negativo invalido', function () {
+    $regra = ($this->makeRegra)(['qtdCasasDecimais' => -1]);
+    $validator = new RegraAvaliacao_Validators_RegraAvaliacaoValidator;
+
+    $this->assertFalse($validator->isValid($regra));
+    $this->assertContains(
+        'A quantidade máxima de casas decimais deve estar entre 0 e 4.',
+        $validator->getMessages()
+    );
+});
+
+test('casas decimais acima do limite invalido', function () {
+    $regra = ($this->makeRegra)(['qtdCasasDecimais' => 5]);
+    $validator = new RegraAvaliacao_Validators_RegraAvaliacaoValidator;
+
+    $this->assertFalse($validator->isValid($regra));
+    $this->assertContains(
+        'A quantidade máxima de casas decimais deve estar entre 0 e 4.',
+        $validator->getMessages()
+    );
+});
+
+test('casas decimais valor extremo issue 1016', function () {
+    $regra = ($this->makeRegra)(['qtdCasasDecimais' => 999]);
+    $validator = new RegraAvaliacao_Validators_RegraAvaliacaoValidator;
+
+    $this->assertFalse($validator->isValid($regra));
+    $this->assertContains(
+        'A quantidade máxima de casas decimais deve estar entre 0 e 4.',
+        $validator->getMessages()
+    );
+});
+
+test('casas decimais limite inferior valido', function () {
+    $regra = ($this->makeRegra)(['qtdCasasDecimais' => 0]);
+    $validator = new RegraAvaliacao_Validators_RegraAvaliacaoValidator;
+
+    $this->assertTrue($validator->isValid($regra));
+    $this->assertEmpty($validator->getMessages());
+});
+
+test('casas decimais limite superior valido', function () {
+    $regra = ($this->makeRegra)(['qtdCasasDecimais' => 4]);
+    $validator = new RegraAvaliacao_Validators_RegraAvaliacaoValidator;
+
+    $this->assertTrue($validator->isValid($regra));
+    $this->assertEmpty($validator->getMessages());
+});
+
+test('casas decimais valor intermediario valido', function () {
+    $regra = ($this->makeRegra)(['qtdCasasDecimais' => 2]);
+    $validator = new RegraAvaliacao_Validators_RegraAvaliacaoValidator;
+
+    $this->assertTrue($validator->isValid($regra));
+    $this->assertEmpty($validator->getMessages());
+});
