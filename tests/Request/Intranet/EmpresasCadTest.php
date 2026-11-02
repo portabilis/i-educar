@@ -142,15 +142,12 @@ test('recusa cada dado inválido com a sua mensagem', function (array $overrides
     'telefone sem DDD' => [['ddd_telefone_2' => ''], 'O campo: DDD, deve ser preenchido quando o Telefone 2 estiver preenchido.'],
     'celular sem DDD' => [['ddd_telefone_mov' => ''], 'O campo: DDD, deve ser preenchido quando o Celular estiver preenchido.'],
     'fax sem telefone' => [['telefone_fax' => ''], 'O campo: Fax, deve ser preenchido quando o DDD estiver preenchido.'],
+    'site que não é URL' => [['url' => 'alfa'], 'O campo Site deve conter uma URL válida'],
+    'site sem esquema' => [['url' => 'www.site-sem-dominio'], 'O campo Site deve conter uma URL válida'],
+    'site com esquema javascript' => [['url' => 'javascript://comentario%0Aalert(1)'], 'O campo Site deve conter uma URL válida'],
+    'site com esquema ftp' => [['url' => 'ftp://exemplo.com.br'], 'O campo Site deve conter uma URL válida'],
+    'site com esquema mailto' => [['url' => 'mailto:contato@exemplo.com.br'], 'O campo Site deve conter uma URL válida'],
 ]);
-
-test('defeito: aceita um site que não é URL', function () {
-    // filter_var() recebe FILTER_VALIDATE_URL como `options`, não como filtro,
-    // então nada é validado.
-    $this->post($this->new, ($this->payload)(['url' => 'alfa']))->assertRedirect('empresas_lst.php');
-
-    expect(($this->stored)()->url)->toBe('alfa');
-});
 
 test('recusa o CNPJ de outra empresa', function () {
     ($this->organization)();
@@ -232,6 +229,11 @@ test('na edição recusa os mesmos dados inválidos do cadastro', function (arra
     'CNPJ inválido' => [['cnpj' => '11.111.111/1111-11'], 'CNPJ inválido'],
     'complemento com caractere proibido' => [['complement' => 'Sala #2'], 'O campo Complemento só permite os caracteres'],
     'DDD sem telefone' => [['telefone_1' => ''], 'O campo: Telefone 1, deve ser preenchido quando o DDD estiver preenchido.'],
+    'site que não é URL' => [['url' => 'alfa'], 'O campo Site deve conter uma URL válida'],
+    'site sem esquema' => [['url' => 'www.site-sem-dominio'], 'O campo Site deve conter uma URL válida'],
+    'site com esquema javascript' => [['url' => 'javascript://comentario%0Aalert(1)'], 'O campo Site deve conter uma URL válida'],
+    'site com esquema ftp' => [['url' => 'ftp://exemplo.com.br'], 'O campo Site deve conter uma URL válida'],
+    'site com esquema mailto' => [['url' => 'mailto:contato@exemplo.com.br'], 'O campo Site deve conter uma URL válida'],
 ]);
 
 test('abaixo do nível institucional o CNPJ vira rótulo e campo oculto', function () {
@@ -263,4 +265,11 @@ test('com um código inexistente abre a edição vazia', function () {
 
     expect($fields['tipoacao'])->toBe('Editar')
         ->and($fields['razao_social'])->toBe('');
+});
+
+test('aceita site com esquema em maiúsculas', function () {
+    $this->post($this->new, ($this->payload)(['url' => 'HTTPS://WWW.EXEMPLO.COM.BR']))
+        ->assertRedirect('empresas_lst.php');
+
+    expect(($this->stored)()->url)->toBe('HTTPS://WWW.EXEMPLO.COM.BR');
 });
