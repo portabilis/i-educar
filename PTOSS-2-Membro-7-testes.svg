@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="475" viewBox="0 0 1180 475">
+  <rect width="1180" height="475" rx="12" fill="#0d1117"/>
+  <path d="M12 0h1156a12 12 0 0 1 12 12v38H0V12A12 12 0 0 1 12 0" fill="#161b22"/>
+  <circle cx="24" cy="25" r="6" fill="#ff5f56"/>
+  <circle cx="44" cy="25" r="6" fill="#ffbd2e"/>
+  <circle cx="64" cy="25" r="6" fill="#27c93f"/>
+  <text x="88" y="31" fill="#c9d1d9" font-family="Segoe UI, sans-serif" font-size="15">Terminal — Pest 5.3.2 — testes do Membro 7</text>
+  <g font-family="Cascadia Code, Consolas, monospace" font-size="15">
+    <text x="32" y="82" fill="#79c0ff">$ docker compose run --rm --no-deps -v ieducar_test_vendor:/var/www/ieducar/vendor</text>
+    <text x="32" y="108" fill="#79c0ff">  php vendor/bin/pest tests/Unit/Services/NameCapitalizationServiceTest.php</text>
+    <text x="32" y="134" fill="#79c0ff">  tests/Unit/Models/Builders/IndividualFilterByBondTest.php</text>
+    <text x="32" y="180" fill="#3fb950">PASS  Tests\Unit\Services\NameCapitalizationServiceTest</text>
+    <text x="32" y="207" fill="#3fb950">  ✓ capitalizes simple names</text>
+    <text x="32" y="234" fill="#3fb950">  ✓ keeps Portuguese prepositions lowercase</text>
+    <text x="32" y="261" fill="#3fb950">  ✓ preserves accents when capitalizing names</text>
+    <text x="32" y="301" fill="#3fb950">PASS  Tests\Unit\Models\Builders\IndividualFilterByBondTest</text>
+    <text x="32" y="328" fill="#3fb950">  ✓ filters individuals by student, employee, and responsible bonds</text>
+    <text x="32" y="355" fill="#3fb950">  ✓ rejects unsupported bond filters</text>
+    <text x="32" y="395" fill="#e6edf3">Tests: 5 passed (7 assertions)    Duration: 7.14s</text>
+  </g>
+</svg>

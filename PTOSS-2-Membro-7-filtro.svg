@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="390" viewBox="0 0 1180 390">
+  <rect width="1180" height="390" rx="12" fill="#0d1117"/>
+  <path d="M12 0h1156a12 12 0 0 1 12 12v38H0V12A12 12 0 0 1 12 0" fill="#161b22"/>
+  <circle cx="24" cy="25" r="6" fill="#ff5f56"/>
+  <circle cx="44" cy="25" r="6" fill="#ffbd2e"/>
+  <circle cx="64" cy="25" r="6" fill="#27c93f"/>
+  <text x="88" y="31" fill="#c9d1d9" font-family="Segoe UI, sans-serif" font-size="15">LegacyIndividualBuilder.php — whereVinculo()</text>
+  <g font-family="Cascadia Code, Consolas, monospace" font-size="17">
+    <g fill="#6e7681" text-anchor="end">
+      <text x="48" y="87">1</text><text x="48" y="119">2</text><text x="48" y="151">3</text>
+      <text x="48" y="183">4</text><text x="48" y="215">5</text><text x="48" y="247">6</text>
+      <text x="48" y="279">7</text><text x="48" y="311">8</text><text x="48" y="343">9</text>
+    </g>
+    <g fill="#e6edf3">
+      <text x="72" y="87">public function whereVinculo(string $vinculo): self</text>
+      <text x="72" y="119">{</text>
+      <text x="72" y="151">return match (mb_strtolower($vinculo)) {</text>
+      <text x="72" y="183">'aluno' =&gt; $this-&gt;whereHas('student'),</text>
+      <text x="72" y="215">'servidor' =&gt; $this-&gt;whereHas('employee'),</text>
+      <text x="72" y="247">'responsavel', 'responsável' =&gt; $this-&gt;whereHas('dependents'),</text>
+      <text x="72" y="279">default =&gt; throw new \InvalidArgumentException("Vínculo inválido: {$vinculo}"),</text>
+      <text x="72" y="311">};</text>
+      <text x="72" y="343">}</text>
+    </g>
+  </g>
+</svg>
