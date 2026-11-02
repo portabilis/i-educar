@@ -104,7 +104,7 @@ trait DiarioApiFakeDataTestTrait
     public function getPromotionFromAverageAndAttendanceWithoutRetake()
     {
         $roundingTable = LegacyRoundingTableFactory::new()->numeric()->create();
-        LegacyValueRoundingTableFactory::new()->count(10)->create([
+        LegacyValueRoundingTableFactory::new()->numericBands()->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 
@@ -120,7 +120,7 @@ trait DiarioApiFakeDataTestTrait
     public function getProgressionWithAverageCalculationWeightedRecovery()
     {
         $roundingTable = LegacyRoundingTableFactory::new()->numeric()->create();
-        LegacyValueRoundingTableFactory::new()->count(10)->create([
+        LegacyValueRoundingTableFactory::new()->numericBands()->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 

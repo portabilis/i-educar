@@ -32,7 +32,11 @@ return new class extends clsDetalhe
 
         $registro = LegacyExemptionType::find($this->cod_tipo_dispensa)?->getAttributes();
         if (!$registro) {
-            $this->simpleRedirect('educar_tipo_dispensa_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_tipo_dispensa_lst.php',
+                registro: 'tipo de dispensa',
+                codigo: $this->cod_tipo_dispensa,
+            );
         }
         $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
         $obj_instituicao_det = $obj_instituicao->detalhe();

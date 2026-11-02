@@ -20,7 +20,15 @@ class EnrollmentHistoryController extends Controller
 
         $this->menu(578);
 
-        $registration = LegacyRegistration::find($id);
+        $registration = LegacyRegistration::query()->findOrFail((int) $id);
+
+        $user = auth()->user();
+
+        abort_if(
+            $user->isSchooling() && !$user->schools()->where('cod_escola', $registration->ref_ref_cod_escola)->exists(),
+            403,
+            'A matrícula informada não pertence às escolas do usuário.'
+        );
 
         return view('enrollments.enrollmentHistory', ['registration' => $registration]);
     }

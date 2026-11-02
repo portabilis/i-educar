@@ -77,7 +77,10 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategy extends CoreExt_Contro
     public function dispatch()
     {
         if (extension_loaded('newrelic')) {
+            // A extensão do New Relic não está instalada no ambiente dos testes.
+            // @codeCoverageIgnoreStart
             newrelic_name_transaction($_SERVER['REDIRECT_URL']);
+            // @codeCoverageIgnoreEnd
         }
 
         $this->setRequest($this->getController()->getRequest());
@@ -100,6 +103,25 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategy extends CoreExt_Contro
         }
 
         require_once $controllerFile;
+
+        // O nome da classe do page controller sai só da ação, então toda tela de
+        // módulo declararia `IndexController`, `EditController` ou
+        // `ViewController`. Sob php-fpm isso passa despercebido, porque cada
+        // requisição é um processo novo; num processo que atende mais de uma
+        // requisição — o servidor in-process dos testes de browser, por exemplo —
+        // a segunda tela de módulo aberta estoura com "Cannot redeclare class".
+        //
+        // Por isso o controller pode declarar o nome qualificado pelo módulo, no
+        // mesmo padrão dos models (AreaConhecimento_Model_AreaDataMapper), e é
+        // ele que tem preferência aqui. O nome nu continua valendo para os
+        // módulos que ainda não foram renomeados, daí a conferência sem
+        // autoload: neste ponto o arquivo já foi carregado.
+        $qualifiedPageController = implode('_', [ucwords($controller), $controllerDir, $pageController]);
+
+        if (class_exists($qualifiedPageController, false)) {
+            $pageController = $qualifiedPageController;
+        }
+
         $pageController = new $pageController;
 
         // Injeta as instâncias CoreExt_Dispatcher_Interface, CoreExt_Request_Interface

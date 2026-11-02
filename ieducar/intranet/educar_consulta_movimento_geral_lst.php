@@ -8,7 +8,7 @@ return new class extends clsListagem
     {
         $params = [];
         $params['ano'] = $this->getQueryString('ano');
-        $params['curso'] = $this->getQueryString('curso');
+        $params['curso'] = array_map('intval', (array) $this->getQueryString('curso')) ?: null;
         $params['data_inicial'] = $this->getQueryString('data_inicial');
         $params['data_final'] = $this->getQueryString('data_final');
 
@@ -39,21 +39,7 @@ return new class extends clsListagem
         $this->titulo = 'Parâmetros';
         $this->acao = 'go("/intranet/educar_consulta_movimento_geral.php")';
         $this->nome_acao = 'Nova consulta';
-        $cursos = [];
-
-        if (empty($params['curso'])) {
-            $cursos[] = 'Todos';
-        } else {
-            $cursoIds = implode(separator: ', ', array: $params['curso']);
-
-            $dadosCursos = (array) Portabilis_Utils_Database::fetchPreparedQuery(
-                "select nm_curso from pmieducar.curso where cod_curso in ({$cursoIds});"
-            );
-
-            foreach ($dadosCursos as $curso) {
-                $cursos[] = $curso['nm_curso'];
-            }
-        }
+        $cursos = $this->nomesDosCursos($params['curso']);
 
         $this->addCabecalhos([
             'Ano',
@@ -70,27 +56,7 @@ return new class extends clsListagem
         ]);
 
         $params['curso'] = empty($params['curso']) ? '' : implode(separator: ',', array: $params['curso']);
-        $linkTemplate = '<a href="#" class="mostra-consulta" style="font-weight: bold;" data-api="ConsultaMovimentoGeral" data-params=\'%s\' data-tipo="%s">%d</a>';
-
-        foreach ($data as $key => $value) {
-            foreach ($value as $k => $v) {
-                switch ($k) {
-                    case 'cod_escola':
-                    case 'escola':
-                    case 'ciclo':
-                    case 'aee':
-                    case 'localizacao':
-                        continue;
-                    default:
-                        $paramsCopy = $params;
-                        $paramsCopy['escola'] = $value['cod_escola'];
-                        $paramsCopy = json_encode($paramsCopy);
-                        $data[$key][$k] = sprintf($linkTemplate, $paramsCopy, $k, $v);
-                }
-            }
-        }
-
-        $data = json_encode($data);
+        $data = json_encode($this->adicionarLinksDasEscolas(data: $data, params: $params));
 
         $tableScript = <<<JS
 (function () {
@@ -174,6 +140,45 @@ JS;
 
         Portabilis_View_Helper_Application::embedJavascript(viewInstance: $this, script: $tableScript, afterReady: false);
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: ['/intranet/scripts/consulta_movimentos.js']);
+    }
+
+    private function nomesDosCursos(?array $cursoIds): array
+    {
+        if (empty($cursoIds)) {
+            return ['Todos'];
+        }
+
+        $dadosCursos = (array) Portabilis_Utils_Database::fetchPreparedQuery(
+            'select nm_curso from pmieducar.curso where cod_curso in (' . implode(separator: ', ', array: $cursoIds) . ');'
+        );
+
+        return array_column(array: $dadosCursos, column_key: 'nm_curso');
+    }
+
+    /**
+     * Troca os totais pelos links da consulta detalhada, só nas escolas que o
+     * usuário acessa. As colunas de identificação da escola ficam como vieram.
+     */
+    private function adicionarLinksDasEscolas(array $data, array $params): array
+    {
+        $colunasSemLink = ['cod_escola', 'escola', 'ciclo', 'aee', 'localizacao'];
+        $linkTemplate = '<a href="#" class="mostra-consulta" style="font-weight: bold;" data-api="ConsultaMovimentoGeral" data-params=\'%s\' data-tipo="%s">%d</a>';
+
+        foreach ($data as $key => $value) {
+            if (!Portabilis_Utils_User::canAccessEscola(id: $value['cod_escola'])) {
+                continue;
+            }
+
+            $paramsEscola = json_encode([...$params, 'escola' => $value['cod_escola']]);
+
+            foreach ($value as $k => $v) {
+                if (!in_array($k, $colunasSemLink, true)) {
+                    $data[$key][$k] = sprintf($linkTemplate, $paramsEscola, $k, $v);
+                }
+            }
+        }
+
+        return $data;
     }
 
     public function Formular()

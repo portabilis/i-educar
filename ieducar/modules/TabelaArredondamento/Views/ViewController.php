@@ -1,6 +1,6 @@
 <?php
 
-class ViewController extends Core_Controller_Page_ViewController
+class TabelaArredondamento_Views_ViewController extends Core_Controller_Page_ViewController
 {
     protected $_dataMapper = 'TabelaArredondamento_Model_TabelaDataMapper';
 

@@ -88,9 +88,9 @@ return new class extends clsListagem
                 }
 
                 $this->addLinhas([
-                    "<a href=\"educar_deficiencia_det.php?cod_deficiencia={$registro['cod_deficiencia']}\">{$registro['nm_deficiencia']}</a>",
+                    "<a href=\"educar_deficiencia_det.php?cod_deficiencia={$registro['cod_deficiencia']}\">" . e($registro['nm_deficiencia']) . '</a>',
                     "<a href=\"educar_deficiencia_det.php?cod_deficiencia={$registro['cod_deficiencia']}\">{$types[$registro['deficiency_type_id']]}</a>",
-                    "<a href=\"educar_deficiencia_det.php?cod_deficiencia={$registro['cod_deficiencia']}\">{$educacenso}</a>",
+                    "<a href=\"educar_deficiencia_det.php?cod_deficiencia={$registro['cod_deficiencia']}\">" . e($educacenso) . '</a>',
                 ]);
             }
         }

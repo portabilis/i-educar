@@ -14,7 +14,7 @@
                 <td class="formdktd" colspan="2" height="24"><b>Notificações</b></td>
             </tr>
             <tr id="tr_nm_instituicao">
-                <td class="formmdtd" valign="top"><span class="form">Notificações:</span></td>
+                <td class="formmdtd" valign="top"><span class="form"><label for="status">Notificações:</label></span></td>
                 <td class="formmdtd" valign="top">
                     <span class="form">
                         <select class="geral" name="status" id="status" style="width: 308px;">
@@ -25,8 +25,8 @@
                     </span>
                 </td>
             </tr>
-            <tr id="tr_nm_instituicao">
-                <td class="formlttd" valign="top"><span class="form">Tipo:</span></td>
+            <tr id="tr_type">
+                <td class="formlttd" valign="top"><span class="form"><label for="type">Tipo:</label></span></td>
                 <td class="formlttd" valign="top">
                     <span class="form">
                         <select class="geral" name="type" id="type" style="width: 308px;">
@@ -39,7 +39,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="formmdtd" valign="top"><span>Texto:</span></td>
+                <td class="formmdtd" valign="top"><span><label for="text">Texto:</label></span></td>
                 <td class="formmdtd" valign="top">
                 <input type="text" name="text" id="text" style="width: 400px;" value="{{Request::get('text')}}" />
             </tr>

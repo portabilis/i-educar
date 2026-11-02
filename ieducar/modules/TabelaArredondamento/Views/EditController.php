@@ -1,6 +1,6 @@
 <?php
 
-class EditController extends Core_Controller_Page_EditController
+class TabelaArredondamento_Views_EditController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper = 'TabelaArredondamento_Model_TabelaDataMapper';
 
@@ -126,7 +126,7 @@ class EditController extends Core_Controller_Page_EditController
     {
         if (isset($this->getRequest()->id) && $this->getRequest()->id > 0) {
             $this->setEntity(
-                $this->getDataMapper()->find($this->getRequest()->id)
+                $this->getDataMapper()->find((int) $this->getRequest()->id)
             );
 
             $this->_setValores(

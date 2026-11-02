@@ -24,8 +24,8 @@ if ($id == strval(intval($id))) {
     foreach ($states as $id => $name) {
         echo sprintf(
             '  <estado id="%s">%s</estado>' . PHP_EOL,
-            $id,
-            $name
+            htmlspecialchars($id, ENT_XML1 | ENT_QUOTES),
+            htmlspecialchars($name, ENT_XML1)
         );
     }
 }

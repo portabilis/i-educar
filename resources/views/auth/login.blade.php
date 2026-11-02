@@ -21,8 +21,8 @@
             <a href="{{ route('password.request') }}">Esqueceu sua senha?</a>
         </div>
 
-        @if(config('services.passport.client_id') && config('services.passport.client_secret'))
-        <div id="portabilis-id" style="display: block;">
+        @if(config('services.passport.enabled'))
+        <div id="sso" style="display: block;">
             <div style="border-top: 1px solid #DDDDDD; margin-top: 1.5rem; padding: 1.5rem 0 0; position: relative">
                 <span style="position: absolute; top: -.75rem; width: 50px; background: white; left: calc(50% - 25px); text-align: center; color: #999999">OU</span>
                 <a href="{{ route('socialite.redirect') }}?intended={{ session()->get('url.intended') }}" style="padding: .75rem 1.25rem; background: #0052f5; text-align: center; color: white; display: block; border-radius: 3px">

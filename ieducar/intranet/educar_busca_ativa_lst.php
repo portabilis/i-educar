@@ -34,7 +34,10 @@ return new class extends clsListagem
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -124,8 +127,13 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
+        // A busca ativa é da matrícula de um aluno, então os dois são níveis
+        // do caminho: Início > Escola > Alunos > Nome > Matrícula > Busca ativa
         $this->breadcrumb(currentPage: 'Busca ativa', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_aluno_lst.php') => 'Alunos',
+            url(path: "intranet/educar_aluno_det.php?cod_aluno={$legacyRegistration->ref_cod_aluno}") => $legacyRegistration->student->real_name,
+            url(path: "intranet/educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}") => 'Matrícula',
         ]);
     }
 

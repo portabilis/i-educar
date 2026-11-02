@@ -54,19 +54,19 @@
                     </tr>
                     <tr id="tr_nm_tipo">
                         <th scope="row" class="formmdtd">
-                            <span class="form">Tipo de Usuário</span><span class="campo_obrigatorio">*</span>
+                            <span class="form"><label for="user_type_name">Tipo de Usuário</label></span><span class="campo_obrigatorio">*</span>
                         </th>
                         <td class="formmdtd">
-                            <span class="form"><input class="obrigatorio" type="text" name="name" v-model="userType.nm_tipo" size="40" maxlength="255"> </span>
+                            <span class="form"><input class="obrigatorio" type="text" name="name" id="user_type_name" v-model="userType.nm_tipo" size="40" maxlength="255"> </span>
                         </td>
                     </tr>
                     <tr id="tr_nivel">
                         <th scope="row" class="formlttd">
-                            <span class="form">Nível</span><span class="campo_obrigatorio">*</span>
+                            <span class="form"><label for="user_type_level">Nível</label></span><span class="campo_obrigatorio">*</span>
                         </th>
                         <td class="formlttd">
                             <span class="form">
-                                <select v-model="userType.nivel" class="obrigatorio" name="level">
+                                <select v-model="userType.nivel" class="obrigatorio" name="level" id="user_type_level">
                                     @foreach(Auth::user()->type->getLevelDescriptions() as $value => $label)
                                     <option value="{{ $value }}">{{ $label }}</option>
                                     @endforeach
@@ -76,11 +76,11 @@
                     </tr>
                     <tr id="tr_descricao">
                         <th scope="row" class="formmdtd">
-                            <span class="form">Descrição</span>
+                            <span class="form"><label for="user_type_description">Descrição</label></span>
                         </th>
                         <td class="formmdtd">
                             <span class="form">
-                                <textarea v-model="userType.descricao" class="geral" name="description" cols="37" rows="5"></textarea>
+                                <textarea v-model="userType.descricao" class="geral" name="description" id="user_type_description" cols="37" rows="5"></textarea>
                             </span>
                         </td>
                     </tr>
@@ -89,7 +89,7 @@
                     <tr><td colspan="2"><hr></td></tr>
                     <tr>
                         <th scope="row" class="formlttd">
-                            <span class="form">Procure pelo nome do menu: </span><input type="text" v-model="search" placeholder="Digite o menu que procura" style="width: 300px;">
+                            <span class="form"><label for="menu_search">Procure pelo nome do menu: </label></span><input type="text" id="menu_search" v-model="search" placeholder="Digite o menu que procura" style="width: 300px;">
                         </th>
                         <td class="formlttd">
                             <div style="clear: both;"><small class="text-muted">Marcar opção para todos</small></div>

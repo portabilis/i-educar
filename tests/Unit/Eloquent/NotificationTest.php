@@ -1,30 +1,23 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyUser;
 use App\Models\Notification;
 use App\Models\NotificationType;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class NotificationTest extends EloquentTestCase
-{
-    protected $relations = [
-        'type' => NotificationType::class,
-        'user' => LegacyUser::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return Notification::class;
-    }
+beforeEach(fn () => $this->eloquent(Notification::class, relations: [
+    'type' => NotificationType::class,
+    'user' => LegacyUser::class,
+]));
 
-    public function test_needs_presigner_url(): void
-    {
-        $expect = in_array($this->model->type_id, [
-            NotificationType::EXPORT_STUDENT,
-            NotificationType::EXPORT_TEACHER,
-        ], true);
-        $this->assertEquals($expect, $this->model->needsPresignerUrl());
-    }
-}
+EloquentModelTestCase::registerModelTests();
+
+test('needs presigner url', function () {
+    $expect = in_array($this->model->type_id, [
+        NotificationType::EXPORT_STUDENT,
+        NotificationType::EXPORT_TEACHER,
+    ], true);
+    $this->assertEquals($expect, $this->model->needsPresignerUrl());
+});

@@ -31,7 +31,10 @@ return new class extends clsDetalhe
         }
 
         if (!$registro) {
-            $this->simpleRedirect(url: 'educar_bloqueio_ano_letivo_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_bloqueio_ano_letivo_lst.php',
+                registro: 'bloqueio do ano letivo',
+            );
         }
 
         if ($registro['instituicao']) {

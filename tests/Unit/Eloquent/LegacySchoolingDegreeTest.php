@@ -1,30 +1,23 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\Employee;
 use App\Models\LegacyIndividual;
 use App\Models\LegacySchoolingDegree;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacySchoolingDegreeTest extends EloquentTestCase
-{
-    protected $relations = [
+uses(EloquentModelTestCase::class);
+
+beforeEach(fn () => $this->eloquent(
+    LegacySchoolingDegree::class,
+    relations: [
         'employees' => Employee::class,
         'individuals' => LegacyIndividual::class,
-    ];
+    ],
+    legacyAttributes: [
+        'id' => 'idesco',
+        'description' => 'descricao',
+        'schooling' => 'escolaridade',
+    ],
+));
 
-    protected function getEloquentModelName(): string
-    {
-        return LegacySchoolingDegree::class;
-    }
-
-    protected function getLegacyAttributes(): array
-    {
-        return [
-            'id' => 'idesco',
-            'description' => 'descricao',
-            'schooling' => 'escolaridade',
-        ];
-    }
-}
+EloquentModelTestCase::registerModelTests();

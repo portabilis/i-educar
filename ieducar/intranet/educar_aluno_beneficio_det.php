@@ -29,17 +29,21 @@ return new class extends clsDetalhe
         $registro = LegacyBenefit::find(request()->integer('cod_aluno_beneficio'))?->getAttributes();
 
         if (!$registro) {
-            $this->simpleRedirect(url: 'educar_aluno_beneficio_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_aluno_beneficio_lst.php',
+                registro: 'benefício',
+                codigo: request()->integer('cod_aluno_beneficio'),
+            );
         }
 
         if ($registro['cod_aluno_beneficio']) {
-            $this->addDetalhe(detalhe: ['Código Benefício', "{$registro['cod_aluno_beneficio']}"]);
+            $this->addDetalhe(detalhe: ['Código Benefício', e($registro['cod_aluno_beneficio'])]);
         }
         if ($registro['nm_beneficio']) {
-            $this->addDetalhe(detalhe: ['Benefício', "{$registro['nm_beneficio']}"]);
+            $this->addDetalhe(detalhe: ['Benefício', e($registro['nm_beneficio'])]);
         }
         if ($registro['desc_beneficio']) {
-            $this->addDetalhe(detalhe: ['Descrição', nl2br(string: "{$registro['desc_beneficio']}")]);
+            $this->addDetalhe(detalhe: ['Descrição', nl2br(string: e($registro['desc_beneficio']))]);
         }
 
         $this->addDetalhe(detalhe: ['Bolsa Família', $registro['bolsa_familia'] ? 'Sim' : 'Não']);

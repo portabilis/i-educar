@@ -1,23 +1,16 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+test('instancia e singleton', function () {
+    $instance1 = CoreExt_SingletonStub::getInstance();
+    $oid1 = spl_object_hash($instance1);
 
-class CoreExt_SingletonTest extends TestCase
-{
-    public function test_instancia_e_singleton()
-    {
-        $instance1 = CoreExt_SingletonStub::getInstance();
-        $oid1 = spl_object_hash($instance1);
+    $instance2 = CoreExt_SingletonStub::getInstance();
+    $oid2 = spl_object_hash($instance2);
 
-        $instance2 = CoreExt_SingletonStub::getInstance();
-        $oid2 = spl_object_hash($instance2);
+    $this->assertSame($oid1, $oid2);
+});
 
-        $this->assertSame($oid1, $oid2);
-    }
-
-    public function test_classe_que_nao_implementa_metodo_lanca_excecao()
-    {
-        $this->expectException(CoreExt_Exception::class);
-        $instance1 = CoreExt_SingletonIncompleteStub::getInstance();
-    }
-}
+test('classe que nao implementa metodo lanca excecao', function () {
+    $this->expectException(CoreExt_Exception::class);
+    $instance1 = CoreExt_SingletonIncompleteStub::getInstance();
+});

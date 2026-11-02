@@ -125,6 +125,7 @@ button.submit:disabled {
 }
 
 .success {
+  display: block;
   color: #157100;
   border: 1px solid #e0f9d8;
   background-color: #f0f9ee;
@@ -195,7 +196,7 @@ button.submit:disabled {
   margin-left: 335px;
   color: #188ad1;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
   #eye {
     margin-top: 17px !important;
     margin-left: -25px !important;

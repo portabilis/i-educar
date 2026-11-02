@@ -1,5 +1,10 @@
 <?php
 
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\LoginFirstUser;
+use Tests\TestCase;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -12,6 +17,29 @@
 */
 
 // uses(Tests\TestCase::class)->in('Feature');
+
+// Os testes de browser passam por HTTP de verdade e precisam do app Laravel
+// bootado. O DatabaseTransactions isola porque o servidor HTTP do Pest 4 é
+// in-process: ele roda no mesmo processo do teste.
+uses(
+    TestCase::class,
+    DatabaseTransactions::class,
+)->in('Browser');
+
+// A camada de requisição exercita as mesmas telas sem navegador: GET para abrir
+// o formulário, POST para gravar. Nunca com WithoutMiddleware — é o
+// ConvertEmptyStringsToNull que faz um campo vazio chegar ao legado como null.
+uses(
+    TestCase::class,
+    DatabaseTransactions::class,
+)->in('Request');
+
+uses(
+    TestCase::class,
+    DatabaseTransactions::class,
+    LoginFirstUser::class,
+    WithoutMiddleware::class,
+)->in('Pages');
 
 /*
 |--------------------------------------------------------------------------

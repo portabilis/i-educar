@@ -1,63 +1,46 @@
 <?php
 
-namespace Tests\Api;
-
-use App\Models\LegacyIndividual;
-use App\Models\LegacyStudent;
 use Database\Factories\LegacyIndividualFactory;
 use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\LoginFirstUser;
 use Tests\TestCase;
 
-class LegacyUnificationPersonStudentTest extends TestCase
-{
-    use DatabaseTransactions;
-    use LoginFirstUser;
+uses(TestCase::class, DatabaseTransactions::class, LoginFirstUser::class);
 
-    private LegacyIndividual $individual;
+beforeEach(function () {
+    $this->loginWithFirstUser();
 
-    private LegacyStudent $student;
+    $this->individual = LegacyIndividualFactory::new()->create();
+    $this->student = LegacyStudentFactory::new()->create();
+    $this->studentTwo = LegacyStudentFactory::new()->create();
+});
 
-    private LegacyStudent $studentTwo;
+test('unification person student', function () {
+    $request = [
+        'tipoacao' => 'Novo',
+    ];
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->loginWithFirstUser();
+    $data = [
+        'pessoas' => collect([
+            [
+                'idpes' => $this->individual->getKey(),
+                'pessoa_principal' => true,
+            ],
+            [
+                'idpes' => $this->student->individual->getKey(),
+                'pessoa_principal' => false,
+            ],
+            [
+                'idpes' => $this->studentTwo->individual->getKey(),
+                'pessoa_principal' => false,
+            ],
+        ]),
+    ];
 
-        $this->individual = LegacyIndividualFactory::new()->create();
-        $this->student = LegacyStudentFactory::new()->create();
-        $this->studentTwo = LegacyStudentFactory::new()->create();
-    }
+    $payload = array_merge($request, $data);
 
-    public function test_unification_person_student(): void
-    {
-        $request = [
-            'tipoacao' => 'Novo',
-        ];
-
-        $data = [
-            'pessoas' => collect([
-                [
-                    'idpes' => $this->individual->getKey(),
-                    'pessoa_principal' => true,
-                ],
-                [
-                    'idpes' => $this->student->individual->getKey(),
-                    'pessoa_principal' => false,
-                ],
-                [
-                    'idpes' => $this->studentTwo->individual->getKey(),
-                    'pessoa_principal' => false,
-                ],
-            ]),
-        ];
-
-        $payload = array_merge($request, $data);
-
-        $this->post('/intranet/educar_unifica_pessoa.php', $payload)
-            ->assertSuccessful()
-            ->assertSee('Não é permitido unificar mais de uma pessoa vinculada com alunos. Efetue primeiro a unificação de alunos e tente novamente.');
-    }
-}
+    $this->post('/intranet/educar_unifica_pessoa.php', $payload)
+        ->assertSuccessful()
+        ->assertSee('Não é permitido unificar mais de uma pessoa vinculada com alunos. Efetue primeiro a unificação de alunos e tente novamente.');
+});

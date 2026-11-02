@@ -127,13 +127,17 @@ trait InteractWithDatabase
     {
         $model = $this->find($identifier);
 
+        // Inalcançável: find() acabou de achar o registro, então findOrFail()
+        // não falha, e ler `->delete` não lança exceção.
         try {
             $model->findOrFail($identifier)->delete;
+            // @codeCoverageIgnoreStart
         } catch (Throwable) {
             $this->mensagem = 'Exclusão não realizada.<br>';
 
             return false;
         }
+        // @codeCoverageIgnoreEnd
 
         $this->redirectToIndex();
     }

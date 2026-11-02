@@ -24,7 +24,7 @@
             </tr>
             <tr id="tr_nm_instituicao">
                 <td class="formlttd" valign="top">
-                    <span class="form">Instituição</span>
+                    <span class="form"><label for="ref_cod_instituicao">Instituição</label></span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
@@ -32,7 +32,7 @@
                 </td>
             </tr>
             <tr id="tr_nm_escola">
-                <td class="formmdtd" valign="top"><span class="form">Escola</span></td>
+                <td class="formmdtd" valign="top"><span class="form"><label for="ref_cod_escola">Escola</label></span></td>
                 <td class="formmdtd" valign="top">
                     @include('form.select-school')
                 </td>

@@ -1,37 +1,29 @@
 <?php
 
-namespace Tests\Unit\View;
-
 use App\Models\Individual;
 use App\Models\Person;
 use App\Models\PersonType;
 use App\Models\Place;
 use App\Models\RegistryOrigin;
-use Tests\ViewTestCase;
+use Tests\ViewModelTestCase;
 
-class PersonTest extends ViewTestCase
-{
-    protected $relations = [
-        'individual' => Individual::class,
-        'createdBy' => Individual::class,
-        'updatedBy' => Individual::class,
-        'place' => Place::class,
-    ];
+uses(ViewModelTestCase::class);
 
-    protected function getViewModelName(): string
-    {
-        return Person::class;
-    }
+beforeEach(fn () => $this->viewModel(Person::class, relations: [
+    'individual' => Individual::class,
+    'createdBy' => Individual::class,
+    'updatedBy' => Individual::class,
+    'place' => Place::class,
+]));
 
-    public function test_type_description(): void
-    {
-        $expected = (new PersonType)->getDescriptiveValues()[(int) $this->model->type];
-        $this->assertEquals($expected, $this->model->typeDescription);
-    }
+ViewModelTestCase::registerModelTests();
 
-    public function test_registry_origin_description(): void
-    {
-        $expected = (new RegistryOrigin)->getDescriptiveValues()[(int) $this->model->registry_origin];
-        $this->assertEquals($expected, $this->model->registryOriginDescription);
-    }
-}
+test('type description', function () {
+    $expected = (new PersonType)->getDescriptiveValues()[(int) $this->model->type];
+    $this->assertEquals($expected, $this->model->typeDescription);
+});
+
+test('registry origin description', function () {
+    $expected = (new RegistryOrigin)->getDescriptiveValues()[(int) $this->model->registry_origin];
+    $this->assertEquals($expected, $this->model->registryOriginDescription);
+});

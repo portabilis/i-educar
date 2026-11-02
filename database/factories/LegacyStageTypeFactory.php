@@ -24,10 +24,10 @@ class LegacyStageTypeFactory extends Factory
             'nm_tipo' => $this->faker->word,
             'data_cadastro' => now(),
             'ref_cod_instituicao' => fn () => LegacyInstitutionFactory::new()->current(),
-            'num_etapas' => $this->faker->numberBetween(1, 4),
+            'num_etapas' => 4,
             'descricao' => $this->faker->sentence,
-            'num_meses' => $this->faker->numberBetween(1, 12),
-            'num_semanas' => $this->faker->numberBetween(1, 52),
+            'num_meses' => 10,
+            'num_semanas' => 40,
             'ativo' => 1,
         ];
     }

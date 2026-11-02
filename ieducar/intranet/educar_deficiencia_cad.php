@@ -166,9 +166,12 @@ return new class extends clsCadastro
             $this->simpleRedirect('educar_deficiencia_lst.php');
         }
 
+        // Inalcançável: `delete()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function makeExtra()

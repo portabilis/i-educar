@@ -13,8 +13,9 @@ class LegacySchoolGradeDisciplineBuilder extends LegacyBuilder
     {
         $this->distinctDiscipline()->with('discipline:id,nome')->filter($filters);
 
-        // não não aparece na query, mas é adicionado no recurso
-        return $this->resource(['id', 'workload'], ['name']);
+        // ref_cod_disciplina entra na query por ser a chave do relacionamento, mas não é retornada
+        return $this->setExcept(['ref_cod_disciplina'])
+            ->resource(['ref_cod_disciplina as id', 'workload'], ['name']);
     }
 
     /**
@@ -26,7 +27,7 @@ class LegacySchoolGradeDisciplineBuilder extends LegacyBuilder
     }
 
     /**
-     * Filtra por escola
+     * Filtra por série
      */
     public function whereGrade(int $grade): self
     {

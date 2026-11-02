@@ -33,7 +33,12 @@ return new class extends clsDetalhe
         $registro = LegacyStageType::find($this->cod_modulo);
 
         if (!$registro) {
-            $this->simpleRedirect(url: 'educar_modulo_lst.php');
+            $this->redirectNotFound(
+                url: 'educar_modulo_lst.php',
+                registro: 'etapa',
+                feminino: true,
+                codigo: $this->cod_modulo,
+            );
         }
         $registro['ref_cod_instituicao'] = $registro->institution->nm_instituicao;
         $registro = $registro->getAttributes();
@@ -45,7 +50,7 @@ return new class extends clsDetalhe
                 $this->addDetalhe(
                     detalhe: [
                         'Instituição',
-                        "{$registro['ref_cod_instituicao']}",
+                        e($registro['ref_cod_instituicao']),
                     ]
                 );
             }
@@ -53,7 +58,7 @@ return new class extends clsDetalhe
         if ($registro['nm_tipo']) {
             $this->addDetalhe(
                 detalhe: ['Etapa',
-                    "{$registro['nm_tipo']}",
+                    e($registro['nm_tipo']),
                 ]
             );
         }
@@ -61,21 +66,21 @@ return new class extends clsDetalhe
             $this->addDetalhe(
                 detalhe: [
                     'Descrição',
-                    "{$registro['descricao']}",
+                    e($registro['descricao']),
                 ]
             );
         }
         $this->addDetalhe(
             detalhe: [
                 'Número de etapas',
-                "{$registro['num_etapas']}",
+                e($registro['num_etapas']),
             ]
         );
         if ($registro['num_meses']) {
             $this->addDetalhe(
                 detalhe: [
                     'Número de meses',
-                    "{$registro['num_meses']}",
+                    e($registro['num_meses']),
                 ]
             );
         }
@@ -83,7 +88,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(
                 detalhe: [
                     'Número de semanas',
-                    "{$registro['num_semanas']}",
+                    e($registro['num_semanas']),
                 ]
             );
         }

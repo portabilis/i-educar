@@ -9,6 +9,8 @@ use App\Services\StudentUnificationService;
 use Exception;
 use iEducar\Modules\ErrorTracking\HoneyBadgerTracker;
 use iEducar\Modules\ErrorTracking\Tracker;
+use iEducar\Reports\Contracts\ReportCardTypes;
+use iEducar\Reports\DefaultReportCardTypes;
 use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -110,6 +112,8 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $this->app->bind(Tracker::class, HoneyBadgerTracker::class);
+
+        $this->app->bindIf(ReportCardTypes::class, DefaultReportCardTypes::class);
 
         $this->app->bind(LegacyInstitution::class, function () {
             return LegacyInstitution::query()->where('ativo', 1)->firstOrFail();

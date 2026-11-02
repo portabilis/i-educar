@@ -73,8 +73,9 @@ class EnrollmentController extends Controller
                 return redirect()->back()->with('error', 'Você não tem permissão para desenturmar alunos.');
             }
         } else {
+            // A rota já exige esta permissão no middleware; esta checagem não é alcançada.
             if (!Gate::allows('modify', Process::ENROLLMENT)) {
-                return redirect()->back()->with('error', 'Você não tem permissão para enturmar alunos.');
+                return redirect()->back()->with('error', 'Você não tem permissão para enturmar alunos.'); // @codeCoverageIgnore
             }
         }
 
@@ -149,8 +150,9 @@ class EnrollmentController extends Controller
         LegacyRegistration $registration,
         LegacySchoolClass $schoolClass
     ) {
+        // A rota já exige esta permissão no middleware; esta checagem não é alcançada.
         if (!Gate::allows('modify', Process::RELOCATE)) {
-            return redirect()->back()->with('error', 'Você não tem permissão para remanejar alunos.');
+            return redirect()->back()->with('error', 'Você não tem permissão para remanejar alunos.'); // @codeCoverageIgnore
         }
 
         DB::beginTransaction();

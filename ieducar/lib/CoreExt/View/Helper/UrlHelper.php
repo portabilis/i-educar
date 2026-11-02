@@ -191,7 +191,7 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
     }
 
     /**
-     * Retorna um link HTML simples.
+     * Retorna um link HTML simples. O texto é escapado.
      *
      * @param string $text    O texto a ser apresentado como link HTML
      * @param string $path    O caminho relativo ou absoluto da URL do link
@@ -200,6 +200,6 @@ class CoreExt_View_Helper_UrlHelper extends CoreExt_View_Helper_Abstract
      */
     protected function _link($text, $path, array $options = [])
     {
-        return sprintf('<a href="%s">%s</a>', self::url($path, $options), $text);
+        return sprintf('<a href="%s">%s</a>', self::url($path, $options), e((string) $text));
     }
 }

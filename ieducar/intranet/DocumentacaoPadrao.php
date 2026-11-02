@@ -42,6 +42,8 @@ return new class extends clsCadastro
 
         $nivelUsuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivelUsuario == 4) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
 
             $obj_instituicao = new clsPmieducarInstituicao;
@@ -51,6 +53,7 @@ return new class extends clsCadastro
                 $det_instituicao = array_shift($lst_instituicao);
                 $this->nm_instituicao = $det_instituicao['nm_instituicao'];
                 $this->campoRotulo('nm_instituicao', 'Institução', $this->nm_instituicao);
+                // @codeCoverageIgnoreEnd
             }
         }
 

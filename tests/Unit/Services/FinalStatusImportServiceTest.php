@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests\Unit\Services;
-
 use App\Models\RegistrationStatus;
 use App\Services\FinalStatusImportService;
 use Database\Factories\LegacyEnrollmentFactory;
@@ -10,464 +8,426 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
-class FinalStatusImportServiceTest extends TestCase
-{
-    use DatabaseTransactions;
+uses(TestCase::class, DatabaseTransactions::class);
 
-    protected FinalStatusImportService $service;
+beforeEach(function () {
+    $this->service = new FinalStatusImportService;
+});
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->service = new FinalStatusImportService;
+test('returns correct required columns', function () {
+    $requiredColumns = $this->service->getRequiredColumns();
+
+    $this->assertEquals(['registration_id', 'final_status', 'exit_date'], $requiredColumns);
+});
+
+test('returns correct situations requiring exit date', function () {
+    $statusRequiringExitDate = $this->service->getStatusRequiringExitDate();
+
+    $expected = [RegistrationStatus::TRANSFERRED, RegistrationStatus::ABANDONED, RegistrationStatus::DECEASED, RegistrationStatus::RECLASSIFIED];
+    $this->assertEqualsCanonicalizing($expected, $statusRequiringExitDate);
+});
+
+test('returns correct status mapping', function () {
+    $mapping = $this->service->getStatusMapping();
+
+    $expectedMappings = [
+        'aprovado' => RegistrationStatus::APPROVED,
+        'reprovado' => RegistrationStatus::REPROVED,
+        'cursando' => RegistrationStatus::ONGOING,
+        'transferido' => RegistrationStatus::TRANSFERRED,
+        'reclassificado' => RegistrationStatus::RECLASSIFIED,
+        'deixou de frequentar' => RegistrationStatus::ABANDONED,
+        'aprovado com dependência' => RegistrationStatus::APPROVED_WITH_DEPENDENCY,
+        'aprovado pelo conselho' => RegistrationStatus::APPROVED_BY_BOARD,
+        'reprovado por faltas' => RegistrationStatus::REPROVED_BY_ABSENCE,
+        'falecido' => RegistrationStatus::DECEASED,
+    ];
+
+    foreach ($expectedMappings as $status => $code) {
+        $this->assertArrayHasKey($status, $mapping);
+        $this->assertEquals($code, $mapping[$status]);
     }
+});
 
-    public function test_returns_correct_required_columns()
-    {
-        $requiredColumns = $this->service->getRequiredColumns();
-
-        $this->assertEquals(['registration_id', 'final_status', 'exit_date'], $requiredColumns);
-    }
-
-    public function test_returns_correct_situations_requiring_exit_date()
-    {
-        $statusRequiringExitDate = $this->service->getStatusRequiringExitDate();
-
-        $expected = [RegistrationStatus::TRANSFERRED, RegistrationStatus::ABANDONED, RegistrationStatus::DECEASED, RegistrationStatus::RECLASSIFIED];
-        $this->assertEqualsCanonicalizing($expected, $statusRequiringExitDate);
-    }
-
-    public function test_returns_correct_status_mapping()
-    {
-        $mapping = $this->service->getStatusMapping();
-
-        $expectedMappings = [
-            'aprovado' => RegistrationStatus::APPROVED,
-            'reprovado' => RegistrationStatus::REPROVED,
-            'cursando' => RegistrationStatus::ONGOING,
-            'transferido' => RegistrationStatus::TRANSFERRED,
-            'reclassificado' => RegistrationStatus::RECLASSIFIED,
-            'deixou de frequentar' => RegistrationStatus::ABANDONED,
-            'aprovado com dependência' => RegistrationStatus::APPROVED_WITH_DEPENDENCY,
-            'aprovado pelo conselho' => RegistrationStatus::APPROVED_BY_BOARD,
-            'reprovado por faltas' => RegistrationStatus::REPROVED_BY_ABSENCE,
-            'falecido' => RegistrationStatus::DECEASED,
-        ];
-
-        foreach ($expectedMappings as $status => $code) {
-            $this->assertArrayHasKey($status, $mapping);
-            $this->assertEquals($code, $mapping[$status]);
-        }
-    }
-
-    public function test_auto_mapping_works_for_standard_headers()
-    {
-        $headers = ['ID Matrícula', 'Situação Final', 'Data de Saída'];
-
-        $mapping = $this->service->autoMapColumns($headers);
-
-        $this->assertEquals(0, $mapping['registration_id']);
-        $this->assertEquals(1, $mapping['final_status']);
-        $this->assertEquals(2, $mapping['exit_date']);
-    }
-
-    public function test_auto_mapping_works_for_alternative_headers()
-    {
-        $headers = ['Código', 'Status', 'Data Saída'];
-
-        $mapping = $this->service->autoMapColumns($headers);
-
-        $this->assertEquals(0, $mapping['registration_id']);
-        $this->assertEquals(1, $mapping['final_status']);
-        $this->assertEquals(2, $mapping['exit_date']);
-    }
-
-    public function test_auto_mapping_works_for_portuguese_headers()
-    {
-        $headers = ['Matrícula', 'Situação da Matrícula', 'Data de saída da matrícula'];
-
-        $mapping = $this->service->autoMapColumns($headers);
-
-        $this->assertEquals(0, $mapping['registration_id']);
-        $this->assertEquals(1, $mapping['final_status']);
-        $this->assertEquals(2, $mapping['exit_date']);
-    }
-
-    public function test_auto_mapping_handles_case_insensitive_headers()
-    {
-        $headers = ['id matrícula', 'SITUAÇÃO FINAL', 'Data De Saída'];
-
-        $mapping = $this->service->autoMapColumns($headers);
-
-        $this->assertEquals(0, $mapping['registration_id']);
-        $this->assertEquals(1, $mapping['final_status']);
-        $this->assertEquals(2, $mapping['exit_date']);
-    }
-
-    public function test_validates_empty_registration_id()
-    {
-        $data = [
-            ['registration_id' => '', 'final_status' => 'Aprovado', 'exit_date' => ''],
-        ];
-
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
-
-        $this->assertFalse($result['success']);
-        $this->assertCount(1, $result['errors']);
-        $this->assertStringContainsString('ID da matrícula é obrigatório', $result['errors'][0]['error']);
-    }
-
-    public function test_validates_non_numeric_registration_id()
-    {
-        $data = [
-            ['registration_id' => 'abc123', 'final_status' => 'Aprovado', 'exit_date' => ''],
-        ];
-
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
+test('auto mapping works for standard headers', function () {
+    $headers = ['ID Matrícula', 'Situação Final', 'Data de Saída'];
 
-        $this->assertFalse($result['success']);
-        $this->assertCount(1, $result['errors']);
-        $this->assertStringContainsString('Matrícula ID tem valor inválido para matrícula', $result['errors'][0]['error']);
-        $this->assertStringContainsString('abc123', $result['errors'][0]['error']);
-    }
-
-    public function test_validates_negative_registration_id()
-    {
-        $data = [
-            ['registration_id' => '-123', 'final_status' => 'Aprovado', 'exit_date' => ''],
-        ];
-
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
-
-        $this->assertFalse($result['success']);
-        $this->assertCount(1, $result['errors']);
-        $this->assertStringContainsString('Matrícula ID tem valor inválido para matrícula', $result['errors'][0]['error']);
-    }
-
-    public function test_validates_zero_registration_id()
-    {
-        $data = [
-            ['registration_id' => '0', 'final_status' => 'Aprovado', 'exit_date' => ''],
-        ];
+    $mapping = $this->service->autoMapColumns($headers);
 
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
-
-        $this->assertFalse($result['success']);
-        $this->assertCount(1, $result['errors']);
-        $this->assertStringContainsString('Matrícula ID tem valor inválido para matrícula', $result['errors'][0]['error']);
-    }
-
-    public function test_validates_empty_final_status()
-    {
-        $data = [
-            ['registration_id' => '12345', 'final_status' => '', 'exit_date' => ''],
-        ];
-
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
+    $this->assertEquals(0, $mapping['registration_id']);
+    $this->assertEquals(1, $mapping['final_status']);
+    $this->assertEquals(2, $mapping['exit_date']);
+});
 
-        $this->assertFalse($result['success']);
-        $this->assertCount(1, $result['errors']);
-        $this->assertStringContainsString('Situação final é obrigatória', $result['errors'][0]['error']);
-    }
+test('auto mapping works for alternative headers', function () {
+    $headers = ['Código', 'Status', 'Data Saída'];
 
-    public function test_validates_invalid_final_status()
-    {
-        $data = [
-            ['registration_id' => '12345', 'final_status' => 'Situação Inexistente', 'exit_date' => ''],
-        ];
+    $mapping = $this->service->autoMapColumns($headers);
 
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
+    $this->assertEquals(0, $mapping['registration_id']);
+    $this->assertEquals(1, $mapping['final_status']);
+    $this->assertEquals(2, $mapping['exit_date']);
+});
 
-        $this->assertFalse($result['success']);
-        $this->assertCount(1, $result['errors']);
-        $this->assertStringContainsString('Matrícula 12345 com situação final inválida', $result['errors'][0]['error']);
-        $this->assertStringContainsString('Situação Inexistente', $result['errors'][0]['error']);
-    }
+test('auto mapping works for portuguese headers', function () {
+    $headers = ['Matrícula', 'Situação da Matrícula', 'Data de saída da matrícula'];
 
-    public function test_validates_case_insensitive_final_status()
-    {
-        $registration = LegacyRegistrationFactory::new()->create();
+    $mapping = $this->service->autoMapColumns($headers);
 
-        $data = [
-            ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'APROVADO', 'exit_date' => ''],
-        ];
+    $this->assertEquals(0, $mapping['registration_id']);
+    $this->assertEquals(1, $mapping['final_status']);
+    $this->assertEquals(2, $mapping['exit_date']);
+});
 
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
+test('auto mapping handles case insensitive headers', function () {
+    $headers = ['id matrícula', 'SITUAÇÃO FINAL', 'Data De Saída'];
 
-        $this->assertTrue($result['success']);
-        $this->assertCount(0, $result['errors']);
-    }
+    $mapping = $this->service->autoMapColumns($headers);
 
-    public function test_validates_invalid_date_format()
-    {
-        $registration = LegacyRegistrationFactory::new()->create();
+    $this->assertEquals(0, $mapping['registration_id']);
+    $this->assertEquals(1, $mapping['final_status']);
+    $this->assertEquals(2, $mapping['exit_date']);
+});
 
-        $data = [
-            ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Transferido', 'exit_date' => '2023-12-15'],
-        ];
+test('validates empty registration id', function () {
+    $data = [
+        ['registration_id' => '', 'final_status' => 'Aprovado', 'exit_date' => ''],
+    ];
 
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1, 'exit_date' => 2]);
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
 
-        $this->assertFalse($result['success']);
-        $this->assertCount(1, $result['errors']);
-        $this->assertStringContainsString('data de saída inválida', $result['errors'][0]['error']);
-        $this->assertStringContainsString('2023-12-15', $result['errors'][0]['error']);
-    }
+    $this->assertFalse($result['success']);
+    $this->assertCount(1, $result['errors']);
+    $this->assertStringContainsString('ID da matrícula é obrigatório', $result['errors'][0]['error']);
+});
 
-    public function test_validates_impossible_date()
-    {
-        $registration = LegacyRegistrationFactory::new()->create();
+test('validates non numeric registration id', function () {
+    $data = [
+        ['registration_id' => 'abc123', 'final_status' => 'Aprovado', 'exit_date' => ''],
+    ];
 
-        $data = [
-            ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Transferido', 'exit_date' => '40/20/2025'],
-        ];
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
 
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1, 'exit_date' => 2]);
+    $this->assertFalse($result['success']);
+    $this->assertCount(1, $result['errors']);
+    $this->assertStringContainsString('Matrícula ID tem valor inválido para matrícula', $result['errors'][0]['error']);
+    $this->assertStringContainsString('abc123', $result['errors'][0]['error']);
+});
 
-        $this->assertFalse($result['success']);
-        $this->assertCount(1, $result['errors']);
-        $this->assertStringContainsString('data de saída inválida', $result['errors'][0]['error']);
-        $this->assertStringContainsString('40/20/2025', $result['errors'][0]['error']);
-    }
+test('validates negative registration id', function () {
+    $data = [
+        ['registration_id' => '-123', 'final_status' => 'Aprovado', 'exit_date' => ''],
+    ];
 
-    public function test_validates_valid_date_format()
-    {
-        $registration = LegacyRegistrationFactory::new()->create();
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
 
-        LegacyEnrollmentFactory::new()->create([
-            'ref_cod_matricula' => $registration->cod_matricula,
-            'ativo' => 1,
-        ]);
+    $this->assertFalse($result['success']);
+    $this->assertCount(1, $result['errors']);
+    $this->assertStringContainsString('Matrícula ID tem valor inválido para matrícula', $result['errors'][0]['error']);
+});
 
-        $data = [
-            ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Transferido', 'exit_date' => '15/12/2023'],
-        ];
+test('validates zero registration id', function () {
+    $data = [
+        ['registration_id' => '0', 'final_status' => 'Aprovado', 'exit_date' => ''],
+    ];
 
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1, 'exit_date' => 2]);
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
 
-        $this->assertTrue($result['success']);
-        $this->assertCount(0, $result['errors']);
-    }
+    $this->assertFalse($result['success']);
+    $this->assertCount(1, $result['errors']);
+    $this->assertStringContainsString('Matrícula ID tem valor inválido para matrícula', $result['errors'][0]['error']);
+});
 
-    public function test_requires_exit_date_for_transferido()
-    {
-        $registration = LegacyRegistrationFactory::new()->create();
+test('validates empty final status', function () {
+    $data = [
+        ['registration_id' => '12345', 'final_status' => '', 'exit_date' => ''],
+    ];
 
-        $data = [
-            ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Transferido', 'exit_date' => ''],
-        ];
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
 
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
+    $this->assertFalse($result['success']);
+    $this->assertCount(1, $result['errors']);
+    $this->assertStringContainsString('Situação final é obrigatória', $result['errors'][0]['error']);
+});
 
-        $this->assertFalse($result['success']);
-        $this->assertCount(1, $result['errors']);
-        $this->assertStringContainsString('Data de saída é obrigatória', $result['errors'][0]['error']);
-    }
+test('validates invalid final status', function () {
+    $data = [
+        ['registration_id' => '12345', 'final_status' => 'Situação Inexistente', 'exit_date' => ''],
+    ];
 
-    public function test_requires_exit_date_for_deixou_de_frequentar()
-    {
-        $registration = LegacyRegistrationFactory::new()->create();
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
 
-        $data = [
-            ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Deixou de frequentar', 'exit_date' => ''],
-        ];
-
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
+    $this->assertFalse($result['success']);
+    $this->assertCount(1, $result['errors']);
+    $this->assertStringContainsString('Matrícula 12345 com situação final inválida', $result['errors'][0]['error']);
+    $this->assertStringContainsString('Situação Inexistente', $result['errors'][0]['error']);
+});
 
-        $this->assertFalse($result['success']);
-        $this->assertCount(1, $result['errors']);
-        $this->assertStringContainsString('Data de saída é obrigatória', $result['errors'][0]['error']);
-    }
+test('validates case insensitive final status', function () {
+    $registration = LegacyRegistrationFactory::new()->create();
 
-    public function test_does_not_require_exit_date_for_aprovado()
-    {
-        $registration = LegacyRegistrationFactory::new()->create();
+    $data = [
+        ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'APROVADO', 'exit_date' => ''],
+    ];
 
-        $data = [
-            ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Aprovado', 'exit_date' => ''],
-        ];
-
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
 
-        $this->assertTrue($result['success']);
-        $this->assertCount(0, $result['errors']);
-    }
+    $this->assertTrue($result['success']);
+    $this->assertCount(0, $result['errors']);
+});
 
-    public function test_abandono_is_invalid_from_csv()
-    {
-        $registration = LegacyRegistrationFactory::new()->create();
+test('validates invalid date format', function () {
+    $registration = LegacyRegistrationFactory::new()->create();
 
-        $data = [
-            ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Abandono', 'exit_date' => ''],
-        ];
+    $data = [
+        ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Transferido', 'exit_date' => '2023-12-15'],
+    ];
 
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1, 'exit_date' => 2]);
 
-        $this->assertFalse($result['success']);
-        $this->assertCount(1, $result['errors']);
-        $this->assertStringContainsString('situação final inválida', $result['errors'][0]['error']);
-        $this->assertStringContainsString('Abandono', $result['errors'][0]['error']);
-    }
+    $this->assertFalse($result['success']);
+    $this->assertCount(1, $result['errors']);
+    $this->assertStringContainsString('data de saída inválida', $result['errors'][0]['error']);
+    $this->assertStringContainsString('2023-12-15', $result['errors'][0]['error']);
+});
 
-    public function test_detects_nonexistent_registration()
-    {
-        $data = [
-            ['registration_id' => '99999', 'final_status' => 'Aprovado', 'exit_date' => ''],
-        ];
+test('validates impossible date', function () {
+    $registration = LegacyRegistrationFactory::new()->create();
 
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
+    $data = [
+        ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Transferido', 'exit_date' => '40/20/2025'],
+    ];
 
-        $this->assertFalse($result['success']);
-        $this->assertCount(1, $result['errors']);
-        $this->assertStringContainsString('Matrícula não encontrada', $result['errors'][0]['error']);
-    }
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1, 'exit_date' => 2]);
 
-    public function test_warns_about_inactive_registration()
-    {
-        $registration = LegacyRegistrationFactory::new()->create(['ativo' => 0]);
+    $this->assertFalse($result['success']);
+    $this->assertCount(1, $result['errors']);
+    $this->assertStringContainsString('data de saída inválida', $result['errors'][0]['error']);
+    $this->assertStringContainsString('40/20/2025', $result['errors'][0]['error']);
+});
 
-        $data = [
-            ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Aprovado', 'exit_date' => ''],
-        ];
+test('validates valid date format', function () {
+    $registration = LegacyRegistrationFactory::new()->create();
 
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
+    LegacyEnrollmentFactory::new()->create([
+        'ref_cod_matricula' => $registration->cod_matricula,
+        'ativo' => 1,
+    ]);
 
-        $this->assertTrue($result['success']);
-        $this->assertCount(1, $result['warnings']);
-        $this->assertStringContainsString('está inativa, mas será atualizada', $result['warnings'][0]['warning']);
-    }
+    $data = [
+        ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Transferido', 'exit_date' => '15/12/2023'],
+    ];
 
-    public function test_warns_about_multiple_active_enrollments()
-    {
-        $registration = LegacyRegistrationFactory::new()->create();
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1, 'exit_date' => 2]);
 
-        LegacyEnrollmentFactory::new()->create([
-            'ref_cod_matricula' => $registration->cod_matricula,
-            'ativo' => 1,
-        ]);
+    $this->assertTrue($result['success']);
+    $this->assertCount(0, $result['errors']);
+});
 
-        LegacyEnrollmentFactory::new()->create([
-            'ref_cod_matricula' => $registration->cod_matricula,
-            'ativo' => 1,
-        ]);
+test('requires exit date for transferido', function () {
+    $registration = LegacyRegistrationFactory::new()->create();
 
-        $data = [
-            ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Transferido', 'exit_date' => '15/12/2023'],
-        ];
+    $data = [
+        ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Transferido', 'exit_date' => ''],
+    ];
 
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1, 'exit_date' => 2]);
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
 
-        $this->assertFalse($result['success']);
-        $this->assertCount(1, $result['errors']);
-        $this->assertStringContainsString('possui 2 enturmações ativas', $result['errors'][0]['error']);
-        $this->assertStringContainsString('enquanto houver mais de uma enturmação ativa', $result['errors'][0]['error']);
-    }
+    $this->assertFalse($result['success']);
+    $this->assertCount(1, $result['errors']);
+    $this->assertStringContainsString('Data de saída é obrigatória', $result['errors'][0]['error']);
+});
 
-    public function test_does_not_warn_about_single_active_enrollment()
-    {
-        $registration = LegacyRegistrationFactory::new()->create();
+test('requires exit date for deixou de frequentar', function () {
+    $registration = LegacyRegistrationFactory::new()->create();
 
-        LegacyEnrollmentFactory::new()->create([
-            'ref_cod_matricula' => $registration->cod_matricula,
-            'ativo' => 1,
-        ]);
+    $data = [
+        ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Deixou de frequentar', 'exit_date' => ''],
+    ];
 
-        $data = [
-            ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Transferido', 'exit_date' => '15/12/2023'],
-        ];
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
 
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1, 'exit_date' => 2]);
+    $this->assertFalse($result['success']);
+    $this->assertCount(1, $result['errors']);
+    $this->assertStringContainsString('Data de saída é obrigatória', $result['errors'][0]['error']);
+});
 
-        $this->assertTrue($result['success']);
-        $this->assertCount(0, $result['warnings']);
-    }
+test('does not require exit date for aprovado', function () {
+    $registration = LegacyRegistrationFactory::new()->create();
 
-    public function test_processes_multiple_valid_rows()
-    {
-        $registration1 = LegacyRegistrationFactory::new()->create();
-        $registration2 = LegacyRegistrationFactory::new()->create();
+    $data = [
+        ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Aprovado', 'exit_date' => ''],
+    ];
 
-        $data = [
-            ['registration_id' => (string) $registration1->cod_matricula, 'final_status' => 'Aprovado', 'exit_date' => ''],
-            ['registration_id' => (string) $registration2->cod_matricula, 'final_status' => 'Reprovado', 'exit_date' => ''],
-        ];
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
 
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
+    $this->assertTrue($result['success']);
+    $this->assertCount(0, $result['errors']);
+});
 
-        $this->assertTrue($result['success']);
-        $this->assertCount(2, $result['validated_data']);
-    }
+test('abandono is invalid from csv', function () {
+    $registration = LegacyRegistrationFactory::new()->create();
 
-    public function test_deixou_de_frequentar_maps_to_abandono_code()
-    {
-        $registration = LegacyRegistrationFactory::new()->create();
+    $data = [
+        ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Abandono', 'exit_date' => ''],
+    ];
 
-        LegacyEnrollmentFactory::new()->create([
-            'ref_cod_matricula' => $registration->cod_matricula,
-            'ativo' => 1,
-        ]);
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
 
-        $data = [
-            ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Deixou de frequentar', 'exit_date' => '15/12/2023'],
-        ];
+    $this->assertFalse($result['success']);
+    $this->assertCount(1, $result['errors']);
+    $this->assertStringContainsString('situação final inválida', $result['errors'][0]['error']);
+    $this->assertStringContainsString('Abandono', $result['errors'][0]['error']);
+});
 
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1, 'exit_date' => 2]);
+test('detects nonexistent registration', function () {
+    $data = [
+        ['registration_id' => '99999', 'final_status' => 'Aprovado', 'exit_date' => ''],
+    ];
 
-        $this->assertTrue($result['success']);
-        $this->assertCount(1, $result['validated_data']);
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
 
-        $validatedRow = $result['validated_data'][0];
-        $this->assertEquals(RegistrationStatus::ABANDONED, $validatedRow['status_code']);
-        $this->assertEquals('deixou de frequentar', $validatedRow['normalized_final_status']);
-    }
+    $this->assertFalse($result['success']);
+    $this->assertCount(1, $result['errors']);
+    $this->assertStringContainsString('Matrícula não encontrada', $result['errors'][0]['error']);
+});
 
-    public function test_stops_validation_on_first_error()
-    {
-        $registration = LegacyRegistrationFactory::new()->create();
+test('warns about inactive registration', function () {
+    $registration = LegacyRegistrationFactory::new()->create(['ativo' => 0]);
 
-        $data = [
-            ['registration_id' => '', 'final_status' => 'Aprovado', 'exit_date' => ''],
-            ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Aprovado', 'exit_date' => ''],
-        ];
+    $data = [
+        ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Aprovado', 'exit_date' => ''],
+    ];
 
-        $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
 
-        $this->assertFalse($result['success']);
-        $this->assertCount(1, $result['errors']);
-        $this->assertCount(0, $result['validated_data']);
-    }
+    $this->assertTrue($result['success']);
+    $this->assertCount(1, $result['warnings']);
+    $this->assertStringContainsString('está inativa, mas será atualizada', $result['warnings'][0]['warning']);
+});
 
-    public function test_analyzes_uploaded_file_correctly()
-    {
-        $csvContent = "ID Matrícula,Situação Final,Data de Saída\n12345,Aprovado,\n67890,Transferido,15/12/2023";
-        $file = UploadedFile::fake()->createWithContent('test.csv', $csvContent);
+test('warns about multiple active enrollments', function () {
+    $registration = LegacyRegistrationFactory::new()->create();
 
-        $analysis = $this->service->analyzeUploadedFile($file);
+    LegacyEnrollmentFactory::new()->create([
+        'ref_cod_matricula' => $registration->cod_matricula,
+        'ativo' => 1,
+    ]);
 
-        $this->assertEquals(2, $analysis['total_rows']);
-        $this->assertEquals(['ID Matrícula', 'Situação Final', 'Data de Saída'], $analysis['headers']);
-        $this->assertCount(2, $analysis['sample_data']);
-    }
+    LegacyEnrollmentFactory::new()->create([
+        'ref_cod_matricula' => $registration->cod_matricula,
+        'ativo' => 1,
+    ]);
 
-    public function test_handles_csv_with_quotes()
-    {
-        $csvContent = '"ID Matrícula","Situação Final","Data de Saída"' . "\n" . '"12345","Aprovado",""';
-        $file = UploadedFile::fake()->createWithContent('test.csv', $csvContent);
+    $data = [
+        ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Transferido', 'exit_date' => '15/12/2023'],
+    ];
 
-        $analysis = $this->service->analyzeUploadedFile($file);
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1, 'exit_date' => 2]);
 
-        $this->assertEquals(1, $analysis['total_rows']);
-        $this->assertEquals(['ID Matrícula', 'Situação Final', 'Data de Saída'], $analysis['headers']);
-    }
+    $this->assertFalse($result['success']);
+    $this->assertCount(1, $result['errors']);
+    $this->assertStringContainsString('possui 2 enturmações ativas', $result['errors'][0]['error']);
+    $this->assertStringContainsString('enquanto houver mais de uma enturmação ativa', $result['errors'][0]['error']);
+});
 
-    public function test_handles_csv_with_semicolon_separator()
-    {
-        $csvContent = "ID Matrícula;Situação Final;Data de Saída\n12345;Aprovado;\n67890;Transferido;15/12/2023";
-        $file = UploadedFile::fake()->createWithContent('test.csv', $csvContent);
+test('does not warn about single active enrollment', function () {
+    $registration = LegacyRegistrationFactory::new()->create();
 
-        $analysis = $this->service->analyzeUploadedFile($file);
+    LegacyEnrollmentFactory::new()->create([
+        'ref_cod_matricula' => $registration->cod_matricula,
+        'ativo' => 1,
+    ]);
 
-        $this->assertEquals(2, $analysis['total_rows']);
-        $this->assertEquals(['ID Matrícula', 'Situação Final', 'Data de Saída'], $analysis['headers']);
-    }
-}
+    $data = [
+        ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Transferido', 'exit_date' => '15/12/2023'],
+    ];
+
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1, 'exit_date' => 2]);
+
+    $this->assertTrue($result['success']);
+    $this->assertCount(0, $result['warnings']);
+});
+
+test('processes multiple valid rows', function () {
+    $registration1 = LegacyRegistrationFactory::new()->create();
+    $registration2 = LegacyRegistrationFactory::new()->create();
+
+    $data = [
+        ['registration_id' => (string) $registration1->cod_matricula, 'final_status' => 'Aprovado', 'exit_date' => ''],
+        ['registration_id' => (string) $registration2->cod_matricula, 'final_status' => 'Reprovado', 'exit_date' => ''],
+    ];
+
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
+
+    $this->assertTrue($result['success']);
+    $this->assertCount(2, $result['validated_data']);
+});
+
+test('deixou de frequentar maps to abandono code', function () {
+    $registration = LegacyRegistrationFactory::new()->create();
+
+    LegacyEnrollmentFactory::new()->create([
+        'ref_cod_matricula' => $registration->cod_matricula,
+        'ativo' => 1,
+    ]);
+
+    $data = [
+        ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Deixou de frequentar', 'exit_date' => '15/12/2023'],
+    ];
+
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1, 'exit_date' => 2]);
+
+    $this->assertTrue($result['success']);
+    $this->assertCount(1, $result['validated_data']);
+
+    $validatedRow = $result['validated_data'][0];
+    $this->assertEquals(RegistrationStatus::ABANDONED, $validatedRow['status_code']);
+    $this->assertEquals('deixou de frequentar', $validatedRow['normalized_final_status']);
+});
+
+test('stops validation on first error', function () {
+    $registration = LegacyRegistrationFactory::new()->create();
+
+    $data = [
+        ['registration_id' => '', 'final_status' => 'Aprovado', 'exit_date' => ''],
+        ['registration_id' => (string) $registration->cod_matricula, 'final_status' => 'Aprovado', 'exit_date' => ''],
+    ];
+
+    $result = $this->service->validateData($data, ['registration_id' => 0, 'final_status' => 1]);
+
+    $this->assertFalse($result['success']);
+    $this->assertCount(1, $result['errors']);
+    $this->assertCount(0, $result['validated_data']);
+});
+
+test('analyzes uploaded file correctly', function () {
+    $csvContent = "ID Matrícula,Situação Final,Data de Saída\n12345,Aprovado,\n67890,Transferido,15/12/2023";
+    $file = UploadedFile::fake()->createWithContent('test.csv', $csvContent);
+
+    $analysis = $this->service->analyzeUploadedFile($file);
+
+    $this->assertEquals(2, $analysis['total_rows']);
+    $this->assertEquals(['ID Matrícula', 'Situação Final', 'Data de Saída'], $analysis['headers']);
+    $this->assertCount(2, $analysis['sample_data']);
+});
+
+test('handles csv with quotes', function () {
+    $csvContent = '"ID Matrícula","Situação Final","Data de Saída"' . "\n" . '"12345","Aprovado",""';
+    $file = UploadedFile::fake()->createWithContent('test.csv', $csvContent);
+
+    $analysis = $this->service->analyzeUploadedFile($file);
+
+    $this->assertEquals(1, $analysis['total_rows']);
+    $this->assertEquals(['ID Matrícula', 'Situação Final', 'Data de Saída'], $analysis['headers']);
+});
+
+test('handles csv with semicolon separator', function () {
+    $csvContent = "ID Matrícula;Situação Final;Data de Saída\n12345;Aprovado;\n67890;Transferido;15/12/2023";
+    $file = UploadedFile::fake()->createWithContent('test.csv', $csvContent);
+
+    $analysis = $this->service->analyzeUploadedFile($file);
+
+    $this->assertEquals(2, $analysis['total_rows']);
+    $this->assertEquals(['ID Matrícula', 'Situação Final', 'Data de Saída'], $analysis['headers']);
+});

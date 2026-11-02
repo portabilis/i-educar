@@ -90,7 +90,7 @@ class PictureController
 
         if (strlen($name) > 0) {
             // File format validation
-            if (in_array($ext, $this->suportedExtensions)) {
+            if (in_array($ext, $this->suportedExtensions) && $this->hasSupportedContent()) {
                 // File size validation
                 if ($size < $this->maxSize) {
                     return true;
@@ -109,6 +109,25 @@ class PictureController
 
             return false;
         }
+    }
+
+    /**
+     * Verifica se o conteúdo do arquivo é de fato uma imagem suportada. A
+     * extensão do nome enviado não basta, pois o arquivo é gravado com a
+     * extensão deduzida do conteúdo (ver `sendPicture`).
+     */
+    private function hasSupportedContent(): bool
+    {
+        $tmp = $this->imageFile['tmp_name'] ?? '';
+
+        if (!is_string($tmp) || $tmp === '' || !is_file($tmp)) {
+            return false;
+        }
+
+        $extension = (new File($tmp))->guessExtension();
+
+        return in_array($extension, $this->suportedExtensions, true)
+            && @getimagesize($tmp) !== false;
     }
 
     /**

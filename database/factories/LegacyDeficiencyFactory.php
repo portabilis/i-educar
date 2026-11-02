@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\LegacyDeficiency;
+use iEducar\Modules\Educacenso\Model\Deficiencias;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LegacyDeficiencyFactory extends Factory
@@ -13,9 +14,9 @@ class LegacyDeficiencyFactory extends Factory
     {
         return [
             'name' => $this->faker->word(),
-            'educacenso' => $this->faker->randomNumber(1, 10),
-            'disregards_different_rule' => $this->faker->boolean(),
-            'require_medical_report' => $this->faker->boolean(),
+            'educacenso' => Deficiencias::BAIXA_VISAO,
+            'disregards_different_rule' => false,
+            'require_medical_report' => false,
         ];
     }
 }

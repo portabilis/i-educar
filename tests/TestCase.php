@@ -4,12 +4,27 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\DB;
+use Portabilis_Utils_User;
 
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
     protected $backupGlobals = true;
+
+    /**
+     * Zera os caches estáticos do usuário logado do legado. Eles não são
+     * restaurados pelo PHPUnit e, sem isso, o primeiro usuário logado no
+     * processo vaza para os testes seguintes.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Portabilis_Utils_User::$_currentUserId = null;
+        Portabilis_Utils_User::$_nivelAcesso = null;
+        Portabilis_Utils_User::$_permissoes = null;
+    }
 
     /**
      * Utilizar este método pode permitir falta de integridade nos testes com o

@@ -1,6 +1,6 @@
 <?php
 
-class EditController extends Core_Controller_Page_EditController
+class AreaConhecimento_Views_EditController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper = 'AreaConhecimento_Model_AreaDataMapper';
 

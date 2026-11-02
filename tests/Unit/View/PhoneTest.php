@@ -1,33 +1,26 @@
 <?php
 
-namespace Tests\Unit\View;
-
 use App\Models\LegacyPerson;
 use App\Models\LegacyUser;
 use App\Models\Phone;
-use Tests\ViewTestCase;
+use Tests\ViewModelTestCase;
 
-class PhoneTest extends ViewTestCase
-{
-    protected $relations = [
-        'person' => LegacyPerson::class,
-        'createdBy' => LegacyUser::class,
-        'updatedBy' => LegacyUser::class,
-    ];
+uses(ViewModelTestCase::class);
 
-    protected function getViewModelName(): string
-    {
-        return Phone::class;
-    }
+beforeEach(fn () => $this->viewModel(Phone::class, relations: [
+    'person' => LegacyPerson::class,
+    'createdBy' => LegacyUser::class,
+    'updatedBy' => LegacyUser::class,
+]));
 
-    public function test_get_formatted_number_attribute()
-    {
-        $areaCode = $this->model->area_code;
-        $number = $this->model->number;
+ViewModelTestCase::registerModelTests();
 
-        $number = preg_replace('/(\d{4,5})(\d{4})/', '$1-$2', $number);
-        $expect = "({$areaCode}) {$number}";
+test('get formatted number attribute', function () {
+    $areaCode = $this->model->area_code;
+    $number = $this->model->number;
 
-        $this->assertEquals($expect, $this->model->formattedNumber);
-    }
-}
+    $number = preg_replace('/(\d{4,5})(\d{4})/', '$1-$2', $number);
+    $expect = "({$areaCode}) {$number}";
+
+    $this->assertEquals($expect, $this->model->formattedNumber);
+});

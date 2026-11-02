@@ -23,7 +23,7 @@ class SerieController extends ApiCoreController
             $canLoadSeriesAlocado = Portabilis_Business_Professor::canLoadSeriesAlocado($instituicaoId);
 
             if ($isOnlyProfessor && $canLoadSeriesAlocado) {
-                $resources = Portabilis_Business_Professor::seriesAlocado($instituicaoId, $escolaId, $cursoId, $userId);
+                $resources = Portabilis_Business_Professor::seriesAlocado($instituicaoId, $escolaId, $cursoId, $userId, $ano);
                 $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
             } elseif ($escolaId && $cursoId) {
                 $resources = App_Model_IedFinder::getSeries($instituicaoId = null, $escolaId, $cursoId, $ano);

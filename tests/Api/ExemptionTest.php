@@ -1,209 +1,194 @@
 <?php
 
-namespace Tests\Api;
-
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
-use App\Models\LegacyEnrollment;
-use App_Model_MatriculaSituacao;
 use Database\Factories\LegacyDisciplineExemptionFactory;
 use Database\Factories\LegacyExemptionStageFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\Api\DiarioApiFakeDataTestTrait;
+use Tests\Api\DiarioApiRequestTestTrait;
 use Tests\TestCase;
 
-class ExemptionTest extends TestCase
-{
-    use DatabaseTransactions;
-    use DiarioApiFakeDataTestTrait;
-    use DiarioApiRequestTestTrait;
+uses(TestCase::class, DatabaseTransactions::class, DiarioApiFakeDataTestTrait::class, DiarioApiRequestTestTrait::class);
 
-    /** @var LegacyEnrollment */
-    private $enrollment;
+beforeEach(function () {
+    $this->enrollment = $this->getPromotionFromAverageAndAttendanceWithoutRetake();
+});
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->enrollment = $this->getPromotionFromAverageAndAttendanceWithoutRetake();
-    }
+/**
+ * O aluno deverá ser aprovado sem lançamentos nas etapas dispensadas
+ */
+test('approve without post grade in exemption stages', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
 
-    /**
-     * O aluno deverá ser aprovado sem lançamentos nas etapas dispensadas
-     */
-    public function test_approve_without_post_grade_in_exemption_stages()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 2);
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 2);
+    $registration = $this->enrollment->registration;
+    $disciplines = $schoolClass->disciplines;
 
-        $registration = $this->enrollment->registration;
-        $disciplines = $schoolClass->disciplines;
+    // Dispensa a primeira etapa da primeira disciplina
+    /** @var LegacyDisciplineExemption $dispensa */
+    $dispensa = LegacyDisciplineExemptionFactory::new()->create([
+        'ref_cod_matricula' => $registration->id,
+        'ref_cod_disciplina' => $disciplines[0]->id,
+        'ref_cod_escola' => $registration->ref_ref_cod_escola,
+        'ref_cod_serie' => $registration->ref_ref_cod_serie,
+    ]);
 
-        // Dispensa a primeira etapa da primeira disciplina
-        /** @var LegacyDisciplineExemption $dispensa */
-        $dispensa = LegacyDisciplineExemptionFactory::new()->create([
-            'ref_cod_matricula' => $registration->id,
-            'ref_cod_disciplina' => $disciplines[0]->id,
-            'ref_cod_escola' => $registration->ref_ref_cod_escola,
-            'ref_cod_serie' => $registration->ref_ref_cod_serie,
-        ]);
+    LegacyExemptionStageFactory::new()->create([
+        'ref_cod_dispensa' => $dispensa->cod_dispensa,
+        'etapa' => 1,
+    ]);
 
-        LegacyExemptionStageFactory::new()->create([
-            'ref_cod_dispensa' => $dispensa->cod_dispensa,
-            'etapa' => 1,
-        ]);
+    // Sem lançamentos para a etapa dispensada na primeira disciplina
+    $score = [
+        2 => 5.4,
+        3 => 6.7,
+        4 => 10,
+    ];
 
-        // Sem lançamentos para a etapa dispensada na primeira disciplina
-        $score = [
-            2 => 5.4,
-            3 => 6.7,
-            4 => 10,
-        ];
+    $absence = [
+        2 => 3,
+        3 => 3,
+        4 => 3,
+    ];
 
-        $absence = [
-            2 => 3,
-            3 => 3,
-            4 => 3,
-        ];
+    $this->postAbsenceForStages($absence, $disciplines[0]);
+    $response = $this->postScoreForStages($score, $disciplines[0]);
+    $this->assertEquals('Aprovado', $response->situacao);
 
-        $this->postAbsenceForStages($absence, $disciplines[0]);
-        $response = $this->postScoreForStages($score, $disciplines[0]);
-        $this->assertEquals('Aprovado', $response->situacao);
+    // Lança notas e faltas para todos as etapas da segunda disciplina
+    $score = [
+        1 => 9.1,
+        2 => 5.4,
+        3 => 6.7,
+        4 => 10,
+    ];
 
-        // Lança notas e faltas para todos as etapas da segunda disciplina
-        $score = [
-            1 => 9.1,
-            2 => 5.4,
-            3 => 6.7,
-            4 => 10,
-        ];
+    $absence = [
+        1 => 3,
+        2 => 3,
+        3 => 3,
+        4 => 3,
+    ];
 
-        $absence = [
-            1 => 3,
-            2 => 3,
-            3 => 3,
-            4 => 3,
-        ];
+    $this->postAbsenceForStages($absence, $disciplines[1]);
+    $response = $this->postScoreForStages($score, $disciplines[1]);
+    $this->assertEquals('Aprovado', $response->situacao);
 
-        $this->postAbsenceForStages($absence, $disciplines[1]);
-        $response = $this->postScoreForStages($score, $disciplines[1]);
-        $this->assertEquals('Aprovado', $response->situacao);
+    $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
+});
 
-        $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
-    }
+/**
+ * O aluno deverá ser aprovado sem lançamentos em disciplinas dispensadas
+ * em todas as etapas
+ */
+test('approve without post grade in exemption', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
 
-    /**
-     * O aluno deverá ser aprovado sem lançamentos em disciplinas dispensadas
-     * em todas as etapas
-     */
-    public function test_approve_without_post_grade_in_exemption()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    $this->createStages($school, 2);
+    $this->createDisciplines($schoolClass, 2);
 
-        $this->createStages($school, 2);
-        $this->createDisciplines($schoolClass, 2);
+    $registration = $this->enrollment->registration;
 
-        $registration = $this->enrollment->registration;
+    /** @var LegacyDiscipline[] $disciplines */
+    $disciplines = $schoolClass->disciplines;
 
-        /** @var LegacyDiscipline[] $disciplines */
-        $disciplines = $schoolClass->disciplines;
+    // Dispensa as duas etapas da primeira disciplina
+    /** @var LegacyDisciplineExemption $dispensa */
+    $dispensa = LegacyDisciplineExemptionFactory::new()->create([
+        'ref_cod_matricula' => $registration->id,
+        'ref_cod_disciplina' => $disciplines[0]->id,
+        'ref_cod_escola' => $registration->ref_ref_cod_escola,
+        'ref_cod_serie' => $registration->ref_ref_cod_serie,
+    ]);
 
-        // Dispensa as duas etapas da primeira disciplina
-        /** @var LegacyDisciplineExemption $dispensa */
-        $dispensa = LegacyDisciplineExemptionFactory::new()->create([
-            'ref_cod_matricula' => $registration->id,
-            'ref_cod_disciplina' => $disciplines[0]->id,
-            'ref_cod_escola' => $registration->ref_ref_cod_escola,
-            'ref_cod_serie' => $registration->ref_ref_cod_serie,
-        ]);
+    LegacyExemptionStageFactory::new()->create([
+        'ref_cod_dispensa' => $dispensa->cod_dispensa,
+        'etapa' => 1,
+    ]);
+    LegacyExemptionStageFactory::new()->create([
+        'ref_cod_dispensa' => $dispensa->cod_dispensa,
+        'etapa' => 2,
+    ]);
 
-        LegacyExemptionStageFactory::new()->create([
-            'ref_cod_dispensa' => $dispensa->cod_dispensa,
-            'etapa' => 1,
-        ]);
-        LegacyExemptionStageFactory::new()->create([
-            'ref_cod_dispensa' => $dispensa->cod_dispensa,
-            'etapa' => 2,
-        ]);
+    // Lança notas e faltas somente para a segunda disciplina
+    $score = [
+        1 => 9.1,
+        2 => 5.4,
+    ];
 
-        // Lança notas e faltas somente para a segunda disciplina
-        $score = [
-            1 => 9.1,
-            2 => 5.4,
-        ];
+    $absence = [
+        1 => 3,
+        2 => 3,
+    ];
 
-        $absence = [
-            1 => 3,
-            2 => 3,
-        ];
+    $this->postAbsenceForStages($absence, $disciplines[1]);
+    $response = $this->postScoreForStages($score, $disciplines[1]);
+    $this->assertEquals('Aprovado', $response->situacao);
 
-        $this->postAbsenceForStages($absence, $disciplines[1]);
-        $response = $this->postScoreForStages($score, $disciplines[1]);
-        $this->assertEquals('Aprovado', $response->situacao);
+    $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
+});
 
-        $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
-    }
+/**
+ * Aluno com dispensa na ultima etapa de uma disciplina, deve ser aprovado após o lançamento
+ * de nota nas etapas não dispensadas
+ */
+test('approve with exemption in last stage', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
 
-    /**
-     * Aluno com dispensa na ultima etapa de uma disciplina, deve ser aprovado após o lançamento
-     * de nota nas etapas não dispensadas
-     */
-    public function test_approve_with_exemption_in_last_stage()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    // Cria duas disciplinas e duas etapas
+    $this->createStages($school, 2);
+    $this->createDisciplines($schoolClass, 2);
 
-        // Cria duas disciplinas e duas etapas
-        $this->createStages($school, 2);
-        $this->createDisciplines($schoolClass, 2);
+    $registration = $this->enrollment->registration;
+    $disciplines = $schoolClass->disciplines;
 
-        $registration = $this->enrollment->registration;
-        $disciplines = $schoolClass->disciplines;
+    // Lança notas e faltas para todos as etapas da segunda disciplina
+    $score = [
+        1 => 9.1,
+        2 => 5.4,
+    ];
 
-        // Lança notas e faltas para todos as etapas da segunda disciplina
-        $score = [
-            1 => 9.1,
-            2 => 5.4,
-        ];
+    $absence = [
+        1 => 3,
+        2 => 3,
+    ];
 
-        $absence = [
-            1 => 3,
-            2 => 3,
-        ];
+    $this->postAbsenceForStages($absence, $disciplines[1]);
+    $response = $this->postScoreForStages($score, $disciplines[1]);
+    $this->assertEquals('Aprovado', $response->situacao);
 
-        $this->postAbsenceForStages($absence, $disciplines[1]);
-        $response = $this->postScoreForStages($score, $disciplines[1]);
-        $this->assertEquals('Aprovado', $response->situacao);
+    // Dispensa a ultima etapa da primeira disciplina
+    /** @var LegacyDisciplineExemption $dispensa */
+    $dispensa = LegacyDisciplineExemptionFactory::new()->create([
+        'ref_cod_matricula' => $registration->id,
+        'ref_cod_disciplina' => $disciplines[0]->id,
+        'ref_cod_escola' => $registration->ref_ref_cod_escola,
+        'ref_cod_serie' => $registration->ref_ref_cod_serie,
+    ]);
 
-        // Dispensa a ultima etapa da primeira disciplina
-        /** @var LegacyDisciplineExemption $dispensa */
-        $dispensa = LegacyDisciplineExemptionFactory::new()->create([
-            'ref_cod_matricula' => $registration->id,
-            'ref_cod_disciplina' => $disciplines[0]->id,
-            'ref_cod_escola' => $registration->ref_ref_cod_escola,
-            'ref_cod_serie' => $registration->ref_ref_cod_serie,
-        ]);
+    LegacyExemptionStageFactory::new()->create([
+        'ref_cod_dispensa' => $dispensa->cod_dispensa,
+        'etapa' => 2,
+    ]);
 
-        LegacyExemptionStageFactory::new()->create([
-            'ref_cod_dispensa' => $dispensa->cod_dispensa,
-            'etapa' => 2,
-        ]);
+    // Sem lançamentos para a etapa dispensada na primeira disciplina
+    $score = [
+        1 => 7,
+    ];
 
-        // Sem lançamentos para a etapa dispensada na primeira disciplina
-        $score = [
-            1 => 7,
-        ];
+    $absence = [
+        1 => 3,
+    ];
 
-        $absence = [
-            1 => 3,
-        ];
+    $this->postAbsenceForStages($absence, $disciplines[0]);
+    $response = $this->postScoreForStages($score, $disciplines[0]);
+    $this->assertEquals('Aprovado', $response->situacao);
 
-        $this->postAbsenceForStages($absence, $disciplines[0]);
-        $response = $this->postScoreForStages($score, $disciplines[0]);
-        $this->assertEquals('Aprovado', $response->situacao);
-
-        $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
-    }
-}
+    $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
+});

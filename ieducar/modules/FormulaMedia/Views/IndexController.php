@@ -2,7 +2,7 @@
 
 use App\Models\LegacyAverageFormula;
 
-class IndexController extends Core_Controller_Page_ListController
+class FormulaMedia_Views_IndexController extends Core_Controller_Page_ListController
 {
     protected $_dataMapper = 'FormulaMedia_Model_FormulaDataMapper';
 

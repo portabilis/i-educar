@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyStudent;
 use App\Models\UniformDistribution;
 
 return new class extends clsCadastro
@@ -48,8 +49,12 @@ return new class extends clsCadastro
 
         $this->nome_url_cancelar = 'Cancelar';
 
-        $this->breadcrumb(currentPage: 'Distribuições de uniforme escolar', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Distribuições de uniforme > Nova (ou Editar)
+        $this->breadcrumb(currentPage: $retorno == 'Editar' ? 'Editar' : 'Nova', breadcrumbs: [
             'educar_index.php' => 'Escola',
+            'educar_aluno_lst.php' => 'Alunos',
+            'educar_aluno_det.php?cod_aluno='.request('ref_cod_aluno') => LegacyStudent::find(request('ref_cod_aluno'))?->real_name,
+            'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno') => 'Distribuições de uniforme',
         ]);
 
         return $retorno;
@@ -406,9 +411,12 @@ return new class extends clsCadastro
             $this->redirectIf(condition: true, url: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
         }
 
+        // Inalcançável: `create()` devolve o registro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
@@ -441,9 +449,12 @@ return new class extends clsCadastro
             $this->redirectIf(condition: true, url: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
         }
 
+        // Inalcançável: `save()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()
@@ -457,9 +468,12 @@ return new class extends clsCadastro
             $this->redirectIf(condition: true, url: 'educar_distribuicao_uniforme_lst.php?ref_cod_aluno='.request('ref_cod_aluno'));
         }
 
+        // Inalcançável: `delete()` devolve verdadeiro ou lança exceção.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function makeExtra()

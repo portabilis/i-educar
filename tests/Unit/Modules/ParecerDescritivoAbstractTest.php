@@ -1,21 +1,16 @@
 <?php
 
-class ParecerDescritivoAbstractTest extends UnitBaseTest
-{
-    protected $_entity = null;
+uses(UnitBaseTest::class);
 
-    protected function setUp(): void
-    {
-        $this->_entity = new Avaliacao_Model_ParecerDescritivoAbstractStub;
-    }
+beforeEach(function () {
+    $this->_entity = new Avaliacao_Model_ParecerDescritivoAbstractStub;
+});
 
-    public function test_entity_validators()
-    {
-        $validators = $this->_entity->getValidatorCollection();
-        $this->assertInstanceOf('CoreExt_Validate_Choice', $validators['etapa']);
-        $this->assertInstanceOf('CoreExt_Validate_String', $validators['parecer']);
+test('entity validators', function () {
+    $validators = $this->_entity->getValidatorCollection();
+    $this->assertInstanceOf('CoreExt_Validate_Choice', $validators['etapa']);
+    $this->assertInstanceOf('CoreExt_Validate_String', $validators['parecer']);
 
-        // Verifica se as opções de etapa incluem 'An'
-        $this->assertTrue(in_array('An', $validators['etapa']->getOption('choices')));
-    }
-}
+    // Verifica se as opções de etapa incluem 'An'
+    $this->assertTrue(in_array('An', $validators['etapa']->getOption('choices')));
+});

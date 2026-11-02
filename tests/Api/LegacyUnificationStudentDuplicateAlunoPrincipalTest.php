@@ -1,54 +1,40 @@
 <?php
 
-namespace Tests\Api;
-
-use App\Models\LegacyStudent;
 use Database\Factories\LegacyStudentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\LoginFirstUser;
 use Tests\TestCase;
 
-class LegacyUnificationStudentDuplicateAlunoPrincipalTest extends TestCase
-{
-    use DatabaseTransactions;
-    use LoginFirstUser;
+uses(TestCase::class, DatabaseTransactions::class, LoginFirstUser::class);
 
-    private LegacyStudent $studentOne;
+beforeEach(function () {
+    $this->loginWithFirstUser();
 
-    private LegacyStudent $studentTwo;
+    $this->studentOne = LegacyStudentFactory::new()->create();
+    $this->studentTwo = LegacyStudentFactory::new()->create();
+});
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->loginWithFirstUser();
+test('duplicate aluno principal', function () {
+    $request = [
+        'tipoacao' => 'Novo',
+    ];
 
-        $this->studentOne = LegacyStudentFactory::new()->create();
-        $this->studentTwo = LegacyStudentFactory::new()->create();
-    }
+    $data = [
+        'alunos' => collect([
+            [
+                'codAluno' => $this->studentOne->getKey(),
+                'aluno_principal' => true,
+            ],
+            [
+                'codAluno' => $this->studentTwo->getKey(),
+                'aluno_principal' => true,
+            ],
+        ]),
+    ];
 
-    public function test_duplicate_aluno_principal(): void
-    {
-        $request = [
-            'tipoacao' => 'Novo',
-        ];
+    $payload = array_merge($request, $data);
 
-        $data = [
-            'alunos' => collect([
-                [
-                    'codAluno' => $this->studentOne->getKey(),
-                    'aluno_principal' => true,
-                ],
-                [
-                    'codAluno' => $this->studentTwo->getKey(),
-                    'aluno_principal' => true,
-                ],
-            ]),
-        ];
-
-        $payload = array_merge($request, $data);
-
-        $this->post('/intranet/educar_unifica_aluno.php', $payload)
-            ->assertSuccessful()
-            ->assertSee('Não pode haver mais de uma aluno principal');
-    }
-}
+    $this->post('/intranet/educar_unifica_aluno.php', $payload)
+        ->assertSuccessful()
+        ->assertSee('Não pode haver mais de uma aluno principal');
+});

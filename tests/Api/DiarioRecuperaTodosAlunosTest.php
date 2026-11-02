@@ -1,39 +1,33 @@
 <?php
 
-namespace Tests\Api;
-
 use App\Models\LegacyEnrollment;
 use Database\Factories\LegacyEnrollmentFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\Api\DiarioApiRequestTestTrait;
 use Tests\TestCase;
 
-class DiarioRecuperaTodosAlunosTest extends TestCase
-{
-    use DatabaseTransactions;
-    use DiarioApiRequestTestTrait;
+uses(TestCase::class, DatabaseTransactions::class, DiarioApiRequestTestTrait::class);
 
-    public function test_busca_todos_alunos()
-    {
-        /** @var LegacyEnrollment $enrollments */
-        $enrollments = LegacyEnrollmentFactory::new()->create();
+test('busca todos alunos', function () {
+    /** @var LegacyEnrollment $enrollments */
+    $enrollments = LegacyEnrollmentFactory::new()->create();
 
-        $data = [
-            'oper' => 'get',
-            'resource' => 'todos-alunos',
-            'instituicao_id' => $enrollments->schoolClass->ref_cod_instituicao,
-            'escola' => $enrollments->schoolClass->ref_ref_cod_escola,
-        ];
+    $data = [
+        'oper' => 'get',
+        'resource' => 'todos-alunos',
+        'instituicao_id' => $enrollments->schoolClass->ref_cod_instituicao,
+        'escola' => $enrollments->schoolClass->ref_ref_cod_escola,
+    ];
 
-        $response = $this->getResource('/module/Api/Aluno', $data);
+    $response = $this->getResource('/module/Api/Aluno', $data);
 
-        $response->assertJsonStructure(
-            [
-                'alunos',
-                'any_error_msg',
-                'msgs',
-                'oper',
-                'resource',
-            ]
-        );
-    }
-}
+    $response->assertJsonStructure(
+        [
+            'alunos',
+            'any_error_msg',
+            'msgs',
+            'oper',
+            'resource',
+        ]
+    );
+});

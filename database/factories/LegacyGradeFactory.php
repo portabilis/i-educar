@@ -15,16 +15,17 @@ class LegacyGradeFactory extends Factory
             'nm_serie' => $this->faker->words(3, true),
             'ref_usuario_cad' => fn () => LegacyUserFactory::new()->current(),
             'ref_cod_curso' => fn () => LegacyCourseFactory::new()->create(),
-            'etapa_curso' => $this->faker->randomElement([1, 2, 3, 4]),
+            'etapa_curso' => 1,
             'carga_horaria' => 800,
-            'data_cadastro' => $this->faker->dateTime(),
-            'idade_inicial' => $initial = $this->faker->numberBetween(0, 20),
-            'idade_final' => $initial + 1,
+            'data_cadastro' => now(),
+            'idade_inicial' => 6,
+            'idade_final' => 7,
             'descricao' => $this->faker->word(),
-            'concluinte' => $this->faker->randomNumber(1),
+            // A tela só conhece 1 (não) e 2 (sim).
+            'concluinte' => 1,
             'ativo' => 1,
             'importar_serie_pre_matricula' => false,
-            'dias_letivos' => $this->faker->numberBetween(100, 200),
+            'dias_letivos' => 200,
         ];
     }
 

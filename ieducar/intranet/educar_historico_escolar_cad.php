@@ -4,6 +4,7 @@ use App\Models\Country;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolHistory;
 use App\Models\LegacySchoolHistoryDiscipline;
+use App\Models\LegacyStudent;
 use App\Models\RegistrationStatus;
 use App\Models\State;
 use App\Services\SchoolHistoryService;
@@ -124,8 +125,12 @@ return new class extends clsCadastro
         $this->nome_url_cancelar = 'Cancelar';
         $this->dependencia = dbBool($this->dependencia);
 
-        $this->breadcrumb(currentPage: 'Atualização de históricos escolares', breadcrumbs: [
+        // Início > Escola > Alunos > Nome > Históricos escolares > Novo (ou Editar)
+        $this->breadcrumb(currentPage: $retorno == 'Editar' ? 'Editar' : 'Novo', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}") => LegacyStudent::find($this->ref_cod_aluno)?->real_name,
+            url("intranet/educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}") => 'Históricos escolares',
         ]);
 
         return $retorno;
@@ -149,12 +154,15 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'nomeEscola', valor: $nomeEscola);
         $this->campoOculto(nome: 'numeroSequencial', valor: $_GET['sequencial']);
 
-        $obj_aluno = new clsPmieducarAluno;
-        $lst_aluno = $obj_aluno->lista(int_cod_aluno: $this->ref_cod_aluno, int_ativo: 1);
+        if (is_numeric($this->ref_cod_aluno)) {
+            $this->nm_aluno = LegacyStudent::query()
+                ->active()
+                ->whereStudent($this->ref_cod_aluno)
+                ->joinPerson()
+                ->value('pessoa.nome');
+        }
 
-        if (is_array($lst_aluno)) {
-            $det_aluno = array_shift($lst_aluno);
-            $this->nm_aluno = $det_aluno['nome_aluno'];
+        if ($this->nm_aluno) {
             $this->campoRotulo(nome: 'nm_aluno', campo: 'Aluno', valor: $this->nm_aluno);
         }
 
@@ -222,7 +230,13 @@ return new class extends clsCadastro
 
         $this->campoNumero(nome: 'carga_horaria', campo: 'Carga Horária', valor: $this->carga_horaria, tamanhovisivel: 8, tamanhomaximo: 8);
         $this->campoCheck(nome: 'cb_faltas_globalizadas', campo: 'Faltas Globalizadas', valor: is_numeric($this->faltas_globalizadas) ? 'on' : '');
-        $this->campoNumero(nome: 'faltas_globalizadas', campo: 'Faltas Globalizadas', valor: $this->faltas_globalizadas, tamanhovisivel: 4, tamanhomaximo: 4);
+        $this->inputsHelper()->integer(attrName: 'faltas_globalizadas', inputOptions: [
+            'required' => false,
+            'label' => 'Faltas Globalizadas',
+            'value' => $this->faltas_globalizadas,
+            'max_length' => 4,
+            'size' => 4,
+        ]);
         $this->campoNumero(nome: 'dias_letivos', campo: 'Dias Letivos', valor: $this->dias_letivos, tamanhovisivel: 3, tamanhomaximo: 3);
         $this->campoMonetario(nome: 'frequencia', campo: 'Frequência', valor: $this->frequencia, tamanhovisivel: 8, tamanhomaximo: 6);
         $this->campoCheck(nome: 'extra_curricular', campo: 'Extra-Curricular', valor: $this->extra_curricular);
@@ -433,7 +447,7 @@ return new class extends clsCadastro
                 'sequencial' => $key + 1,
                 'nm_disciplina' => $disciplina,
                 'nota' => $this->nota[$key] ?? '',
-                'faltas' => is_numeric($faltas) ? $faltas : null,
+                'faltas' => is_numeric($faltas) ? (int) $faltas : null,
                 'ordenamento' => is_numeric($ordenamento) ? $ordenamento : null,
                 'carga_horaria_disciplina' => is_numeric($cargaHoraria) ? (int) $cargaHoraria : null,
                 'dependencia' => ($this->disciplinaDependencia[$key] ?? '') == 'on',

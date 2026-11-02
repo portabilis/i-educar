@@ -1,19 +1,12 @@
 <?php
 
-namespace Tests\Unit\Enum;
-
 use App\Models\RegistrationStatus;
-use Tests\EnumTestCase;
+use Tests\TestCase;
 
-class RegistrationStatusTest extends EnumTestCase
-{
-    protected function getEnumName(): string
-    {
-        return RegistrationStatus::class;
-    }
+uses(TestCase::class);
 
-    public function getDescriptiveValues(): array
-    {
+beforeEach(function () {
+    $this->getDescriptiveValues = function (): array {
         return [
             1 => 'Aprovado',
             2 => 'Retido',
@@ -30,5 +23,27 @@ class RegistrationStatusTest extends EnumTestCase
             14 => 'Reprovado por faltas',
             15 => 'Falecido',
         ];
-    }
-}
+    };
+});
+
+test('descriptive values', function () {
+    $values = (new RegistrationStatus)->getDescriptiveValues();
+    $this->assertIsArray($values);
+    $this->assertJsonStringEqualsJsonString(collect(($this->getDescriptiveValues)()), collect($values));
+});
+
+test('inactive statuses', function () {
+    $this->assertSame([
+        RegistrationStatus::ABANDONED,
+        RegistrationStatus::TRANSFERRED,
+        RegistrationStatus::DECEASED,
+    ], RegistrationStatus::getStatusInactive());
+});
+
+test('registration and enrollment status calls the retained student reproved', function () {
+    $values = RegistrationStatus::getRegistrationAndEnrollmentStatus();
+
+    $this->assertSame('Reprovado', $values[RegistrationStatus::REPROVED]);
+    $this->assertSame('Aprovado', $values[RegistrationStatus::APPROVED]);
+    $this->assertCount(count(($this->getDescriptiveValues)()), $values);
+});

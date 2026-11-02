@@ -65,3 +65,86 @@ describe('parseDecimalBr', function () {
         expect(parseDecimalBr('689,20,30'))->toBeNull();
     });
 });
+
+describe('transformDBArrayInString', function () {
+    test('converts array to Postgres array literal', function () {
+        expect(transformDBArrayInString(['1', '2']))->toBe('{1,2}');
+        expect(transformDBArrayInString([12]))->toBe('{12}');
+    });
+
+    test('converts empty array to empty Postgres array', function () {
+        expect(transformDBArrayInString([]))->toBe('{}');
+    });
+
+    test('discards empty items', function () {
+        expect(transformDBArrayInString(['1', '', '2']))->toBe('{1,2}');
+    });
+
+    test('returns null when value is not an array', function () {
+        expect(transformDBArrayInString(null))->toBeNull();
+        expect(transformDBArrayInString('{1,2}'))->toBeNull();
+        expect(transformDBArrayInString(12))->toBeNull();
+    });
+});
+
+describe('transformStringFromDBInArray', function () {
+    test('converts Postgres array literal to array', function () {
+        expect(transformStringFromDBInArray('{1,2}'))->toBe(['1', '2']);
+        expect(transformStringFromDBInArray('{12}'))->toBe(['12']);
+    });
+
+    test('converts empty Postgres array to array with one empty item', function () {
+        expect(transformStringFromDBInArray('{}'))->toBe(['']);
+    });
+
+    test('returns null when value is not a string', function () {
+        expect(transformStringFromDBInArray(null))->toBeNull();
+        expect(transformStringFromDBInArray(['1', '2']))->toBeNull();
+        expect(transformStringFromDBInArray(12))->toBeNull();
+    });
+});
+
+describe('validaCPF', function () {
+    test('recusa o CPF com dígito verificador errado', function () {
+        expect(validaCPF('52998224725'))->toBeTrue()
+            ->and(validaCPF('52998224726'))->toBeFalse();
+    });
+});
+
+describe('dataToBrasil', function () {
+    test('mantém hora e minuto, ou hora, minuto e segundo, quando pedido', function () {
+        expect(dataToBrasil('2030-02-10 08:30:45', true))->toBe('10/02/2030 08:30')
+            ->and(dataToBrasil('2030-02-10 08:30:45', false, true))->toBe('10/02/2030 08:30:45');
+    });
+});
+
+describe('dataToBanco', function () {
+    test('converte a data com o início ou o fim do dia e recusa vazio', function () {
+        expect(dataToBanco('10/02/2030', true))->toBe('2030-02-10 00:00:00')
+            ->and(dataToBanco('10/02/2030', false))->toBe('2030-02-10 23:59:59')
+            ->and(dataToBanco(''))->toBeFalse();
+    });
+});
+
+describe('extendChars', function () {
+    test('troca acentos por entidades e desfaz a troca', function () {
+        expect(extendChars('Ação'))->toBe('A&ccedil;&atilde;o')
+            ->and(extendChars('A&ccedil;&atilde;o', true))->toBe('Ação');
+    });
+});
+
+describe('int2IdFederal', function () {
+    test('formata CPF e CNPJ completando com zeros à esquerda', function () {
+        expect(int2IdFederal(52998224725))->toBe('529.982.247-25')
+            ->and(int2IdFederal(1234567890))->toBe('012.345.678-90')
+            ->and(int2IdFederal(11222333000181))->toBe('11.222.333/0001-81')
+            ->and(int2IdFederal(1222333000181))->toBe('01.222.333/0001-81');
+    });
+});
+
+describe('isEmptyDbArray', function () {
+    test('reconhece o array vazio do banco', function () {
+        expect(isEmptyDbArray('{}'))->toBeTrue()
+            ->and(isEmptyDbArray('{1,2}'))->toBeFalse();
+    });
+});

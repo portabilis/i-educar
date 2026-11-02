@@ -44,7 +44,10 @@ class LegacyModel extends Model
             return $newAttributes;
         }
 
+        // Inalcançável: esta classe sempre declara `$legacy`.
+        // @codeCoverageIgnoreStart
         return parent::attributesToArray();
+        // @codeCoverageIgnoreEnd
     }
 
     public function fill(array $attributes)
@@ -57,7 +60,10 @@ class LegacyModel extends Model
             return $this;
         }
 
+        // Inalcançável: esta classe sempre declara `$legacy`.
+        // @codeCoverageIgnoreStart
         return parent::fill($attributes);
+        // @codeCoverageIgnoreEnd
     }
 
     /**

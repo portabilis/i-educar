@@ -72,6 +72,8 @@ return new class extends clsCadastro
 
     public function Novo()
     {
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $classType = new LegacySchoolClassType;
         $classType->ref_usuario_cad = $this->pessoa_logada;
         $classType->nm_tipo = $this->nm_tipo;
@@ -102,6 +104,7 @@ return new class extends clsCadastro
     public function Editar() {}
 
     public function Excluir() {}
+    // @codeCoverageIgnoreEnd
 
     public function Formular()
     {

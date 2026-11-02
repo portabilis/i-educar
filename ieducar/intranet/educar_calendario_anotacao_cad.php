@@ -101,6 +101,8 @@ return new class extends clsCadastro
             ->exists();
 
         if (!$exists) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $obj_dia = new LegacyCalendarDay;
             $obj_dia->ref_cod_calendario_ano_letivo = $this->ref_ref_cod_calendario_ano_letivo;
             $obj_dia->mes = $this->mes;
@@ -109,6 +111,7 @@ return new class extends clsCadastro
 
             if (!$obj_dia->save()) {
                 return false;
+                // @codeCoverageIgnoreEnd
             }
         }
 
@@ -129,11 +132,14 @@ return new class extends clsCadastro
                 $this->simpleRedirect(url: "educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_ref_cod_calendario_ano_letivo}");
             }
 
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             return false;
         }
         $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()
@@ -154,9 +160,12 @@ return new class extends clsCadastro
             );
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()
@@ -173,9 +182,12 @@ return new class extends clsCadastro
             );
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Formular()

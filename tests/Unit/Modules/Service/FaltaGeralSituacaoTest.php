@@ -1,120 +1,114 @@
 <?php
 
-class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSituacaoCommon
-{
-    protected function setUp(): void
-    {
-        $this->_setRegraOption('tipoPresenca', RegraAvaliacao_Model_TipoPresenca::GERAL);
-        parent::setUp();
-    }
+uses(Avaliacao_Service_FaltaSituacaoCommon::class);
 
-    public function test_situacao_faltas_em_andamento()
-    {
-        $this->markTestSkipped();
+beforeEach(function () {
+    $this->configuraRegra(['tipoPresenca' => RegraAvaliacao_Model_TipoPresenca::GERAL]);
+});
 
-        $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
-        $this->_setUpFaltaAbstractDataMapperMock($faltaAluno, []);
+test('situacao faltas em andamento', function () {
+    $this->markTestSkipped();
 
-        $expected = $this->_getExpectedSituacaoFaltas();
+    $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
+    $this->_setUpFaltaAbstractDataMapperMock($faltaAluno, []);
 
-        // Configura a expectativa
-        $expected->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-        $expected->porcentagemPresenca = 100;
-        $expected->diasLetivos = 960;
+    $expected = $this->_getExpectedSituacaoFaltas();
 
-        $service = $this->_getServiceInstance();
-        $actual = $service->getSituacaoFaltas();
+    // Configura a expectativa
+    $expected->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+    $expected->porcentagemPresenca = 100;
+    $expected->diasLetivos = 960;
 
-        $this->assertEquals($expected, $actual);
-    }
+    $service = $this->_getServiceInstance();
+    $actual = $service->getSituacaoFaltas();
 
-    public function test_situacao_faltas_aprovado()
-    {
-        $this->markTestSkipped();
+    $this->assertEquals($expected, $actual);
+});
 
-        $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
+test('situacao faltas aprovado', function () {
+    $this->markTestSkipped();
 
-        $faltas = [
-            new Avaliacao_Model_FaltaGeral([
-                'id' => 2,
-                'quantidade' => 5,
-                'etapa' => 2,
-            ]),
-            new Avaliacao_Model_FaltaGeral([
-                'id' => 3,
-                'quantidade' => 5,
-                'etapa' => 3,
-            ]),
-            new Avaliacao_Model_FaltaGeral([
-                'id' => 4,
-                'quantidade' => 5,
-                'etapa' => 4,
-            ]),
-        ];
+    $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
-        $this->_setUpFaltaAbstractDataMapperMock($faltaAluno, $faltas);
+    $faltas = [
+        new Avaliacao_Model_FaltaGeral([
+            'id' => 2,
+            'quantidade' => 5,
+            'etapa' => 2,
+        ]),
+        new Avaliacao_Model_FaltaGeral([
+            'id' => 3,
+            'quantidade' => 5,
+            'etapa' => 3,
+        ]),
+        new Avaliacao_Model_FaltaGeral([
+            'id' => 4,
+            'quantidade' => 5,
+            'etapa' => 4,
+        ]),
+    ];
 
-        $expected = $this->_getExpectedSituacaoFaltas();
+    $this->_setUpFaltaAbstractDataMapperMock($faltaAluno, $faltas);
 
-        // Configura a expectativa
-        $expected->situacao = App_Model_MatriculaSituacao::APROVADO;
+    $expected = $this->_getExpectedSituacaoFaltas();
 
-        $expected->totalFaltas = array_sum(CoreExt_Entity::entityFilterAttr($faltas, 'id', 'quantidade'));
-        $expected->horasFaltas = $expected->totalFaltas * $this->_getConfigOption('curso', 'hora_falta');
-        $expected->porcentagemFalta = ($expected->horasFaltas / $this->_getConfigOption('serie', 'carga_horaria') * 100);
-        $expected->porcentagemPresenca = 100 - $expected->porcentagemFalta;
-        $expected->diasLetivos = 960;
+    // Configura a expectativa
+    $expected->situacao = App_Model_MatriculaSituacao::APROVADO;
 
-        $service = $this->_getServiceInstance();
-        $actual = $service->getSituacaoFaltas();
+    $expected->totalFaltas = array_sum(CoreExt_Entity::entityFilterAttr($faltas, 'id', 'quantidade'));
+    $expected->horasFaltas = $expected->totalFaltas * $this->_getConfigOption('curso', 'hora_falta');
+    $expected->porcentagemFalta = ($expected->horasFaltas / $this->_getConfigOption('serie', 'carga_horaria') * 100);
+    $expected->porcentagemPresenca = 100 - $expected->porcentagemFalta;
+    $expected->diasLetivos = 960;
 
-        $this->assertEquals($expected, $actual);
-    }
+    $service = $this->_getServiceInstance();
+    $actual = $service->getSituacaoFaltas();
 
-    public function test_situacao_faltas_reprovado()
-    {
-        $this->markTestSkipped();
+    $this->assertEquals($expected, $actual);
+});
 
-        $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
+test('situacao faltas reprovado', function () {
+    $this->markTestSkipped();
 
-        $faltas = [
-            new Avaliacao_Model_FaltaGeral([
-                'id' => 1,
-                'quantidade' => 180,
-                'etapa' => 1,
-            ]),
-            new Avaliacao_Model_FaltaGeral([
-                'id' => 2,
-                'quantidade' => 180,
-                'etapa' => 2,
-            ]),
-            new Avaliacao_Model_FaltaGeral([
-                'id' => 3,
-                'quantidade' => 180,
-                'etapa' => 3,
-            ]),
-            new Avaliacao_Model_FaltaGeral([
-                'id' => 4,
-                'quantidade' => 180,
-                'etapa' => 4,
-            ]),
-        ];
+    $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
-        $this->_setUpFaltaAbstractDataMapperMock($faltaAluno, $faltas);
+    $faltas = [
+        new Avaliacao_Model_FaltaGeral([
+            'id' => 1,
+            'quantidade' => 180,
+            'etapa' => 1,
+        ]),
+        new Avaliacao_Model_FaltaGeral([
+            'id' => 2,
+            'quantidade' => 180,
+            'etapa' => 2,
+        ]),
+        new Avaliacao_Model_FaltaGeral([
+            'id' => 3,
+            'quantidade' => 180,
+            'etapa' => 3,
+        ]),
+        new Avaliacao_Model_FaltaGeral([
+            'id' => 4,
+            'quantidade' => 180,
+            'etapa' => 4,
+        ]),
+    ];
 
-        $expected = $this->_getExpectedSituacaoFaltas();
+    $this->_setUpFaltaAbstractDataMapperMock($faltaAluno, $faltas);
 
-        // Configura a expectativa
-        $expected->situacao = App_Model_MatriculaSituacao::REPROVADO;
+    $expected = $this->_getExpectedSituacaoFaltas();
 
-        $expected->totalFaltas = array_sum(CoreExt_Entity::entityFilterAttr($faltas, 'id', 'quantidade'));
-        $expected->horasFaltas = $expected->totalFaltas * $this->_getConfigOption('curso', 'hora_falta');
-        $expected->porcentagemFalta = ($expected->horasFaltas / $this->_getConfigOption('serie', 'carga_horaria') * 100);
-        $expected->porcentagemPresenca = 100 - $expected->porcentagemFalta;
-        $expected->diasLetivos = 960;
+    // Configura a expectativa
+    $expected->situacao = App_Model_MatriculaSituacao::REPROVADO;
 
-        $service = $this->_getServiceInstance();
+    $expected->totalFaltas = array_sum(CoreExt_Entity::entityFilterAttr($faltas, 'id', 'quantidade'));
+    $expected->horasFaltas = $expected->totalFaltas * $this->_getConfigOption('curso', 'hora_falta');
+    $expected->porcentagemFalta = ($expected->horasFaltas / $this->_getConfigOption('serie', 'carga_horaria') * 100);
+    $expected->porcentagemPresenca = 100 - $expected->porcentagemFalta;
+    $expected->diasLetivos = 960;
 
-        $this->assertEquals($expected, $service->getSituacaoFaltas());
-    }
-}
+    $service = $this->_getServiceInstance();
+
+    $this->assertEquals($expected, $service->getSituacaoFaltas());
+});

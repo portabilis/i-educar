@@ -1,19 +1,13 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\EmployeeGraduation;
 use App\Models\EmployeeGraduationDiscipline;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class EmployeeGraduationDisciplineTest extends EloquentTestCase
-{
-    protected $relations = [
-        'employeeGraduations' => EmployeeGraduation::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return EmployeeGraduationDiscipline::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(EmployeeGraduationDiscipline::class, relations: [
+    'employeeGraduations' => EmployeeGraduation::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

@@ -6,7 +6,9 @@ use App\Models\LegacyGrade;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchool;
+use App\Models\LegacyStudent;
 use App\Process;
+use App\Services\EnrollmentService;
 
 return new class extends clsCadastro
 {
@@ -62,7 +64,10 @@ return new class extends clsCadastro
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -80,7 +85,13 @@ return new class extends clsCadastro
         $det_matricula = $obj_matricula->detalhe();
 
         if (!$det_matricula || $det_matricula['aprovado'] != 3) {
-            $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->redirectNotFound(
+                url: "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}",
+                registro: 'matrícula',
+                feminino: true,
+                motivo: 'A matrícula não existe, foi excluída ou não está em andamento.',
+                dica: 'Acesse a matrícula pela ficha do aluno.',
+            );
         }
 
         foreach ($det_matricula as $key => $value) {
@@ -89,8 +100,13 @@ return new class extends clsCadastro
 
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
-        $this->breadcrumb('Registro da reclassificação da matrícula', [
+        // Início > Escola > Alunos > Nome > Matrícula > Reclassificação
+        $registration = LegacyRegistration::find($this->cod_matricula);
+        $this->breadcrumb('Reclassificação', [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_aluno_lst.php') => 'Alunos',
+            url("intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url("intranet/educar_matricula_det.php?cod_matricula={$this->cod_matricula}") => 'Matrícula',
         ]);
 
         $this->nome_url_cancelar = 'Cancelar';
@@ -109,11 +125,15 @@ return new class extends clsCadastro
         $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
         $this->campoOculto('ref_cod_escola', $this->ref_ref_cod_escola);
 
-        $obj_aluno = new clsPmieducarAluno;
-        $lst_aluno = $obj_aluno->lista($this->ref_cod_aluno, null, null, null, null, null, null, null, null, null, 1);
-        if (is_array($lst_aluno)) {
-            $det_aluno = array_shift($lst_aluno);
-            $this->nm_aluno = $det_aluno['nome_aluno'];
+        if (is_numeric($this->ref_cod_aluno)) {
+            $this->nm_aluno = LegacyStudent::query()
+                ->active()
+                ->whereStudent($this->ref_cod_aluno)
+                ->joinPerson()
+                ->value('pessoa.nome');
+        }
+
+        if ($this->nm_aluno) {
             $this->campoRotulo('nm_aluno', 'Aluno', $this->nm_aluno);
         }
 
@@ -163,7 +183,10 @@ return new class extends clsCadastro
         $escola = $detMatricula['ref_ref_cod_escola'] ?? $this->ref_cod_escola;
 
         if (!$serieAtual || !$escola) {
+            // Inalcançável: o método só recebe a matrícula lida, que sempre tem série e escola.
+            // @codeCoverageIgnoreStart
             return null;
+            // @codeCoverageIgnoreEnd
         }
 
         $codInstituicao = LegacySchool::query()
@@ -171,7 +194,10 @@ return new class extends clsCadastro
             ->value('ref_cod_instituicao');
 
         if (!$codInstituicao) {
+            // Inalcançável: a escola da matrícula tem chave estrangeira para a instituição.
+            // @codeCoverageIgnoreStart
             return null;
+            // @codeCoverageIgnoreEnd
         }
 
         $proibir = LegacyInstitution::query()
@@ -236,8 +262,16 @@ return new class extends clsCadastro
         }
 
         if (!$det_matricula || $det_matricula['aprovado'] != 3) {
-            $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->redirectNotFound(
+                url: "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}",
+                registro: 'matrícula',
+                feminino: true,
+                motivo: 'A matrícula não existe, foi excluída ou não está em andamento.',
+                dica: 'Acesse a matrícula pela ficha do aluno.',
+            );
         }
+        // Não testável: a reclassificação termina em `exit`, que encerraria a suíte de testes.
+        // @codeCoverageIgnoreStart
         DB::beginTransaction();
 
         $obj_matricula = new clsPmieducarMatricula(
@@ -265,8 +299,9 @@ return new class extends clsCadastro
             echo "<script>alert('Erro ao reclassificar matrícula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
             exit('Erro ao reclassificar matrícula');
         }
-        $obj_serie = new clsPmieducarSerie($this->ref_ref_cod_serie);
-        $det_serie = $obj_serie->detalhe();
+        $cursoDaSerie = is_numeric($this->ref_ref_cod_serie)
+            ? LegacyGrade::query()->whereKey($this->ref_ref_cod_serie)->value('ref_cod_curso')
+            : null;
 
         $obj_matricula = new clsPmieducarMatricula(
             null,
@@ -286,7 +321,7 @@ return new class extends clsCadastro
             null,
             null,
             1,
-            $det_serie['ref_cod_curso'],
+            $cursoDaSerie,
             null,
             null,
             null,
@@ -307,8 +342,7 @@ return new class extends clsCadastro
         /**
          * desativa todas as enturmacoes da matricula anterior
          */
-        $obj_matricula_turma = new clsPmieducarMatriculaTurma($this->cod_matricula);
-        if (!$obj_matricula_turma->reclassificacao($this->data_cancel)) {
+        if (!app(EnrollmentService::class)->registerReclassification($this->cod_matricula, $this->data_cancel)) {
             echo "<script>alert('Erro ao desativar enturmações da matrícula: {$this->cod_matricula}\nContate o administrador do sistema informando a matrícula!');</script>";
         }
 
@@ -336,6 +370,7 @@ return new class extends clsCadastro
         window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';
         </script>";
         exit('Reclassificação realizada com sucesso!');
+        // @codeCoverageIgnoreEnd
     }
 
     public function Excluir()

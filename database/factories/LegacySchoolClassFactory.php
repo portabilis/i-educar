@@ -21,7 +21,7 @@ class LegacySchoolClassFactory extends Factory
             'sgl_turma' => mb_substr($name, 0, 3),
             'max_aluno' => 10,
             'data_cadastro' => now(),
-            'turma_turno_id' => fn () => LegacyPeriodFactory::new()->create(),
+            'turma_turno_id' => fn () => LegacyPeriodFactory::new()->morning(),
             'ref_cod_turma_tipo' => fn () => LegacySchoolClassTypeFactory::new()->current(),
             'ref_ref_cod_escola' => fn () => $this->getSchoolGrade()->school_id,
             'ref_ref_cod_serie' => fn () => $this->getSchoolGrade()->grade_id,

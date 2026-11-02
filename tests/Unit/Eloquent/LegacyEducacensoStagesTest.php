@@ -1,17 +1,10 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyEducacensoStages;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyEducacensoStagesTest extends EloquentTestCase
-{
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyEducacensoStages::class;
-    }
-}
+uses(EloquentModelTestCase::class);
+
+beforeEach(fn () => $this->eloquent(LegacyEducacensoStages::class));
+
+EloquentModelTestCase::registerModelTests();

@@ -51,6 +51,7 @@ return new class extends clsListagem
     public function Gerar()
     {
         $this->titulo = 'Benefício Aluno - Listagem';
+        $this->buscaRapida = 'nm_beneficio';
 
         $this->nm_beneficio = request('nm_beneficio');
 
@@ -82,7 +83,7 @@ return new class extends clsListagem
         if (is_array(value: $lista) && count(value: $lista)) {
             foreach ($lista as $registro) {
                 $this->addLinhas(linha: [
-                    "<a href=\"educar_aluno_beneficio_det.php?cod_aluno_beneficio={$registro['cod_aluno_beneficio']}\">{$registro['nm_beneficio']}</a>",
+                    "<a href=\"educar_aluno_beneficio_det.php?cod_aluno_beneficio={$registro['cod_aluno_beneficio']}\">" . e($registro['nm_beneficio']) . '</a>',
                 ]);
             }
         }

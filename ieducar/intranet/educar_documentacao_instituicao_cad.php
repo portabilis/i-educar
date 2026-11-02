@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyInstitution;
+
 return new class extends clsCadastro
 {
     public $pessoa_logada;
@@ -10,11 +12,14 @@ return new class extends clsCadastro
     {
         $retorno = 'Documentação padrão';
 
+        $this->cod_instituicao = $_GET['cod_instituicao'];
+
+        // Início > Escola > Instituições > Nome > Documentação padrão
         $this->breadcrumb(currentPage: 'Documentação padrão', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
+            url('intranet/educar_instituicao_lst.php') => 'Instituições',
+            url("intranet/educar_instituicao_det.php?cod_instituicao={$this->cod_instituicao}") => LegacyInstitution::whereKey($this->cod_instituicao)->value('nm_instituicao'),
         ]);
-
-        $this->cod_instituicao = $_GET['cod_instituicao'];
 
         return $retorno;
     }

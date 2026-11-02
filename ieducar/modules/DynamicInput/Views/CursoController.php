@@ -22,7 +22,7 @@ class CursoController extends ApiCoreController
             $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicaoId, $userId);
 
             if ($isOnlyProfessor) {
-                $cursos = Portabilis_Business_Professor::cursosAlocado($instituicaoId, $escolaId, $userId);
+                $cursos = Portabilis_Business_Professor::cursosAlocado($instituicaoId, $escolaId, $userId, $ano);
             } else {
                 $params = [$escolaId];
 

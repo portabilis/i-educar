@@ -1,143 +1,124 @@
 <?php
 
-namespace Tests\Unit\Modules\FormulaMedia\Model;
-
-use FormulaMedia_Model_Formula;
 use PHPUnit\Framework\TestCase;
 
-class FormulaTest extends TestCase
-{
-    /**
-     * @var FormulaMedia_Model_Formula
-     */
-    private $formula;
+uses(TestCase::class);
 
-    protected function setUp(): void
-    {
-        parent::setUp();
+beforeEach(function () {
+    $this->formula = new FormulaMedia_Model_Formula;
+});
 
-        $this->formula = new FormulaMedia_Model_Formula;
-    }
+/**
+ * @see FormulaMedia_Model_Formula::getTokens()
+ *
+ * @return void
+ */
+test('get tokens method', function () {
+    $this->assertCount(63, $this->formula->getTokens());
+});
 
-    /**
-     * @see FormulaMedia_Model_Formula::getTokens()
-     *
-     * @return void
-     */
-    public function test_get_tokens_method()
-    {
-        $this->assertCount(63, $this->formula->getTokens());
-    }
+/**
+ * @see FormulaMedia_Model_Formula::isNumericToken()
+ *
+ * @return void
+ */
+test('is numeric token method', function () {
+    $this->assertTrue(
+        $this->formula->isNumericToken('E1')
+    );
 
-    /**
-     * @see FormulaMedia_Model_Formula::isNumericToken()
-     *
-     * @return void
-     */
-    public function test_is_numeric_token_method()
-    {
-        $this->assertTrue(
-            $this->formula->isNumericToken('E1')
-        );
+    $this->assertFalse(
+        $this->formula->isNumericToken('*')
+    );
+});
 
-        $this->assertFalse(
-            $this->formula->isNumericToken('*')
-        );
-    }
+/**
+ * @see FormulaMedia_Model_Formula::replaceTokens()
+ *
+ * @return void
+ */
+test('replace tokens method', function () {
+    $formula = $this->formula->replaceTokens('Se / Et', [
+        'Et' => 4,
+        'Se' => 20,
+    ]);
 
-    /**
-     * @see FormulaMedia_Model_Formula::replaceTokens()
-     *
-     * @return void
-     */
-    public function test_replace_tokens_method()
-    {
-        $formula = $this->formula->replaceTokens('Se / Et', [
-            'Et' => 4,
-            'Se' => 20,
-        ]);
+    $this->assertEquals('20 / 4', $formula);
+});
 
-        $this->assertEquals('20 / 4', $formula);
-    }
+/**
+ * @see FormulaMedia_Model_Formula::replaceAliasTokens()
+ *
+ * @return void
+ */
+test('replace alias tokens method', function () {
+    $formula = '(1x2)';
+    $expected = ' ( 1*2 ) ';
+    $replaced = $this->formula->replaceAliasTokens($formula);
 
-    /**
-     * @see FormulaMedia_Model_Formula::replaceAliasTokens()
-     *
-     * @return void
-     */
-    public function test_replace_alias_tokens_method()
-    {
-        $formula = '(1x2)';
-        $expected = ' ( 1*2 ) ';
-        $replaced = $this->formula->replaceAliasTokens($formula);
+    $this->assertEquals($expected, $replaced);
+});
 
-        $this->assertEquals($expected, $replaced);
-    }
+/**
+ * @see FormulaMedia_Model_Formula::execFormulaMedia()
+ *
+ * @return void
+ */
+test('exec formula media method', function () {
+    $this->formula->formulaMedia = '(E1 + E2 + E3 + E4) / Et';
+    $average = $this->formula->execFormulaMedia([
+        'E1' => 10,
+        'E2' => 8,
+        'E3' => 7,
+        'E4' => 7,
+        'Et' => 4,
+    ]);
 
-    /**
-     * @see FormulaMedia_Model_Formula::execFormulaMedia()
-     *
-     * @return void
-     */
-    public function test_exec_formula_media_method()
-    {
-        $this->formula->formulaMedia = '(E1 + E2 + E3 + E4) / Et';
-        $average = $this->formula->execFormulaMedia([
-            'E1' => 10,
-            'E2' => 8,
-            'E3' => 7,
-            'E4' => 7,
-            'Et' => 4,
-        ]);
+    $this->formula->formulaMedia = '((Se / Et * 0.6) + (Rc * 0.4))';
+    $recuperation = $this->formula->execFormulaMedia([
+        'Et' => 4,
+        'Se' => 20,
+        'Rc' => 7,
+    ]);
 
-        $this->formula->formulaMedia = '((Se / Et * 0.6) + (Rc * 0.4))';
-        $recuperation = $this->formula->execFormulaMedia([
-            'Et' => 4,
-            'Se' => 20,
-            'Rc' => 7,
-        ]);
+    $this->assertEquals(8, $average);
+    $this->assertEqualsWithDelta(5.8, $recuperation, 0.00001); // TODO entender o motivo de ser necessário
+});
 
-        $this->assertEquals(8, $average);
-        $this->assertEqualsWithDelta(5.8, $recuperation, 0.00001); // TODO entender o motivo de ser necessário
-    }
+/**
+ * @see FormulaMedia_Model_Formula::getDefaultValidatorCollection()
+ *
+ * @return void
+ */
+test('get default validator collection method', function () {
+    // Este método tem muitas dependências e deverá ser refatorado.
 
-    /**
-     * @see FormulaMedia_Model_Formula::getDefaultValidatorCollection()
-     *
-     * @return void
-     */
-    public function test_get_default_validator_collection_method()
-    {
-        // Este método tem muitas dependências e deverá ser refatorado.
+    $this->assertTrue(true);
+});
 
-        $this->assertTrue(true);
-    }
+/**
+ * Este teste está relacionado à dispensa de etapas dos alunos quando a
+ * média ponderada é utilizada para o cálculo da nota. Ou seja, cada etapa
+ * tem um peso diferente.
+ *
+ * Como a fórmula de cálculo da média ponderada é fixa, dependendo a etapa
+ * em que o aluno é dispensado, o cálculo da média fica incorreto, pois o
+ * aluno não possui nota devido ter a etapa dispensada.
+ *
+ * @return void
+ */
+test('considering dispensed stages', function () {
+    $this->formula->formulaMedia = '((C1*E1*1) + (C2*E2*2) + (C3*E3*3) + (C4*E4*4)) / ((C1*1) + (C2*2) + (C3*3) + (C4*4))';
+    $average = $this->formula->execFormulaMedia([
+        'E1' => 9,
+        'E2' => 0,
+        'E3' => 9,
+        'E4' => 7,
+        'C1' => 1,
+        'C2' => 0,
+        'C3' => 1,
+        'C4' => 1,
+    ]);
 
-    /**
-     * Este teste está relacionado à dispensa de etapas dos alunos quando a
-     * média ponderada é utilizada para o cálculo da nota. Ou seja, cada etapa
-     * tem um peso diferente.
-     *
-     * Como a fórmula de cálculo da média ponderada é fixa, dependendo a etapa
-     * em que o aluno é dispensado, o cálculo da média fica incorreto, pois o
-     * aluno não possui nota devido ter a etapa dispensada.
-     *
-     * @return void
-     */
-    public function test_considering_dispensed_stages()
-    {
-        $this->formula->formulaMedia = '((C1*E1*1) + (C2*E2*2) + (C3*E3*3) + (C4*E4*4)) / ((C1*1) + (C2*2) + (C3*3) + (C4*4))';
-        $average = $this->formula->execFormulaMedia([
-            'E1' => 9,
-            'E2' => 0,
-            'E3' => 9,
-            'E4' => 7,
-            'C1' => 1,
-            'C2' => 0,
-            'C3' => 1,
-            'C4' => 1,
-        ]);
-
-        $this->assertEquals(8, $average);
-    }
-}
+    $this->assertEquals(8, $average);
+});

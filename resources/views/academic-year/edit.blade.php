@@ -45,7 +45,7 @@
 @section('content')
     <form id="formcadastro" method="post">
         @csrf
-        <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
+        <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0" role="presentation">
             <tbody>
             <tr>
                 <td class="formdktd" colspan="2" height="24"><b>Ano Letivo em Lote</b></td>
@@ -53,7 +53,7 @@
 
             <tr id="tr_nm_ano">
                 <td class="formmdtd" valign="top">
-                    <label for="year" class="form">Ano <span class="campo_obrigatorio">*</span></label>
+                    <label for="ano" class="form">Ano <span class="campo_obrigatorio">*</span></label>
                 </td>
                 <td class="formmdtd" valign="top">
                     @include('form.select-year', ['obrigatorio' => true])
@@ -61,7 +61,7 @@
             </tr>
             <tr id="tr_nm_instituicao">
                 <td class="formlttd" valign="top">
-                    <label for="institution" class="form">Instituição <span class="campo_obrigatorio">*</span></label>
+                    <label for="ref_cod_instituicao" class="form">Instituição <span class="campo_obrigatorio">*</span></label>
                 </td>
                 <td class="formlttd" valign="top">
                     @include('form.select-institution', ['obrigatorio' => true])
@@ -69,7 +69,7 @@
             </tr>
             <tr id="tr_nm_escola">
                 <td class="formmdtd" valign="top">
-                    <label for="schools" class="form">Escola <span class="campo_obrigatorio">*</span></label>
+                    <label for="escola" class="form">Escola <span class="campo_obrigatorio">*</span></label>
                 </td>
                 <td class="formmdtd" valign="top">
                     @include('form.select-school-multiple', ['obrigatorio' => true])
@@ -93,7 +93,7 @@
             </tr>
             <tr id="tr_nm_modulo">
                 <td class="formlttd" valign="top">
-                    <label for="cursos" class="form">Tipo de Etapa <span class="campo_obrigatorio">*</span></label>
+                    <label for="ref_cod_modulo" class="form">Tipo de Etapa <span class="campo_obrigatorio">*</span></label>
                 </td>
                 <td class="formlttd" valign="top">
                     <select class="geral obrigatorio" name="ref_cod_modulo" id="ref_cod_modulo" style="width: 308px;">
@@ -113,52 +113,52 @@
                             <td colspan="3">Etapas do ano letivo</td>
                         </tr>
                         <tr style="font-weight:bold; text-align: center;" id="tr_modulos_ano_letivo_cab">
-                            <td class="formmdtd" id="td_data_inicial" style="text-align: center"><span class="form">Data inicial</span><span class="campo_obrigatorio">*</span></td>
-                            <td class="formmdtd" id="td_data_final" style="text-align: center"><span class="form">Data final</span><span class="campo_obrigatorio">*</span></td>
-                            <td class="formmdtd" id="td_dias_letivos" style="text-align: center"><span class="form">Dias Letivos</span></td>
+                            <th scope="col" class="formmdtd" id="td_data_inicial" style="text-align: center"><span class="form">Data inicial</span><span class="campo_obrigatorio">*</span></th>
+                            <th scope="col" class="formmdtd" id="td_data_final" style="text-align: center"><span class="form">Data final</span><span class="campo_obrigatorio">*</span></th>
+                            <th scope="col" class="formmdtd" id="td_dias_letivos" style="text-align: center"><span class="form">Dias Letivos</span></th>
                         </tr>
                         <tr id="tr_modulos_ano_letivo[1]" name="tr_modulos_ano_letivo[1]" class="formmdtd dd tr_modulos_ano_letivo">
                             <td class="formmdtd dd data_inicio" id="td_data_inicio[1]" style="vertical-align: top">
-                                <input onkeypress="formataData(this, event);" type="text" name="periodos[1][data_inicio]" id="data_inicio[1]" value="" size="9" maxlength="10">
+                                <input onkeypress="formataData(this, event);" type="text" name="periodos[1][data_inicio]" aria-label="Data inicial da etapa 1" id="data_inicio[1]" value="" size="9" maxlength="10">
                             </td>
                             <td class="formmdtd dd data_fim" id="td_data_fim[1]" style="vertical-align: top">
-                                <input onkeypress="formataData(this, event);" type="text" name="periodos[1][data_fim]" id="data_fim[1]" value="" size="9" maxlength="10">
+                                <input onkeypress="formataData(this, event);" type="text" name="periodos[1][data_fim]" aria-label="Data final da etapa 1" id="data_fim[1]" value="" size="9" maxlength="10">
                             </td>
                             <td class="formmdtd dd dias_letivos" id="td_dias_letivos[1]" style="vertical-align: top">
-                                <input class="geral" type="text" name="periodos[1][dias_letivos]" id="dias_letivos[1]" value="" size="6" maxlength="3">
+                                <input class="geral" type="text" name="periodos[1][dias_letivos]" aria-label="Dias letivos da etapa 1" id="dias_letivos[1]" value="" size="6" maxlength="3">
                             </td>
                         </tr>
                         <tr id="tr_modulos_ano_letivo[2]" name="tr_modulos_ano_letivo[2]" class="formlttd dd tr_modulos_ano_letivo">
                             <td class="formlttd dd data_inicio" id="td_data_inicio[2]" style="vertical-align: top">
-                                <input onkeypress="formataData(this, event);" type="text" name="periodos[2][data_inicio]" id="data_inicio[2]" value="" size="9" maxlength="10">
+                                <input onkeypress="formataData(this, event);" type="text" name="periodos[2][data_inicio]" aria-label="Data inicial da etapa 2" id="data_inicio[2]" value="" size="9" maxlength="10">
                             </td>
                             <td class="formlttd dd data_fim" id="td_data_fim[2]" style="vertical-align: top">
-                                <input onkeypress="formataData(this, event);" type="text" name="periodos[2][data_fim]" id="data_fim[2]" value="" size="9" maxlength="10">
+                                <input onkeypress="formataData(this, event);" type="text" name="periodos[2][data_fim]" aria-label="Data final da etapa 2" id="data_fim[2]" value="" size="9" maxlength="10">
                             </td>
                             <td class="formlttd dd dias_letivos" id="td_dias_letivos[2]" style="vertical-align: top">
-                                <input class="geral" type="text" name="periodos[2][dias_letivos]" id="dias_letivos[2]" value="" size="6" maxlength="3">
+                                <input class="geral" type="text" name="periodos[2][dias_letivos]" aria-label="Dias letivos da etapa 2" id="dias_letivos[2]" value="" size="6" maxlength="3">
                             </td>
                         </tr>
                         <tr id="tr_modulos_ano_letivo[3]" name="tr_modulos_ano_letivo[3]" class="formmdtd dd tr_modulos_ano_letivo">
                             <td class="formmdtd dd data_inicio" id="td_data_inicio[3]" style="vertical-align: top">
-                                <input onkeypress="formataData(this, event);" type="text" name="periodos[3][data_inicio]" id="data_inicio[3]" value="" size="9" maxlength="10">
+                                <input onkeypress="formataData(this, event);" type="text" name="periodos[3][data_inicio]" aria-label="Data inicial da etapa 3" id="data_inicio[3]" value="" size="9" maxlength="10">
                             </td>
                             <td class="formmdtd dd data_fim" id="td_data_fim[3]" style="vertical-align: top">
-                                <input onkeypress="formataData(this, event);" type="text" name="periodos[3][data_fim]" id="data_fim[3]" value="" size="9" maxlength="10">
+                                <input onkeypress="formataData(this, event);" type="text" name="periodos[3][data_fim]" aria-label="Data final da etapa 3" id="data_fim[3]" value="" size="9" maxlength="10">
                             </td>
                             <td class="formmdtd dd dias_letivos" id="td_dias_letivos[3]" style="vertical-align: top">
-                                <input class="geral" type="text" name="periodos[3][dias_letivos]" id="dias_letivos[3]" value="" size="6" maxlength="3">
+                                <input class="geral" type="text" name="periodos[3][dias_letivos]" aria-label="Dias letivos da etapa 3" id="dias_letivos[3]" value="" size="6" maxlength="3">
                             </td>
                         </tr>
                         <tr id="tr_modulos_ano_letivo[4]" name="tr_modulos_ano_letivo[4]" class="formlttd dd tr_modulos_ano_letivo">
                             <td class="formlttd dd data_inicio" id="td_data_inicio[4]" style="vertical-align: top">
-                                <input onkeypress="formataData(this, event);" type="text" name="periodos[4][data_inicio]" id="data_inicio[4]" value="" size="9" maxlength="10">
+                                <input onkeypress="formataData(this, event);" type="text" name="periodos[4][data_inicio]" aria-label="Data inicial da etapa 4" id="data_inicio[4]" value="" size="9" maxlength="10">
                                 </td>
                             <td class="formlttd dd data_fim" id="td_data_fim[4]" style="vertical-align: top">
-                                <input onkeypress="formataData(this, event);" type="text" name="periodos[4][data_fim]" id="data_fim[4]" value="" size="9" maxlength="10">
+                                <input onkeypress="formataData(this, event);" type="text" name="periodos[4][data_fim]" aria-label="Data final da etapa 4" id="data_fim[4]" value="" size="9" maxlength="10">
                                 </td>
                             <td class="formlttd dd dias_letivos" id="td_dias_letivos[4]" style="vertical-align: top">
-                                <input class="geral" type="text" name="periodos[4][dias_letivos]" id="dias_letivos[4]" value="" size="6" maxlength="3">
+                                <input class="geral" type="text" name="periodos[4][dias_letivos]" aria-label="Dias letivos da etapa 4" id="dias_letivos[4]" value="" size="6" maxlength="3">
                                 </td>
                             </tr>
                         </tbody>

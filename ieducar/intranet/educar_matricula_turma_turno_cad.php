@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\LegacyEnrollment;
+use App\Models\LegacyRegistration;
+use App\Models\LegacyStudent;
+use App\Services\EnrollmentService;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 
 return new class extends clsCadastro
@@ -20,7 +23,10 @@ return new class extends clsCadastro
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -49,16 +55,24 @@ return new class extends clsCadastro
         $this->array_botao[] = 'Voltar';
         $this->array_botao_url[] = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
-        $this->breadcrumb(currentPage: 'Turno do aluno', breadcrumbs: [
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'Início',
-            'educar_index.php' => 'Escola',
+        // Início > Escola > Alunos > Nome > Matrícula > Turno
+        $registration = LegacyRegistration::find($this->cod_matricula);
+        $this->breadcrumb(currentPage: 'Turno', breadcrumbs: [
+            url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_aluno_lst.php') => 'Alunos',
+            url(path: "intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url(path: "intranet/educar_matricula_det.php?cod_matricula={$this->cod_matricula}") => 'Matrícula',
         ]);
 
-        $obj_aluno = new clsPmieducarAluno;
-        $lst_aluno = $obj_aluno->lista(int_cod_aluno: $this->ref_cod_aluno, int_ativo: 1);
-        if (is_array($lst_aluno)) {
-            $det_aluno = array_shift($lst_aluno);
-            $this->nm_aluno = $det_aluno['nome_aluno'];
+        if (is_numeric($this->ref_cod_aluno)) {
+            $this->nm_aluno = LegacyStudent::query()
+                ->active()
+                ->whereStudent($this->ref_cod_aluno)
+                ->joinPerson()
+                ->value('pessoa.nome');
+        }
+
+        if ($this->nm_aluno) {
             $this->campoRotulo(nome: 'nm_aluno', campo: 'Aluno', valor: $this->nm_aluno);
         }
         $enturmacoes = LegacyEnrollment::active()
@@ -115,10 +129,10 @@ return new class extends clsCadastro
             if ($turnoEnturmacao != (int) $turno) {
                 $is_change = true;
 
-                $obj = new clsPmieducarMatriculaTurma(ref_cod_matricula: $this->cod_matricula, ref_cod_turma: $codTurma, ref_usuario_exc: $this->pessoa_logada);
-                $obj->sequencial = $sequencial;
-                $obj->turno_id = $turno;
-                $obj->edita();
+                app(EnrollmentService::class)->updateFromScreen($this->cod_matricula, $codTurma, $sequencial, [
+                    'ref_usuario_exc' => $this->pessoa_logada,
+                    'turno_id' => $turno,
+                ]);
             }
         }
 
@@ -144,7 +158,13 @@ return new class extends clsCadastro
         $det_matricula = $obj_matricula->detalhe();
 
         if (!$det_matricula) {
-            $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->redirectNotFound(
+                url: "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}",
+                registro: 'matrícula',
+                feminino: true,
+                codigo: $this->cod_matricula,
+                dica: 'Acesse a matrícula pela ficha do aluno.',
+            );
         }
     }
 };

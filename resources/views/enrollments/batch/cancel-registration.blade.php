@@ -52,7 +52,7 @@
         <table class="table-default">
             <thead>
             <tr>
-                <th width="25"><input class="registration-check-master" type="checkbox" /></th>
+                <th width="25"><input class="registration-check-master" type="checkbox" aria-label="Selecionar todas as matrículas" /></th>
                 <th width="100">Matrícula</th>
                 <th>Nome</th>
                 <th>Data da enturmação</th>

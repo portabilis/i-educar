@@ -110,9 +110,10 @@ class Handler extends ExceptionHandler
      */
     private function getActionName()
     {
-        $controller = app('request')->route()->getAction();
-        $controller = class_basename($controller['controller']);
+        // Exceção lançada antes do roteamento (middleware global) não tem rota,
+        // e rota de closure não tem controller
+        $action = app('request')->route()?->getAction() ?? [];
 
-        return $controller;
+        return class_basename($action['controller'] ?? '');
     }
 }

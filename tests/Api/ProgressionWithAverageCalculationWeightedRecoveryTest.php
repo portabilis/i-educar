@@ -1,458 +1,434 @@
 <?php
 
-namespace Tests\Api;
-
-use App\Models\LegacyEnrollment;
-use App_Model_MatriculaSituacao;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\Api\DiarioApiFakeDataTestTrait;
+use Tests\Api\DiarioApiRequestTestTrait;
 use Tests\TestCase;
 
-class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
-{
-    use DatabaseTransactions;
-    use DiarioApiFakeDataTestTrait;
-    use DiarioApiRequestTestTrait;
+uses(TestCase::class, DatabaseTransactions::class, DiarioApiFakeDataTestTrait::class, DiarioApiRequestTestTrait::class);
 
-    /**
-     * @var LegacyEnrollment
-     */
-    private $enrollment;
+beforeEach(function () {
+    $this->enrollment = $this->getProgressionWithAverageCalculationWeightedRecovery();
+});
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->enrollment = $this->getProgressionWithAverageCalculationWeightedRecovery();
+/**
+ * O aluno deverá ser Aprovado depois dos lançamentos (notas e faltas) nas etapas
+ */
+test('approved after all score and absence posted', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
+
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 2);
+
+    $disciplines = $schoolClass->disciplines;
+
+    $score = [
+        1 => 8,
+        2 => 8,
+        3 => 8,
+        4 => 8,
+    ];
+
+    $absence = [
+        1 => 0,
+        2 => 0,
+        3 => 0,
+        4 => 0,
+    ];
+
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
+
+        self::assertEquals('Aprovado', $response->situacao);
     }
 
-    /**
-     * O aluno deverá ser Aprovado depois dos lançamentos (notas e faltas) nas etapas
-     */
-    public function test_approved_after_all_score_and_absence_posted()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    $registration = $this->enrollment->registration;
+    self::assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
+});
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 2);
+/**
+ * O aluno deverá ser Reprovado por Falta depois do lançamento (notas e faltas) nas etapas
+ */
+test('reproved per absence after all score and absence posted', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
 
-        $disciplines = $schoolClass->disciplines;
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 2);
 
-        $score = [
-            1 => 8,
-            2 => 8,
-            3 => 8,
-            4 => 8,
-        ];
+    $disciplines = $schoolClass->disciplines;
 
-        $absence = [
-            1 => 0,
-            2 => 0,
-            3 => 0,
-            4 => 0,
-        ];
+    $score = [
+        1 => 8,
+        2 => 8,
+        3 => 8,
+        4 => 8,
+    ];
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $absence = [
+        1 => 48,
+        2 => 45,
+        3 => 17,
+        4 => 24,
+    ];
 
-            self::assertEquals('Aprovado', $response->situacao);
-        }
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        $registration = $this->enrollment->registration;
-        self::assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
+        self::assertEquals('Reprovado por faltas', $response->situacao);
     }
 
-    /**
-     * O aluno deverá ser Reprovado por Falta depois do lançamento (notas e faltas) nas etapas
-     */
-    public function test_reproved_per_absence_after_all_score_and_absence_posted()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    $registration = $this->enrollment->registration;
+    self::assertEquals(App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS, $registration->refresh()->aprovado);
+});
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 2);
+/**
+ * O Aluno deverá continuar como Cursando depois dos lançamentos (notas e faltas) nas etapas, exceto para etapa de recuperação
+ */
+test('studying after all score and absence posted', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
 
-        $disciplines = $schoolClass->disciplines;
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 2);
 
-        $score = [
-            1 => 8,
-            2 => 8,
-            3 => 8,
-            4 => 8,
-        ];
+    $disciplines = $schoolClass->disciplines;
 
-        $absence = [
-            1 => 48,
-            2 => 45,
-            3 => 17,
-            4 => 24,
-        ];
+    $score = [
+        1 => 5,
+        2 => 5,
+        3 => 5,
+        4 => 5,
+    ];
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $absence = [
+        1 => 3,
+        2 => 3,
+        3 => 3,
+        4 => 3,
+    ];
 
-            self::assertEquals('Reprovado por faltas', $response->situacao);
-        }
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        $registration = $this->enrollment->registration;
-        self::assertEquals(App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS, $registration->refresh()->aprovado);
+        self::assertEquals('Em exame', $response->situacao);
     }
 
-    /**
-     * O Aluno deverá continuar como Cursando depois dos lançamentos (notas e faltas) nas etapas, exceto para etapa de recuperação
-     */
-    public function test_studying_after_all_score_and_absence_posted()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    $registration = $this->enrollment->registration;
+    self::assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
+});
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 2);
+/**
+ * Os lançamentos (notas e faltas) nas etapas deverá deixar o aluno com a situação Cursando e os componentes como Em Exame,
+ * depois o aluno deverá ser Aprovado após o lançamento da nota de Recuperação
+ */
+test('approved after exam all score and absence posted', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
 
-        $disciplines = $schoolClass->disciplines;
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 2);
 
-        $score = [
-            1 => 5,
-            2 => 5,
-            3 => 5,
-            4 => 5,
-        ];
+    $disciplines = $schoolClass->disciplines;
 
-        $absence = [
-            1 => 3,
-            2 => 3,
-            3 => 3,
-            4 => 3,
-        ];
+    $score = [
+        1 => 6,
+        2 => 5,
+        3 => 6,
+        4 => 5,
+    ];
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $absence = [
+        1 => 4,
+        2 => 7,
+        3 => 5,
+        4 => 2,
+    ];
 
-            self::assertEquals('Em exame', $response->situacao);
-        }
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        $registration = $this->enrollment->registration;
-        self::assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
+        self::assertEquals('Em exame', $response->situacao);
     }
 
-    /**
-     * Os lançamentos (notas e faltas) nas etapas deverá deixar o aluno com a situação Cursando e os componentes como Em Exame,
-     * depois o aluno deverá ser Aprovado após o lançamento da nota de Recuperação
-     */
-    public function test_approved_after_exam_all_score_and_absence_posted()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    // Nota da etapa de recuperação
+    $score = [
+        'Rc' => 8,
+    ];
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 2);
+    // Lança nota para a etapa de Recuperação
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        $disciplines = $schoolClass->disciplines;
-
-        $score = [
-            1 => 6,
-            2 => 5,
-            3 => 6,
-            4 => 5,
-        ];
-
-        $absence = [
-            1 => 4,
-            2 => 7,
-            3 => 5,
-            4 => 2,
-        ];
-
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
-
-            self::assertEquals('Em exame', $response->situacao);
-        }
-
-        // Nota da etapa de recuperação
-        $score = [
-            'Rc' => 8,
-        ];
-
-        // Lança nota para a etapa de Recuperação
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
-
-            self::assertEquals('Aprovado após exame', $response->situacao);
-        }
-
-        $registration = $this->enrollment->registration;
-        self::assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
+        self::assertEquals('Aprovado após exame', $response->situacao);
     }
 
-    /**
-     * Os lançamentos (notas e faltas) nas etapas deverá deixar o aluno com a situação Cursando e os componentes como Em Exame,
-     * depois o aluno deverá ser Reprovado após o lançamento da nota de Recuperação
-     */
-    public function test_reproved_after_exam_all_score_and_absence_posted()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    $registration = $this->enrollment->registration;
+    self::assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
+});
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 2);
+/**
+ * Os lançamentos (notas e faltas) nas etapas deverá deixar o aluno com a situação Cursando e os componentes como Em Exame,
+ * depois o aluno deverá ser Reprovado após o lançamento da nota de Recuperação
+ */
+test('reproved after exam all score and absence posted', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
 
-        $disciplines = $schoolClass->disciplines;
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 2);
 
-        $score = [
-            1 => 6,
-            2 => 5,
-            3 => 6,
-            4 => 5,
-        ];
+    $disciplines = $schoolClass->disciplines;
 
-        $absence = [
-            1 => 4,
-            2 => 7,
-            3 => 5,
-            4 => 2,
-        ];
+    $score = [
+        1 => 6,
+        2 => 5,
+        3 => 6,
+        4 => 5,
+    ];
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $absence = [
+        1 => 4,
+        2 => 7,
+        3 => 5,
+        4 => 2,
+    ];
 
-            self::assertEquals('Em exame', $response->situacao);
-        }
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        // Nota da etapa de recuperação
-        $score = [
-            'Rc' => 5,
-        ];
-
-        // Lança nota para a etapa de Recuperação
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
-
-            self::assertEquals('Retido', $response->situacao);
-        }
-
-        $registration = $this->enrollment->registration;
-        self::assertEquals(App_Model_MatriculaSituacao::REPROVADO, $registration->refresh()->aprovado);
+        self::assertEquals('Em exame', $response->situacao);
     }
 
-    /**
-     * O aluno deverá continuar com a situação Cursando e os componentes como Em Exame, depois dos lançamentos (notas e faltas) nas etapas,
-     * exceto para etapa de recuperação. As faltas devem ser altas para que o aluno reprove por falta
-     */
-    public function test_in_exam_after_all_score_and_absence_posted_with_absence_high()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    // Nota da etapa de recuperação
+    $score = [
+        'Rc' => 5,
+    ];
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 8);
+    // Lança nota para a etapa de Recuperação
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        $disciplines = $schoolClass->disciplines;
-
-        $score = [
-            1 => 6,
-            2 => 5,
-            3 => 6,
-            4 => 5,
-        ];
-
-        $absence = [
-            1 => 24,
-            2 => 17,
-            3 => 51,
-            4 => 22,
-        ];
-
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
-
-            self::assertEquals('Em exame', $response->situacao);
-        }
-
-        $registration = $this->enrollment->registration;
-        self::assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
+        self::assertEquals('Retido', $response->situacao);
     }
 
-    /**
-     * O aluno deverá ganhar a situação Reprovado Por Falta, depois dos lançamentos (notas e faltas) nas etapas
-     */
-    public function test_reproved_per_absence_after_exam_all_score_and_absence_posted()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    $registration = $this->enrollment->registration;
+    self::assertEquals(App_Model_MatriculaSituacao::REPROVADO, $registration->refresh()->aprovado);
+});
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 2);
+/**
+ * O aluno deverá continuar com a situação Cursando e os componentes como Em Exame, depois dos lançamentos (notas e faltas) nas etapas,
+ * exceto para etapa de recuperação. As faltas devem ser altas para que o aluno reprove por falta
+ */
+test('in exam after all score and absence posted with absence high', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
 
-        $disciplines = $schoolClass->disciplines;
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 8);
 
-        $score = [
-            1 => 6,
-            2 => 5,
-            3 => 6,
-            4 => 5,
-        ];
+    $disciplines = $schoolClass->disciplines;
 
-        $absence = [
-            1 => 32,
-            2 => 27,
-            3 => 51,
-            4 => 32,
-        ];
+    $score = [
+        1 => 6,
+        2 => 5,
+        3 => 6,
+        4 => 5,
+    ];
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $absence = [
+        1 => 24,
+        2 => 17,
+        3 => 51,
+        4 => 22,
+    ];
 
-            self::assertEquals('Em exame', $response->situacao);
-        }
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        // Nota da etapa de recuperação
-        $score = [
-            'Rc' => 8,
-        ];
-
-        // Lança nota para a etapa de Recuperação
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
-
-            self::assertEquals('Reprovado por faltas', $response->situacao);
-        }
-
-        $registration = $this->enrollment->registration;
-        self::assertEquals(App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS, $registration->refresh()->aprovado);
+        self::assertEquals('Em exame', $response->situacao);
     }
 
-    /**
-     * O aluno deverá continuar com a situação Cursando, depois dos lançamentos (notas e faltas) em algumas etapas
-     */
-    public function test_studying_after_not_all_stage_score_and_absence_posted()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    $registration = $this->enrollment->registration;
+    self::assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
+});
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 2);
+/**
+ * O aluno deverá ganhar a situação Reprovado Por Falta, depois dos lançamentos (notas e faltas) nas etapas
+ */
+test('reproved per absence after exam all score and absence posted', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
 
-        $disciplines = $schoolClass->disciplines;
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 2);
 
-        // Lança notas e faltas das etapas 1 e 2
-        $score = [
-            1 => 6,
-            2 => 5,
-        ];
+    $disciplines = $schoolClass->disciplines;
 
-        $absence = [
-            1 => 2,
-            2 => 2,
-        ];
+    $score = [
+        1 => 6,
+        2 => 5,
+        3 => 6,
+        4 => 5,
+    ];
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $absence = [
+        1 => 32,
+        2 => 27,
+        3 => 51,
+        4 => 32,
+    ];
 
-            self::assertEquals('Cursando', $response->situacao);
-        }
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        $registration = $this->enrollment->registration;
-        self::assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
+        self::assertEquals('Em exame', $response->situacao);
     }
 
-    /**
-     * O aluno deverá continuar com a situação Cursando, depois dos lançamentos (notas e faltas) nas etapas e ter a falta removida da última etapa
-     */
-    public function test_studying_after_remove_stage_score_and_absence_posted()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    // Nota da etapa de recuperação
+    $score = [
+        'Rc' => 8,
+    ];
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 2);
+    // Lança nota para a etapa de Recuperação
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        $disciplines = $schoolClass->disciplines;
+        self::assertEquals('Reprovado por faltas', $response->situacao);
+    }
 
-        $score = [
-            1 => 7,
-            2 => 7,
-            3 => 7,
-            4 => 7,
-        ];
+    $registration = $this->enrollment->registration;
+    self::assertEquals(App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS, $registration->refresh()->aprovado);
+});
 
-        $absence = [
-            1 => 2,
-            2 => 2,
-            3 => 2,
-            4 => 2,
-        ];
+/**
+ * O aluno deverá continuar com a situação Cursando, depois dos lançamentos (notas e faltas) em algumas etapas
+ */
+test('studying after not all stage score and absence posted', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 2);
 
-            self::assertEquals('Aprovado', $response->situacao);
-        }
+    $disciplines = $schoolClass->disciplines;
 
-        $registration = $this->enrollment->registration;
-        self::assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
+    // Lança notas e faltas das etapas 1 e 2
+    $score = [
+        1 => 6,
+        2 => 5,
+    ];
 
-        // Remove falta da última etapa, de um dos componentes
-        $randomDiscipline = $schoolClass->disciplines->random()->id;
-        $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 4);
+    $absence = [
+        1 => 2,
+        2 => 2,
+    ];
+
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
+
         self::assertEquals('Cursando', $response->situacao);
-
-        $registration = $this->enrollment->registration;
-        self::assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
     }
 
-    /**
-     * Deverá retornar erro ao tentar remover falta de uma etapa, quando não é a útima etapa
-     */
-    public function test_error_after_remove_not_last_stage_score_and_absence_posted()
-    {
-        $schoolClass = $this->enrollment->schoolClass;
-        $school = $schoolClass->school;
+    $registration = $this->enrollment->registration;
+    self::assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
+});
 
-        $this->createStages($school, 4);
-        $this->createDisciplines($schoolClass, 2);
+/**
+ * O aluno deverá continuar com a situação Cursando, depois dos lançamentos (notas e faltas) nas etapas e ter a falta removida da última etapa
+ */
+test('studying after remove stage score and absence posted', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
 
-        $disciplines = $schoolClass->disciplines;
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 2);
 
-        $score = [
-            1 => 7,
-            2 => 7,
-            3 => 7,
-            4 => 7,
-        ];
+    $disciplines = $schoolClass->disciplines;
 
-        $absence = [
-            1 => 2,
-            2 => 2,
-            3 => 2,
-            4 => 2,
-        ];
+    $score = [
+        1 => 7,
+        2 => 7,
+        3 => 7,
+        4 => 7,
+    ];
 
-        foreach ($disciplines as $discipline) {
-            $this->postAbsenceForStages($absence, $discipline);
-            $response = $this->postScoreForStages($score, $discipline);
+    $absence = [
+        1 => 2,
+        2 => 2,
+        3 => 2,
+        4 => 2,
+    ];
 
-            self::assertEquals('Aprovado', $response->situacao);
-        }
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
 
-        // Remove falta de uma etapa
-        $randomDiscipline = $schoolClass->disciplines->random()->id;
-        $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 3);
-        self::assertTrue($response->any_error_msg);
-
-        $registration = $this->enrollment->registration;
-        self::assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
+        self::assertEquals('Aprovado', $response->situacao);
     }
-}
+
+    $registration = $this->enrollment->registration;
+    self::assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
+
+    // Remove falta da última etapa, de um dos componentes
+    $randomDiscipline = $schoolClass->disciplines->random()->id;
+    $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 4);
+    self::assertEquals('Cursando', $response->situacao);
+
+    $registration = $this->enrollment->registration;
+    self::assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
+});
+
+/**
+ * Deverá retornar erro ao tentar remover falta de uma etapa, quando não é a útima etapa
+ */
+test('error after remove not last stage score and absence posted', function () {
+    $schoolClass = $this->enrollment->schoolClass;
+    $school = $schoolClass->school;
+
+    $this->createStages($school, 4);
+    $this->createDisciplines($schoolClass, 2);
+
+    $disciplines = $schoolClass->disciplines;
+
+    $score = [
+        1 => 7,
+        2 => 7,
+        3 => 7,
+        4 => 7,
+    ];
+
+    $absence = [
+        1 => 2,
+        2 => 2,
+        3 => 2,
+        4 => 2,
+    ];
+
+    foreach ($disciplines as $discipline) {
+        $this->postAbsenceForStages($absence, $discipline);
+        $response = $this->postScoreForStages($score, $discipline);
+
+        self::assertEquals('Aprovado', $response->situacao);
+    }
+
+    // Remove falta de uma etapa
+    $randomDiscipline = $schoolClass->disciplines->random()->id;
+    $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 3);
+    self::assertTrue($response->any_error_msg);
+
+    $registration = $this->enrollment->registration;
+    self::assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
+});

@@ -98,12 +98,12 @@ return new class extends clsListagem
                 $det_instituicao = $obj_instituicao->detalhe();
 
                 $lista_busca = [
-                    "<a href=\"educar_motivo_afastamento_det.php?cod_motivo_afastamento={$registro['cod_motivo_afastamento']}\">{$registro['nm_motivo']}</a>",
+                    "<a href=\"educar_motivo_afastamento_det.php?cod_motivo_afastamento={$registro['cod_motivo_afastamento']}\">" . e($registro['nm_motivo']) . '</a>',
                 ];
 
                 if ($nivel_usuario == 1) {
                     // $lista_busca[] = "<a href=\"educar_motivo_afastamento_det.php?cod_motivo_afastamento={$registro["cod_motivo_afastamento"]}\">{$det_ins["nome"]}</a>";
-                    $lista_busca[] = "<a href=\"educar_motivo_afastamento_det.php?cod_motivo_afastamento={$registro['cod_motivo_afastamento']}\">{$det_instituicao['nm_instituicao']}</a>";
+                    $lista_busca[] = "<a href=\"educar_motivo_afastamento_det.php?cod_motivo_afastamento={$registro['cod_motivo_afastamento']}\">" . e($det_instituicao['nm_instituicao']) . '</a>';
                 }
                 $this->addLinhas(linha: $lista_busca);
             }

@@ -1,36 +1,29 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\EducacensoDegree;
 use App\Models\EducacensoInstitution;
 use App\Models\Employee;
 use App\Models\EmployeeGraduation;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class EmployeeGraduationTest extends EloquentTestCase
-{
-    public $relations = [
-        'employee' => Employee::class,
-        'educacensoDegree' => EducacensoDegree::class,
-        'educacensoInstitution' => EducacensoInstitution::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return EmployeeGraduation::class;
-    }
+beforeEach(fn () => $this->eloquent(EmployeeGraduation::class, relations: [
+    'employee' => Employee::class,
+    'educacensoDegree' => EducacensoDegree::class,
+    'educacensoInstitution' => EducacensoInstitution::class,
+]));
 
-    public function test_scope_professor(): void
-    {
-        $employeeGraduation = $this->createNewModel();
+EloquentModelTestCase::registerModelTests();
 
-        $employeeQuery = EmployeeGraduation::query()
-            ->ofEmployee($employeeGraduation->employee->id)
-            ->first();
+test('scope professor', function () {
+    $employeeGraduation = $this->createNewModel();
 
-        $this->assertInstanceOf(EmployeeGraduation::class, $employeeQuery);
-        $this->assertInstanceOf(Employee::class, $employeeQuery->employee);
-        $this->assertEquals($employeeGraduation->id, $employeeQuery->id);
-    }
-}
+    $employeeQuery = EmployeeGraduation::query()
+        ->ofEmployee($employeeGraduation->employee->id)
+        ->first();
+
+    $this->assertInstanceOf(EmployeeGraduation::class, $employeeQuery);
+    $this->assertInstanceOf(Employee::class, $employeeQuery->employee);
+    $this->assertEquals($employeeGraduation->id, $employeeQuery->id);
+});

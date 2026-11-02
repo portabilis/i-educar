@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\LegacyEnrollment;
+use App\Models\LegacyRegistration;
+use App\Models\LegacyStudent;
 
 return new class extends clsCadastro
 {
@@ -19,7 +21,10 @@ return new class extends clsCadastro
         if ($user->isLibrary() || !$allow) {
             $this->simpleRedirect(url: '/intranet/index.php');
 
+            // Inalcançável: o `simpleRedirect()` acima interrompe a execução.
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -39,25 +44,43 @@ return new class extends clsCadastro
         $this->nome_url_cancelar = 'Voltar';
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
+        // Início > Escola > Alunos > Nome > Matrícula > Etapa do aluno
+        $registration = LegacyRegistration::find($this->cod_matricula);
         $this->breadcrumb(currentPage: 'Etapa do aluno', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_aluno_lst.php') => 'Alunos',
+            url(path: "intranet/educar_aluno_det.php?cod_aluno={$registration?->ref_cod_aluno}") => $registration?->student?->real_name,
+            url(path: "intranet/educar_matricula_det.php?cod_matricula={$this->cod_matricula}") => 'Matrícula',
         ]);
 
         $this->campoOculto(nome: 'cod_matricula', valor: $this->cod_matricula);
         $this->campoOculto(nome: 'ref_cod_aluno', valor: $this->ref_cod_aluno);
 
-        $obj_aluno = new clsPmieducarAluno;
-        $lst_aluno = $obj_aluno->lista(int_cod_aluno: $this->ref_cod_aluno, int_ativo: 1);
-        if (is_array(value: $lst_aluno)) {
-            $det_aluno = array_shift(array: $lst_aluno);
-            $this->nm_aluno = $det_aluno['nome_aluno'];
+        if (is_numeric($this->ref_cod_aluno)) {
+            $this->nm_aluno = LegacyStudent::query()
+                ->active()
+                ->whereStudent($this->ref_cod_aluno)
+                ->joinPerson()
+                ->value('pessoa.nome');
+        }
+
+        if ($this->nm_aluno) {
             $this->campoRotulo(nome: 'nm_aluno', campo: 'Aluno', valor: $this->nm_aluno);
         }
-        $enturmacoes = new clsPmieducarMatriculaTurma;
-        $enturmacoes = $enturmacoes->lista(
-            int_ref_cod_matricula: $this->cod_matricula,
-            apenasTurmasMultiSeriadas: true
-        );
+        $enturmacoes = LegacyEnrollment::query()
+            ->join('pmieducar.turma', 'turma.cod_turma', 'matricula_turma.ref_cod_turma')
+            ->join('pmieducar.matricula', 'matricula.cod_matricula', 'matricula_turma.ref_cod_matricula')
+            ->join('pmieducar.aluno', 'aluno.cod_aluno', 'matricula.ref_cod_aluno')
+            ->when(is_numeric($this->cod_matricula), fn ($q) => $q->whereRegistration($this->cod_matricula))
+            ->whereIn('turma.etapa_educacenso', App_Model_Educacenso::etapas_multisseriadas())
+            ->where('aluno.ativo', 1)
+            ->get([
+                'matricula_turma.ref_cod_turma',
+                'matricula_turma.sequencial',
+                'matricula_turma.etapa_educacenso',
+                'turma.nm_turma',
+                'turma.etapa_educacenso as etapa_ensino',
+            ]);
 
         $todasEtapasEducacenso = loadJson(file: 'educacenso_json/etapas_ensino.json');
 
@@ -65,12 +88,12 @@ return new class extends clsCadastro
             $etapasEducacenso = $this->array_filter_key(
                 array: $todasEtapasEducacenso,
                 callback: function ($value) use ($enturmacao) {
-                    return in_array(needle: $value, haystack: App_Model_Educacenso::etapasDaTurma(etapaEnsino: $enturmacao['etapa_ensino']));
+                    return in_array(needle: $value, haystack: App_Model_Educacenso::etapasDaTurma(etapaEnsino: $enturmacao->etapa_ensino));
                 }
             );
             $etapasEducacenso = [0 => 'Nenhuma'] + $etapasEducacenso;
 
-            $this->campoLista(nome: "etapas_educacenso[{$enturmacao['ref_cod_turma']}-{$enturmacao['sequencial']}]", campo: "Etapa do aluno na turma {$enturmacao['nm_turma']}:", valor: $etapasEducacenso, default: $enturmacao['etapa_educacenso'], obrigatorio: false);
+            $this->campoLista(nome: "etapas_educacenso[{$enturmacao->ref_cod_turma}-{$enturmacao->sequencial}]", campo: "Etapa do aluno na turma {$enturmacao->nm_turma}:", valor: $etapasEducacenso, default: $enturmacao->etapa_educacenso, obrigatorio: false);
         }
     }
 
@@ -114,7 +137,13 @@ return new class extends clsCadastro
         $det_matricula = $obj_matricula->detalhe();
 
         if (!$det_matricula) {
-            $this->simpleRedirect(url: 'educar_matricula_lst.php?ref_cod_aluno=' . $this->ref_cod_aluno);
+            $this->redirectNotFound(
+                url: 'educar_matricula_lst.php?ref_cod_aluno=' . $this->ref_cod_aluno,
+                registro: 'matrícula',
+                feminino: true,
+                codigo: $this->cod_matricula,
+                dica: 'Acesse a matrícula pela ficha do aluno.',
+            );
         }
     }
 

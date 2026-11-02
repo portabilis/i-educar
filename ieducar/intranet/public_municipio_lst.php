@@ -63,7 +63,10 @@ return new class extends clsListagem
         $opcoes = ['' => 'Selecione'];
 
         if ($this->idpais) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $opcoes += $this->getStates($this->idpais);
+            // @codeCoverageIgnoreEnd
         }
 
         $this->campoLista('iduf', 'Estado', $opcoes, $this->iduf, '', false, '', '', false, false);
@@ -79,14 +82,17 @@ return new class extends clsListagem
                 $query->whereUnaccent('name', $this->nome);
             });
             $query->when($this->iduf, function ($query) {
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 $query->where('state_id', $this->iduf);
+                // @codeCoverageIgnoreEnd
             });
         });
 
         foreach ($data as $item) {
             $this->addLinhas([
-                "<a href=\"public_municipio_det.php?idmun={$item->id}\">{$item->name}</a>",
-                "<a href=\"public_municipio_det.php?idmun={$item->id}\">{$item->state->abbreviation}</a>",
+                "<a href=\"public_municipio_det.php?idmun={$item->id}\">" . e($item->name) . '</a>',
+                "<a href=\"public_municipio_det.php?idmun={$item->id}\">" . e($item->state->abbreviation) . '</a>',
             ]);
         }
 

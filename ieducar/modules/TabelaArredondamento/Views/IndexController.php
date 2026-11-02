@@ -2,7 +2,7 @@
 
 use App\Models\LegacyRoundingTable;
 
-class IndexController extends Core_Controller_Page_ListController
+class TabelaArredondamento_Views_IndexController extends Core_Controller_Page_ListController
 {
     protected $_dataMapper = 'TabelaArredondamento_Model_TabelaDataMapper';
 

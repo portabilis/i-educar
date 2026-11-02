@@ -31,6 +31,8 @@ npm-debug.log
 yarn-error.log
 .phpunit.result.cache
 
+/tests/Browser/Screenshots
+
 # IDE Files
 ## PHPStorm InteliJ
 *.idea
@@ -70,6 +72,7 @@ website/i18n/*
 
 # this is the code coverage generated when running phpunit.
 ieducar/tests/log
+/coverage
 
 programmatic-types.graphql
 schema-directives.graphql

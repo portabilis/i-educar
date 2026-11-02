@@ -78,5 +78,34 @@ services:
     ports:
       - ${DOCKER_REDIS_PORT:-6379}:6379
 
+  pest:
+    build:
+      context: docker/pest
+      args:
+        PHP_VERSION: "8.5"
+        COMPOSER_VERSION: "2.10"
+        PLAYWRIGHT_VERSION: "1.62.1"
+    image: ieducar-pest:latest
+    container_name: ieducar-pest
+    working_dir: /var/www/ieducar
+    volumes:
+      - ./:/var/www/ieducar
+      - pest_node_modules:/var/www/ieducar/node_modules
+      # Grafo do `pest --tia`, que sobrevive à recriação do container.
+      - pest_tia:/root/.pest
+    depends_on:
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
+    environment:
+      CACHE_DRIVER: redis
+      REDIS_HOST: redis
+      DB_HOST: postgres
+    # O Chromium precisa de mais memória compartilhada que o padrão de 64 MB.
+    shm_size: 2gb
+
 volumes:
     postgres:
+    pest_node_modules:
+    pest_tia:

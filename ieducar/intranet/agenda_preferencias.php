@@ -56,7 +56,10 @@ return new class extends clsCadastro
 
         $db->Consulta(consulta: "SELECT ref_cod_agenda FROM agenda_responsavel WHERE ref_ref_cod_pessoa_fj = '{$this->pessoa_logada}' AND principal = 1");
         if ($db->ProximoRegistro()) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             [$this->agenda_display] = $db->Tupla();
+            // @codeCoverageIgnoreEnd
         } else {
             $this->agenda_display = $this->cod_agenda;
         }
@@ -65,10 +68,13 @@ return new class extends clsCadastro
         $agendas[$this->cod_agenda] = "Minha agenda: {$this->nm_agenda}";
         $db->Consulta(consulta: "SELECT ref_cod_agenda, principal FROM agenda_responsavel WHERE ref_ref_cod_pessoa_fj = '{$this->pessoa_logada}'");
         while ($db->ProximoRegistro()) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             [$cod_agenda, $principal] = $db->Tupla();
             $agendas[$cod_agenda] = $db2->CampoUnico(consulta: "SELECT nm_agenda FROM agenda WHERE cod_agenda = '{$cod_agenda}'");
             if ($principal) {
                 $this->agenda_display = $cod_agenda;
+                // @codeCoverageIgnoreEnd
             }
         }
         $this->campoLista(nome: 'agenda_display', campo: 'Agenda exibida na pagina principal', valor: $agendas, default: $this->agenda_display);
@@ -76,7 +82,10 @@ return new class extends clsCadastro
 
     public function Novo()
     {
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function Editar()

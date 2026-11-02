@@ -8,7 +8,9 @@ class Util
 {
     public static function sumTimes(array|Collection|null $times): string
     {
-        if (empty($times)) {
+        $times = collect($times)->filter();
+
+        if ($times->isEmpty()) {
             return '00:00';
         }
 

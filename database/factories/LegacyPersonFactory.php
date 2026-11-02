@@ -14,10 +14,10 @@ class LegacyPersonFactory extends Factory
         return [
             'nome' => $this->faker->name(),
             'data_cad' => now(),
-            'tipo' => $this->faker->randomElement(['F', 'J']),
-            'situacao' => $this->faker->randomElement(['A', 'I', 'P']),
-            'origem_gravacao' => $this->faker->randomElement(['M', 'U', 'C', 'O']),
-            'operacao' => $this->faker->randomElement(['I', 'A', 'E']),
+            'tipo' => 'F',
+            'situacao' => 'A',
+            'origem_gravacao' => 'M',
+            'operacao' => 'I',
             'email' => $this->faker->email(),
         ];
     }

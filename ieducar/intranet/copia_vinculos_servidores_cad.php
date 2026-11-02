@@ -43,10 +43,11 @@ return new class extends clsCadastro
 
         $this->url_cancelar = 'educar_turma_det.php?cod_turma=' . $this->cod_turma;
 
-        $nomeMenu = 'Copiar Vínculos dos Servidores da';
-
-        $this->breadcrumb(currentPage: $nomeMenu . ' turma', breadcrumbs: [
+        // Início > Escola > Turmas > Turma (ano) > Cópia de vínculos
+        $this->breadcrumb(currentPage: 'Cópia de vínculos', breadcrumbs: [
             url(path: 'intranet/educar_index.php') => 'Escola',
+            url(path: 'intranet/educar_turma_lst.php') => 'Turmas',
+            url(path: "intranet/educar_turma_det.php?cod_turma={$this->cod_turma}") => $schoolClass->name,
         ]);
 
         $this->retorno = $retorno;

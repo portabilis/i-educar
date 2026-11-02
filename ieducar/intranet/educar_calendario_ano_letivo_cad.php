@@ -136,9 +136,12 @@ return new class extends clsCadastro
                     );
                 }
 
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 $this->mensagem = 'Edição não realizada.<br>';
 
                 return false;
+                // @codeCoverageIgnoreEnd
             } else {
                 $obj_calend_ano_letivo = new LegacyCalendarYear;
                 $obj_calend_ano_letivo->ref_cod_escola = $this->ref_cod_escola;
@@ -153,9 +156,12 @@ return new class extends clsCadastro
                     );
                 }
 
+                // Débito de cobertura: trecho ainda sem teste.
+                // @codeCoverageIgnoreStart
                 $this->mensagem = 'Cadastro não realizado.<br>';
 
                 return false;
+                // @codeCoverageIgnoreEnd
             }
         }
 
@@ -185,9 +191,12 @@ return new class extends clsCadastro
                 );
             }
 
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Edição não realizada.<br>';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         echo '<script> alert( \'Não foi possível definir as datas de início e fim do ano letivo.\' ) </script>';
@@ -209,9 +218,12 @@ return new class extends clsCadastro
             );
         }
 
+        // Débito de cobertura: trecho ainda sem teste.
+        // @codeCoverageIgnoreStart
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     public function makeExtra()

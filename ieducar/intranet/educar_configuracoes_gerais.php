@@ -2,7 +2,6 @@
 
 use App\Models\LegacyGeneralConfiguration;
 use iEducar\Reports\Contracts\TeacherReportCard;
-use Illuminate\Support\Facades\Cache;
 
 return new class extends clsCadastro
 {
@@ -332,9 +331,6 @@ return new class extends clsCadastro
         $editou = LegacyGeneralConfiguration::query()->forActiveInstitution()->first()?->update($dados);
 
         if ($editou) {
-            // Reseta o cache de configurações
-            Cache::invalidateByTags(['configurations']);
-
             $this->mensagem = 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect(url: 'index.php');
         }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyStudent;
+
 return new class extends clsListagem
 {
     /**
@@ -22,13 +24,6 @@ return new class extends clsListagem
      * @var int
      */
     public $limite;
-
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
-    public $offset;
 
     public $ref_cod_aluno;
 
@@ -62,38 +57,41 @@ return new class extends clsListagem
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
-        $obj_aluno = new clsPmieducarAluno;
-        $obj_aluno->setOrderby('nome_aluno ASC');
-        $obj_aluno->setLimite(intLimiteQtd: $this->limite, intLimiteOffset: $this->offset);
+        $alunos = LegacyStudent::query()
+            ->active()
+            ->joinPerson()
+            ->joinIndividual()
+            ->when(is_numeric($this->cod_aluno), fn ($q) => $q->whereStudent($this->cod_aluno))
+            ->when(is_string($this->nm_aluno), fn ($q) => $q->whereStudentNameLike($this->nm_aluno))
+            ->when(is_numeric($this->ref_cod_escola), fn ($q) => $q->whereLastRegistrationSchool($this->ref_cod_escola))
+            ->orderBy('pessoa.nome')
+            ->paginate(
+                perPage: $this->limite,
+                columns: [
+                    'cod_aluno',
+                    'pessoa.nome as nome_aluno',
+                    'fisica.nome_social',
+                ],
+                pageName: 'pagina_' . $this->nome
+            );
 
-        $lista = $obj_aluno->lista(
-            int_cod_aluno: $this->cod_aluno,
-            int_ativo: 1,
-            str_nome_aluno: $this->nm_aluno,
-            int_ref_cod_escola: $this->ref_cod_escola
-        );
+        foreach ($alunos as $registro) {
+            $nomeAluno = str_replace(search: '\'', replace: '', subject: $registro['nome_aluno']);
+            $script = " onclick=\"addVal1('ref_cod_aluno','{$registro['cod_aluno']}'); addVal1('nm_aluno','{$nomeAluno}'); addVal1('nm_aluno_','{$nomeAluno}');fecha();\"";
 
-        $total = $obj_aluno->_total;
+            $display = $nomeAluno;
 
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $registro['nome_aluno'] = str_replace(search: '\'', replace: '', subject: $registro['nome_aluno']);
-                $script = " onclick=\"addVal1('ref_cod_aluno','{$registro['cod_aluno']}'); addVal1('nm_aluno','{$registro['nome_aluno']}'); addVal1('nm_aluno_','{$registro['nome_aluno']}');fecha();\"";
-
-                $display = $registro['nome_aluno'];
-
-                if (!empty($registro['nome_social'])) {
-                    $display = $registro['nome_social'] . ' - Nome de registro: ' . $registro['nome_aluno'];
-                }
-
-                $this->addLinhas([
-                    "<a href=\"javascript:void(0);\" {$script}>{$display}</a>",
-                ]);
+            if (!empty($registro['nome_social'])) {
+                $display = $registro['nome_social'] . ' - Nome de registro: ' . $nomeAluno;
             }
+
+            $this->addLinhas([
+                "<a href=\"javascript:void(0);\" {$script}>{$display}</a>",
+            ]);
         }
-        $this->addPaginador2(strUrl: 'educar_pesquisa_aluno.php', intTotalRegistros: $total, mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
+
+        $this->addPaginador2(strUrl: 'educar_pesquisa_aluno.php', intTotalRegistros: $alunos->total(), mixVariaveisMantidas: $_GET, nome: $this->nome, intResultadosPorPagina: $this->limite);
         $this->largura = '100%';
     }
 

@@ -37,6 +37,8 @@ return new class extends clsListagem
     public function Gerar()
     {
         $this->titulo = 'Servidor - Listagem';
+        $this->buscaRapida = 'nome';
+        $this->buscaRapidaRotulo = 'Buscar por nome, matrícula ou CPF';
 
         foreach ($_GET as $var => $val) {
             $this->$var = ($val === '') ? null : $val;
@@ -51,8 +53,6 @@ return new class extends clsListagem
 
         $this->inputsHelper()->dynamic(helperNames: ['instituicao', 'escola', 'anoLetivo'], helperOptions: ['options' => ['required' => false]]);
 
-        $parametros = new clsParametrosPesquisas;
-        $parametros->setSubmit(submit: 0);
         $this->campoTexto(nome: 'nome', campo: 'Nome do servidor', valor: $this->nome, tamanhovisivel: 50, tamanhomaximo: 255);
         $this->campoTexto(nome: 'matricula_servidor', campo: 'Matrícula', valor: $this->matricula_servidor, tamanhovisivel: 50, tamanhomaximo: 255);
         $this->inputsHelper()->dynamic(helperNames: 'escolaridade', inputOptions: ['required' => false]);
@@ -75,6 +75,7 @@ return new class extends clsListagem
         ])->with([
             'institution:cod_instituicao,nm_instituicao',
             'individual:idpes,cpf',
+            'person:idpes,nome',
             'employeeRoles:ref_cod_servidor,matricula',
         ])->active()->orderBy('pessoa.nome')->paginate($this->limite, [
             'pessoa.nome as name',
@@ -120,9 +121,7 @@ return new class extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb(currentPage: 'Funções do servidor', breadcrumbs: [
-            url(path: 'intranet/educar_servidores_index.php') => 'Servidores',
-        ]);
+        $this->breadcrumb(currentPage: 'Servidores');
     }
 
     public function Formular()

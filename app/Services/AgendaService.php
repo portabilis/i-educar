@@ -165,8 +165,10 @@ class AgendaService
             ->whereVersion($this->maxVersion($commitment))
             ->first(['data_inicio', 'titulo', 'descricao', 'importante', 'publico']);
 
+        // Inalcançável: o compromisso já foi achado na agenda, então a versão
+        // máxima dele sempre existe.
         if ($note === null) {
-            return '';
+            return ''; // @codeCoverageIgnore
         }
 
         return $this->updateCommitment(

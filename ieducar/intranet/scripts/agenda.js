@@ -1,5 +1,17 @@
 var oldBotoes = '';
 
+// Os valores dos campos ocultos chegam decodificados pelo navegador e precisam
+// ser escapados antes de entrar em innerHTML.
+function agenda_escape( texto )
+{
+	return String( texto )
+		.replaceAll( '&', '&amp;' )
+		.replaceAll( '<', '&lt;' )
+		.replaceAll( '>', '&gt;' )
+		.replaceAll( '"', '&quot;' )
+		.replaceAll( "'", '&#039;' );
+}
+
 function form2text()
 {
 	// se tivesse algum sendo editado, fecha o formulario dele
@@ -30,14 +42,14 @@ function form2text()
 		arrTitle = inputConteudo.value.split( ' ' );
 		titulo = arrTitle.slice( 0, 6 ).join( ' ' );
 	}
-	titulo = inputHoraIni.value + ' - ' + titulo + ' - ' + inputHoraFim.value;
+	titulo = agenda_escape( inputHoraIni.value + ' - ' + titulo + ' - ' + inputHoraFim.value );
 	if( inputOpcoes.value & 1 && ! ( inputOpcoes.value & 4 ) )
 	{
 		titulo = '<span class="alerta">' + titulo + '</span>';
 	}
 
 	divTitle.innerHTML = titulo;
-	divConteudo.innerHTML = inputConteudo.value.split( "\n" ).join( "<br>\n" );
+	divConteudo.innerHTML = agenda_escape( inputConteudo.value ).replaceAll( "\n", "<br>\n" );
 
 	divBotoes.innerHTML = oldBotoes;
 	if( document.getElementById( "aberto_" + compId ).value == 0 )
@@ -70,14 +82,14 @@ function text2form( compId )
 
 	publica = document.getElementById( "agenda_publica" ).value;
 
-	divTitle.innerHTML = '<input type="hidden" name="agenda_rap_id" id="agenda_rap_id" value="' + compId + '"><input type="text" name="agenda_rap_hora" id="agenda_rap_hora" class="agenda_hora" value="' + inputHoraIni.value + '"  maxlength="5" onKeyPress="formataHora(this, event);"> <input type="text" name="agenda_rap_titulo" id="agenda_rap_titulo" class="agenda_titulo" value="">';
+	divTitle.innerHTML = '<input type="hidden" name="agenda_rap_id" id="agenda_rap_id" value="' + compId + '"><input type="text" name="agenda_rap_hora" id="agenda_rap_hora" class="agenda_hora" value="' + agenda_escape( inputHoraIni.value ) + '"  maxlength="5" onKeyPress="formataHora(this, event);"> <input type="text" name="agenda_rap_titulo" id="agenda_rap_titulo" class="agenda_titulo" value="">';
 	document.getElementById( 'agenda_rap_titulo' ).value = inputTitle.value;
 
 	chck1 = ( inputOpcoes.value & 2 ) ? 'checked' : '';
 	chck2 = ( inputOpcoes.value & 1 ) ? 'checked' : '';
 
-	conteudo = '<textarea name="agenda_rap_conteudo" id="agenda_rap_conteudo" class="agenda_conteudo">' + inputConteudo.value + '</textarea><br>';
-	conteudo += 'Fim do Compromisso:<input type="text" name="agenda_rap_horafim" id="agenda_rap_horafim" class="agenda_hora" value="' + inputHoraFim.value + '" maxlength="5" onKeyPress="formataHora(this, event);"> Data: <input type="text" name="agenda_rap_data" id="agenda_rap_data" class="agenda_data" value="' + inputData.value + '"  maxlength="10" onKeyPress="formataData(this, event);"><br>';
+	let conteudo = '<textarea name="agenda_rap_conteudo" id="agenda_rap_conteudo" class="agenda_conteudo">' + agenda_escape( inputConteudo.value ) + '</textarea><br>';
+	conteudo += 'Fim do Compromisso:<input type="text" name="agenda_rap_horafim" id="agenda_rap_horafim" class="agenda_hora" value="' + agenda_escape( inputHoraFim.value ) + '" maxlength="5" onKeyPress="formataHora(this, event);"> Data: <input type="text" name="agenda_rap_data" id="agenda_rap_data" class="agenda_data" value="' + agenda_escape( inputData.value ) + '"  maxlength="10" onKeyPress="formataData(this, event);"><br>';
 	conteudo += 'Importante:<input type="checkbox" name="agenda_rap_importante" id="agenda_rap_importante" ' + chck2 + ' style="margin-right:89px;">';
 	if( publica == 1 )
 	{
@@ -157,7 +169,7 @@ function agenda_expandir( compId )
 
 	divExpandir.innerHTML = '<div id="agenda_expandir_' + compId + '"><a href="javascript:agenda_retrair( ' + compId + ' );"><img src="imagens/agenda_icon_extendido.gif" border="0" alt="Retrair" title="Retrair este compromisso"></a></div>';
 
-	divConteudo.innerHTML = inputConteudo.value.split( '\n' ).join( '<br>' );;
+	divConteudo.innerHTML = agenda_escape( inputConteudo.value ).replaceAll( '\n', '<br>' );
 	document.getElementById( "aberto_" + compId ).value = 1;
 }
 
@@ -180,8 +192,8 @@ function agenda_retrair( compId )
 
 	divExpandir.innerHTML = '<div id="agenda_expandir_' + compId + '"><a href="javascript:agenda_expandir( ' + compId + ' );"><img src="imagens/agenda_icon_retraido.gif" border="0" alt="Expandir" title="Expandir este compromisso"></a></div>';
 
-	textoArr = inputConteudo.value.split( ' ' ).slice( 0, 21 ).join( ' ' ) + '...';
-	textoArr = textoArr.split( '\n' ).join( '<br>' );
+	let textoArr = agenda_escape( inputConteudo.value.split( ' ' ).slice( 0, 21 ).join( ' ' ) + '...' );
+	textoArr = textoArr.replaceAll( '\n', '<br>' );
 	divConteudo.innerHTML = textoArr;
 	document.getElementById( "aberto_" + compId ).value = 0;
 }
@@ -217,7 +229,7 @@ function novoForm(array_compromissos)
 	}
 	publica = document.getElementById( "agenda_publica" ).value;
 
-	conteudo = '<form id="novo_form" action="'+acao+ document.getElementById( "parametros" ).value + '" method="POST"><br>';
+	let conteudo = '<form id="novo_form" action="'+acao+ document.getElementById( "parametros" ).value + '" method="POST"><br>';
 	conteudo += '<table border="0" cellpadding="0" cellspacing="3">';
 	conteudo += '<tr>';
 	conteudo += '<td width="25%">Inicio <input type="text" name="novo_hora_inicio" id="novo_hora_inicio" class="agenda_hora" title="Horas (hh:mm)" onChange="verifica_hora(this.value)" maxlength="5"onKeyPress="formataHora(this, event);"></td>';
@@ -266,7 +278,7 @@ function novoForm(array_compromissos)
 
 function salvaNota( compId )
 {
-	conteudo = '<form id="novo_form" action="agenda.php' + document.getElementById( "parametros" ).value + '" method="POST"><br>';
+	let conteudo = '<form id="novo_form" action="agenda.php' + document.getElementById( "parametros" ).value + '" method="POST"><br>';
 	conteudo += '<input type="hidden" name="grava_compromisso" value="' + compId + '">';
 	conteudo += '<table border="0" cellpadding="0" cellspacing="3">';
 	conteudo += '<tr>';

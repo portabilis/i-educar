@@ -379,7 +379,8 @@
                             .attr('value', 'sim')
                             .attr('id', 'matricula-' + value.matricula_id)
                             .attr('class', 'matricula disable-on-apply-changes')
-                            .data('matricula_id', value.matricula_id);
+                            .data('matricula_id', value.matricula_id)
+                            .data('serie_id', value.serie_id);
 
             var $linha = $('<tr />');
             $('<td />').html($checkbox).addClass('left').appendTo($linha);
@@ -460,12 +461,51 @@
 
     $formFilter.ajaxForm(matriculasSearchOptions);
 
+    function getPosicaoAtiva(){
+      var posicao = document.getElementById('posicao');
+      var linha = $(posicao).closest('tr').get(0);
+      return posicao != null && !posicao.disabled && posicao.style.display != 'none' &&
+        (linha == null || linha.style.display != 'none');
+    }
+
+    function getSeriesSelecionadas(){
+      var ids = [];
+      var series = [];
+      $.each($('input.matricula:checked'), function(index, matricula){
+        var serieId = $(matricula).data('serie_id');
+        if ($.inArray(serieId, ids) < 0){
+          var $colunas = $(matricula).closest('tr').children();
+          ids.push(serieId);
+          series.push({nome : $.trim($colunas.eq(2).text()), curso : $.trim($colunas.eq(1).text())});
+        }
+      });
+      return series;
+    }
+
+    function getMensagemSeriesDiferentes(){
+      var series = getPosicaoAtiva() ? getSeriesSelecionadas() : [];
+      if (series.length < 2)
+        return '';
+
+      var nomes = $.map(series, function(serie){ return serie.nome.toUpperCase(); });
+      var rotulos = $.map(series, function(serie){
+        var nomeRepetido = $.grep(nomes, function(nome){ return nome == serie.nome.toUpperCase(); }).length > 1;
+        return $('<div />').text(nomeRepetido ? serie.nome + ' de ' + serie.curso : serie.nome).html();
+      });
+
+      var citadas = rotulos.length > 3 ? rotulos.slice(0, 3).join(', ') + ' e mais ' + (rotulos.length - 3) : rotulos.join(', ');
+      return 'Os alunos marcados são de ' + series.length + ' séries (' + citadas + '). Não é possível processar séries diferentes juntas: processe uma série por vez.';
+    }
+
     var onClickActionEvent = function(event){
 
       var $firstChecked = $('input.matricula:checked:first');
+      var mensagemSeriesDiferentes = getMensagemSeriesDiferentes();
 
       if ($firstChecked.length < 1)
         handleMessages([{type : 'error', msg : 'Selecione alguma matrícula.'}], $actionButton, true);
+      else if (mensagemSeriesDiferentes)
+        handleMessages([{type : 'error', msg : mensagemSeriesDiferentes}], $actionButton, true);
       else {
         var additionalFields = [
           $('#percentual-frequencia-manual').get(0),

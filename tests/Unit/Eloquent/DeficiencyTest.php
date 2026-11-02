@@ -1,17 +1,10 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyDeficiency;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class DeficiencyTest extends EloquentTestCase
-{
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyDeficiency::class;
-    }
-}
+uses(EloquentModelTestCase::class);
+
+beforeEach(fn () => $this->eloquent(LegacyDeficiency::class));
+
+EloquentModelTestCase::registerModelTests();

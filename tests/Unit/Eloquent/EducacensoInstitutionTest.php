@@ -1,26 +1,17 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\EducacensoInstitution;
 use App\Models\Employee;
 use App\Models\EmployeeGraduation;
 use App\Models\LegacySchool;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class EducacensoInstitutionTest extends EloquentTestCase
-{
-    protected $relations = [
-        'schools' => LegacySchool::class,
-        'employeeGraduations' => EmployeeGraduation::class,
-        'employees' => Employee::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return EducacensoInstitution::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(EducacensoInstitution::class, relations: [
+    'schools' => LegacySchool::class,
+    'employeeGraduations' => EmployeeGraduation::class,
+    'employees' => Employee::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

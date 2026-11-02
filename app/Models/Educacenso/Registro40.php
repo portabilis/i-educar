@@ -47,15 +47,4 @@ class Registro40 implements ItemOfRegistro30, RegistroEducacenso
     {
         return $this->codigoPessoa;
     }
-
-    /**
-     * Retorna a propriedade da classe correspondente ao dado no arquivo do censo
-     *
-     * @param int $column
-     * @return string
-     */
-    public function getProperty($column)
-    {
-        // TODO: Implement getProperty() method.
-    }
 }

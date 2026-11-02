@@ -1,27 +1,23 @@
 <?php
 
-namespace Tests\Unit\Services;
-
 use App\Services\DisableUsersWithDaysGoneSinceLastAccessService;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Config\Repository;
-use Mockery;
 use Tests\TestCase;
 
-class DisableUsersWithDaysGoneSinceLastAccessServiceTest extends TestCase
-{
-    protected function createService()
-    {
+uses(TestCase::class);
+
+beforeEach(function () {
+    $this->createService = function () {
         $config = Mockery::mock(Repository::class);
 
         $config->shouldReceive('get')
             ->andReturn(45);
 
         return new DisableUsersWithDaysGoneSinceLastAccessService($config);
-    }
+    };
 
-    protected function createUser(bool $isAdmin, int $daysGone)
-    {
+    $this->createUser = function (bool $isAdmin, int $daysGone) {
         $user = Mockery::mock(Authenticatable::class);
 
         $user->disabled = false;
@@ -38,89 +34,79 @@ class DisableUsersWithDaysGoneSinceLastAccessServiceTest extends TestCase
             });
 
         return $user;
-    }
+    };
+});
 
-    // CT01
-    public function test_nao_desabilita_usuario_com_44_dias_sem_acesso()
-    {
-        $service = $this->createService();
-        $user = $this->createUser(false, 44);
+afterEach(function () {
+    Mockery::close();
+});
 
-        $service->execute($user);
+// CT01
+test('nao desabilita usuario com 44 dias sem acesso', function () {
+    $service = ($this->createService)();
+    $user = ($this->createUser)(false, 44);
 
-        $this->assertFalse($user->disabled);
-    }
+    $service->execute($user);
 
-    // CT02
-    public function test_desabilita_usuario_com_45_dias_sem_acesso()
-    {
-        $service = $this->createService();
-        $user = $this->createUser(false, 45);
+    $this->assertFalse($user->disabled);
+});
 
-        $service->execute($user);
+// CT02
+test('desabilita usuario com 45 dias sem acesso', function () {
+    $service = ($this->createService)();
+    $user = ($this->createUser)(false, 45);
 
-        $this->assertTrue($user->disabled);
-    }
+    $service->execute($user);
 
-    // CT03
-    public function test_desabilita_usuario_com_46_dias_sem_acesso()
-    {
-        $service = $this->createService();
-        $user = $this->createUser(false, 46);
+    $this->assertTrue($user->disabled);
+});
 
-        $service->execute($user);
+// CT03
+test('desabilita usuario com 46 dias sem acesso', function () {
+    $service = ($this->createService)();
+    $user = ($this->createUser)(false, 46);
 
-        $this->assertTrue($user->disabled);
-    }
+    $service->execute($user);
 
-    // CT04
-    public function test_nao_desabilita_administrador_com_45_dias_sem_acesso()
-    {
-        $service = $this->createService();
-        $user = $this->createUser(true, 45);
+    $this->assertTrue($user->disabled);
+});
 
-        $service->execute($user);
+// CT04
+test('nao desabilita administrador com 45 dias sem acesso', function () {
+    $service = ($this->createService)();
+    $user = ($this->createUser)(true, 45);
 
-        $this->assertFalse($user->disabled);
-    }
+    $service->execute($user);
 
-    // CT05
-    public function test_nao_desabilita_administrador_com_44_dias_sem_acesso()
-    {
-        $service = $this->createService();
-        $user = $this->createUser(true, 44);
+    $this->assertFalse($user->disabled);
+});
 
-        $service->execute($user);
+// CT05
+test('nao desabilita administrador com 44 dias sem acesso', function () {
+    $service = ($this->createService)();
+    $user = ($this->createUser)(true, 44);
 
-        $this->assertFalse($user->disabled);
-    }
+    $service->execute($user);
 
-    // CT06
-    public function test_nao_desabilita_usuario_com_zero_dias_sem_acesso()
-    {
-        $service = $this->createService();
-        $user = $this->createUser(false, 0);
+    $this->assertFalse($user->disabled);
+});
 
-        $service->execute($user);
+// CT06
+test('nao desabilita usuario com zero dias sem acesso', function () {
+    $service = ($this->createService)();
+    $user = ($this->createUser)(false, 0);
 
-        $this->assertFalse($user->disabled);
-    }
+    $service->execute($user);
 
-    // CT07
-    public function test_nao_desabilita_usuario_com_dias_negativos()
-    {
-        $service = $this->createService();
-        $user = $this->createUser(false, -1);
+    $this->assertFalse($user->disabled);
+});
 
-        $service->execute($user);
+// CT07
+test('nao desabilita usuario com dias negativos', function () {
+    $service = ($this->createService)();
+    $user = ($this->createUser)(false, -1);
 
-        $this->assertFalse($user->disabled);
-    }
+    $service->execute($user);
 
-    protected function tearDown(): void
-    {
-        Mockery::close();
-
-        parent::tearDown();
-    }
-}
+    $this->assertFalse($user->disabled);
+});

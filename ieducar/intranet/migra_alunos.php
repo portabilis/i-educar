@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Individual;
+use App\Models\LegacyStudent;
 use App\Models\LogUnification;
 use iEducar\Modules\Unification\PersonLogUnification;
 use iEducar\Modules\Unification\StudentLogUnification;
@@ -65,8 +66,7 @@ return new class
 
         $this->unificaAlunos(principal: $principal, cod_alunos: $studentCods);
 
-        $alunosPrincipal = $this->getStudentDetails(id: $principal);
-        $codPessoaPrincipal = $alunosPrincipal['ref_idpes'];
+        $codPessoaPrincipal = $this->buscaCodPessoaDoAluno(id: $principal);
         $codPessoas = $this->buscaCodPessoas(studentCods: $studentCods);
 
         $this->unificaPessoas(codPessoaPrincipal: $codPessoaPrincipal, codPessoas: $codPessoas);
@@ -75,14 +75,10 @@ return new class
 
     private function buscaCodPessoas($studentCods)
     {
-        $data = [];
-        foreach ($studentCods as $cod) {
-            $alunosPrincipal = $this->getStudentDetails(id: $cod);
-            $codPessoaPrincipal = $alunosPrincipal['ref_idpes'];
-            $data[] = $codPessoaPrincipal;
-        }
-
-        return $data;
+        return LegacyStudent::query()
+            ->whereIn('cod_aluno', $studentCods)
+            ->pluck('ref_idpes')
+            ->all();
     }
 
     private function unificaAlunos($principal, $cod_alunos)
@@ -163,9 +159,9 @@ return new class
         }
     }
 
-    private function getStudentDetails($id): array
+    private function buscaCodPessoaDoAluno($id): ?int
     {
-        return (new clsPmieducarAluno(cod_aluno: $id))->detalhe();
+        return LegacyStudent::query()->whereKey($id)->value('ref_idpes');
     }
 
     private function getStudents()

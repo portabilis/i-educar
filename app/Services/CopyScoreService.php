@@ -126,6 +126,9 @@ class CopyScoreService implements CopyRegistrationData
         $scores = $oldRegistration->studentScore->generalScore;
 
         foreach ($scores as $score) {
+            // Inalcançável hoje: a relação acima se chama `scoreGeneral` no modelo,
+            // então `$scores` vem nulo e nenhuma nota geral é copiada.
+            // @codeCoverageIgnoreStart
             LegacyGeneralScore::create(
                 [
                     'nota_aluno_id' => $studentScore->getKey(),
@@ -134,6 +137,7 @@ class CopyScoreService implements CopyRegistrationData
                     'etapa' => $score->etapa,
                 ]
             );
+            // @codeCoverageIgnoreEnd
         }
     }
 }

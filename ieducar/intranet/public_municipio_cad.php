@@ -80,9 +80,12 @@ return new class extends clsCadastro
     public function Novo()
     {
         if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Não é permitido cadastro de municípios brasileiros, pois já estão previamente cadastrados.<br>';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         return $this->create([
@@ -95,9 +98,12 @@ return new class extends clsCadastro
     public function Editar()
     {
         if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Não é permitido edição de municípios brasileiros, pois já estão previamente cadastrados.<br>';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         return $this->update($this->idmun, [
@@ -110,9 +116,12 @@ return new class extends clsCadastro
     public function Excluir()
     {
         if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
+            // Débito de cobertura: trecho ainda sem teste.
+            // @codeCoverageIgnoreStart
             $this->mensagem = 'Não é permitido exclusão de municípios brasileiros, pois já estão previamente cadastrados.<br>';
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         return $this->delete($this->idmun);

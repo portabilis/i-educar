@@ -18,9 +18,9 @@ class LegacyEvaluationRuleFactory extends Factory
             'formula_media_id' => fn () => LegacyAverageFormulaFactory::new()->create(),
             'instituicao_id' => fn () => LegacyInstitutionFactory::new()->current(),
             'nome' => $this->faker->words(3, true),
-            'tipo_nota' => $this->faker->randomElement([1, 2, 3, 4]),
-            'tipo_progressao' => $this->faker->randomElement([1, 2, 3, 4]),
-            'tipo_presenca' => $this->faker->randomElement([1, 2]),
+            'tipo_nota' => RegraAvaliacao_Model_Nota_TipoValor::NUMERICA,
+            'tipo_progressao' => RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA,
+            'tipo_presenca' => RegraAvaliacao_Model_TipoPresenca::GERAL,
             'tabela_arredondamento_id' => fn () => LegacyRoundingTableFactory::new()->create(),
             'tabela_arredondamento_id_conceitual' => fn () => LegacyRoundingTableFactory::new()->create(),
         ];

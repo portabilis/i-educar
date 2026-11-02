@@ -22,7 +22,7 @@ class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_D
         $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicaoId, $userId);
 
         if ($escolaId and $serieId and empty($resources) and $isOnlyProfessor) {
-            $resources = collect(Portabilis_Business_Professor::turmasAlocado($instituicaoId, $escolaId, $serieId, $userId))
+            $resources = collect(Portabilis_Business_Professor::turmasAlocado($instituicaoId, $escolaId, $serieId, $userId, $ano))
                 ->keyBy('id')
                 ->map(function ($turma) {
                     return $turma['nome'] . ' - ' . $turma['ano'];
@@ -51,7 +51,11 @@ class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_D
 
     protected function turmasPorAno($escolaId, $ano)
     {
-        $turmasPorAno = LegacySchoolAcademicYear::query()->whereSchool($escolaId)->whereYearEq($ano)->value('turmas_por_ano');
+        if (!is_numeric($ano)) {
+            return false;
+        }
+
+        $turmasPorAno = LegacySchoolAcademicYear::query()->whereSchool($escolaId)->whereYearEq((int) $ano)->value('turmas_por_ano');
 
         return $turmasPorAno === 1;
     }

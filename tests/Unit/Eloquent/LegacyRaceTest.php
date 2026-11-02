@@ -1,19 +1,13 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyIndividual;
 use App\Models\LegacyRace;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyRaceTest extends EloquentTestCase
-{
-    protected $relations = [
-        'individual' => LegacyIndividual::class,
-    ];
+uses(EloquentModelTestCase::class);
 
-    protected function getEloquentModelName(): string
-    {
-        return LegacyRace::class;
-    }
-}
+beforeEach(fn () => $this->eloquent(LegacyRace::class, relations: [
+    'individual' => LegacyIndividual::class,
+]));
+
+EloquentModelTestCase::registerModelTests();

@@ -26,7 +26,7 @@ class LegacySchoolClassTeacherFactory extends Factory
             'servidor_id' => EmployeeFactory::new()->create(),
             'funcao_exercida' => 1,
             'tipo_vinculo' => 2,
-            'turno_id' => fn () => LegacyPeriodFactory::new()->create(),
+            'turno_id' => fn () => LegacyPeriodFactory::new()->morning(),
         ];
     }
 }

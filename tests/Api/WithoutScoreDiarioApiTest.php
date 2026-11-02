@@ -1,72 +1,53 @@
 <?php
 
-namespace Tests\Api;
-
-use App\Models\LegacyEvaluationRule;
-use App_Model_MatriculaSituacao;
 use Database\Factories\LegacyEvaluationRuleFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\Api\DiarioApiFakeDataTestTrait;
+use Tests\Api\DiarioApiRequestTestTrait;
 use Tests\TestCase;
 
-class WithoutScoreDiarioApiTest extends TestCase
-{
-    use DatabaseTransactions;
-    use DiarioApiFakeDataTestTrait;
-    use DiarioApiRequestTestTrait;
+uses(TestCase::class, DatabaseTransactions::class, DiarioApiFakeDataTestTrait::class, DiarioApiRequestTestTrait::class);
 
-    /**
-     * @var LegacyEvaluationRule
-     */
-    private $evaluationRule;
+beforeEach(function () {
+    $this->evaluationRule = LegacyEvaluationRuleFactory::new()->withoutScore()->create();
+});
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->evaluationRule = LegacyEvaluationRuleFactory::new()->withoutScore()->create();
-    }
+/**
+ * O aluno deve ser aprovado ao lançar todas as faltas
+ */
+test('post absence should returns approved', function () {
+    $enrollment = $this->getCommonFakeData($this->evaluationRule);
+    $schoolClass = $enrollment->schoolClass;
+    $school = $schoolClass->school;
+    $registration = $enrollment->registration;
 
-    /**
-     * O aluno deve ser aprovado ao lançar todas as faltas
-     */
-    public function test_post_absence_should_returns_approved()
-    {
-        $enrollment = $this->getCommonFakeData($this->evaluationRule);
-        $schoolClass = $enrollment->schoolClass;
-        $school = $schoolClass->school;
-        $registration = $enrollment->registration;
+    $this->createStages($school, 1);
+    $this->createDisciplines($schoolClass, 1);
 
-        $this->createStages($school, 1);
-        $this->createDisciplines($schoolClass, 1);
+    $discipline = $schoolClass->refresh()->disciplines()->first();
 
-        $discipline = $schoolClass->refresh()->disciplines()->first();
+    $response = $this->postAbsence($enrollment, $discipline->id, 1, 10);
 
-        $response = $this->postAbsence($enrollment, $discipline->id, 1, 10);
+    $this->assertEquals('Aprovado', $response->situacao);
+    $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
+});
 
-        $this->assertEquals('Aprovado', $response->situacao);
-        $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
-    }
+/**
+ * O aluno deve continuar cursando quando não forem lançadas as faltas de todas as etapas
+ */
+test('post a part of absence should returns studying', function () {
+    $enrollment = $this->getCommonFakeData($this->evaluationRule);
+    $schoolClass = $enrollment->schoolClass;
+    $school = $schoolClass->school;
+    $registration = $enrollment->registration;
 
-    /**
-     * O aluno deve continuar cursando quando não forem lançadas as faltas de todas as etapas
-     */
-    public function test_post_a_part_of_absence_should_returns_studying()
-    {
-        $enrollment = $this->getCommonFakeData($this->evaluationRule);
-        $schoolClass = $enrollment->schoolClass;
-        $school = $schoolClass->school;
-        $registration = $enrollment->registration;
+    $this->createStages($school, 2);
+    $this->createDisciplines($schoolClass, 1);
 
-        $this->createStages($school, 2);
-        $this->createDisciplines($schoolClass, 1);
+    $discipline = $schoolClass->refresh()->disciplines()->first();
 
-        $discipline = $schoolClass->refresh()->disciplines()->first();
+    $response = $this->postAbsence($enrollment, $discipline->id, 1, 10);
 
-        $response = $this->postAbsence($enrollment, $discipline->id, 1, 10);
-
-        $this->assertEquals('Cursando', $response->situacao);
-        $this->assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
-    }
-}
+    $this->assertEquals('Cursando', $response->situacao);
+    $this->assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
+});

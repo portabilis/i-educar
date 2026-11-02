@@ -1,17 +1,10 @@
 <?php
 
-namespace Tests\Unit\Eloquent;
-
 use App\Models\LegacyDocument;
-use Tests\EloquentTestCase;
+use Tests\EloquentModelTestCase;
 
-class LegacyDocumentTest extends EloquentTestCase
-{
-    /**
-     * @return string
-     */
-    protected function getEloquentModelName()
-    {
-        return LegacyDocument::class;
-    }
-}
+uses(EloquentModelTestCase::class);
+
+beforeEach(fn () => $this->eloquent(LegacyDocument::class));
+
+EloquentModelTestCase::registerModelTests();
