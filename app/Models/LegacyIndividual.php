@@ -201,6 +201,22 @@ class LegacyIndividual extends Model
     }
 
     /**
+     * @return HasOne<Employee, $this>
+     */
+    public function employee(): HasOne
+    {
+        return $this->hasOne(Employee::class, 'cod_servidor', 'idpes');
+    }
+
+    /**
+     * @return HasMany<LegacyIndividual, $this>
+     */
+    public function dependents(): HasMany
+    {
+        return $this->hasMany(__CLASS__, 'idpes_responsavel', 'idpes');
+    }
+
+    /**
      * @return BelongsTo<LegacyMaritalStatus, $this>
      */
     public function maritalStatus(): BelongsTo
