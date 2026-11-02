@@ -10,7 +10,7 @@ return new class extends clsDetalhe
     {
         $this->cod_usuario = $this->pessoa_logada;
 
-        $this->titulo = 'Detalhe do Vínculo';
+        $this->titulo = 'Detalhe do vínculo';
 
         $legacyBondType = LegacyBondType::findOrFail(request('cod_func'));
 
@@ -27,7 +27,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->title = 'Vínculo Funcionários';
+        $this->title = 'Vínculo funcionários';
         $this->processoAp = '190';
     }
 };

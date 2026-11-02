@@ -54,13 +54,13 @@ test('mostra os dados pessoais, o endereço e a origem do aluno', function () {
         ->assertSeeInOrder([
             (string) $ana->student->getKey(),
             '111.222.333-4',
-            'Nome Aluno', 'ANA ALVES',
+            'Nome aluno', 'ANA ALVES',
             'Nome social e/ou afetivo', 'NINA ALVES',
             'CPF', '123.456.789-09',
-            'Data de Nascimento', '20/04/2015',
+            'Data de nascimento', '20/04/2015',
             'Analfabeto', 'Sim',
             'Sexo', 'Feminino',
-            'Estado Civil', 'Solteira',
+            'Estado civil', 'Solteira',
             'Logradouro', 'Rua das Acácias',
             'Número', '120',
             'Complemento', 'Casa 2',
@@ -70,9 +70,9 @@ test('mostra os dados pessoais, o endereço e a origem do aluno', function () {
             'CEP', '88800-123',
             'Naturalidade', 'Cidade Natal',
             'Nacionalidade', 'Estrangeiro',
-            'País de Origem', 'País Vizinho',
+            'País de origem', 'País Vizinho',
             'E-mail', 'ana@exemplo.test',
-            'Página Pessoal', 'https://ana.exemplo.test',
+            'Página pessoal', 'https://ana.exemplo.test',
             'Religião', 'Religião Alfa',
             'Raça', 'Raça Alfa',
             'Transporte escolar', 'Não utiliza',
@@ -88,10 +88,10 @@ test('sem os dados opcionais mostra só o essencial', function () {
     $ana = StudentScenario::named('Ana Alves', ['analfabeto' => 0], ['cpf' => '12345678909', 'sexo' => null, 'ideciv' => null, 'idmun_nascimento' => null]);
 
     ($this->detail)($ana)
-        ->assertSeeInOrder(['Nome Aluno', 'ANA ALVES', 'Analfabeto', 'Não', 'Transporte escolar', 'Não utiliza'])
+        ->assertSeeInOrder(['Nome aluno', 'ANA ALVES', 'Analfabeto', 'Não', 'Transporte escolar', 'Não utiliza'])
         ->assertDontSee('Nome social e/ou afetivo')
         ->assertDontSee('Sexo')
-        ->assertDontSee('Estado Civil')
+        ->assertDontSee('Estado civil')
         ->assertDontSee('Logradouro')
         ->assertDontSee('Naturalidade')
         ->assertDontSee('Nacionalidade')
@@ -116,7 +116,7 @@ test('mostra os pais com a situação do CPF de cada um e o responsável conform
 
     $links = ['mãe' => ($this->personLink)($mother, 'Marta Alves'), 'pai' => ($this->personLink)($father, 'Pedro Alves')];
 
-    $response->assertSee('Nome do Responsável');
+    $response->assertSee('Nome do responsável');
 
     foreach ($expected as $who) {
         $response->assertSee($links[$who], false);
@@ -142,18 +142,18 @@ test('com outra pessoa como responsável mostra o vínculo e a situação do CPF
         ->assertSee(($this->personLink)($guardian, 'Rita Ramos') . " <span class='cpf-situacao cpf-situacao-sem'", false)
         ->assertSee("Pedro Alves <span class='cpf-situacao cpf-situacao-com'>111.222.333-96</span>", false)
         ->assertSee('O responsável Rita Ramos não possui CPF registrado e não há justificativa de ausência.')
-        ->assertDontSee('Nome do Responsável');
+        ->assertDontSee('Nome do responsável');
 });
 
 test('defeito: os nomes de pai e mãe digitados no aluno nunca aparecem, e o responsável sai em branco', function () {
     // A classe legada não traz `nm_pai` e `nm_mae` do banco; e sem responsável
-    // a tela ainda imprime a linha "Nome do Responsável" vazia.
+    // a tela ainda imprime a linha "Nome do responsável" vazia.
     $ana = StudentScenario::named('Ana Alves', ['nm_pai' => 'Pai Digitado', 'nm_mae' => 'Mãe Digitada'], ['cpf' => '12345678909']);
 
     ($this->detail)($ana)
         ->assertDontSee('Pai Digitado')
         ->assertDontSee('Mãe Digitada')
-        ->assertSee('Nome do Responsável');
+        ->assertSee('Nome do responsável');
 });
 
 test('avisa quando o aluno não tem CPF, com ou sem justificativa, e oferece atualizar', function () {
@@ -261,25 +261,25 @@ test('mostra o RG e a certidão civil conforme o formato', function (array $docu
             'data_emissao_cert_civil' => '2015-05-02', 'sigla_uf_cert_civil' => 'SC', 'cartorio_cert_civil' => 'Cartório Central',
         ],
         [
-            'RG', '7654321', 'Data de Expedição RG', '10/03/2020', 'Órgão Expedição RG', 'SSP', 'Estado Expedidor', 'SC',
-            'Tipo Certidão Civil', 'Nascimento (novo formato)', 'Número Certidão Civil', '12345678901234567890123456789012',
-            'Emissão Certidão Civil', '02/05/2015', 'Sigla Certidão Civil', 'SC', 'Cartório', 'Cartório Central',
+            'RG', '7654321', 'Data de expedição RG', '10/03/2020', 'Órgão expedição RG', 'SSP', 'Estado expedidor', 'SC',
+            'Tipo certidão civil', 'Nascimento (novo formato)', 'Número certidão civil', '12345678901234567890123456789012',
+            'Emissão certidão civil', '02/05/2015', 'Sigla certidão civil', 'SC', 'Cartório', 'Cartório Central',
         ],
         ['Termo'],
     ],
     'certidão de casamento no formato novo' => [
         ['rg' => '7654321', 'certidao_casamento' => '99999999901234567890123456789012'],
-        ['Tipo Certidão Civil', 'Casamento (novo formato)', 'Número Certidão Civil', '99999999901234567890123456789012'],
-        ['Data de Expedição RG', 'Emissão Certidão Civil'],
+        ['Tipo certidão civil', 'Casamento (novo formato)', 'Número certidão civil', '99999999901234567890123456789012'],
+        ['Data de expedição RG', 'Emissão certidão civil'],
     ],
     'certidão de nascimento no formato antigo' => [
         ['tipo_cert_civil' => 91, 'num_termo' => '1001', 'num_livro' => 'A-12', 'num_folha' => '77'],
-        ['Tipo Certidão Civil', 'Nascimento (antigo formato)', 'Termo', '1001', 'Livro', 'A-12', 'Folha', '77'],
-        ['Número Certidão Civil'],
+        ['Tipo certidão civil', 'Nascimento (antigo formato)', 'Termo', '1001', 'Livro', 'A-12', 'Folha', '77'],
+        ['Número certidão civil'],
     ],
     'certidão de casamento no formato antigo, sem os números' => [
         ['tipo_cert_civil' => 92],
-        ['Tipo Certidão Civil', 'Casamento (antigo formato)'],
+        ['Tipo certidão civil', 'Casamento (antigo formato)'],
         ['Termo', 'Folha'],
     ],
 ]);

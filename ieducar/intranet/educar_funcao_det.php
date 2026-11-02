@@ -79,7 +79,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->title = 'Servidores -  Funções do servidor';
+        $this->title = 'Servidores -  funções do servidor';
         $this->processoAp = '634';
     }
 };

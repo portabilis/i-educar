@@ -50,7 +50,7 @@ return new class extends clsListagem
 
     public function Gerar()
     {
-        $this->titulo = 'Benefício Aluno - Listagem';
+        $this->titulo = 'Benefício aluno - Listagem';
         $this->buscaRapida = 'nm_beneficio';
 
         $this->nm_beneficio = request('nm_beneficio');

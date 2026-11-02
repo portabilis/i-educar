@@ -25,7 +25,7 @@ test('mostra a instituição, o nome, a descrição e os links de novo e de edi�
 
     $this->get(($this->url)($record))
         ->assertOk()
-        ->assertSeeInOrder(['Instituição', 'Rede Aurora', 'Motivo de Afastamento', 'Registro Alfa', 'Descrição', 'Descrição do registro'])
+        ->assertSeeInOrder(['Instituição', 'Rede Aurora', 'Motivo de afastamento', 'Registro Alfa', 'Descrição', 'Descrição do registro'])
         ->assertSee('educar_motivo_afastamento_cad.php?cod_motivo_afastamento=' . $record->getKey(), false)
         ->assertSee('educar_motivo_afastamento_lst.php', false);
 });

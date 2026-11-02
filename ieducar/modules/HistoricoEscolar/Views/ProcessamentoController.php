@@ -185,7 +185,7 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
             </tr>
 
             <tr id='tr-area-conhecimento'>
-                <td><label for='area-conhecimento'>Area Conhecimento </label></td>
+                <td><label for='area-conhecimento'>Area conhecimento </label></td>
                 <td>
                     <select id='area-conhecimento' multiple class='chosen-choices' style='width: 90%' data-placeholder='Selecione'>
                     </select>

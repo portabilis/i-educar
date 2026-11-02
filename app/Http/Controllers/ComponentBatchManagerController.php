@@ -23,7 +23,7 @@ class ComponentBatchManagerController extends Controller
 {
     public function index(Request $request)
     {
-        $this->breadcrumb('Gerenciamento em Lote de Componentes', [
+        $this->breadcrumb('Gerenciamento em lote de componentes', [
             url('intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
         $this->menu(Process::COMPONENT_BATCH_MANAGER);
@@ -50,7 +50,7 @@ class ComponentBatchManagerController extends Controller
 
     public function create(Request $request)
     {
-        $this->breadcrumb('Gerenciamento em Lote de Componentes', [
+        $this->breadcrumb('Gerenciamento em lote de componentes', [
             url('intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
         $this->menu(Process::COMPONENT_BATCH_MANAGER);

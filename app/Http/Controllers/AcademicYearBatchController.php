@@ -211,9 +211,9 @@ class AcademicYearBatchController extends Controller
 
         session()->forget('academic_year_batch_result');
 
-        $this->breadcrumb('Resultado do Ano Letivo em Lote', [
+        $this->breadcrumb('Resultado do ano letivo em lote', [
             url('intranet/educar_configuracoes_index.php') => 'Configurações',
-            route('academic-year.edit') => 'Ano Letivo em Lote',
+            route('academic-year.edit') => 'Ano letivo em lote',
         ]);
 
         $this->menu(Process::ACADEMIC_YEAR_IMPORT);
@@ -228,7 +228,7 @@ class AcademicYearBatchController extends Controller
         }
 
         $this->menu(Process::ACADEMIC_YEAR_IMPORT);
-        $this->breadcrumb('Ano Letivo em Lote', [
+        $this->breadcrumb('Ano letivo em lote', [
             url('intranet/educar_configuracoes_index.php') => 'Configurações',
             null => 'On-Boarding',
         ]);

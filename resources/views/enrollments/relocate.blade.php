@@ -80,7 +80,7 @@
 
         <div style="text-align: center">
             @if($enrollments->count())
-                <button class="btn" type="submit">Transferir para a turma (Remanejar)</button>
+                <button class="btn" type="submit">Transferir para a turma (remanejar)</button>
             @else
                 <p>O aluno não possui enturmações ativas para remanejar.</p>
             @endif

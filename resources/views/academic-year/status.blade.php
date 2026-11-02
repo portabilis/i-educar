@@ -10,7 +10,7 @@
             <tbody>
             <tr>
                 <td class="formdktd" colspan="2" height="24">
-                    <b>Resultado do Ano Letivo em Lote</b>
+                    <b>Resultado do ano letivo em lote</b>
                 </td>
             </tr>
             <tr>
@@ -137,7 +137,7 @@
         </table>
         <div style="text-align: center; margin-top: 20px; margin-bottom: 30px">
             <a href="{{ route('academic-year.edit') }}" class="btn-green" style="text-decoration: none">
-                Novo Ano Letivo em Lote
+                Novo ano letivo em lote
             </a>
         </div>
     </div>

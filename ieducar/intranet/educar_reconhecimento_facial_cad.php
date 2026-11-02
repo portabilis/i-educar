@@ -27,7 +27,7 @@ return new class extends clsCadastro
 
         $this->url_cancelar = "educar_reconhecimento_facial_det.php?ref_cod_aluno={$this->ref_cod_aluno}";
 
-        $this->breadcrumb(currentPage: 'Reconhecimento Facial - Editar', breadcrumbs: [
+        $this->breadcrumb(currentPage: 'Reconhecimento facial - Editar', breadcrumbs: [
             'educar_index.php' => 'Escola',
         ]);
 
@@ -42,7 +42,7 @@ return new class extends clsCadastro
 
         $opcoes = FacialRecognitionPosition::getDescriptiveValues()->prepend('Selecione', '');
         $options = [
-            'label' => 'Tipo de Imagem',
+            'label' => 'Tipo de imagem',
             'value' => null,
             'resources' => $opcoes,
             'inline' => true,
@@ -51,7 +51,7 @@ return new class extends clsCadastro
 
         $this->inputsHelper()->select(attrName: 'type', inputOptions: $options);
 
-        $this->addHtml(html: view(view: 'uploads.upload', data: ['files' => [], 'label' => 'Reconhecimento Facial'])->render());
+        $this->addHtml(html: view(view: 'uploads.upload', data: ['files' => [], 'label' => 'Reconhecimento facial'])->render());
 
     }
 
@@ -112,7 +112,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Reconhecimento Facial - Editar';
+        $this->title = 'Reconhecimento facial - Editar';
         $this->processoAp = '5781';
     }
 };

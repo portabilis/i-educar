@@ -28,7 +28,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Turma Tipo - Detalhe';
+        $this->titulo = 'Turma tipo - Detalhe';
 
         $this->cod_turma_tipo = $_GET['cod_turma_tipo'];
 
@@ -55,7 +55,7 @@ return new class extends clsDetalhe
         }
 
         if ($registro['nm_tipo']) {
-            $this->addDetalhe(detalhe: ['Turma Tipo', e($registro['nm_tipo'])]);
+            $this->addDetalhe(detalhe: ['Turma tipo', e($registro['nm_tipo'])]);
         }
         if ($registro['sgl_tipo']) {
             $this->addDetalhe(detalhe: ['Sigla', e($registro['sgl_tipo'])]);
@@ -76,7 +76,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->title = 'Turma Tipo';
+        $this->title = 'Turma tipo';
         $this->processoAp = '570';
     }
 };

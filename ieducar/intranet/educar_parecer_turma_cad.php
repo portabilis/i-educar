@@ -80,10 +80,10 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'cod_turma', valor: $this->cod_turma);
         $this->campoOculto(nome: 'ano', valor: $this->ano);
 
-        $this->campoMemo(nome: 'parecer_1_etapa', campo: 'Relatório global da turma - 1° Semestre', valor: $this->parecer_1_etapa, colunas: 60, linhas: 5, obrigatorio: false);
-        $this->campoMemo(nome: 'parecer_2_etapa', campo: 'Relatório global de educação física - 1° Semestre', valor: $this->parecer_2_etapa, colunas: 60, linhas: 5, obrigatorio: false);
-        $this->campoMemo(nome: 'parecer_3_etapa', campo: 'Relatório global da turma - 2° Semestre', valor: $this->parecer_3_etapa, colunas: 60, linhas: 5, obrigatorio: false);
-        $this->campoMemo(nome: 'parecer_4_etapa', campo: 'Relatório global de educação física - 2° Semestre', valor: $this->parecer_4_etapa, colunas: 60, linhas: 5, obrigatorio: false);
+        $this->campoMemo(nome: 'parecer_1_etapa', campo: 'Relatório global da turma - 1° semestre', valor: $this->parecer_1_etapa, colunas: 60, linhas: 5, obrigatorio: false);
+        $this->campoMemo(nome: 'parecer_2_etapa', campo: 'Relatório global de educação física - 1° semestre', valor: $this->parecer_2_etapa, colunas: 60, linhas: 5, obrigatorio: false);
+        $this->campoMemo(nome: 'parecer_3_etapa', campo: 'Relatório global da turma - 2° semestre', valor: $this->parecer_3_etapa, colunas: 60, linhas: 5, obrigatorio: false);
+        $this->campoMemo(nome: 'parecer_4_etapa', campo: 'Relatório global de educação física - 2° semestre', valor: $this->parecer_4_etapa, colunas: 60, linhas: 5, obrigatorio: false);
     }
 
     public function Editar()

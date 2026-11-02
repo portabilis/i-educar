@@ -144,7 +144,7 @@ return new class extends clsCadastro
 
         $this->campoLista(
             nome: 'ref_cod_nivel_ensino',
-            campo: 'Nível Ensino',
+            campo: 'Nível ensino',
             valor: $opcoes,
             default: $this->ref_cod_nivel_ensino,
             complemento: $script
@@ -170,7 +170,7 @@ return new class extends clsCadastro
 
         $this->campoLista(
             nome: 'ref_cod_tipo_ensino',
-            campo: 'Tipo Ensino',
+            campo: 'Tipo ensino',
             valor: $opcoes,
             default: $this->ref_cod_tipo_ensino,
             complemento: $script
@@ -198,7 +198,7 @@ return new class extends clsCadastro
 
         $this->campoLista(
             nome: 'ref_cod_tipo_regime',
-            campo: 'Tipo Regime',
+            campo: 'Tipo regime',
             valor: $opcoes,
             default: $this->ref_cod_tipo_regime,
             complemento: $script,
@@ -208,14 +208,14 @@ return new class extends clsCadastro
         // Outros campos
         $this->campoTexto(nome: 'nm_curso', campo: 'Curso', valor: $this->nm_curso, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
 
-        $this->campoTexto(nome: 'sgl_curso', campo: 'Sigla Curso', valor: $this->sgl_curso, tamanhovisivel: 15, tamanhomaximo: 15);
+        $this->campoTexto(nome: 'sgl_curso', campo: 'Sigla curso', valor: $this->sgl_curso, tamanhovisivel: 15, tamanhomaximo: 15);
         $this->campoTexto(nome: 'descricao', campo: 'Descrição', valor: $this->descricao, tamanhovisivel: 15, tamanhomaximo: 50, duplo: '', descricao: 'Caso o campo seja preenchido, a descrição será apresentada nas listagens e filtros de busca');
-        $this->campoNumero(nome: 'qtd_etapas', campo: 'Quantidade Etapas', valor: $this->qtd_etapas, tamanhovisivel: 2, tamanhomaximo: 2, obrigatorio: true);
-        $this->campoNumero(nome: 'hora_falta', campo: 'Hora Falta (min)', valor: round($this->hora_falta * 60), tamanhovisivel: 2, tamanhomaximo: 2, obrigatorio: true);
+        $this->campoNumero(nome: 'qtd_etapas', campo: 'Quantidade etapas', valor: $this->qtd_etapas, tamanhovisivel: 2, tamanhomaximo: 2, obrigatorio: true);
+        $this->campoNumero(nome: 'hora_falta', campo: 'Hora falta (min)', valor: round($this->hora_falta * 60), tamanhovisivel: 2, tamanhomaximo: 2, obrigatorio: true);
 
         $this->campoMonetario(
             nome: 'carga_horaria',
-            campo: 'Carga Horária',
+            campo: 'Carga horária',
             valor: $this->carga_horaria,
             tamanhovisivel: 7,
             tamanhomaximo: 7,
@@ -224,7 +224,7 @@ return new class extends clsCadastro
 
         $this->campoTexto(
             nome: 'ato_poder_publico',
-            campo: 'Ato Poder Público',
+            campo: 'Ato poder público',
             valor: $this->ato_poder_publico,
             tamanhovisivel: 30,
             tamanhomaximo: 255
@@ -234,14 +234,14 @@ return new class extends clsCadastro
         $aux = [];
 
         // Padrão ano escolar
-        $this->campoCheck(nome: 'padrao_ano_escolar', campo: 'Padrão Ano Escolar', valor: $this->padrao_ano_escolar);
+        $this->campoCheck(nome: 'padrao_ano_escolar', campo: 'Padrão ano escolar', valor: $this->padrao_ano_escolar);
 
         $this->campoCheck(nome: 'multi_seriado', campo: 'Multisseriado', valor: $this->multi_seriado);
 
         // Objetivo do curso
         $this->campoMemo(
             nome: 'objetivo_curso',
-            campo: 'Objetivo Curso',
+            campo: 'Objetivo curso',
             valor: $this->objetivo_curso,
             colunas: 60,
             linhas: 5
@@ -250,7 +250,7 @@ return new class extends clsCadastro
         // Público alvo
         $this->campoMemo(
             nome: 'publico_alvo',
-            campo: 'Público Alvo',
+            campo: 'Público alvo',
             valor: $this->publico_alvo,
             colunas: 60,
             linhas: 5

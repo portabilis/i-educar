@@ -29,7 +29,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Deixou de Frequentar Tipo - Detalhe';
+        $this->titulo = 'Deixou de frequentar tipo - Detalhe';
 
         $this->cod_abandono_tipo = $_GET['cod_abandono_tipo'];
 
@@ -55,7 +55,7 @@ return new class extends clsDetalhe
             }
         }
         if ($registro['nome']) {
-            $this->addDetalhe(detalhe: ['Motivo - Deixou de Frequentar', "{$registro['nome']}"]);
+            $this->addDetalhe(detalhe: ['Motivo - Deixou de frequentar', "{$registro['nome']}"]);
         }
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 950, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = 'educar_abandono_tipo_cad.php';
@@ -71,7 +71,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->title = 'Motivo - Deixou de Frequentar';
+        $this->title = 'Motivo - Deixou de frequentar';
         $this->processoAp = '950';
     }
 };

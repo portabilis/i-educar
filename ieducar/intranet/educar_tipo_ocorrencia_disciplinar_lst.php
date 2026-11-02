@@ -34,7 +34,7 @@ return new class extends clsListagem
 
     public function Gerar()
     {
-        $this->titulo = 'Tipo Ocorrência Disciplinar - Listagem';
+        $this->titulo = 'Tipo ocorrência disciplinar - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;
@@ -42,7 +42,7 @@ return new class extends clsListagem
 
         $lista_busca = [
             'Tipo Ocorrência Disciplinar',
-            'Máximo Ocorrências',
+            'Máximo ocorrências',
         ];
 
         $obj_permissoes = new clsPermissoes;
@@ -56,7 +56,7 @@ return new class extends clsListagem
         include 'include/pmieducar/educar_campo_lista.php';
 
         // outros Filtros
-        $this->campoTexto('nm_tipo', 'Tipo Ocorrência Disciplinar', $this->nm_tipo, 30, 255, false);
+        $this->campoTexto('nm_tipo', 'Tipo ocorrência disciplinar', $this->nm_tipo, 30, 255, false);
         // $this->campoNumero( "max_ocorrencias", "Max Ocorrencias", $this->max_ocorrencias, 15, 255, false );
 
         // Paginador
@@ -113,7 +113,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->title = 'Tipo Ocorrência Disciplinar';
+        $this->title = 'Tipo ocorrência disciplinar';
         $this->processoAp = '580';
     }
 };

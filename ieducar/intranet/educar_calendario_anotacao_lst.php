@@ -106,7 +106,7 @@ return new class extends clsListagem
         $obj_permissoes = new clsPermissoes;
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: 620, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->acao = "go(\"educar_calendario_anotacao_cad.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}\")";
-            $this->nome_acao = 'Nova Anotação';
+            $this->nome_acao = 'Nova anotação';
             $this->array_botao = ['Dia Extra/Não Letivo', 'Calendário'];
             $this->array_botao_url = ["educar_calendario_dia_cad.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}", "educar_calendario_ano_letivo_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}"];
         }
@@ -116,7 +116,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->title = 'Calendario Anotacao';
+        $this->title = 'Calendario anotacao';
         $this->processoAp = '620';
     }
 };

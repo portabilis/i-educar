@@ -191,7 +191,7 @@ return new class extends clsCadastro
             $this->ref_sequencial = $enturmacao->sequencial;
         }
 
-        $this->campoRotulo(nome: 'nm_aluno', campo: 'Nome do Aluno', valor: $nm_aluno);
+        $this->campoRotulo(nome: 'nm_aluno', campo: 'Nome do aluno', valor: $nm_aluno);
 
         if (!isset($this->ref_cod_turma)) {
             $this->mensagem = 'Para dispensar um aluno de um componente curricular, é necessário que este esteja enturmado.';
@@ -251,7 +251,7 @@ return new class extends clsCadastro
 
         $this->campoLista(
             nome: 'ref_cod_tipo_dispensa',
-            campo: 'Tipo Dispensa',
+            campo: 'Tipo dispensa',
             valor: $opcoes,
             default: $this->ref_cod_tipo_dispensa
         );
@@ -568,7 +568,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Dispensa Componente Curricular';
+        $this->title = 'Dispensa componente curricular';
         $this->processoAp = 628;
     }
 };

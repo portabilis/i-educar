@@ -55,7 +55,7 @@ return new class extends clsCadastro
 
         $nomeMenu = $retorno === 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb(currentPage: 'Comunicados Escolares', breadcrumbs: [
+        $this->breadcrumb(currentPage: 'Comunicados escolares', breadcrumbs: [
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
@@ -156,7 +156,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Comunicados Escolares';
+        $this->title = 'Comunicados escolares';
         $this->processoAp = SchoolNotice::PROCESS;
     }
 };

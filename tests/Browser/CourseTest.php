@@ -21,7 +21,7 @@ it('lista os cursos', function () {
     $this->scenario->loginAsAdmin()
         ->navigate('/intranet/educar_curso_lst.php')
         ->assertSee('Curso')
-        ->assertSee('Nível Ensino');
+        ->assertSee('Nível ensino');
 
     // Sem assertNoJavaScriptErrors aqui: educar-curso-lst.js:32 faz
     // document.getElementById('ref_cod_instituicao').onchange sem conferir se o

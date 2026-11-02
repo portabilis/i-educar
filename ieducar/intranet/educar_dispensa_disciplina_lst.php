@@ -62,7 +62,7 @@ return new class extends clsListagem
         // Helper para url
         $urlHelper = CoreExt_View_Helper_UrlHelper::getInstance();
 
-        $this->titulo = 'Dispensa Componente Curricular - Listagem';
+        $this->titulo = 'Dispensa componente curricular - Listagem';
 
         // passa todos os valores obtidos no GET para atributos do objeto
         foreach ($_GET as $var => $val) {
@@ -107,8 +107,8 @@ return new class extends clsListagem
 
         $this->addCabecalhos(coluna: [
             'Disciplina',
-            'Tipo Dispensa',
-            'Data Dispensa',
+            'Tipo dispensa',
+            'Data dispensa',
         ]);
 
         $opcoes = LegacyExemptionType::query()
@@ -221,7 +221,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->title = 'Dispensa Componente Curricular';
+        $this->title = 'Dispensa componente curricular';
         $this->processoAp = 628;
     }
 };

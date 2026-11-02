@@ -26,7 +26,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Transferencia Tipo - Detalhe';
+        $this->titulo = 'Transferencia tipo - Detalhe';
 
         $this->cod_transferencia_tipo = $_GET['cod_transferencia_tipo'];
 
@@ -52,7 +52,7 @@ return new class extends clsDetalhe
             }
         }
         if ($registro['nm_tipo']) {
-            $this->addDetalhe(detalhe: ['Motivo Transferência', e($registro['nm_tipo'])]);
+            $this->addDetalhe(detalhe: ['Motivo transferência', e($registro['nm_tipo'])]);
         }
         if ($registro['desc_tipo']) {
             $this->addDetalhe(detalhe: ['Descrição', e($registro['desc_tipo'])]);
@@ -72,7 +72,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->title = 'Motivo Transferência';
+        $this->title = 'Motivo transferência';
         $this->processoAp = '575';
     }
 };

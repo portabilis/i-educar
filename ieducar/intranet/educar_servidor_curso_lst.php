@@ -149,7 +149,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Servidor Curso';
+        $this->title = 'Servidor curso';
         $this->processoAp = 0;
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

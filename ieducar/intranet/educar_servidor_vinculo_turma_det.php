@@ -59,7 +59,7 @@ return new class extends clsDetalhe
             6 => 'Docente tutor - Auxiliar (de módulo ou disciplina) - EAD',
             7 => 'Guia-Intérprete',
             8 => 'Profissional de apoio escolar para aluno(a)s com deficiência (Lei 13.146/2015)',
-            9 => 'Instrutor da Educação Profissional'];
+            9 => 'Instrutor da educação profissional'];
 
         $resources_tipo = [null => 'Selecione',
             1 => 'Concursado/efetivo/estável',

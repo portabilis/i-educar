@@ -25,7 +25,7 @@ test('mostra a instituição, o nome, a descrição e os links de novo e de edi�
 
     $this->get(($this->url)($record))
         ->assertOk()
-        ->assertSeeInOrder(['Instituição', 'Rede Aurora', 'Nível Ensino', 'Registro Alfa', 'Descrição', 'Descrição do registro'])
+        ->assertSeeInOrder(['Instituição', 'Rede Aurora', 'Nível ensino', 'Registro Alfa', 'Descrição', 'Descrição do registro'])
         ->assertSee('educar_nivel_ensino_cad.php?cod_nivel_ensino=' . $record->getKey(), false)
         ->assertSee('educar_nivel_ensino_lst.php', false);
 });

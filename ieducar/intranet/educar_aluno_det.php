@@ -398,13 +398,13 @@ return new class extends clsDetalhe
                 $url = $this->urlPresigner()->getPresignedUrl(url: $caminhoFoto);
 
                 $this->addDetalhe(detalhe: [
-                    'Nome Aluno',
+                    'Nome aluno',
                     $urlAluno . '<p><img id="student-picture" height="117" src="' . $url . '"/></p>'
                     . '<div><a class="rotate-picture" data-angle="90" href="javascript:void(0)"><i class="fa fa-rotate-left"></i> Girar para esquerda</a></div>'
                     . '<div><a class="rotate-picture" data-angle="-90" href="javascript:void(0)"><i class="fa fa-rotate-right"></i> Girar para direita</a></div>',
                 ]);
             } else {
-                $this->addDetalhe(detalhe: ['Nome Aluno', $urlAluno]);
+                $this->addDetalhe(detalhe: ['Nome aluno', $urlAluno]);
             }
         }
 
@@ -417,7 +417,7 @@ return new class extends clsDetalhe
         }
 
         if ($registro['data_nasc']) {
-            $this->addDetalhe(detalhe: ['Data de Nascimento', $registro['data_nasc']]);
+            $this->addDetalhe(detalhe: ['Data de nascimento', $registro['data_nasc']]);
         }
 
         /**
@@ -430,7 +430,7 @@ return new class extends clsDetalhe
         }
 
         if ($registro['ideciv']) {
-            $this->addDetalhe(detalhe: ['Estado Civil', $registro['ideciv']]);
+            $this->addDetalhe(detalhe: ['Estado civil', $registro['ideciv']]);
         }
 
         if (isset($endereco)) {
@@ -462,7 +462,7 @@ return new class extends clsDetalhe
         }
 
         if ($registro['pais_origem']) {
-            $this->addDetalhe(detalhe: ['País de Origem', $registro['pais_origem']]);
+            $this->addDetalhe(detalhe: ['País de origem', $registro['pais_origem']]);
         }
 
         $fisicaAluno = LegacyIndividual::query()
@@ -505,7 +505,7 @@ return new class extends clsDetalhe
         }
 
         if (is_null(value: $registro['ref_idpes_responsavel'])) {
-            $this->addDetalhe(detalhe: ['Nome do Responsável', $nomeResponsavelAluno]);
+            $this->addDetalhe(detalhe: ['Nome do responsável', $nomeResponsavelAluno]);
         }
 
         if ($registro['ref_idpes_responsavel']) {
@@ -567,7 +567,7 @@ return new class extends clsDetalhe
         }
 
         if ($registro['url']) {
-            $this->addDetalhe(detalhe: ['Página Pessoal', $registro['url']]);
+            $this->addDetalhe(detalhe: ['Página pessoal', $registro['url']]);
         }
 
         if ($det_fisica['ref_cod_religiao']) {
@@ -687,31 +687,31 @@ return new class extends clsDetalhe
         }
 
         if ($registro['data_exp_rg']) {
-            $this->addDetalhe(detalhe: ['Data de Expedição RG', $registro['data_exp_rg']]);
+            $this->addDetalhe(detalhe: ['Data de expedição RG', $registro['data_exp_rg']]);
         }
 
         if ($registro['idorg_exp_rg']) {
-            $this->addDetalhe(detalhe: ['Órgão Expedição RG', $registro['idorg_exp_rg']]);
+            $this->addDetalhe(detalhe: ['Órgão expedição RG', $registro['idorg_exp_rg']]);
         }
 
         if ($registro['sigla_uf_exp_rg']) {
-            $this->addDetalhe(detalhe: ['Estado Expedidor', $registro['sigla_uf_exp_rg']]);
+            $this->addDetalhe(detalhe: ['Estado expedidor', $registro['sigla_uf_exp_rg']]);
         }
 
         if (!$registro['tipo_cert_civil'] && $registro['certidao_nascimento']) {
-            $this->addDetalhe(detalhe: ['Tipo Certidão Civil', 'Nascimento (novo formato)']);
-            $this->addDetalhe(detalhe: ['Número Certidão Civil', $registro['certidao_nascimento']]);
+            $this->addDetalhe(detalhe: ['Tipo certidão civil', 'Nascimento (novo formato)']);
+            $this->addDetalhe(detalhe: ['Número certidão civil', $registro['certidao_nascimento']]);
         } else {
             if (!$registro['tipo_cert_civil'] && $registro['certidao_casamento']) {
-                $this->addDetalhe(detalhe: ['Tipo Certidão Civil', 'Casamento (novo formato)']);
-                $this->addDetalhe(detalhe: ['Número Certidão Civil', $registro['certidao_casamento']]);
+                $this->addDetalhe(detalhe: ['Tipo certidão civil', 'Casamento (novo formato)']);
+                $this->addDetalhe(detalhe: ['Número certidão civil', $registro['certidao_casamento']]);
             } else {
                 $lista_tipo_cert_civil = [];
                 $lista_tipo_cert_civil['0'] = 'Selecione';
                 $lista_tipo_cert_civil[91] = 'Nascimento (antigo formato)';
                 $lista_tipo_cert_civil[92] = 'Casamento (antigo formato)';
 
-                $this->addDetalhe(detalhe: ['Tipo Certidão Civil', $lista_tipo_cert_civil[$registro['tipo_cert_civil']]]);
+                $this->addDetalhe(detalhe: ['Tipo certidão civil', $lista_tipo_cert_civil[$registro['tipo_cert_civil']]]);
 
                 if ($registro['num_termo']) {
                     $this->addDetalhe(detalhe: ['Termo', $registro['num_termo']]);
@@ -728,11 +728,11 @@ return new class extends clsDetalhe
         }
 
         if ($registro['data_emissao_cert_civil']) {
-            $this->addDetalhe(detalhe: ['Emissão Certidão Civil', $registro['data_emissao_cert_civil']]);
+            $this->addDetalhe(detalhe: ['Emissão certidão civil', $registro['data_emissao_cert_civil']]);
         }
 
         if ($registro['sigla_uf_cert_civil']) {
-            $this->addDetalhe(detalhe: ['Sigla Certidão Civil', $registro['sigla_uf_cert_civil']]);
+            $this->addDetalhe(detalhe: ['Sigla certidão civil', $registro['sigla_uf_cert_civil']]);
         }
 
         if ($registro['cartorio_cert_civil']) {
@@ -742,7 +742,7 @@ return new class extends clsDetalhe
         if ($registro['num_tit_eleitor']) {
             // Inalcançável: o título de eleitor não é lido do documento para o registro.
             // @codeCoverageIgnoreStart
-            $this->addDetalhe(detalhe: ['Título de Eleitor', $registro['num_tit_eleitor']]);
+            $this->addDetalhe(detalhe: ['Título de eleitor', $registro['num_tit_eleitor']]);
             // @codeCoverageIgnoreEnd
         }
 
@@ -928,7 +928,7 @@ return new class extends clsDetalhe
                 $this->addDetalhe(detalhe: ['Qual', $reg['desc_plano_saude']]);
             }
 
-            $this->addDetalhe(detalhe: ['<span id="tr_tit_dados_hospital">Em caso de emergência, autorizo levar meu(minha) filho(a) para o Hospital ou Clínica mais próximos:</span>']);
+            $this->addDetalhe(detalhe: ['<span id="tr_tit_dados_hospital">Em caso de emergência, autorizo levar meu(minha) filho(a) para o hospital ou clínica mais próximos:</span>']);
             $this->addDetalhe(detalhe: ['Responsável', $reg['desc_aceita_hospital_proximo']]);
             $this->addDetalhe(detalhe: ['<span id="tr_tit_dados_hospital">Em caso de emergência, se não for possível contatar os responsáveis, comunicar</span>']);
             $this->addDetalhe(detalhe: ['Nome', $reg['responsavel']]);

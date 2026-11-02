@@ -32,7 +32,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Motivo Afastamento - Detalhe';
+        $this->titulo = 'Motivo afastamento - Detalhe';
 
         $this->cod_motivo_afastamento = $_GET['cod_motivo_afastamento'];
 
@@ -57,7 +57,7 @@ return new class extends clsDetalhe
             }
         }
         if ($registro['nm_motivo']) {
-            $this->addDetalhe(detalhe: ['Motivo de Afastamento', e($registro['nm_motivo'])]);
+            $this->addDetalhe(detalhe: ['Motivo de afastamento', e($registro['nm_motivo'])]);
         }
         if ($registro['descricao']) {
             $this->addDetalhe(detalhe: ['Descrição', e($registro['descricao'])]);
@@ -79,7 +79,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->title = 'Servidores - Motivo Afastamento';
+        $this->title = 'Servidores - Motivo afastamento';
         $this->processoAp = '633';
     }
 };

@@ -30,7 +30,7 @@ return new class extends clsListagem
 
     public function Gerar()
     {
-        $this->titulo = 'Tipo Ensino - Listagem';
+        $this->titulo = 'Tipo ensino - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;
@@ -44,7 +44,7 @@ return new class extends clsListagem
         switch ($nivel_usuario) {
             case 1:
                 $this->addCabecalhos([
-                    'Tipo Ensino',
+                    'Tipo ensino',
                     'Instituição',
                 ]);
                 break;
@@ -53,7 +53,7 @@ return new class extends clsListagem
                 // Débito de cobertura: trecho ainda sem teste.
                 // @codeCoverageIgnoreStart
                 $this->addCabecalhos([
-                    'Tipo Ensino',
+                    'Tipo ensino',
                 ]);
                 break;
                 // @codeCoverageIgnoreEnd
@@ -132,7 +132,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->title = 'Tipo Ensino';
+        $this->title = 'Tipo ensino';
         $this->processoAp = '558';
     }
 };

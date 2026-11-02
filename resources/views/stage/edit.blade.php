@@ -60,7 +60,7 @@
                     <span class="form">
                         <select class="geral" name="tipo" id="tipo" style="width: 308px;">
                             <option value="">Selecione o tipo</option>
-                            @foreach(['schoolclass' => 'Etapas da Turma', 'school' =>'Etapas da Escola'] as $valor => $tipo)
+                            @foreach(['schoolclass' => 'Etapas da turma', 'school' =>'Etapas da escola'] as $valor => $tipo)
                                 <option value="{{ $valor }}" @if(old('tipo', Request::get('tipo')) == $valor) selected @endif>
                                     {{ $tipo }}
                                 </option>
@@ -91,7 +91,7 @@
             </tr>
             <tr>
                 <td class="formmdtd" valign="top">
-                    <label for="ref_cod_modulo" class="form">Tipo de Etapa</label>
+                    <label for="ref_cod_modulo" class="form">Tipo de etapa</label>
                 </td>
                 <td class="formmdtd" valign="top">
                     <select class="geral" name="ref_cod_modulo" id="ref_cod_modulo" style="width: 308px;">

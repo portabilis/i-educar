@@ -15,12 +15,12 @@ return new class extends clsListagem
             $this->$var = ($val === '') ? null : $val;
         }
 
-        $this->addCabecalhos(coluna: ['Nome', 'Matrícula', 'Matrícula Interna', 'Status', 'Tipo usuário', 'Nível de Acesso']);
+        $this->addCabecalhos(coluna: ['Nome', 'Matrícula', 'Matrícula interna', 'Status', 'Tipo usuário', 'Nível de acesso']);
 
         // Filtros de Busca
         $this->campoTexto(nome: 'nm_pessoa', campo: 'Nome', valor: $this->nm_pessoa, tamanhovisivel: 42, tamanhomaximo: 255);
         $this->campoTexto(nome: 'matricula', campo: 'Matrícula', valor: $this->matricula, tamanhovisivel: 20, tamanhomaximo: 15);
-        $this->campoTexto(nome: 'matricula_interna', campo: 'Matrícula Interna', valor: $this->matricula_interna, tamanhovisivel: 20, tamanhomaximo: 30);
+        $this->campoTexto(nome: 'matricula_interna', campo: 'Matrícula interna', valor: $this->matricula_interna, tamanhovisivel: 20, tamanhomaximo: 30);
 
         $opcoes = ['' => 'Selecione'];
 
@@ -33,7 +33,7 @@ return new class extends clsListagem
             $opcoes["{$registro['cod_tipo_usuario']}"] = "{$registro['nm_tipo']}";
         }
 
-        $this->campoLista(nome: 'ref_cod_tipo_usuario', campo: 'Tipo Usuário', valor: $opcoes, default: $this->ref_cod_tipo_usuario, acao: null, duplo: null, descricao: null, complemento: null, desabilitado: null, obrigatorio: false);
+        $this->campoLista(nome: 'ref_cod_tipo_usuario', campo: 'Tipo usuário', valor: $opcoes, default: $this->ref_cod_tipo_usuario, acao: null, duplo: null, descricao: null, complemento: null, desabilitado: null, obrigatorio: false);
 
         // filtro de nivel de acesso
         $nivelUsuario = LegacyUserType::query()
@@ -71,7 +71,7 @@ return new class extends clsListagem
             default => $opcoes,
         };
         // @codeCoverageIgnoreEnd
-        $this->campoLista(nome: 'ref_cod_nivel_usuario', campo: 'Nível de Acesso', valor: $opcoes, default: $this->ref_cod_nivel_usuario, acao: null, duplo: null, descricao: null, complemento: null, desabilitado: null, obrigatorio: false);
+        $this->campoLista(nome: 'ref_cod_nivel_usuario', campo: 'Nível de acesso', valor: $opcoes, default: $this->ref_cod_nivel_usuario, acao: null, duplo: null, descricao: null, complemento: null, desabilitado: null, obrigatorio: false);
 
         $this->inputsHelper()->dynamic(helperNames: 'instituicao', inputOptions: ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao]);
         $this->inputsHelper()->dynamic(helperNames: 'escola', inputOptions: ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola]);

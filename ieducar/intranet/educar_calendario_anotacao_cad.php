@@ -192,7 +192,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Calendario Anotacao';
+        $this->title = 'Calendario anotacao';
         $this->processoAp = '620';
     }
 };

@@ -30,7 +30,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Calendário Dia Motivo - Detalhe';
+        $this->titulo = 'Calendário dia motivo - Detalhe';
 
         $this->cod_calendario_dia_motivo = $_GET['cod_calendario_dia_motivo'];
 
@@ -71,7 +71,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->title = 'Calendário Dia Motivo';
+        $this->title = 'Calendário dia motivo';
         $this->processoAp = '576';
     }
 };

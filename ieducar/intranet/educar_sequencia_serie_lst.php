@@ -33,17 +33,17 @@ return new class extends clsListagem
 
     public function Gerar()
     {
-        $this->titulo = 'Sequência Enturmação - Listagem';
+        $this->titulo = 'Sequência enturmação - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;
         }
 
         $lista_busca = [
-            'Curso Origem',
-            'Série Origem',
-            'Curso Destino',
-            'Série Destino',
+            'Curso origem',
+            'Série origem',
+            'Curso destino',
+            'Série destino',
         ];
 
         $obj_permissoes = new clsPermissoes;
@@ -188,7 +188,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->title = 'Sequência Enturmação';
+        $this->title = 'Sequência enturmação';
         $this->processoAp = 587;
     }
 };

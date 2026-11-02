@@ -140,7 +140,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Tipo Ocorrência Disciplinar';
+        $this->title = 'Tipo ocorrência disciplinar';
         $this->processoAp = '580';
     }
 };

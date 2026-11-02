@@ -108,9 +108,9 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'idpes_cad', valor: $this->idpes_cad);
 
         // Dados da Empresa
-        $this->campoTexto(nome: 'fantasia', campo: 'Nome Fantasia', valor: $this->fantasia, tamanhovisivel: '50', tamanhomaximo: '255', obrigatorio: true);
-        $this->campoTexto(nome: 'razao_social', campo: 'Razão Social', valor: $this->razao_social, tamanhovisivel: '50', tamanhomaximo: '255', obrigatorio: true);
-        $this->campoTexto(nome: 'capital_social', campo: 'Capital Social', valor: $this->capital_social, tamanhovisivel: '50', tamanhomaximo: '255');
+        $this->campoTexto(nome: 'fantasia', campo: 'Nome fantasia', valor: $this->fantasia, tamanhovisivel: '50', tamanhomaximo: '255', obrigatorio: true);
+        $this->campoTexto(nome: 'razao_social', campo: 'Razão social', valor: $this->razao_social, tamanhovisivel: '50', tamanhomaximo: '255', obrigatorio: true);
+        $this->campoTexto(nome: 'capital_social', campo: 'Capital social', valor: $this->capital_social, tamanhovisivel: '50', tamanhomaximo: '255');
 
         if ((new clsPermissoes)->nivel_acesso(int_idpes_usuario: Auth::id()) > App_Model_NivelTipoUsuario::INSTITUCIONAL) {
             $this->campoRotulo(nome: 'cnpj_', campo: 'CNPJ', valor: $this->cnpj);
@@ -129,7 +129,7 @@ return new class extends clsCadastro
         // Dados da Empresa
         $this->campoTexto(nome: 'url', campo: 'Site', valor: $this->url, tamanhovisivel: '50', tamanhomaximo: '255');
         $this->campoTexto(nome: 'email', campo: 'E-mail', valor: $this->email, tamanhovisivel: '50', tamanhomaximo: '255');
-        $this->campoTexto(nome: 'insc_est', campo: 'Inscrição Estadual', valor: $this->insc_est, tamanhovisivel: '20', tamanhomaximo: '30');
+        $this->campoTexto(nome: 'insc_est', campo: 'Inscrição estadual', valor: $this->insc_est, tamanhovisivel: '20', tamanhomaximo: '30');
 
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
             '/vendor/legacy/Cadastro/Assets/Javascripts/Addresses.js',

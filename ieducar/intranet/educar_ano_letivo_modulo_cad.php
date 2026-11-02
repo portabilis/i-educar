@@ -224,7 +224,7 @@ return new class extends clsCadastro
             $this->campoTabelaInicio(
                 nome: 'modulos_ano_letivo',
                 titulo: 'Etapas do ano letivo',
-                arr_campos: ['Data inicial', 'Data final', 'Dias Letivos'],
+                arr_campos: ['Data inicial', 'Data final', 'Dias letivos'],
                 arr_valores: $this->ano_letivo_modulo
             );
 
@@ -563,7 +563,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Ano Letivo Etapa';
+        $this->title = 'Ano letivo etapa';
         $this->processoAp = 561;
     }
 };

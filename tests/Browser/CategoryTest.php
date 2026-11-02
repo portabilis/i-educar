@@ -125,5 +125,5 @@ it('inativa um motivo de ausência de documentação', function () {
 it('lista os tipos de evento do calendário', function () {
     $this->scenario->loginAsAdmin()
         ->navigate('/intranet/educar_calendario_dia_motivo_lst.php')
-        ->assertSee('Calendário Dia Motivo - Listagem');
+        ->assertSee('Calendário dia motivo - Listagem');
 });

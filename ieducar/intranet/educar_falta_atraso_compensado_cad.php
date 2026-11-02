@@ -99,8 +99,8 @@ return new class extends clsCadastro
         include 'include/pmieducar/educar_campo_lista.php';
 
         // Data
-        $this->campoData(nome: 'data_inicio', campo: 'Data Inicio', valor: $this->data_inicio, obrigatorio: true);
-        $this->campoData(nome: 'data_fim', campo: 'Data Fim', valor: $this->data_fim, obrigatorio: true);
+        $this->campoData(nome: 'data_inicio', campo: 'Data inicio', valor: $this->data_inicio, obrigatorio: true);
+        $this->campoData(nome: 'data_fim', campo: 'Data fim', valor: $this->data_fim, obrigatorio: true);
     }
 
     public function Novo()
@@ -226,7 +226,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Falta Atraso Compensado';
+        $this->title = 'Falta atraso compensado';
         $this->processoAp = 635;
     }
 };

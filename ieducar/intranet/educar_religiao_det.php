@@ -46,7 +46,7 @@ return new class extends clsDetalhe
             $this->addDetalhe(detalhe: ['Religião', "{$registro['id']}"]);
         }
         if ($registro['name']) {
-            $this->addDetalhe(detalhe: ['Nome Religião', "{$registro['name']}"]);
+            $this->addDetalhe(detalhe: ['Nome religião', "{$registro['name']}"]);
         }
 
         // ** Verificacao de permissao para cadastro

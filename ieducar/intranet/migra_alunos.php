@@ -195,7 +195,7 @@ return new class
 
     public function Formular()
     {
-        $this->titulo = 'Migra Alunos';
+        $this->titulo = 'Migra alunos';
         $this->processoAp = 0;
     }
 };

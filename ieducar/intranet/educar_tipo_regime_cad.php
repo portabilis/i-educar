@@ -148,7 +148,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Tipo Regime';
+        $this->title = 'Tipo regime';
         $this->processoAp = '568';
     }
 };

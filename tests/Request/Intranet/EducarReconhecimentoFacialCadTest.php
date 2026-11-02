@@ -13,7 +13,7 @@ beforeEach(function () {
 });
 
 test('abre o envio de imagens e exige ao menos uma imagem', function () {
-    $this->get($this->url)->assertOk()->assertSee('Tipo de Imagem');
+    $this->get($this->url)->assertOk()->assertSee('Tipo de imagem');
 
     $this->post($this->url, ['tipoacao' => 'Novo', 'ref_cod_aluno' => $this->student->getKey(), 'type' => 'FR'])
         ->assertOk()

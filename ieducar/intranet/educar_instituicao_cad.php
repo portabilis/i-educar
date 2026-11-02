@@ -174,7 +174,7 @@ return new class extends clsCadastro
         $this->campoOculto(nome: 'cod_instituicao', valor: $this->cod_instituicao);
 
         // text
-        $this->campoTexto(nome: 'nm_instituicao', campo: 'Nome da Instituição', valor: $this->nm_instituicao, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoTexto(nome: 'nm_instituicao', campo: 'Nome da instituição', valor: $this->nm_instituicao, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
         $this->campoCep(nome: 'cep', campo: 'CEP', valor: int2CEP($this->cep), obrigatorio: true);
         $this->campoTexto(nome: 'logradouro', campo: 'Logradouro', valor: $this->logradouro, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
         $this->campoNumero(nome: 'numero', campo: 'Número', valor: $this->numero, tamanhovisivel: 6, tamanhomaximo: 6);
@@ -187,8 +187,8 @@ return new class extends clsCadastro
 
         $this->campoLista(nome: 'ref_sigla_uf', campo: 'UF', valor: $opcoes, default: $this->ref_sigla_uf);
 
-        $this->campoTexto(nome: 'nm_responsavel', campo: 'Nome do Responsável', valor: $this->nm_responsavel, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
-        $this->campoNumero(nome: 'ddd_telefone', campo: 'DDD Telefone', valor: $this->ddd_telefone, tamanhovisivel: 2, tamanhomaximo: 2);
+        $this->campoTexto(nome: 'nm_responsavel', campo: 'Nome do responsável', valor: $this->nm_responsavel, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: true);
+        $this->campoNumero(nome: 'ddd_telefone', campo: 'DDD telefone', valor: $this->ddd_telefone, tamanhovisivel: 2, tamanhomaximo: 2);
         $this->campoNumero(nome: 'telefone', campo: 'Telefone', valor: $this->telefone, tamanhovisivel: 11, tamanhomaximo: 11);
 
         $options = [
@@ -220,7 +220,7 @@ return new class extends clsCadastro
         $this->inputsHelper()->select(attrName: 'orgao_regional', inputOptions: $options);
 
         $this->campoRotulo(nome: 'gerais', campo: '<b>Gerais</b>');
-        $this->campoCheck(nome: 'obrigar_documento_pessoa', campo: 'Exigir documento (RG, CPF ou Certidão de nascimento / casamento) no cadastro pessoa / aluno', valor: $this->obrigar_documento_pessoa);
+        $this->campoCheck(nome: 'obrigar_documento_pessoa', campo: 'Exigir documento (RG, CPF ou certidão de nascimento / casamento) no cadastro pessoa / aluno', valor: $this->obrigar_documento_pessoa);
 
         $this->campoCheck(nome: 'obrigar_cpf', campo: 'Exigir CPF no cadastro pessoa / aluno', valor: $this->obrigar_cpf);
 
@@ -310,8 +310,8 @@ return new class extends clsCadastro
 
         $this->campoRotulo(nome: 'relatorios', campo: '<b>Relatórios</b>');
         $this->campoCheck(nome: 'permissao_filtro_abandono_transferencia', campo: 'Não permitir a apresentação de alunos que deixaram de frequentar ou que foram transferidos na emissão do relatório de frequência', valor: $this->permissao_filtro_abandono_transferencia);
-        $this->campoCheck(nome: 'altera_atestado_para_declaracao', campo: 'Alterar nome do título do menu e relatórios de Atestado para Declaração', valor: $this->altera_atestado_para_declaracao);
-        $this->campoCheck(nome: 'exibir_apenas_professores_alocados', campo: 'Exibir apenas professores alocados nos filtros de emissão do Diário de classe', valor: $this->exibir_apenas_professores_alocados);
+        $this->campoCheck(nome: 'altera_atestado_para_declaracao', campo: 'Alterar nome do título do menu e relatórios de atestado para declaração', valor: $this->altera_atestado_para_declaracao);
+        $this->campoCheck(nome: 'exibir_apenas_professores_alocados', campo: 'Exibir apenas professores alocados nos filtros de emissão do diário de classe', valor: $this->exibir_apenas_professores_alocados);
         $this->campoCheck(
             nome: 'ordenar_alunos_sequencial_enturmacao',
             campo: 'Apresentar alunos em relatórios de acordo com a ordenação definida de forma automática/manual na turma',

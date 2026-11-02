@@ -52,8 +52,8 @@ return new class extends clsListagem
             'Aluno',
         ]);
 
-        $this->campoNumero(nome: 'cod_aluno', campo: 'Código Aluno', valor: $this->cod_aluno, tamanhovisivel: 8, tamanhomaximo: 20);
-        $this->campoTexto(nome: 'nm_aluno', campo: 'Nome Aluno', valor: $this->nm_aluno, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoNumero(nome: 'cod_aluno', campo: 'Código aluno', valor: $this->cod_aluno, tamanhovisivel: 8, tamanhomaximo: 20);
+        $this->campoTexto(nome: 'nm_aluno', campo: 'Nome aluno', valor: $this->nm_aluno, tamanhovisivel: 30, tamanhomaximo: 255);
 
         // Paginador
         $this->limite = 20;

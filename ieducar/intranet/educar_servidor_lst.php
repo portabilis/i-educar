@@ -45,7 +45,7 @@ return new class extends clsListagem
         }
 
         $this->addCabecalhos(coluna: [
-            'Nome do Servidor',
+            'Nome do servidor',
             'Matrícula',
             'CPF',
             'Instituição',

@@ -110,7 +110,7 @@ return new class extends clsCadastro
 
         $options = [
             'required' => false,
-            'label' => '(DDD) Telefone',
+            'label' => '(DDD) telefone',
             'placeholder' => 'DDD',
             'value' => $this->ddd_telefone,
             'max_length' => 3,
@@ -132,7 +132,7 @@ return new class extends clsCadastro
 
         $options = [
             'required' => false,
-            'label' => '(DDD) Celular',
+            'label' => '(DDD) celular',
             'placeholder' => 'DDD',
             'value' => $this->ddd_celular,
             'max_length' => 3,

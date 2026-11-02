@@ -237,7 +237,7 @@ return new class extends clsCadastro
         $this->inputsHelper()->date('data_fim', $options);
 
         $options = [
-            'label' => 'Profissional escolar leciona no Itinerário de formação técnica e profissional (IFTP)',
+            'label' => 'Profissional escolar leciona no itinerário de formação técnica e profissional (IFTP)',
             'resources' => [
                 null => 'Selecione',
                 1 => 'Sim',

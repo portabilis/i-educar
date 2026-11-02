@@ -11,7 +11,7 @@
             <tbody>
                 <tr>
                     <td class="formdktd" colspan="2" height="24">
-                        <b>Importação de Situação Final das Matrículas</b>
+                        <b>Importação de situação final das matrículas</b>
                     </td>
                 </tr>
                 <tr>

@@ -139,7 +139,7 @@
     const modal_element = '<div class="modal-server-container inactive">' +
         '<div class="modal-server-wrapper">' +
         '<div class="modal-server-header">' +
-        '<h3>Componentes Curriculares</h3>' +
+        '<h3>Componentes curriculares</h3>' +
         '<i class="fa fa-close modal-server-close"></i>' +
         '</div>' +
         '<div class="modal-server-body"></div>' +

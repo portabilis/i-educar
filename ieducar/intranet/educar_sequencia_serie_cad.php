@@ -293,7 +293,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = 'Sequência Enturmação';
+        $this->title = 'Sequência enturmação';
         $this->processoAp = '587';
     }
 };

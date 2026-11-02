@@ -31,7 +31,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Escola Série - Detalhe';
+        $this->titulo = 'Escola série - Detalhe';
 
         $this->ref_cod_serie = $_GET['ref_cod_serie'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
@@ -169,7 +169,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->title = 'Escola Série';
+        $this->title = 'Escola série';
         $this->processoAp = '585';
     }
 };

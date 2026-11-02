@@ -118,7 +118,7 @@ return new class extends clsDetalhe
         $nm_aluno = $aluno?->nome;
 
         if ($registro['cod_matricula']) {
-            $this->addDetalhe(detalhe: ['Número Matrícula', $registro['cod_matricula']]);
+            $this->addDetalhe(detalhe: ['Número matrícula', $registro['cod_matricula']]);
         }
 
         if ($nm_aluno) {
@@ -221,12 +221,12 @@ return new class extends clsDetalhe
         if ($nomesTurmas) {
             $this->addDetalhe(detalhe: ['Turma', $nomesTurmas]);
             $this->addDetalhe(detalhe: ['Turno', $nomesTurnos]);
-            $this->addDetalhe(detalhe: ['Data Enturmação', $datasEnturmacoes]);
+            $this->addDetalhe(detalhe: ['Data enturmação', $datasEnturmacoes]);
             $existeTurma = true;
         } else {
             $this->addDetalhe(detalhe: ['Turma', '']);
             $this->addDetalhe(detalhe: ['Turno', '']);
-            $this->addDetalhe(detalhe: ['Data Enturmação', '']);
+            $this->addDetalhe(detalhe: ['Data enturmação', '']);
         }
 
         $situacao = App_Model_MatriculaSituacao::getSituacao(id: $registro['aprovado']);
@@ -266,7 +266,7 @@ return new class extends clsDetalhe
 
             $observacaoAbandono = $registro['observacao'];
 
-            $this->addDetalhe(detalhe: ['Motivo - Deixou de Frequentar', $tipoAbandono ? $tipoAbandono['nome'] : '']);
+            $this->addDetalhe(detalhe: ['Motivo - Deixou de frequentar', $tipoAbandono ? $tipoAbandono['nome'] : '']);
             $this->addDetalhe(detalhe: ['Observação', $observacaoAbandono]);
         }
 

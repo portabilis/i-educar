@@ -52,14 +52,14 @@ return new class extends clsListagem
 
     public function Gerar()
     {
-        $this->titulo = 'Motivo Afastamento - Listagem';
+        $this->titulo = 'Motivo afastamento - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;
         }
 
         $lista_busca = [
-            'Motivo de Afastamento',
+            'Motivo de afastamento',
         ];
 
         $obj_permissoes = new clsPermissoes;
@@ -72,7 +72,7 @@ return new class extends clsListagem
 
         $get_escola = false;
         include 'include/pmieducar/educar_campo_lista.php';
-        $this->campoTexto(nome: 'nm_motivo', campo: 'Motivo de Afastamento', valor: $this->nm_motivo, tamanhovisivel: 30, tamanhomaximo: 255);
+        $this->campoTexto(nome: 'nm_motivo', campo: 'Motivo de afastamento', valor: $this->nm_motivo, tamanhovisivel: 30, tamanhomaximo: 255);
 
         // Paginador
         $this->limite = 20;

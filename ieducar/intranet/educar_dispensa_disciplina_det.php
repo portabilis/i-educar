@@ -39,7 +39,7 @@ return new class extends clsDetalhe
 
     public function Gerar()
     {
-        $this->titulo = 'Dispensa Componente Curricular - Detalhe';
+        $this->titulo = 'Dispensa componente curricular - Detalhe';
 
         $this->ref_cod_disciplina = $_GET['ref_cod_disciplina'];
         $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
@@ -167,7 +167,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->title = 'Dispensa Componente Curricular';
+        $this->title = 'Dispensa componente curricular';
         $this->processoAp = 628;
     }
 };

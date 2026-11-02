@@ -24,7 +24,7 @@ beforeEach(function () {
 it('lista os tipos de usuário', function () {
     $this->scenario->loginAsAdmin()
         ->navigate('/usuarios/tipos')
-        ->assertSee('Tipo Usuário')
+        ->assertSee('Tipo usuário')
         ->assertSee('Nível')
         ->assertNoJavaScriptErrors();
 });

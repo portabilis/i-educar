@@ -38,7 +38,7 @@ return new class extends clsListagem
 
     public function Gerar()
     {
-        $this->titulo = 'Calendário Dia Motivo - Listagem';
+        $this->titulo = 'Calendário dia motivo - Listagem';
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null : $val;
@@ -111,7 +111,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->title = 'Calendário Dia Motivo';
+        $this->title = 'Calendário dia motivo';
         $this->processoAp = '576';
     }
 };

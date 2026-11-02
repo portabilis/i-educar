@@ -21,7 +21,7 @@ class FinalStatusImportController extends Controller
         $this->validateAccessLevel($request);
 
         $this->menu(Process::FINAL_STATUS_IMPORT);
-        $this->breadcrumb('Importação de Situação Final', [
+        $this->breadcrumb('Importação de situação final', [
             url('/intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
         $situations = $this->service->getStatus();
@@ -83,7 +83,7 @@ class FinalStatusImportController extends Controller
         $this->menu(Process::FINAL_STATUS_IMPORT);
         $this->breadcrumb('Análise do Arquivo', [
             url('/intranet/educar_configuracoes_index.php') => 'Configurações',
-            route('final-status-import.index') => 'Importação de Situação Final',
+            route('final-status-import.index') => 'Importação de situação final',
         ]);
 
         $analysis = session('import_analysis');
@@ -104,7 +104,7 @@ class FinalStatusImportController extends Controller
         $this->menu(Process::FINAL_STATUS_IMPORT);
         $this->breadcrumb('Mapeamento de Colunas', [
             url('/intranet/educar_configuracoes_index.php') => 'Configurações',
-            route('final-status-import.index') => 'Importação de Situação Final',
+            route('final-status-import.index') => 'Importação de situação final',
         ]);
 
         $analysis = session('import_analysis');
@@ -188,7 +188,7 @@ class FinalStatusImportController extends Controller
         $this->menu(Process::FINAL_STATUS_IMPORT);
         $this->breadcrumb('Status da Importação', [
             url('/intranet/educar_configuracoes_index.php') => 'Configurações',
-            route('final-status-import.index') => 'Importação de Situação Final',
+            route('final-status-import.index') => 'Importação de situação final',
         ]);
 
         $result = session('import_result');

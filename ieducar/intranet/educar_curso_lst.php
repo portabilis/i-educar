@@ -65,8 +65,8 @@ return new class extends clsListagem
 
         $lista_busca = [
             'Curso',
-            'Nível Ensino',
-            'Tipo Ensino',
+            'Nível ensino',
+            'Tipo ensino',
         ];
 
         $this->addCabecalhos($lista_busca);
@@ -81,7 +81,7 @@ return new class extends clsListagem
 
         $this->campoLista(
             nome: 'ref_cod_nivel_ensino',
-            campo: 'Nível Ensino',
+            campo: 'Nível ensino',
             valor: $opcoes,
             default: $this->ref_cod_nivel_ensino,
             acao: null,
@@ -107,7 +107,7 @@ return new class extends clsListagem
 
         $this->campoLista(
             nome: 'ref_cod_tipo_ensino',
-            campo: 'Tipo Ensino',
+            campo: 'Tipo ensino',
             valor: $opcoes,
             default: $this->ref_cod_tipo_ensino,
             desabilitado: '',

@@ -57,7 +57,7 @@ return new class extends clsListagem
         }
 
         $lista_busca = [
-            'Deixou de Frequentar',
+            'Deixou de frequentar',
         ];
 
         $obj_permissao = new clsPermissoes;
@@ -72,7 +72,7 @@ return new class extends clsListagem
         include 'include/pmieducar/educar_campo_lista.php';
 
         // outros Filtros
-        $this->campoTexto(nome: 'nome', campo: 'Deixou de Frequentar', valor: $this->nome, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: false);
+        $this->campoTexto(nome: 'nome', campo: 'Deixou de frequentar', valor: $this->nome, tamanhovisivel: 30, tamanhomaximo: 255, obrigatorio: false);
 
         // Paginador
         $this->limite = 20;
@@ -126,7 +126,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->title = 'Motivo - Deixou de Frequentar';
+        $this->title = 'Motivo - Deixou de frequentar';
         $this->processoAp = '950';
     }
 };
