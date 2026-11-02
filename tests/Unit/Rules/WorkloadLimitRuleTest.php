@@ -1,5 +1,6 @@
 <?php
 
+uses(Tests\TestCase::class);
 use App\Rules\WorkloadLimitRule;
 use Illuminate\Support\Facades\Validator;
 
