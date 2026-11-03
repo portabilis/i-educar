@@ -6,6 +6,8 @@ use App\Services\EmployeeService;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 use Illuminate\Support\Facades\DB;
+use App\Rules\NonNegativeTimeRule;
+use Illuminate\Support\Facades\Validator;
 
 return new class extends clsCadastro
 {
@@ -150,6 +152,35 @@ return new class extends clsCadastro
             ->toArray();
     }
 
+    
+    // REFACTOR: centraliza a validacao de horas e minutos
+    private function validarTempoNaoNegativo(): bool
+    {
+        if ($this->tipo != 1) {
+            return true;
+        }
+
+        $validator = Validator::make(
+            [
+                'qtd_horas' => $this->qtd_horas,
+                'qtd_min' => $this->qtd_min,
+            ],
+            [
+                'qtd_horas' => [new NonNegativeTimeRule()],
+                'qtd_min' => [new NonNegativeTimeRule()],
+            ]
+        );
+
+        if ($validator->fails()) {
+            $this->mensagem = implode('<br>', $validator->errors()->all()) . '<br>';
+
+            return false;
+        }
+
+        return true;
+    }
+
+
     public function Novo()
     {
         $obj_permissoes = new clsPermissoes;
@@ -181,6 +212,13 @@ return new class extends clsCadastro
 
             return false;
         }
+
+        
+        // REFACTOR: utiliza a validação compartilhada
+        if (!$this->validarTempoNaoNegativo()) {
+            return false;
+        }
+
 
         if ($this->tipo == 1) {
             $obj = new LegacyAbsenceDelay;
@@ -268,6 +306,11 @@ return new class extends clsCadastro
         if ($this->tipo == 1 && ($this->qtd_horas == '' || $this->qtd_min == '')) {
             $this->mensagem = 'Preencha os campos de quantidade de horas e minutos.<br>';
 
+            return false;
+        }
+
+       // REFACTOR: utiliza a validação compartilhada
+        if (!$this->validarTempoNaoNegativo()) {
             return false;
         }
 
