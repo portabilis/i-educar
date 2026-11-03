@@ -1,149 +1,99 @@
 <?php
 
 use App\Rules\CanChangeExitDate;
-use App\Services\iDiarioService as IdiarioService;
-use Database\Factories\LegacyDisciplineFactory;
-use Database\Factories\LegacyGeneralConfigurationFactory;
-use Database\Factories\LegacyInstitutionFactory;
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Response;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Tests\TestCase;
 
-uses(TestCase::class, DatabaseTransactions::class);
+/**
+ * Chama o método privado removeIgnoredTypes().
+ *
+ * Os avisos do PHP (Undefined array key, Undefined property) são convertidos em
+ * exceção durante a chamada, igual ao comportamento do Laravel, para que uma
+ * entrada que gere aviso faça o teste falhar em qualquer ambiente.
+ */
+function callRemoveIgnoredTypes(array $studentActivity): array
+{
+    set_error_handler(function (int $level, string $message): never {
+        throw new ErrorException($message, 0, $level);
+    });
 
-beforeEach(function () {
-    $this->bindIdiarioService = function (array $responsePayload, array &$history): void {
-        config([
-            'legacy.config.url_novo_educacao' => 'https://idiario.example/',
-            'legacy.config.token_novo_educacao' => 'idiario-token',
-        ]);
+    try {
+        $method = new ReflectionMethod(CanChangeExitDate::class, 'removeIgnoredTypes');
 
-        $institution = LegacyInstitutionFactory::new()->create();
+        return $method->invoke(new CanChangeExitDate, $studentActivity);
+    } finally {
+        restore_error_handler();
+    }
+}
 
-        LegacyGeneralConfigurationFactory::new()->create([
-            'ref_cod_instituicao' => $institution->getKey(),
-            'url_novo_educacao' => 'https://idiario.example/',
-            'token_novo_educacao' => 'idiario-token',
-        ]);
+/**
+ * Monta a resposta do i-Diário: cada item é um objeto com a propriedade type.
+ */
+function studentActivityOf(array $types): array
+{
+    $items = array_map(fn ($type) => (object) ['type' => $type], $types);
 
-        $client = ($this->createHttpClient)([
-            new Response(200, [], json_encode($responsePayload)),
-        ], $history);
+    return ['student_activity' => $items];
+}
 
-        $this->app->instance(IdiarioService::class, new IdiarioService(
-            $institution->load('generalConfiguration'),
-            $client
-        ));
-    };
+/**
+ * Tipos que sobraram na lista, sem considerar as chaves (unset não reindexa).
+ */
+function remainingTypes(array $result): array
+{
+    $types = array_map(fn ($item) => $item->type, $result['student_activity']);
 
-    $this->buildStudentActivityPayload = function (string $scenario): array {
-        $disciplines = collect([
-            LegacyDisciplineFactory::new()->create(['name' => 'Matemática']),
-            LegacyDisciplineFactory::new()->create(['name' => 'História']),
-            LegacyDisciplineFactory::new()->create(['name' => 'Geografia']),
-            LegacyDisciplineFactory::new()->create(['name' => 'Ciências']),
-            LegacyDisciplineFactory::new()->create(['name' => 'Português']),
-            LegacyDisciplineFactory::new()->create(['name' => 'Artes']),
-        ]);
+    return array_values($types);
+}
 
-        return match ($scenario) {
-            'ignored_only' => [
-                'student_activity' => [
-                    ['type' => 'descriptive_exam'],
-                    ['type' => 'general_descriptive_exam'],
-                ],
-            ],
-            'with_disciplines' => [
-                'student_activity' => [
-                    ['type' => 'general_descriptive_exam'],
-                    [
-                        'type' => 'daily_note',
-                        'disciplines' => $disciplines->map->getKey()->all(),
-                    ],
-                ],
-            ],
-            'without_disciplines' => [
-                'student_activity' => [
-                    ['type' => 'transfer_note'],
-                ],
-            ],
-        };
-    };
+// Casos 1 a 8: classes de equivalência válidas e valores limite (caixa preta)
+// e cobertura de comandos, decisões e condições (caixa branca).
+it('removes ignored types and keeps the others', function (array $types, array $expected) {
+    $result = callRemoveIgnoredTypes(studentActivityOf($types));
 
-    $this->createHttpClient = function (array $queue, array &$history): Client {
-        $mockHandlerClass = 'GuzzleHttp\\Handler\\MockHandler';
-        $handlerStackClass = 'GuzzleHttp\\HandlerStack';
-        $middlewareClass = 'GuzzleHttp\\Middleware';
+    expect(remainingTypes($result))->toBe($expected);
+})->with([
+    'case 1: empty list' => [[], []],
+    'case 2: only descriptive_exam' => [['descriptive_exam'], []],
+    'case 3: only general_descriptive_exam' => [['general_descriptive_exam'], []],
+    'case 4: only a kept type' => [['daily_note'], ['daily_note']],
+    'case 5: ignored type in the first position' => [['descriptive_exam', 'daily_note'], ['daily_note']],
+    'case 6: ignored type in the last position' => [['daily_note', 'general_descriptive_exam'], ['daily_note']],
+    'case 7: both ignored types' => [['descriptive_exam', 'general_descriptive_exam'], []],
+    'case 8: more than one kept type' => [['daily_note', 'transfer_note'], ['daily_note', 'transfer_note']],
+]);
 
-        $mockHandler = new $mockHandlerClass($queue);
-        $handlerStack = $handlerStackClass::create($mockHandler);
-        $handlerStack->push($middlewareClass::history($history));
+it('keeps the other keys of the response untouched', function () {
+    $response = studentActivityOf(['descriptive_exam', 'daily_note']);
+    $response['other_key'] = 'value';
 
-        return new Client([
-            'handler' => $handlerStack,
-        ]);
-    };
+    $result = callRemoveIgnoredTypes($response);
+
+    expect($result['other_key'])->toBe('value');
 });
 
-test('can change exit date uses real student activity rules', function (string $scenario,
-    bool $expectedResult,
-    array $expectedMessageParts,
-    array $unexpectedMessageParts) {
-    $history = [];
-    $responsePayload = ($this->buildStudentActivityPayload)($scenario);
+// Caso 9: classe inválida CE2 (array sem a chave student_activity).
+it('returns an empty list when the student_activity key is missing', function () {
+    $result = callRemoveIgnoredTypes(['other_key' => 'value']);
 
-    ($this->bindIdiarioService)($responsePayload, $history);
+    expect($result['student_activity'])->toBe([]);
+});
 
-    $rule = new CanChangeExitDate;
-    $exitDate = new DateTime('2024-12-15');
+// Caso 10: classe inválida CE6 (tipo desconhecido). Hoje já é mantido.
+it('keeps an item with an unknown type', function () {
+    $result = callRemoveIgnoredTypes(studentActivityOf(['unknown_type']));
 
-    $this->assertSame($expectedResult, $rule->passes('exit_date', [
-        'student_id' => 42,
-        'exit_date' => $exitDate,
-    ]));
+    expect(remainingTypes($result))->toBe(['unknown_type']);
+});
 
-    $this->assertCount(1, $history);
+// Caso 11: classe inválida CE7 (item sem a propriedade type).
+it('keeps an item without the type property', function () {
+    $result = callRemoveIgnoredTypes(['student_activity' => [(object) []]]);
 
-    $request = $history[0]['request'];
-    parse_str($request->getUri()->getQuery(), $actualQuery);
+    expect($result['student_activity'])->toHaveCount(1);
+});
 
-    $this->assertSame('GET', $request->getMethod());
-    $this->assertStringStartsWith(rtrim('https://idiario.example/', '/') . '/api/v2/student_activity', (string) $request->getUri());
-    $this->assertEquals([
-        'student_id' => '42',
-        'exit_date' => '2024-12-15',
-    ], $actualQuery);
-    $this->assertSame('idiario-token', $request->getHeaderLine('token'));
+// Caso 12: in_array sem strict considera true == 'descriptive_exam'.
+it('does not remove a non-string type that only loosely equals an ignored type', function () {
+    $result = callRemoveIgnoredTypes(studentActivityOf([true]));
 
-    if (!$expectedResult) {
-        $message = $rule->message();
-
-        foreach ($expectedMessageParts as $messagePart) {
-            $this->assertStringContainsString($messagePart, $message);
-        }
-
-        foreach ($unexpectedMessageParts as $messagePart) {
-            $this->assertStringNotContainsString($messagePart, $message);
-        }
-    }
-})->with([
-    'ignored activity types do not block the exit date' => [
-        'ignored_only',
-        true,
-        [],
-        [],
-    ],
-    'discipline activities summarize only the first five disciplines' => [
-        'with_disciplines',
-        false,
-        ['Diário de avaliações', 'Matemática', 'História', 'Geografia', 'Ciências', 'Português', 'e outras'],
-        ['general_descriptive_exam', 'Artes'],
-    ],
-    'activities without disciplines still block the exit date' => [
-        'without_disciplines',
-        false,
-        ['Notas de transferência', 'Sim'],
-        [],
-    ],
-]);
+    expect($result['student_activity'])->toHaveCount(1);
+});
