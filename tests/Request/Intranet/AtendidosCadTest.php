@@ -140,7 +140,8 @@ test('abre o cadastro vazio com CPF marcado como existente e as listas de apoio'
 test('cadastra a pessoa com todos os dados, documentos, endereço, telefones e raça', function () {
     ($this->send)($this->new, ($this->payload)())
         ->assertOk()
-        ->assertSee('window.opener.afterChangePessoa', false);
+        ->assertSee('window.opener.afterChangePessoa', false)
+        ->assertSessionHas('success', 'Cadastro efetuado com sucesso.');
 
     $person = ($this->stored)();
     $individual = $person->individual;
@@ -358,7 +359,7 @@ test('edita a pessoa, trocando os pais, o CPF e o nome social, e avisa o usuári
         'telefone_1' => '34329999',
         'tipo_nacionalidade' => '2',
         'pais_origem_id' => '999',
-    ]))->assertOk();
+    ]))->assertOk()->assertSessionHas('success', 'Edição efetuada com sucesso.');
 
     $individual = $ana->individual->refresh();
 
