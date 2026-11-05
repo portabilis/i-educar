@@ -271,9 +271,7 @@ return new class extends clsCadastro
             return false;
         }
 
-        if ($this->regras_avaliacao_id === null) {
-            $this->mensagem = 'Regra de avaliação não cadastrada';
-
+        if ($this->possuiValidacaoDeSerieInvalida()) {
             return false;
         }
 
@@ -341,9 +339,7 @@ return new class extends clsCadastro
             return false;
         }
 
-        if ($this->regras_avaliacao_id === null) {
-            $this->mensagem = 'Regra de avaliação não cadastrada';
-
+        if ($this->possuiValidacaoDeSerieInvalida()) {
             return false;
         }
 
@@ -438,6 +434,39 @@ return new class extends clsCadastro
 
         return false;
         // @codeCoverageIgnoreEnd
+    }
+
+    protected function possuiFaixaEtariaInvalida()
+    {
+        return $this->possuiIdadeNegativa($this->idade_ideal, 'Idade padrão') ||
+            $this->possuiIdadeNegativa($this->idade_inicial, 'Idade inicial') ||
+            $this->possuiIdadeNegativa($this->idade_final, 'Idade final');
+    }
+
+    protected function possuiValidacaoDeSerieInvalida()
+    {
+        if ($this->possuiFaixaEtariaInvalida()) {
+            return true;
+        }
+
+        if ($this->regras_avaliacao_id !== null) {
+            return false;
+        }
+
+        $this->mensagem = 'Regra de avaliação não cadastrada';
+
+        return true;
+    }
+
+    protected function possuiIdadeNegativa($idade, $label)
+    {
+        if ($idade === null || $idade === '' || (int) $idade >= 0) {
+            return false;
+        }
+
+        $this->mensagem = "$label deve ser maior ou igual a zero.";
+
+        return true;
     }
 
     protected function persisteRegraSerieAno()
