@@ -4,6 +4,7 @@ use App\Http\Controllers\EnrollmentInepController;
 use App\Http\Controllers\EnrollmentsPromotionController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\LegacyController;
+use App\Http\Controllers\PendingTransferController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\WebController;
 use App\Http\Middleware\AnnouncementMiddleware;
@@ -130,6 +131,13 @@ Route::post('/exportacao-para-o-seb', 'SebExportController@export')->middleware(
 Route::get('/abre-url-privada', 'OpenPrivateUrlController@open')->name('open_private_url.open');
 
 Route::get('/notificacoes', 'NotificationController@index')->name('notifications.index');
+Route::get('/transferencias/pendentes', [PendingTransferController::class, 'index'])
+    ->middleware(['can:view:' . Process::NOTIFY_TRANSFER, 'can:view:' . Process::REGISTRATIONS])
+    ->name('transfers.pending.index');
+Route::post('/transferencias/pendentes/{transfer}/confirmar', [PendingTransferController::class, 'confirm'])
+    ->whereNumber('transfer')
+    ->middleware(['can:view:' . Process::NOTIFY_TRANSFER, 'can:view:' . Process::REGISTRATIONS])
+    ->name('transfers.pending.confirm');
 Route::get('/notificacoes/retorna-notificacoes-usuario', 'NotificationController@getByLoggedUser')->withoutMiddleware(AnnouncementMiddleware::class)->name('notifications.get-by-logged-user');
 Route::get('/notificacoes/quantidade-nao-lidas', 'NotificationController@getNotReadCount')->name('notifications.get-not-read-count');
 Route::post('/notificacoes/marca-como-lida', 'NotificationController@markAsRead')->name('notifications.mark-as-read');

@@ -35,6 +35,7 @@ class LegacyTransferRequest extends LegacyModel
      */
     protected $casts = [
         'data_transferencia' => 'date',
+        'data_recebimento' => 'datetime',
     ];
 
     /**
@@ -51,6 +52,8 @@ class LegacyTransferRequest extends LegacyModel
         'ativo',
         'data_transferencia',
         'ref_cod_escola_destino',
+        'data_recebimento',
+        'ref_usuario_recebimento',
         'escola_destino_externa',
         'estado_escola_destino_externa',
         'municipio_escola_destino_externa',
