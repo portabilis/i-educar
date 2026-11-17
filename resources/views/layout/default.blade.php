@@ -248,11 +248,13 @@
 
 @include('layout.vue')
 
-@can('view', \App\Process::NOTIFY_TRANSFER)
-    @can('modify', \App\Process::REGISTRATIONS)
-        @include('transfers.pending')
+@if(request()->is('intranet/educar_index.php', 'intranet/index.php'))
+    @can('view', \App\Process::NOTIFY_TRANSFER)
+        @can('modify', \App\Process::REGISTRATIONS)
+            @include('transfers.pending')
+        @endcan
     @endcan
-@endcan
+@endif
 
 @stack('scripts')
 

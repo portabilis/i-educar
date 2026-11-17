@@ -3,7 +3,6 @@
 namespace App\Listeners;
 
 use App\Models\LegacyTransferRequest;
-use App\Models\LegacyUserType;
 use App\Models\NotificationType;
 use App\Process;
 use App\Services\NotificationService;
@@ -53,10 +52,10 @@ class TransferNotificationListener
             $this->service->createByUser($user->cod_usuario, $message, $link, NotificationType::TRANSFER);
         }
 
-        $this->notifyDestinationSchool($transfer);
+        $this->notifyDestinationSchool($transfer, array_column($users, 'cod_usuario'));
     }
 
-    private function notifyDestinationSchool(LegacyTransferRequest $transfer): void
+    private function notifyDestinationSchool(LegacyTransferRequest $transfer, array $notifiedUsers): void
     {
         $school = $transfer->destinationSchool;
         $registration = $transfer->oldRegistration;
@@ -69,13 +68,9 @@ class TransferNotificationListener
         $users = $this->getUsers(Process::NOTIFY_TRANSFER, $school->getKey());
         $recipients = User::query()
             ->whereIn('cod_usuario', array_column($users, 'cod_usuario'))
-            ->where(function ($query) use ($school) {
-                $query->where('ref_cod_instituicao', $school->ref_cod_instituicao)
-                    ->orWhere(function ($query) {
-                        $query->whereNull('ref_cod_instituicao')
-                            ->whereHas('type', fn ($query) => $query->where('nivel', LegacyUserType::LEVEL_ADMIN));
-                    });
-            })
+            ->whereNotIn('cod_usuario', $notifiedUsers)
+            ->where('ref_cod_instituicao', $school->ref_cod_instituicao)
+            ->whereHas('schools', fn ($query) => $query->where('cod_escola', $school->getKey()))
             ->get()
             ->filter(fn (User $user) => $user->can('modify', Process::REGISTRATIONS));
 

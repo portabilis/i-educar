@@ -14,7 +14,7 @@ class PendingTransferController extends Controller
     public function index(Request $request, PendingTransferService $service): JsonResponse
     {
         $query = $service->forUser($request->user());
-        $page = $query->with([
+        $page = (clone $query)->with([
             'oldRegistration.student.person',
             'oldRegistration.student.individual',
             'oldRegistration.school.person',
@@ -33,12 +33,14 @@ class PendingTransferController extends Controller
                 'destination_school' => $transfer->destinationSchool->name,
                 'grade' => $registration->grade?->nm_serie,
                 'transfer_date' => $transfer->data_transferencia?->format('d/m/Y'),
+                'acknowledged' => $transfer->data_recebimento !== null,
                 'confirm_url' => route('transfers.pending.confirm', $transfer->getKey()),
             ];
         });
 
         return response()->json([
             'total' => $page->total(),
+            'latest_unconfirmed_id' => (clone $query)->whereNull('data_recebimento')->max('cod_transferencia_solicitacao'),
             'transfers' => $transfers,
             'next_url' => $page->nextPageUrl(),
             'previous_url' => $page->previousPageUrl(),

@@ -47,6 +47,8 @@ test('lista as informações da transferência interna ainda sem matrícula de e
     $this->getJson(route('transfers.pending.index'))->assertOk()
         ->assertJsonPath('total', 1)
         ->assertJsonPath('transfers.0.id', $this->transfer->getKey())
+        ->assertJsonPath('latest_unconfirmed_id', $this->transfer->getKey())
+        ->assertJsonPath('transfers.0.acknowledged', false)
         ->assertJsonPath('transfers.0.student', $this->registration->student->person->name)
         ->assertJsonPath('transfers.0.destination_school', $this->destination->name);
 });
@@ -103,7 +105,9 @@ test('confirma a ciência e encaminha à matrícula sem efetivar o recebimento d
         ->and($transfer->data_recebimento)->not->toBeNull()
         ->and($transfer->ref_cod_matricula_entrada)->toBeNull();
 
-    $this->getJson(route('transfers.pending.index'))->assertJsonPath('total', 1);
+    $this->getJson(route('transfers.pending.index'))->assertJsonPath('total', 1)
+        ->assertJsonPath('latest_unconfirmed_id', null)
+        ->assertJsonPath('transfers.0.acknowledged', true);
     $this->get($response->headers->get('Location'))->assertOk();
 });
 
@@ -135,6 +139,16 @@ test('notifica a escola de destino usando o evento de transferência existente',
         'ref_cod_turma' => $schoolClass,
     ]);
 
+    $institutional = LegacyUserFactory::new()->institutional()->withSchool($this->destination)
+        ->withAccess(Process::NOTIFY_TRANSFER)->withAccess(Process::REGISTRATIONS)
+        ->create(['ref_cod_instituicao' => $this->user->ref_cod_instituicao]);
+    $bothSchools = LegacyUserFactory::new()->school()->withSchool($this->destination)
+        ->withSchool($this->registration->school)
+        ->withAccess(Process::NOTIFY_TRANSFER)->withAccess(Process::REGISTRATIONS)
+        ->create(['ref_cod_instituicao' => $this->user->ref_cod_instituicao]);
+    $unlinked = LegacyUserFactory::new()->school()
+        ->withAccess(Process::NOTIFY_TRANSFER)->withAccess(Process::REGISTRATIONS)
+        ->create(['ref_cod_instituicao' => $this->user->ref_cod_instituicao]);
     $this->user->update(['ref_cod_instituicao' => null]);
     app(TransferNotificationListener::class)->handle(new TransferEvent($this->transfer));
 
@@ -143,8 +157,13 @@ test('notifica a escola de destino usando o evento de transferência existente',
         ->and($notification->link)->toBe('/intranet/educar_index.php')
         ->and($notification->text)->toContain('aguardando recebimento');
     Event::assertDispatched(NotificationEvent::class);
-    expect(Notification::where('user_id', $this->user->getKey())
-        ->where('link', '/intranet/educar_index.php')->exists())->toBeTrue();
+    foreach ([$this->user, $institutional, $bothSchools] as $originRecipient) {
+        expect(Notification::where('user_id', $originRecipient->getKey())->count())->toBe(1)
+            ->and(Notification::where('user_id', $originRecipient->getKey())
+                ->where('link', '/intranet/educar_index.php')->exists())->toBeFalse();
+    }
+    expect(Notification::where('user_id', $receiver->getKey())->count())->toBe(1)
+        ->and(Notification::where('user_id', $unlinked->getKey())->exists())->toBeFalse();
 });
 
 test('não substitui o primeiro usuário que confirmou a ciência', function () {
@@ -180,4 +199,40 @@ test('exige permissão de matrícula para confirmar mesmo tendo acesso ao aviso'
     $this->actingAs($viewer)->post(route('transfers.pending.confirm', $this->transfer->getKey()))->assertForbidden();
 
     expect(LegacyTransferRequest::find($this->transfer->getKey())->data_recebimento)->toBeNull();
+});
+
+test('não inclui no alerta nem confirma transferências de outros anos letivos', function (int $offset) {
+    $this->registration->update(['ano' => now()->year + $offset]);
+
+    $this->getJson(route('transfers.pending.index'))->assertOk()
+        ->assertJsonPath('total', 0)
+        ->assertJsonPath('latest_unconfirmed_id', null);
+    $this->post(route('transfers.pending.confirm', $this->transfer->getKey()))->assertNotFound();
+
+    expect($this->transfer->fresh()->data_recebimento)->toBeNull();
+})->with([-1, 1]);
+
+test('identifica novas pendências mesmo quando estão fora da página exibida', function () {
+    LegacyTransferRequestFactory::new()->count(20)->create([
+        'ref_cod_matricula_saida' => $this->registration,
+        'ref_cod_matricula_entrada' => null,
+        'ref_cod_escola_destino' => $this->destination,
+        'data_transferencia' => now()->addDay(),
+    ]);
+    $latestId = LegacyTransferRequest::query()->max('cod_transferencia_solicitacao');
+
+    foreach ([1, 2] as $page) {
+        $this->getJson(route('transfers.pending.index', ['page' => $page]))->assertOk()
+            ->assertJsonPath('total', 21)
+            ->assertJsonPath('latest_unconfirmed_id', $latestId);
+    }
+});
+
+test('carrega o modal apenas no painel inicial e preserva o cadastro de matrícula', function () {
+    $this->get('/intranet/educar_index.php')->assertOk()->assertSee('id="pending-transfers"', false);
+
+    $response = $this->post(route('transfers.pending.confirm', $this->transfer->getKey()))->assertRedirect();
+    $this->get($response->headers->get('Location'))->assertOk()
+        ->assertDontSee('id="pending-transfers"', false)
+        ->assertDontSee('TransferenciasPendentes.js', false);
 });

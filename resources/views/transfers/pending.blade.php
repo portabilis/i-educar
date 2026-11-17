@@ -1,10 +1,10 @@
 <div id="pending-transfers" style="display:none"
      data-url="{{ route('transfers.pending.index') }}"
      data-channel="{{ \Illuminate\Support\Facades\DB::getDefaultConnection() . '-notification-' . md5(auth()->id()) }}"
-     data-auto-open="{{ request()->is('web', 'web/*', 'intranet/educar_index.php', 'intranet/index.php') ? '1' : '0' }}">
+     data-storage-key="pending-transfers:{{ auth()->id() }}:{{ now()->year }}">
     <p>Existem alunos aguardando recebimento por transferência interna. Confirme o recebimento para iniciar a matrícula e a enturmação.</p>
     <p>A transferência permanece pendente até a criação da matrícula de entrada.</p>
-    <p id="pending-transfers-summary" role="status"></p>
+    <output id="pending-transfers-summary"></output>
     <div id="pending-transfers-list"></div>
     <nav aria-label="Páginas de transferências pendentes">
         <button type="button" id="pending-transfers-previous" hidden>Anterior</button>
@@ -13,6 +13,7 @@
     <p id="pending-transfers-error" role="alert"></p>
 </div>
 <style>
+    #pending-transfers-summary { display: block; margin: 1em 0; }
     #pending-transfers-list article { border-top: 1px solid #cddce6; padding: 12px 0; }
     #pending-transfers-list dl { margin: 8px 0; }
     #pending-transfers-list dt { font-weight: bold; }

@@ -27,6 +27,7 @@ class PendingTransferService
             ->unattended()
             ->whereHas('oldRegistration', fn ($query) => $query
                 ->where('aprovado', App_Model_MatriculaSituacao::TRANSFERIDO)
+                ->whereYearEq(now()->year)
                 ->whereInstitution($institutionId))
             ->whereHas('destinationSchool', function ($query) use ($user, $institutionId) {
                 $query->where('ativo', 1)
