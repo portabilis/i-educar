@@ -27,13 +27,15 @@ test('lista as pessoas físicas em ordem de nome, com a situação do CPF e o bo
         ->assertSee('go("atendidos_cad.php")', false);
 });
 
-test('defeito: o nome social nunca aparece', function () {
-    // A pessoa física é carregada só com o CPF, então o nome social vem vazio.
+test('mostra o nome social com o nome de registro abaixo', function () {
     $alfa = ($this->person)('Registro Alfa', ['nome_social' => 'Nina Alfa']);
+    $beta = ($this->person)('Registro Beta');
 
-    ($this->list)(['nm_pessoa' => 'Registro Alfa'])
+    ($this->list)(['nm_pessoa' => 'Registro'])
         ->assertSee(($this->detail)($alfa), false)
-        ->assertDontSee('Nina Alfa');
+        ->assertSee('Nina Alfa<br> <i>Nome de registro: </i>Registro Alfa</a>', false)
+        ->assertSee('>Registro Beta</a>', false)
+        ->assertDontSee('Registro Beta<br>', false);
 });
 
 test('filtra pelo nome sem acento e pelo CPF com máscara', function (array $query) {
