@@ -80,7 +80,7 @@ return new class extends clsListagem
             'idpes',
             'nome',
         ])->with([
-            'individual:idpes,cpf',
+            'individual:idpes,cpf,nome_social',
         ])->active()->orderBy('nome')->paginate(
             perPage: $limite,
             pageName: "pagina_{$this->nome}",
@@ -134,20 +134,17 @@ return new class extends clsListagem
     {
         foreach ($lista as $pessoa) {
             $cod = $pessoa->getKey();
-            $nome = $pessoa->name;
+            $nome = e($pessoa->name);
 
             if ($pessoa->social_name) {
-                // Inalcançável: a pessoa física é carregada só com o CPF, então o nome social nunca vem preenchido.
-                // @codeCoverageIgnoreStart
-                $nome = $pessoa->social_name . '<br> <i>Nome de registro: </i>' . $pessoa->name;
-                // @codeCoverageIgnoreEnd
+                $nome = e($pessoa->social_name) . '<br> <i>Nome de registro: </i>' . $nome;
             }
 
             $cpf = $pessoa->individual?->cpf
                 ? "<span class='cpf-situacao cpf-situacao-com'>{$pessoa->individual->cpf}</span>"
                 : "<span class='cpf-situacao cpf-situacao-sem'>Sem CPF</span>";
             $this->addLinhas(linha: [
-                "<img src='imagens/noticia.jpg' border=0><a href='atendidos_det.php?cod_pessoa={$cod}'>" . e($nome) . '</a>',
+                "<img src='imagens/noticia.jpg' border=0><a href='atendidos_det.php?cod_pessoa={$cod}'>" . $nome . '</a>',
                 $cpf,
             ]);
         }
