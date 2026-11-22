@@ -18,4 +18,11 @@ class LegacyIndividualBuilder extends LegacyBuilder
     {
         return $this->where('data_nasc', $birthdate);
     }
+
+    public function whereSimilarNameAndBirthdate(string $name, string $birthdate, ?int $exceptId = null): self
+    {
+        return $this->whereBirthdate($birthdate)
+            ->whereHas('person', fn ($query) => $query->whereRaw('f_unaccent(nome) ILIKE f_unaccent(?)', [$name]))
+            ->when($exceptId, fn ($query) => $query->whereKeyNot($exceptId));
+    }
 }
