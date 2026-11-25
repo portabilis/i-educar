@@ -71,3 +71,46 @@ test('aceita instituicao e escola com codigo acima do limite de smallint', funct
         ->and($notice->institution->is($institution))->toBeTrue()
         ->and($notice->schools->first()->is($school))->toBeTrue();
 });
+
+test('factory cria comunicado com relacionamentos reais e vincula escolas pelo estado withSchools', function () {
+    $institution = LegacyInstitutionFactory::new()->create();
+    $schoolA = LegacySchoolFactory::new()->create(['ref_cod_instituicao' => $institution]);
+    $schoolB = LegacySchoolFactory::new()->create(['ref_cod_instituicao' => $institution]);
+
+    $notice = SchoolNoticeFactory::new()
+        ->forInstitution($institution)
+        ->withSchools($schoolA, $schoolB)
+        ->create();
+
+    expect($notice->institution->is($institution))->toBeTrue()
+        ->and($notice->user)->not->toBeNull()
+        ->and($notice->schools->modelKeys())->toEqualCanonicalizing([$schoolA->getKey(), $schoolB->getKey()]);
+});
+
+test('verifica alcance de usuario no gerenciamento do comunicado', function () {
+    $institution = LegacyInstitutionFactory::new()->create();
+    $allowedSchool = LegacySchoolFactory::new()->create(['ref_cod_instituicao' => $institution]);
+    $otherSchool = LegacySchoolFactory::new()->create(['ref_cod_instituicao' => $institution]);
+
+    $admin = LegacyUserFactory::new()->admin()->create(['ref_cod_instituicao' => $institution]);
+    $schoolUser = LegacyUserFactory::new()
+        ->school()
+        ->withSchool($allowedSchool)
+        ->create(['ref_cod_instituicao' => $institution]);
+
+    $allowedNotice = SchoolNoticeFactory::new()
+        ->forInstitution($institution)
+        ->withSchools($allowedSchool)
+        ->create();
+
+    $mixedNotice = SchoolNoticeFactory::new()
+        ->forInstitution($institution)
+        ->withSchools($allowedSchool, $otherSchool)
+        ->create();
+
+    expect($admin->getKey())->not->toBeNull()
+        ->and($allowedNotice->canBeManagedBy($admin->getKey()))->toBeTrue()
+        ->and($mixedNotice->canBeManagedBy($admin->getKey()))->toBeTrue()
+        ->and($allowedNotice->canBeManagedBy($schoolUser->getKey()))->toBeTrue()
+        ->and($mixedNotice->canBeManagedBy($schoolUser->getKey()))->toBeFalse();
+});
