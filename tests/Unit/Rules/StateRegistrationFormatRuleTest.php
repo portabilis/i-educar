@@ -17,6 +17,8 @@ test('recusa a inscrição fora do formato', function (string $value) {
     '12.345.678-9',
     '123.456.78',
     'abc.def.ghi',
+    'abc123.456.789xyz',
+    '123.456.789-01',
 ]);
 
 test('explica que a inscrição é inválida', function () {
