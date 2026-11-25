@@ -866,9 +866,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $retorno = '';
         $style = '';
 
-        if (!$array_campos) {
-            $arr_campos = $this->campos;
-        }
+        $arr_campos = $array_campos ?: $this->campos;
 
         reset($arr_campos);
         $campo_anterior = '';
