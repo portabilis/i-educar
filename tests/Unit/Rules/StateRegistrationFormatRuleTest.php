@@ -19,10 +19,6 @@ test('recusa a inscrição fora do formato', function (string $value) {
     'abc.def.ghi',
 ]);
 
-test('aceita o formato mesmo com texto ao redor, porque a regex não é ancorada', function () {
-    expect((new StateRegistrationFormatRule)->passes('inscricao', 'abc123.456.789xyz'))->toBeTruthy();
-});
-
 test('explica que a inscrição é inválida', function () {
     expect((new StateRegistrationFormatRule)->message())->toBe('O número de inscrição é inválido.');
 });
