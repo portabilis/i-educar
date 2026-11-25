@@ -118,7 +118,30 @@ test('recusa séries inválidas sem gravar nada', function (string $series) {
     'json inválido' => 'isso-nao-e-json',
     'lista vazia' => '[]',
     'ids não numéricos' => '["abc", 0]',
+    'série inexistente' => '[987654321]',
 ]);
+
+test('recusa lote quando mistura série válida e série inexistente sem gravar nada', function () {
+    $serieValida = LegacyGradeFactory::new()->create();
+    $componente = LegacyDisciplineFactory::new()->create();
+
+    $this->post('/module/Api/ComponentesSerie?' . http_build_query([
+        'oper' => 'post',
+        'resource' => 'atualiza-componentes-serie',
+        'series' => json_encode([$serieValida->getKey(), 987654321]),
+        'componentes' => json_encode([[
+            'id' => $componente->getKey(),
+            'carga_horaria' => 80,
+            'hora_falta' => 0.75,
+            'tipo_nota' => ComponenteSerie_Model_TipoNota::NUMERICA,
+            'anos_letivos' => [now()->year],
+        ]]),
+    ] + $this->params))
+        ->assertOk()
+        ->assertJsonPath('msgErro', 'Nenhuma série válida foi informada.');
+
+    expect(LegacyDisciplineAcademicYear::query()->where('componente_curricular_id', $componente->getKey())->count())->toBe(0);
+});
 
 test('não grava nenhuma série quando a validação falha em uma delas', function () {
     $anoAnterior = now()->year - 1;
