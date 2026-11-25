@@ -20,7 +20,7 @@ class ComponentesSerieController extends ApiCoreController
         $series = $series ? json_decode($series) : [$this->getRequest()->serie_id];
         $series = array_values(array_unique(array_filter(array_map('intval', (array) $series))));
 
-        if (!$series) {
+        if (!$series || LegacyGrade::query()->whereKey($series)->count() !== count($series)) {
             return ['msgErro' => 'Nenhuma série válida foi informada.'];
         }
 
