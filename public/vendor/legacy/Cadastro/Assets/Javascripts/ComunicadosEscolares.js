@@ -100,11 +100,11 @@ $j(document).ready(function () {
       dataType: 'json',
       data: {},
       success: function (response) {
-        let options = '<option value="all">Todas as escolas</option>';
+        $escolas.empty().append($j('<option>', { value: 'all' }).text('Todas as escolas'));
         $j.each(response['options'], function (id, nome) {
-          options += '<option value="' + id.replace(/^__/, '') + '">' + nome + '</option>';
+          $escolas.append($j('<option>', { value: id.replace(/^__/, '') }).text(nome));
         });
-        $escolas.empty().append(options).trigger('chosen:updated');
+        $escolas.trigger('chosen:updated');
       },
     });
   });
