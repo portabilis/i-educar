@@ -12,6 +12,7 @@ use Database\Factories\LegacySchoolClassTeacherFactory;
 use Database\Factories\LegacySchoolGradeFactory;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Support\Facades\DB;
+use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 use Tests\Request\Support\EnrollmentScenario;
 use Tests\Request\Support\StudentScenario;
 
@@ -160,6 +161,40 @@ test('filtra pelas matrículas ativas do aluno', function (Closure $query) {
     'série' => [fn (EnrollmentScenario $scenario) => ['ref_cod_serie' => $scenario->grade->getKey()]],
     'curso e ano' => [fn (EnrollmentScenario $scenario) => ['ref_cod_curso' => $scenario->course->getKey(), 'ano' => 2030]],
 ]);
+
+test('filtra pela situação da matrícula', function () {
+    $scenario = EnrollmentScenario::for($this->user, 2030);
+    $aprovada = $scenario->registration([
+        'ref_cod_aluno' => $scenario->student('Ana Aprovada'),
+        'aprovado' => App_Model_MatriculaSituacao::APROVADO,
+    ]);
+    $cursando = $scenario->registration([
+        'ref_cod_aluno' => $scenario->student('Bia Cursando'),
+        'aprovado' => App_Model_MatriculaSituacao::EM_ANDAMENTO,
+    ]);
+    $transferida = $scenario->registration([
+        'ref_cod_aluno' => $scenario->student('Carla Transferida'),
+        'aprovado' => App_Model_MatriculaSituacao::TRANSFERIDO,
+    ]);
+    $abandono = $scenario->registration([
+        'ref_cod_aluno' => $scenario->student('Dora Abandono'),
+        'aprovado' => App_Model_MatriculaSituacao::ABANDONO,
+    ]);
+    $semMatricula = $scenario->student('Eva Sem Matrícula');
+
+    ($this->list)(['situacao_matricula_id' => App_Model_MatriculaSituacao::APROVADO])
+        ->assertSee('educar_aluno_det.php?cod_aluno=' . $aprovada->ref_cod_aluno, false)
+        ->assertDontSee('educar_aluno_det.php?cod_aluno=' . $cursando->ref_cod_aluno, false);
+
+    ($this->list)(['situacao_matricula_id' => EnrollmentStatusFilter::EXCEPT_TRANSFERRED_OR_ABANDONMENT])
+        ->assertSee('educar_aluno_det.php?cod_aluno=' . $aprovada->ref_cod_aluno, false)
+        ->assertSee('educar_aluno_det.php?cod_aluno=' . $cursando->ref_cod_aluno, false)
+        ->assertDontSee('educar_aluno_det.php?cod_aluno=' . $transferida->ref_cod_aluno, false)
+        ->assertDontSee('educar_aluno_det.php?cod_aluno=' . $abandono->ref_cod_aluno, false);
+
+    ($this->list)(['situacao_matricula_id' => EnrollmentStatusFilter::ALL])
+        ->assertSee('educar_aluno_det.php?cod_aluno=' . $semMatricula->getKey(), false);
+});
 
 test('com a similaridade ligada acha grafias parecidas do nome', function () {
     $ana = StudentScenario::named('Thiago Souza');

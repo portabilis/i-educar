@@ -3,6 +3,7 @@
 use App\Models\DataSearch\StudentFilter;
 use App\Models\LegacyGeneralConfiguration;
 use App\Models\LegacyStudent;
+use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 
 return new class extends clsListagem
 {
@@ -150,6 +151,11 @@ return new class extends clsListagem
         $this->nome_aluno = $this->cleanNameSearch(name: $this->nome_aluno);
         $this->nome_pai = $this->cleanNameSearch(name: $this->nome_pai);
         $this->nome_mae = $this->cleanNameSearch(name: $this->nome_mae);
+        $registrationStatus = is_numeric($this->situacao_matricula_id) ? (int) $this->situacao_matricula_id : null;
+
+        if ($registrationStatus === EnrollmentStatusFilter::ALL) {
+            $registrationStatus = null;
+        }
 
         $dataFilter = [
             'rg' => preg_replace(pattern: '/\D/', replacement: '', subject: $this->rg_aluno),
@@ -169,6 +175,7 @@ return new class extends clsListagem
             'perPage' => 20,
             'pageName' => $this->nome,
             'similarity' => request()->has('similaridade'),
+            'registrationStatus' => $registrationStatus,
         ];
 
         $this->limite = 20;
