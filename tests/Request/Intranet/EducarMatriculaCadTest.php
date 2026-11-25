@@ -41,14 +41,27 @@ afterEach(function () {
     }
 });
 
-test('abre o formulário com o nome do aluno e a data de hoje', function () {
-    $response = $this->get($this->url)->assertOk()->assertSee('Ana Alves')->assertSee('Matrícula de dependência?');
+test('abre o formulário com o nome do aluno e a data da matrícula em branco', function () {
+    $response = $this->get($this->url)
+        ->assertOk()
+        ->assertSee('Ana Alves')
+        ->assertSee('Matrícula de dependência?')
+        ->assertSee('Informe a data real de ingresso conforme a documentação do aluno.')
+        ->assertSee('submitMatricula()', false);
     $fields = LegacyFields::from($response->getContent());
 
     expect($fields['tipoacao'])->toBe('Novo')
         ->and($fields['ref_cod_aluno'])->toBe((string) $this->student->getKey())
-        ->and($fields['data_matricula'])->toBe(now()->format('d/m/Y'))
+        ->and($fields['data_matricula'])->toBe('')
         ->and($fields['ano_em_andamento'])->toBe('1');
+});
+
+test('mantém a data informada quando a matrícula é recusada', function () {
+    $this->scenario->course->update(['bloquear_novas_matriculas' => true]);
+
+    $response = $this->post($this->url, ($this->payload)(['data_matricula' => '15/02/2030']))->assertOk();
+
+    expect(LegacyFields::from($response->getContent())['data_matricula'])->toBe('15/02/2030');
 });
 
 test('não oferece a matrícula de dependência quando a configuração a desliga', function () {

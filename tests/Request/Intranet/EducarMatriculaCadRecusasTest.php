@@ -85,6 +85,13 @@ afterEach(function () {
     }
 });
 
+test('recusa a matrícula sem a data da matrícula', function (string $date) {
+    ($this->refused)('O campo Data da Matrícula é obrigatório.', ['data_matricula' => $date]);
+})->with([
+    'vazia' => '',
+    'só espaços' => '   ',
+]);
+
 test('recusa quando o curso não permite novas matrículas', function () {
     $this->scenario->course->update(['bloquear_novas_matriculas' => true]);
 
