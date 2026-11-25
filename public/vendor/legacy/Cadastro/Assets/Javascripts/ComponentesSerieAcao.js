@@ -65,6 +65,7 @@ var filaSeriesModal = [];
 
 function executaModalProximaSerie() {
     if (filaSeriesModal.length === 0) {
+        $j(window).off('beforeunload.filaSeriesModal');
         if (ModalSelectEscolas.dialogContainer && ModalSelectEscolas.dialogContainer.dialog('isOpen')) {
             ModalSelectEscolas.dialogContainer.dialog('close');
         }
@@ -73,6 +74,15 @@ function executaModalProximaSerie() {
     }
 
     var proxima = filaSeriesModal.shift();
+    if (filaSeriesModal.length > 0) {
+        $j(window).off('beforeunload.filaSeriesModal').on('beforeunload.filaSeriesModal', function (e) {
+            e.preventDefault();
+            e.returnValue = '';
+            return '';
+        });
+    } else {
+        $j(window).off('beforeunload.filaSeriesModal');
+    }
     ModalSelectEscolas.init(proxima.serieId, proxima.serieNome, proxima.componentes, 'novos-componentes', proxima.actions);
 }
 
@@ -295,6 +305,13 @@ ModalSelectEscolas = {
 
         msg += '</ul>';
 
+        if (filaSeriesModal.length > 0) {
+            let restanteTexto = filaSeriesModal.length === 1
+                ? 'Falta ainda <b>1</b> série na fila para replicação nas escolas.'
+                : 'Faltam ainda <b>' + filaSeriesModal.length + '</b> séries na fila para replicação nas escolas.';
+            msg += '<p>' + restanteTexto + ' Não feche esta página antes de concluir.</p>';
+        }
+
         return msg + 'Você pode aplicar as mesmas alterações dessa série para todas as escolas, não aplicar em nenhuma escola ou escolher para quais escolas deseja aplicar</p>';
 
     },
@@ -343,9 +360,35 @@ ModalSelectEscolas = {
             'align': 'center'
         });
 
-        buttonsTd.append('<input type="button" class="botaolistagem" value="Aplicar em todas" onclick="adicionaComponentesTodasEscolas(\''+this.idContainer+'\', ' + this.serieId + ')">');
-        buttonsTd.append('<input type="button" class="botaolistagem" value="Aplicar somente na série" onclick="executaModalProximaSerie();">');
-        buttonsTd.append('<input type="button" class="botao" value="Selecionar escolas para aplicar" onclick="expandEscolas()">');
+        buttonsTd.append(
+            $j('<input>', {
+                type: 'button',
+                class: 'botaolistagem',
+                value: 'Aplicar em todas',
+                'data-dialog-id': this.idContainer,
+                'data-serie-id': this.serieId
+            }).on('click', function () {
+                adicionaComponentesTodasEscolas($j(this).data('dialog-id'), $j(this).data('serie-id'));
+            })
+        );
+        buttonsTd.append(
+            $j('<input>', {
+                type: 'button',
+                class: 'botaolistagem',
+                value: 'Aplicar somente na série'
+            }).on('click', function () {
+                executaModalProximaSerie();
+            })
+        );
+        buttonsTd.append(
+            $j('<input>', {
+                type: 'button',
+                class: 'botao',
+                value: 'Selecionar escolas para aplicar'
+            }).on('click', function () {
+                expandEscolas();
+            })
+        );
 
         buttonsTr.append(buttonsTd);
 
@@ -410,7 +453,17 @@ ModalSelectEscolas = {
         });
 
         div.append(table);
-        div.append('<input type="button" class="botao" value="Aplicar nas escolas selecionadas" onclick="atualizaComponentesEscolas(' + this.serieId + ', \''+this.idContainer+'\')">');
+        div.append(
+            $j('<input>', {
+                type: 'button',
+                class: 'botao',
+                value: 'Aplicar nas escolas selecionadas',
+                'data-serie-id': this.serieId,
+                'data-dialog-id': this.idContainer
+            }).on('click', function () {
+                atualizaComponentesEscolas($j(this).data('serie-id'), $j(this).data('dialog-id'));
+            })
+        );
 
         return div;
     },
