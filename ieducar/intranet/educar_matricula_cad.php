@@ -168,7 +168,13 @@ return new class extends clsCadastro
         }
 
         $this->inputsHelper()->dynamic(helperNames: ['ano', 'instituicao', 'escola', 'curso', 'serie', 'turma']);
-        $this->inputsHelper()->date(attrName: 'data_matricula', inputOptions: ['label' => 'Data da matrícula', 'placeholder' => 'dd/mm/yyyy', 'value' => date(format: 'd/m/Y')]);
+        $this->inputsHelper()->date(attrName: 'data_matricula', inputOptions: [
+            'label' => 'Data da matrícula',
+            'placeholder' => 'dd/mm/aaaa',
+            'value' => $this->data_matricula,
+            'required' => true,
+            'label_hint' => '<br><small class="text-muted">Informe a data real de ingresso conforme a documentação do aluno.</small>',
+        ]);
         $this->inputsHelper()->textArea(attrName: 'observacoes', inputOptions: ['required' => false, 'label' => 'Observações']);
         $this->inputsHelper()->hidden(attrName: 'ano_em_andamento', inputOptions: ['value' => '1']);
 
@@ -182,7 +188,23 @@ return new class extends clsCadastro
             );
         }
 
-        $this->acao_enviar = 'formUtils.submit()';
+        Portabilis_View_Helper_Application::embedJavascript(viewInstance: $this, script: '
+            window.submitMatricula = function () {
+                var $dataMatricula = $j("#data_matricula");
+
+                if ($dataMatricula.length && $dataMatricula.is(":enabled") && !$j.trim($dataMatricula.val())) {
+                    $dataMatricula.addClass("error");
+                    alert("O campo Data da Matrícula é obrigatório.");
+                    $dataMatricula.focus();
+
+                    return false;
+                }
+
+                return formUtils.submit();
+            };
+        ');
+
+        $this->acao_enviar = 'submitMatricula()';
     }
 
     private function cursoDeAtividadeComplementar($id)
@@ -337,6 +359,12 @@ return new class extends clsCadastro
 
     public function Novo()
     {
+        if (blank(value: trim(string: (string) $this->data_matricula))) {
+            $this->mensagem = 'O campo Data da Matrícula é obrigatório.';
+
+            return false;
+        }
+
         DB::beginTransaction();
 
         $dependencia = $this->dependencia == 'on';
