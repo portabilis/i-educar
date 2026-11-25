@@ -23,7 +23,7 @@ return new class extends clsCadastro
     {
         $retorno = 'Novo';
 
-        $this->serie_id = $_GET['serie_id'];
+        $this->serie_id = $_GET['serie_id'] ?? null;
 
         $obj_permissoes = new clsPermissoes;
         $obj_permissoes->permissao_cadastra(
@@ -95,7 +95,11 @@ return new class extends clsCadastro
         $this->inputsHelper()->dynamic(helperNames: 'instituicao', inputOptions: ['value' => $this->instituicao_id]);
 
         $this->campoLista(nome: 'ref_cod_curso', campo: 'Curso', valor: $opcoesCurso, default: $this->curso_id);
-        $this->campoLista(nome: 'ref_cod_serie', campo: 'Série', valor: $opcoesSerie, default: $this->serie_id);
+        if ($this->retorno == 'Novo') {
+            $this->campoLista(nome: 'ref_cod_serie', campo: 'Série', valor: $opcoesSerie, default: $this->serie_id, multiple: 10);
+        } else {
+            $this->campoLista(nome: 'ref_cod_serie', campo: 'Série', valor: $opcoesSerie, default: $this->serie_id);
+        }
 
         $helperOptions = ['objectName' => 'ref_cod_area_conhecimento'];
         $options = ['label' => 'Áreas de conhecimento',
