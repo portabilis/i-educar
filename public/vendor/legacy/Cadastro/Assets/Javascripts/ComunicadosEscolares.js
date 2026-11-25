@@ -64,3 +64,48 @@ $j(document).ready(function () {
     element.summernote(settings);
   }
 });
+
+$j(document).ready(function () {
+  const $instituicao = $j('#ref_cod_instituicao');
+  const $escolas = $j('#escolas');
+
+  $escolas.attr('name', 'escolas[]');
+  $escolas.chosen({
+    no_results_text: 'Sem resultados para ',
+    placeholder_text_multiple: 'Selecione as escolas',
+    search_contains: true,
+  });
+
+  const selecionadas = decodeURIComponent($j('#escolas_selecionadas').val()).split(',');
+  $escolas.find('option').each(function () {
+    this.selected = selecionadas.indexOf(this.value) !== -1;
+  });
+  $escolas.trigger('chosen:updated');
+
+  $escolas.change(function () {
+    if (($escolas.val() || []).indexOf('all') === -1) {
+      return;
+    }
+    $escolas.find('option').each(function () {
+      this.selected = this.value !== 'all';
+    });
+    $escolas.trigger('chosen:updated');
+  });
+
+  $instituicao.change(function () {
+    getResource({
+      url: getResourceUrlBuilder.buildUrl('/module/Api/escola', 'escolas-para-selecao', {
+        instituicao: $instituicao.val(),
+      }),
+      dataType: 'json',
+      data: {},
+      success: function (response) {
+        $escolas.empty().append($j('<option>', { value: 'all' }).text('Todas as escolas'));
+        $j.each(response['options'], function (id, nome) {
+          $escolas.append($j('<option>', { value: id.replace(/^__/, '') }).text(nome));
+        });
+        $escolas.trigger('chosen:updated');
+      },
+    });
+  });
+});

@@ -79,11 +79,11 @@ return new class extends clsListagem
         }
 
         $query = SchoolNotice::query()
-            ->with(['institution', 'school'])
+            ->with(['institution'])
             ->when($usuarioEscolar, function ($query, $usuarioEscolar) {
                 // Débito de cobertura: trecho ainda sem teste.
                 // @codeCoverageIgnoreStart
-                $query->whereHas('school.schoolUsers', function ($q) use ($usuarioEscolar) {
+                $query->whereHas('schools.schoolUsers', function ($q) use ($usuarioEscolar) {
                     $q->where('ref_cod_usuario', $usuarioEscolar);
                 });
                 // @codeCoverageIgnoreEnd
@@ -104,7 +104,7 @@ return new class extends clsListagem
         if (is_numeric(value: $this->ref_cod_escola)) {
             // Débito de cobertura: trecho ainda sem teste.
             // @codeCoverageIgnoreStart
-            $query->where(column: 'school_id', operator: $this->ref_cod_escola);
+            $query->whereHas('schools', fn ($q) => $q->whereKey($this->ref_cod_escola));
             // @codeCoverageIgnoreEnd
         }
 
