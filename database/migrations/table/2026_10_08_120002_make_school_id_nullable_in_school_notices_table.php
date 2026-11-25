@@ -11,24 +11,14 @@ return new class extends Migration
     {
         if (Schema::hasColumn('school_notices', 'school_id')) {
             Schema::table('school_notices', function (Blueprint $table) {
-                $table->dropForeign(['school_id']);
-                $table->dropColumn('school_id');
+                $table->unsignedInteger('school_id')->nullable()->change();
             });
         }
     }
 
     public function down(): void
     {
-        if (!Schema::hasColumn('school_notices', 'school_id')) {
-            Schema::table('school_notices', function (Blueprint $table) {
-                $table->unsignedInteger('school_id')->nullable();
-                $table->foreign('school_id')
-                    ->references('cod_escola')
-                    ->on('pmieducar.escola')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
-            });
-
+        if (Schema::hasColumn('school_notices', 'school_id')) {
             DB::statement('
                 UPDATE school_notices sn
                 SET school_id = (
@@ -38,7 +28,12 @@ return new class extends Migration
                     ORDER BY sns.id ASC
                     LIMIT 1
                 )
+                WHERE sn.school_id IS NULL
             ');
+
+            Schema::table('school_notices', function (Blueprint $table) {
+                $table->unsignedInteger('school_id')->nullable(false)->change();
+            });
         }
     }
 };

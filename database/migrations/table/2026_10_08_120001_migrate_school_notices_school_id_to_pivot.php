@@ -14,6 +14,7 @@ return new class extends Migration
                 SELECT id, school_id
                 FROM school_notices
                 WHERE school_id IS NOT NULL
+                ON CONFLICT (school_notice_id, school_id) DO NOTHING
             ');
         }
     }
