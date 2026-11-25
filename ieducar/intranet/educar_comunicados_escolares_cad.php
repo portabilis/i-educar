@@ -2,6 +2,7 @@
 
 use App\Models\SchoolNotice;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 return new class extends clsCadastro
 {
@@ -39,7 +40,7 @@ return new class extends clsCadastro
         if (is_numeric($this->id) && $this->id > 0) {
             $registro = SchoolNotice::findOrFail($this->id);
             if ($registro) {
-                if (!$this->usuarioPodeGerenciarAviso($registro)) {
+                if (!$registro->canBeManagedBy((int) $this->pessoa_logada)) {
                     $this->simpleRedirect("educar_comunicados_escolares_det.php?id={$registro->getKey()}");
                 }
 
@@ -87,18 +88,6 @@ return new class extends clsCadastro
         Portabilis_View_Helper_Application::loadJavascript(viewInstance: $this, files: [
             '/vendor/legacy/Cadastro/Assets/Javascripts/ComunicadosEscolares.js',
         ]);
-    }
-
-    private function usuarioPodeGerenciarAviso(SchoolNotice $notice): bool
-    {
-        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
-            $escolasDoAviso = $notice->schools()->pluck('cod_escola')->all();
-            $escolasPermitidas = array_map('intval', array_keys($this->escolasDisponiveis()));
-
-            return array_diff($escolasDoAviso, $escolasPermitidas) === [];
-        }
-
-        return true;
     }
 
     private function escolasDisponiveis(): array
@@ -150,18 +139,23 @@ return new class extends clsCadastro
             return false;
         }
 
-        $notice = SchoolNotice::create([
-            'institution_id' => request()->integer('ref_cod_instituicao'),
-            'user_id' => $this->pessoa_logada,
-            'title' => request()->string('titulo'),
-            'description' => request()->string('descricao'),
-            'date' => Carbon::createFromFormat('d/m/Y', request()->string('data')),
-            'hour' => request()->string('hora'),
-            'local' => request()->string('local'),
-        ]);
+        $notice = DB::transaction(function () use ($escolas) {
+            $notice = SchoolNotice::create([
+                'institution_id' => request()->integer('ref_cod_instituicao'),
+                'user_id' => $this->pessoa_logada,
+                'title' => request()->string('titulo'),
+                'description' => request()->string('descricao'),
+                'date' => Carbon::createFromFormat('d/m/Y', request()->string('data')),
+                'hour' => request()->string('hora'),
+                'local' => request()->string('local'),
+            ]);
+
+            $notice->schools()->sync($escolas);
+
+            return $notice;
+        });
 
         if ($notice) {
-            $notice->schools()->sync($escolas);
             $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_comunicados_escolares_lst.php');
         }
@@ -178,7 +172,7 @@ return new class extends clsCadastro
     {
         $notice = SchoolNotice::find($this->id);
 
-        if (!$notice || !$this->usuarioPodeGerenciarAviso($notice)) {
+        if (!$notice || !$notice->canBeManagedBy((int) $this->pessoa_logada)) {
             $this->mensagem = 'Você não tem permissão para editar este comunicado.<br>';
 
             return false;
@@ -189,17 +183,19 @@ return new class extends clsCadastro
             return false;
         }
 
-        $notice->fill([
-            'institution_id' => request()->integer('ref_cod_instituicao'),
-            'title' => request()->string('titulo'),
-            'description' => request()->string('descricao'),
-            'date' => Carbon::createFromFormat('d/m/Y', request()->string('data')),
-            'hour' => request()->string('hora'),
-            'local' => request()->string('local'),
-        ]);
+        DB::transaction(function () use ($notice, $escolas) {
+            $notice->fill([
+                'institution_id' => request()->integer('ref_cod_instituicao'),
+                'title' => request()->string('titulo'),
+                'description' => request()->string('descricao'),
+                'date' => Carbon::createFromFormat('d/m/Y', request()->string('data')),
+                'hour' => request()->string('hora'),
+                'local' => request()->string('local'),
+            ]);
 
-        $notice->save();
-        $notice->schools()->sync($escolas);
+            $notice->save();
+            $notice->schools()->sync($escolas);
+        });
 
         $this->mensagem = 'Edição efetuada com sucesso.<br>';
         $this->simpleRedirect('educar_comunicados_escolares_lst.php');
@@ -209,7 +205,7 @@ return new class extends clsCadastro
     {
         $notice = SchoolNotice::find($this->id);
 
-        if (!$notice || !$this->usuarioPodeGerenciarAviso($notice)) {
+        if (!$notice || !$notice->canBeManagedBy((int) $this->pessoa_logada)) {
             $this->mensagem = 'Você não tem permissão para excluir este comunicado.<br>';
 
             return false;

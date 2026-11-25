@@ -48,18 +48,9 @@ return new class extends clsDetalhe
         $this->addDetalhe(detalhe: ['Hora', $registro->hour->format('H:i')]);
         $this->addDetalhe(detalhe: ['Local', $registro->local]);
 
-        $podeEditar = true;
-        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $this->pessoa_logada)) {
-            $escolasDoAviso = $registro->schools->pluck('cod_escola')->all();
-            $escolasUsuario = array_map('intval', array_column(App_Model_IedFinder::getEscolasUser(cod_usuario: $this->pessoa_logada), 'ref_cod_escola'));
-            if (array_diff($escolasDoAviso, $escolasUsuario) !== []) {
-                $podeEditar = false;
-            }
-        }
-
         if ($obj_permissoes->permissao_cadastra(int_processo_ap: SchoolNotice::PROCESS, int_idpes_usuario: $this->pessoa_logada, int_soma_nivel_acesso: 7)) {
             $this->url_novo = 'educar_comunicados_escolares_cad.php';
-            if ($podeEditar) {
+            if ($registro->canBeManagedBy((int) $this->pessoa_logada)) {
                 $this->url_editar = "educar_comunicados_escolares_cad.php?id={$registro->getKey()}";
             }
         }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App_Model_IedFinder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -67,5 +68,23 @@ class SchoolNotice extends Model
             'school_notice_id',
             'school_id'
         );
+    }
+
+    public function canBeManagedBy(int $userId): bool
+    {
+        if (!App_Model_IedFinder::usuarioNivelBibliotecaEscolar(codUsuario: $userId)) {
+            return true;
+        }
+
+        $noticeSchoolIds = $this->relationLoaded('schools')
+            ? $this->schools->pluck('cod_escola')->map(fn ($id) => (int) $id)->all()
+            : $this->schools()->pluck('cod_escola')->map(fn ($id) => (int) $id)->all();
+
+        $allowedSchoolIds = array_map(
+            'intval',
+            array_column(App_Model_IedFinder::getEscolasUser(cod_usuario: $userId), 'ref_cod_escola')
+        );
+
+        return array_diff($noticeSchoolIds, $allowedSchoolIds) === [];
     }
 }
