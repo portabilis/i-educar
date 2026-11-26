@@ -168,14 +168,17 @@ test('sem ensino superior ignora as graduações e as pós-graduações enviadas
         ->and(EmployeePosgraduate::query()->where('employee_id', $person)->exists())->toBeFalse();
 });
 
-test('defeito: aceita uma carga horária que não é hora, gravando zero', function () {
+test('recusa uma carga horária inválida sem cadastrar o servidor', function () {
     Event::fake([EmployeeCreated::class]);
 
     $person = StudentScenario::individual('Ana Alves')->getKey();
 
-    $this->post($this->new, ($this->payload)($person, ['carga_horaria' => 'abc']))->assertRedirect(($this->detail)($person));
+    $this->post($this->new, ($this->payload)($person, ['carga_horaria' => 'abc']))
+        ->assertOk()
+        ->assertSee('Carga horária inválida. Informe um valor entre 00:00 e 99:59.');
 
-    expect((float) ($this->row)($person)->carga_horaria)->toBe(0.0);
+    expect(($this->row)($person))->toBeNull();
+    Event::assertNotDispatched(EmployeeCreated::class);
 });
 
 test('cadastrar de novo quem já é servidor da instituição atualiza o cadastro', function () {
