@@ -2,6 +2,7 @@
 
 use App\Menu;
 use App\Models\State;
+use App\Services\EducacensoReferenceDateService;
 
 return new class extends clsCadastro
 {
@@ -284,7 +285,7 @@ return new class extends clsCadastro
                 'hint' => $dataFechamento,
             ]
         );
-        $dataEducacenso = 'Este campo deve ser preenchido com a data máxima das matrículas que devem ser enviadas para o Censo.';
+        $dataEducacenso = 'Calculado automaticamente conforme regra padrão do INEP (última quarta-feira de maio). Este campo deve ser preenchido com a data máxima das matrículas que devem ser enviadas para o Censo.';
         $this->inputsHelper()->date(
             attrName: 'data_educacenso',
             inputOptions: [
@@ -292,7 +293,7 @@ return new class extends clsCadastro
                 'required' => false,
                 'hint' => $dataEducacenso,
                 'placeholder' => 'dd/mm/yyyy',
-                'value' => $this->data_educacenso,
+                'value' => app(EducacensoReferenceDateService::class)->fill(date: $this->data_educacenso, year: now()->year),
             ]
         );
 
