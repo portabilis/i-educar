@@ -161,7 +161,9 @@ test('com filtros, o breadcrumb da tela vem junto do formulário', function () {
     $listagem = listagem(['locale' => 'Cursos']);
     $listagem->campoTexto('nome', 'Nome', '');
 
-    comoTelaLegada(fn () => $listagem->RenderHTML());
+    $html = comoTelaLegada(fn () => $listagem->RenderHTML());
 
-    expect(app(Breadcrumb::class)->getLegacy())->toBe('Cursos');
+    expect(app(Breadcrumb::class)->getLegacy())->toBe('Cursos')
+        ->and($html)->toContain('name="nome"')
+        ->not->toContain('filtros-avancados');
 });
