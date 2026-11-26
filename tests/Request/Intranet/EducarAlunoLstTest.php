@@ -12,6 +12,7 @@ use Database\Factories\LegacySchoolClassTeacherFactory;
 use Database\Factories\LegacySchoolGradeFactory;
 use Database\Factories\LegacyUserFactory;
 use Illuminate\Support\Facades\DB;
+use iEducar\Modules\Enrollments\Model\EnrollmentStatusFilter;
 use Tests\Request\Support\EnrollmentScenario;
 use Tests\Request\Support\StudentScenario;
 
@@ -52,6 +53,57 @@ test('mostra o nome social antes do nome de registro', function () {
     ($this->list)(['cod_aluno' => $ana->student->getKey()])
         ->assertSee('Nina Alves<br> <i>Nome de registro: </i>Ana Alves', false);
 });
+
+test('organiza os filtros básicos e avançados em seções distintas', function () {
+    $response = ($this->list)();
+    $html = $response->getContent();
+
+    $inicioBasicos = strpos($html, "data-filter-section='basic'");
+    $fimBasicos = strpos($html, '</tbody>', $inicioBasicos);
+    $filtrosBasicos = substr($html, $inicioBasicos, $fimBasicos - $inicioBasicos);
+
+    $inicioAvancados = strpos($html, "data-filter-section='advanced'", $fimBasicos);
+    $fimAvancados = strpos($html, '</tbody>', $inicioAvancados);
+    $filtrosAvancados = substr($html, $inicioAvancados, $fimAvancados - $inicioAvancados);
+
+    expect($filtrosBasicos)
+        ->toContain('tr_nome_aluno')
+        ->toContain('tr_cpf_aluno')
+        ->toContain('tr_situacao_matricula_id')
+        ->toContain('tr_ano')
+        ->toContain('tr_ref_cod_escola')
+        ->not->toContain('tr_data_nascimento');
+
+    expect($filtrosAvancados)
+        ->toContain('tr_cod_aluno')
+        ->toContain('tr_data_nascimento')
+        ->toContain('tr_ref_cod_instituicao')
+        ->toContain('tr_ref_cod_curso')
+        ->toContain('tr_ref_cod_serie')
+        ->not->toContain('tr_nome_aluno');
+});
+
+test('mostra os filtros básicos e mantém os avançados recolhidos', function () {
+    ($this->list)()
+        ->assertSee('Filtros básicos')
+        ->assertSee('Filtros avançados')
+        ->assertSee("aria-expanded='false'", false)
+        ->assertSee("<tbody id='filtros-avancados' data-filter-section='advanced' hidden>", false)
+        ->assertSee('Limpar filtros avançados');
+});
+
+test('abre e sinaliza somente os filtros avançados disponíveis e preenchidos', function (array $query, string $label, string $expanded) {
+    ($this->list)($query)
+        ->assertSee($label, false)
+        ->assertSee("aria-expanded='{$expanded}'", false);
+})->with([
+    'nenhum' => [[], 'Filtros avançados</button>', 'false'],
+    'um' => [['nome_mae' => 'Marta'], 'Filtros avançados (1 ativo)', 'true'],
+    'vários' => [['nome_mae' => 'Marta', 'nome_pai' => 'Pedro'], 'Filtros avançados (2 ativos)', 'true'],
+    'valor vazio' => [['nome_mae' => ''], 'Filtros avançados</button>', 'false'],
+    'filtro básico' => [['nome_aluno' => 'Ana'], 'Filtros avançados</button>', 'false'],
+    'campo condicional ausente' => [['cod_inep' => '123456789012'], 'Filtros avançados</button>', 'false'],
+]);
 
 test('filtra por cada campo da pessoa', function (Closure $query) {
     $ana = StudentScenario::named('Ana Alves', ['aluno_estado_id' => '111.222.333-4'], ['data_nasc' => '2015-04-20', 'cpf' => '12345678909']);
@@ -101,6 +153,40 @@ test('filtra pelas matrículas ativas do aluno', function (Closure $query) {
     'curso e ano' => [fn (EnrollmentScenario $scenario) => ['ref_cod_curso' => $scenario->course->getKey(), 'ano' => 2030]],
 ]);
 
+test('filtra pela situação da matrícula', function () {
+    $scenario = EnrollmentScenario::for($this->user, 2030);
+    $aprovada = $scenario->registration([
+        'ref_cod_aluno' => $scenario->student('Ana Aprovada'),
+        'aprovado' => App_Model_MatriculaSituacao::APROVADO,
+    ]);
+    $cursando = $scenario->registration([
+        'ref_cod_aluno' => $scenario->student('Bia Cursando'),
+        'aprovado' => App_Model_MatriculaSituacao::EM_ANDAMENTO,
+    ]);
+    $transferida = $scenario->registration([
+        'ref_cod_aluno' => $scenario->student('Carla Transferida'),
+        'aprovado' => App_Model_MatriculaSituacao::TRANSFERIDO,
+    ]);
+    $abandono = $scenario->registration([
+        'ref_cod_aluno' => $scenario->student('Dora Abandono'),
+        'aprovado' => App_Model_MatriculaSituacao::ABANDONO,
+    ]);
+    $semMatricula = $scenario->student('Eva Sem Matrícula');
+
+    ($this->list)(['situacao_matricula_id' => App_Model_MatriculaSituacao::APROVADO])
+        ->assertSee('educar_aluno_det.php?cod_aluno=' . $aprovada->ref_cod_aluno, false)
+        ->assertDontSee('educar_aluno_det.php?cod_aluno=' . $cursando->ref_cod_aluno, false);
+
+    ($this->list)(['situacao_matricula_id' => EnrollmentStatusFilter::EXCEPT_TRANSFERRED_OR_ABANDONMENT])
+        ->assertSee('educar_aluno_det.php?cod_aluno=' . $aprovada->ref_cod_aluno, false)
+        ->assertSee('educar_aluno_det.php?cod_aluno=' . $cursando->ref_cod_aluno, false)
+        ->assertDontSee('educar_aluno_det.php?cod_aluno=' . $transferida->ref_cod_aluno, false)
+        ->assertDontSee('educar_aluno_det.php?cod_aluno=' . $abandono->ref_cod_aluno, false);
+
+    ($this->list)(['situacao_matricula_id' => EnrollmentStatusFilter::ALL])
+        ->assertSee('educar_aluno_det.php?cod_aluno=' . $semMatricula->getKey(), false);
+});
+
 test('com a similaridade ligada acha grafias parecidas do nome', function () {
     $ana = StudentScenario::named('Thiago Souza');
     $bia = StudentScenario::named('Bia Borges');
@@ -136,6 +222,20 @@ test('pagina de 20 em 20, do cadastro mais recente para o mais antigo', function
     ($this->list)(['nome_aluno' => 'Registro Aluno', 'pagina_formulario' => 2])
         ->assertSee('Registro Aluno 21')
         ->assertDontSee('Registro Aluno 20');
+});
+
+test('preserva filtros básicos e avançados nos links da paginação', function () {
+    foreach (range(1, 21) as $number) {
+        StudentScenario::named(sprintf('Aluno %02d', $number), ['data_cadastro' => now()->subDays($number)])->mother('Marta Alves');
+    }
+
+    ($this->list)(['nome_aluno' => 'Aluno', 'nome_mae' => 'Marta'])
+        ->assertSee('nome_aluno=Aluno&amp;nome_mae=Marta&amp;pagina_formulario=2', false)
+        ->assertSee('Filtros avançados (1 ativo)');
+
+    ($this->list)(['nome_aluno' => 'Aluno', 'nome_mae' => 'Marta', 'pagina_formulario' => 2])
+        ->assertSee('Aluno 21')
+        ->assertSee('Filtros avançados (1 ativo)');
 });
 
 test('mostra o filtro e a coluna do código INEP quando a instituição pede', function () {
