@@ -320,6 +320,63 @@ test('cadastra uma pessoa sem CPF com o motivo da ausência, estrangeira e com a
         ->certidao_nascimento->toBe('');
 });
 
+test('edição sem mudança de identificação não consulta nem avisa sobre semelhantes', function () {
+    $ana = StudentScenario::individual('Ána Alves', ['cpf' => '12345678909']);
+    StudentScenario::individual('Ana Alves');
+
+    DB::enableQueryLog();
+
+    $resposta = ($this->send)(($this->edit)($ana), ($this->payload)([
+        'tipoacao' => 'Editar',
+        'cod_pessoa_fj' => (string) $ana->getKey(),
+        'nm_pessoa' => 'ANA ALVES',
+    ]));
+
+    $consultas = collect(DB::getQueryLog())->pluck('query')->implode(' ');
+    DB::disableQueryLog();
+
+    $resposta->assertOk()->assertDontSee('Encontramos pessoas semelhantes');
+    expect($consultas)->not->toContain('f_unaccent(nome) ILIKE f_unaccent(?)')
+        ->and($ana->refresh()->person->nome)->toBe('ANA ALVES');
+});
+
+test('edição avisa quando nome ou nascimento mudam e exclui o próprio cadastro', function (array $dadosAtuais, array $alteracao, string $nomeCandidato, string $nascimentoCandidato) {
+    $pessoa = StudentScenario::individual($dadosAtuais['nome'], [
+        'cpf' => '12345678909',
+        'data_nasc' => $dadosAtuais['nascimento'],
+    ]);
+    $candidato = StudentScenario::individual($nomeCandidato, ['data_nasc' => $nascimentoCandidato]);
+
+    $resposta = ($this->send)(($this->edit)($pessoa), ($this->payload)($alteracao + [
+        'tipoacao' => 'Editar',
+        'cod_pessoa_fj' => (string) $pessoa->getKey(),
+    ]));
+
+    $resposta->assertOk()
+        ->assertSee('Encontramos pessoas semelhantes')
+        ->assertSee("/intranet/atendidos_cad.php?cod_pessoa_fj={$candidato->getKey()}", false)
+        ->assertDontSee("/intranet/atendidos_cad.php?cod_pessoa_fj={$pessoa->getKey()}", false);
+
+    expect($pessoa->refresh()->person->nome)->toBe($dadosAtuais['nome'])
+        ->and($pessoa->data_nasc->toDateString())->toBe($dadosAtuais['nascimento']);
+
+    $token = LegacyFields::from($resposta->getContent())['token_pessoas_semelhantes'];
+
+    ($this->send)(($this->edit)($pessoa), ($this->payload)($alteracao + [
+        'tipoacao' => 'Editar',
+        'cod_pessoa_fj' => (string) $pessoa->getKey(),
+        'token_pessoas_semelhantes' => $token,
+        'confirmar_pessoas_semelhantes' => '1',
+    ]))->assertOk()->assertSee('window.opener.afterChangePessoa', false);
+
+    expect($pessoa->refresh()->person->nome)->toBe($alteracao['nm_pessoa'] ?? $dadosAtuais['nome'])
+        ->and($pessoa->data_nasc->toDateString())->toBe(isset($alteracao['data_nasc']) ? '2015-04-20' : $dadosAtuais['nascimento'])
+        ->and(session()->has('atendidos_cad.pessoas_semelhantes'))->toBeFalse();
+})->with([
+    'nome' => [['nome' => 'Bia Borges', 'nascimento' => '2015-04-20'], ['nm_pessoa' => 'Ana Alves'], 'Ana Alves', '2015-04-20'],
+    'nascimento' => [['nome' => 'Ana Alves', 'nascimento' => '2014-04-20'], ['data_nasc' => '20/04/2015'], 'Ana Alves', '2015-04-20'],
+]);
+
 test('não consulta pessoas semelhantes sem nascimento', function () {
     StudentScenario::individual('Ana Alves');
 

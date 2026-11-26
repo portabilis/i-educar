@@ -855,12 +855,13 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $user = LegacyUser::find($this->cod_pessoa_fj);
-        if ($user) {
+        $resultado = $this->createOrUpdate(pessoaIdOrNull: $this->cod_pessoa_fj);
+
+        if ($resultado && $user = LegacyUser::find($this->cod_pessoa_fj)) {
             UserUpdated::dispatch($user);
         }
 
-        return $this->createOrUpdate(pessoaIdOrNull: $this->cod_pessoa_fj);
+        return $resultado;
     }
 
     public function Excluir()
@@ -1178,7 +1179,7 @@ return new class extends clsCadastro
             return false;
         }
 
-        if ($pessoaIdOrNull === null && !$this->confirmaPessoasSemelhantes()) {
+        if (!$this->confirmaPessoasSemelhantes($pessoaIdOrNull)) {
             return false;
         }
 
@@ -1222,7 +1223,7 @@ return new class extends clsCadastro
         return true;
     }
 
-    protected function confirmaPessoasSemelhantes(): bool
+    protected function confirmaPessoasSemelhantes(?int $pessoaId = null): bool
     {
         $chave = 'atendidos_cad.pessoas_semelhantes';
 
@@ -1233,7 +1234,21 @@ return new class extends clsCadastro
         }
 
         $nascimento = Portabilis_Date_Utils::brToPgSQL(date: $this->data_nasc);
-        $dados = hash('sha256', $this->nm_pessoa . "\0" . $nascimento);
+        $nome = Str::lower(Str::ascii(trim($this->nm_pessoa)));
+
+        if ($pessoaId !== null) {
+            $atual = LegacyIndividual::with('person')->find($pessoaId);
+
+            if ($atual &&
+                Str::lower(Str::ascii(trim($atual->person->nome))) === $nome &&
+                $atual->data_nasc?->toDateString() === $nascimento) {
+                Session::forget($chave);
+
+                return true;
+            }
+        }
+
+        $dados = hash('sha256', $pessoaId . "\0" . $nome . "\0" . $nascimento);
         $pendente = Session::pull($chave);
 
         if ($this->confirmar_pessoas_semelhantes &&
@@ -1245,7 +1260,7 @@ return new class extends clsCadastro
 
         $pessoas = LegacyIndividual::query()
             ->with(['person', 'mother'])
-            ->whereSimilarNameAndBirthdate($this->nm_pessoa, $nascimento)
+            ->whereSimilarNameAndBirthdate($nome, $nascimento, $pessoaId)
             ->get();
 
         if ($pessoas->isEmpty()) {
@@ -1264,11 +1279,12 @@ return new class extends clsCadastro
             return "<tr><td><a href='/intranet/atendidos_cad.php?cod_pessoa_fj={$codigo}' target='_blank'>{$codigo}</a></td><td>{$nome}</td><td>{$nascimento}</td><td>{$mae}</td></tr>";
         })->implode('');
 
-        $this->avisoPessoasSemelhantes = '<p>Encontramos pessoas semelhantes. Confira antes de cadastrar:</p>'
+        $acao = $pessoaId === null ? 'cadastrar' : 'salvar';
+        $this->avisoPessoasSemelhantes = "<p>Encontramos pessoas semelhantes. Confira antes de {$acao}:</p>"
             . '<table><thead><tr><th>Código</th><th>Nome</th><th>Nascimento</th><th>Mãe</th></tr></thead><tbody>'
             . $linhas . '</tbody></table>'
             . '<label><input type="checkbox" name="confirmar_pessoas_semelhantes" value="1"> Não é nenhuma destas</label>';
-        $this->mensagem = 'Confira as pessoas semelhantes antes de cadastrar.';
+        $this->mensagem = "Confira as pessoas semelhantes antes de {$acao}.";
 
         return false;
     }
