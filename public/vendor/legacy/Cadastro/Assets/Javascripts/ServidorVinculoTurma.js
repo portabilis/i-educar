@@ -27,6 +27,24 @@ $j(document).ready(function() {
   const lecionaItinerarioField = $j('#leciona_itinerario_tecnico_profissional');
   const areaItinerarioField = $j('#area_itinerario');
   const copiaDeVinculo = $j('#copia').val() == 1 ? true : false;
+  const vinculoAnoEncerrado = $j('#vinculo_ano_encerrado').val() === '1';
+  const anoEncerradoMensagem = decodeURIComponent($j('#ano_encerrado_mensagem').val().replace(/\+/g, ' '));
+  let ultimaConsultaTurma = 0;
+
+  function bloquearAlteracaoVinculo(bloqueado) {
+    $j('#btn_enviar, #btn_excluir')
+      .prop('disabled', bloqueado)
+      .attr('title', bloqueado ? anoEncerradoMensagem : '')
+      .css('cursor', bloqueado ? 'not-allowed' : '')
+      .each(function() {
+        const prioridade = bloqueado ? 'important' : '';
+        this.style.setProperty('background-color', bloqueado ? '#ffc107' : '', prioridade);
+        this.style.setProperty('color', bloqueado ? '#000' : '', prioridade);
+        this.style.setProperty('border-color', bloqueado ? '#ffc107' : '', prioridade);
+      });
+  }
+
+  bloquearAlteracaoVinculo(vinculoAnoEncerrado);
 
   getRegraAvaliacao();
   getTurnoTurma();
@@ -154,24 +172,41 @@ document.getElementById("funcao_exercida").addEventListener("change", (event) =>
 
   function getTurnoTurma() {
     let turmaId = turmaField.val();
+    const consultaAtual = ++ultimaConsultaTurma;
+    let anoEncerrado = vinculoAnoEncerrado;
 
     if (turmaId == '') {
+      bloquearAlteracaoVinculo(vinculoAnoEncerrado);
       toggleTurno(0);
       return;
     }
+
+    $j('#btn_enviar, #btn_excluir').prop('disabled', true);
 
     let params = {id: turmaId};
     let options = {
       url: getResourceUrlBuilder.buildUrl('/module/Api/Turma', 'turma', params),
       dataType: 'json',
       data: {},
-      success: handleGetTurnoTurma,
+      success: function(dataResponse) {
+        if (consultaAtual !== ultimaConsultaTurma || turmaField.val() !== turmaId) {
+          return;
+        }
+        anoEncerrado = vinculoAnoEncerrado || dataResponse.ano_letivo_encerrado === true;
+        handleGetTurnoTurma(dataResponse);
+      },
+      complete: function() {
+        if (consultaAtual === ultimaConsultaTurma && turmaField.val() === turmaId) {
+          bloquearAlteracaoVinculo(anoEncerrado);
+        }
+      },
     };
 
     getResource(options);
   }
 
   function handleGetTurnoTurma(dataResponse) {
+    bloquearAlteracaoVinculo(vinculoAnoEncerrado || dataResponse.ano_letivo_encerrado === true);
     toggleTurno(dataResponse['turma_turno_id']);
     validaLecionaItinerarioTecnicoProfissional(dataResponse);
     validaAreaItinerarioFormativo(dataResponse);
@@ -366,6 +401,9 @@ document.getElementById("funcao_exercida").addEventListener("change", (event) =>
   }
 
   const submitForm = function () {
+    if ($j('#btn_enviar').prop('disabled')) {
+      return;
+    }
     let canSubmit = validationUtils.validatesFields();
     if (canSubmit) {
       acao();
