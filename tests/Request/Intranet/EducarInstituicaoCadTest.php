@@ -79,6 +79,39 @@ test('abre o formulário em edição com os dados da instituição', function ()
         ->and($payload['data_fechamento'])->toBe('31/03');
 });
 
+test('pré-preenche a data de referência do Educacenso vazia com a última quarta-feira de maio', function () {
+    $this->travelTo(now()->setDate(2027, 3, 10));
+    DB::table('pmieducar.instituicao')->where('cod_instituicao', $this->id)->update(['data_educacenso' => null]);
+
+    $content = $this->get($this->url)->assertOk()->getContent();
+
+    expect(LegacyFields::from($content)['data_educacenso'])->toBe('26/05/2027')
+        ->and($content)->toContain('Calculado automaticamente conforme regra padrão do INEP');
+});
+
+test('recalcula a data de referência do Educacenso que ficou no ano anterior', function () {
+    $this->travelTo(now()->setDate(2027, 3, 10));
+    DB::table('pmieducar.instituicao')->where('cod_instituicao', $this->id)->update(['data_educacenso' => '2026-05-27']);
+
+    expect(($this->form)()['data_educacenso'])->toBe('26/05/2027');
+});
+
+test('mantém a data de referência do Educacenso informada para o ano atual', function () {
+    $this->travelTo(now()->setDate(2027, 3, 10));
+    DB::table('pmieducar.instituicao')->where('cod_instituicao', $this->id)->update(['data_educacenso' => '2027-06-02']);
+
+    expect(($this->form)()['data_educacenso'])->toBe('02/06/2027');
+});
+
+test('grava a data de referência do Educacenso pré-preenchida ao salvar', function () {
+    $this->travelTo(now()->setDate(2027, 3, 10));
+    DB::table('pmieducar.instituicao')->where('cod_instituicao', $this->id)->update(['data_educacenso' => null]);
+
+    $this->post($this->url, ($this->form)())->assertRedirect('educar_instituicao_lst.php');
+
+    expect(($this->row)()->data_educacenso)->toBe('2027-05-26');
+});
+
 test('trata uma instituição inexistente como cadastro novo', function () {
     $payload = LegacyFields::from($this->get('/intranet/educar_instituicao_cad.php?cod_instituicao=0')->assertOk()->getContent());
 
