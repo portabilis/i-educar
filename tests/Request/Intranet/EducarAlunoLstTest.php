@@ -88,8 +88,22 @@ test('mostra os filtros básicos e mantém os avançados recolhidos', function (
         ->assertSee('Filtros básicos')
         ->assertSee('Filtros avançados')
         ->assertSee("aria-expanded='false'", false)
-        ->assertSee("<tbody id='filtros-avancados' data-filter-section='advanced' hidden>", false);
+        ->assertSee("<tbody id='filtros-avancados' data-filter-section='advanced' hidden>", false)
+        ->assertSee('Limpar filtros avançados');
 });
+
+test('abre e sinaliza somente os filtros avançados disponíveis e preenchidos', function (array $query, string $label, string $expanded) {
+    ($this->list)($query)
+        ->assertSee($label, false)
+        ->assertSee("aria-expanded='{$expanded}'", false);
+})->with([
+    'nenhum' => [[], 'Filtros avançados</button>', 'false'],
+    'um' => [['nome_mae' => 'Marta'], 'Filtros avançados (1 ativo)', 'true'],
+    'vários' => [['nome_mae' => 'Marta', 'nome_pai' => 'Pedro'], 'Filtros avançados (2 ativos)', 'true'],
+    'valor vazio' => [['nome_mae' => ''], 'Filtros avançados</button>', 'false'],
+    'filtro básico' => [['nome_aluno' => 'Ana'], 'Filtros avançados</button>', 'false'],
+    'campo condicional ausente' => [['cod_inep' => '123456789012'], 'Filtros avançados</button>', 'false'],
+]);
 
 test('filtra por cada campo da pessoa', function (Closure $query) {
     $ana = StudentScenario::named('Ana Alves', ['aluno_estado_id' => '111.222.333-4'], ['data_nasc' => '2015-04-20', 'cpf' => '12345678909']);
@@ -208,6 +222,20 @@ test('pagina de 20 em 20, do cadastro mais recente para o mais antigo', function
     ($this->list)(['nome_aluno' => 'Registro Aluno', 'pagina_formulario' => 2])
         ->assertSee('Registro Aluno 21')
         ->assertDontSee('Registro Aluno 20');
+});
+
+test('preserva filtros básicos e avançados nos links da paginação', function () {
+    foreach (range(1, 21) as $number) {
+        StudentScenario::named(sprintf('Aluno %02d', $number), ['data_cadastro' => now()->subDays($number)])->mother('Marta Alves');
+    }
+
+    ($this->list)(['nome_aluno' => 'Aluno', 'nome_mae' => 'Marta'])
+        ->assertSee('nome_aluno=Aluno&amp;nome_mae=Marta&amp;pagina_formulario=2', false)
+        ->assertSee('Filtros avançados (1 ativo)');
+
+    ($this->list)(['nome_aluno' => 'Aluno', 'nome_mae' => 'Marta', 'pagina_formulario' => 2])
+        ->assertSee('Aluno 21')
+        ->assertSee('Filtros avançados (1 ativo)');
 });
 
 test('mostra o filtro e a coluna do código INEP quando a instituição pede', function () {
