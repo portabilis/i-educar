@@ -126,6 +126,12 @@ return new class extends clsCadastro
 
     public $document_absence_observation;
 
+    public $confirmar_pessoas_semelhantes;
+
+    public $token_pessoas_semelhantes;
+
+    protected $avisoPessoasSemelhantes;
+
     public function Inicializar()
     {
         $obj_permissoes = new clsPermissoes;
@@ -315,6 +321,11 @@ return new class extends clsCadastro
         ];
 
         $this->inputsHelper()->date(attrName: 'data_nasc', inputOptions: $options);
+
+        if ($this->avisoPessoasSemelhantes) {
+            $this->campoRotulo(nome: 'pessoas_semelhantes', campo: 'Pessoas semelhantes', valor: $this->avisoPessoasSemelhantes);
+            $this->campoOculto(nome: 'token_pessoas_semelhantes', valor: $this->token_pessoas_semelhantes);
+        }
 
         // pai, mãe
 
@@ -844,12 +855,13 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-        $user = LegacyUser::find($this->cod_pessoa_fj);
-        if ($user) {
+        $resultado = $this->createOrUpdate(pessoaIdOrNull: $this->cod_pessoa_fj);
+
+        if ($resultado && $user = LegacyUser::find($this->cod_pessoa_fj)) {
             UserUpdated::dispatch($user);
         }
 
-        return $this->createOrUpdate(pessoaIdOrNull: $this->cod_pessoa_fj);
+        return $resultado;
     }
 
     public function Excluir()
@@ -1167,6 +1179,10 @@ return new class extends clsCadastro
             return false;
         }
 
+        if (!$this->confirmaPessoasSemelhantes($pessoaIdOrNull)) {
+            return false;
+        }
+
         if (!$this->validaCertidao()) {
             return false;
         }
@@ -1205,6 +1221,72 @@ return new class extends clsCadastro
         $this->saveFiles(idpes: $pessoaId);
 
         return true;
+    }
+
+    protected function confirmaPessoasSemelhantes(?int $pessoaId = null): bool
+    {
+        $chave = 'atendidos_cad.pessoas_semelhantes';
+
+        if (empty($this->data_nasc) || empty($this->nm_pessoa)) {
+            Session::forget($chave);
+
+            return true;
+        }
+
+        $nascimento = Portabilis_Date_Utils::brToPgSQL(date: $this->data_nasc);
+        $nome = Str::lower(Str::ascii(trim($this->nm_pessoa)));
+
+        if ($pessoaId !== null) {
+            $atual = LegacyIndividual::with('person')->find($pessoaId);
+
+            if ($atual &&
+                Str::lower(Str::ascii(trim($atual->person->nome))) === $nome &&
+                $atual->data_nasc?->toDateString() === $nascimento) {
+                Session::forget($chave);
+
+                return true;
+            }
+        }
+
+        $dados = hash('sha256', $pessoaId . "\0" . $nome . "\0" . $nascimento);
+        $pendente = Session::pull($chave);
+
+        if ($this->confirmar_pessoas_semelhantes &&
+            $pendente &&
+            $pendente['dados'] === $dados &&
+            hash_equals($pendente['token'], (string) $this->token_pessoas_semelhantes)) {
+            return true;
+        }
+
+        $pessoas = LegacyIndividual::query()
+            ->with(['person', 'mother'])
+            ->whereSimilarNameAndBirthdate($nome, $nascimento, $pessoaId)
+            ->get();
+
+        if ($pessoas->isEmpty()) {
+            return true;
+        }
+
+        $this->token_pessoas_semelhantes = Str::random(40);
+        Session::put($chave, ['dados' => $dados, 'token' => $this->token_pessoas_semelhantes]);
+
+        $linhas = $pessoas->map(function ($pessoa) {
+            $codigo = (int) $pessoa->getKey();
+            $nome = htmlspecialchars($pessoa->person->nome, ENT_QUOTES, 'UTF-8');
+            $mae = htmlspecialchars($pessoa->mother?->nome ?? $pessoa->nome_mae ?? '', ENT_QUOTES, 'UTF-8');
+            $nascimento = $pessoa->data_nasc->format('d/m/Y');
+
+            return "<tr><td><a href='/intranet/atendidos_cad.php?cod_pessoa_fj={$codigo}' target='_blank'>{$codigo}</a></td><td>{$nome}</td><td>{$nascimento}</td><td>{$mae}</td></tr>";
+        })->implode('');
+
+        $acao = $pessoaId === null ? 'cadastrar' : 'salvar';
+        $this->avisoPessoasSemelhantes = "<p>Encontramos pessoas semelhantes. Confira antes de {$acao}:</p>"
+            . '<table><thead><tr><th>Código</th><th>Nome</th><th>Nascimento</th><th>Mãe</th></tr></thead><tbody>'
+            . $linhas . '</tbody></table>'
+            . '<label><input type="checkbox" name="confirmar_pessoas_semelhantes" value="1"> Não é nenhuma destas</label>';
+        $this->mensagem = "Confira as pessoas semelhantes antes de {$acao}.";
+
+        return false;
     }
 
     protected function validaDadosTelefones()

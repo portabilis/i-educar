@@ -206,6 +206,68 @@ test('cadastra a pessoa com todos os dados, documentos, endereço, telefones e r
         ->and(substr(DB::table('cadastro.documento')->where('idpes', $person->getKey())->value('data_exp_rg'), 0, 10))->toBe('2020-03-10');
 });
 
+test('avisa sobre pessoa semelhante e só cadastra após confirmação', function () {
+    $existente = StudentScenario::named('Ána Alves');
+    $existente->mother('Marta Alves');
+
+    $resposta = ($this->send)($this->new, ($this->payload)());
+    $resposta->assertOk()
+        ->assertSee('Encontramos pessoas semelhantes')
+        ->assertSee('Código')
+        ->assertSee('Nascimento')
+        ->assertSee('Mãe')
+        ->assertSee('Ána Alves')
+        ->assertSee('20/04/2015')
+        ->assertSee('Marta Alves')
+        ->assertSee("/intranet/atendidos_cad.php?cod_pessoa_fj={$existente->individual->getKey()}", false)
+        ->assertSee('Não é nenhuma destas');
+
+    expect(LegacyPerson::query()->where('nome', 'Ana Alves')->count())->toBe(0);
+
+    $campos = LegacyFields::from($resposta->getContent());
+    expect($campos['token_pessoas_semelhantes'])->not->toBeEmpty();
+
+    $semConfirmacao = ($this->send)($this->new, ($this->payload)([
+        'token_pessoas_semelhantes' => $campos['token_pessoas_semelhantes'],
+    ]));
+    $semConfirmacao->assertSee('Não é nenhuma destas');
+    expect(LegacyPerson::query()->where('nome', 'Ana Alves')->count())->toBe(0);
+
+    $token = LegacyFields::from($semConfirmacao->getContent())['token_pessoas_semelhantes'];
+
+    ($this->send)($this->new, ($this->payload)([
+        'token_pessoas_semelhantes' => $token,
+        'confirmar_pessoas_semelhantes' => '1',
+    ]))->assertOk()->assertSee('window.opener.afterChangePessoa', false);
+
+    expect(LegacyPerson::query()->where('nome', 'Ana Alves')->count())->toBe(1)
+        ->and(session()->has('atendidos_cad.pessoas_semelhantes'))->toBeFalse();
+});
+
+test('mudança do nome ou nascimento invalida a confirmação de pessoas semelhantes', function (array $alteracao, string $nomeExistente, string $nascimentoExistente) {
+    StudentScenario::individual('Ana Alves');
+    $outra = StudentScenario::individual($nomeExistente, ['data_nasc' => $nascimentoExistente]);
+
+    $totalAntes = LegacyPerson::query()->count();
+
+    $primeira = ($this->send)($this->new, ($this->payload)());
+    $token = LegacyFields::from($primeira->getContent())['token_pessoas_semelhantes'];
+
+    $resposta = ($this->send)($this->new, ($this->payload)($alteracao + [
+        'token_pessoas_semelhantes' => $token,
+        'confirmar_pessoas_semelhantes' => '1',
+    ]));
+
+    $resposta->assertOk()
+        ->assertSee('Encontramos pessoas semelhantes')
+        ->assertSee("/intranet/atendidos_cad.php?cod_pessoa_fj={$outra->getKey()}", false);
+
+    expect(LegacyPerson::query()->count())->toBe($totalAntes);
+})->with([
+    'nome' => [['nm_pessoa' => 'Bia Borges'], 'Bia Borges', '2015-04-20'],
+    'nascimento' => [['data_nasc' => '21/04/2015'], 'Ana Alves', '2015-04-21'],
+]);
+
 test('cadastra uma pessoa sem CPF com o motivo da ausência, estrangeira e com a certidão no formato antigo', function () {
     $reason = DocumentAbsenceReasonFactory::new()->create(['name' => 'Documento em emissão', 'requires_observation' => true]);
     $mother = StudentScenario::individual('Marta Alves');
@@ -256,6 +318,93 @@ test('cadastra uma pessoa sem CPF com o motivo da ausência, estrangeira e com a
         ->num_livro->toBe('A-12')
         ->num_folha->toEqual(77)
         ->certidao_nascimento->toBe('');
+});
+
+test('edição sem mudança de identificação não consulta nem avisa sobre semelhantes', function () {
+    $ana = StudentScenario::individual('Ána Alves', ['cpf' => '12345678909']);
+    StudentScenario::individual('Ana Alves');
+
+    DB::enableQueryLog();
+
+    $resposta = ($this->send)(($this->edit)($ana), ($this->payload)([
+        'tipoacao' => 'Editar',
+        'cod_pessoa_fj' => (string) $ana->getKey(),
+        'nm_pessoa' => 'ANA ALVES',
+    ]));
+
+    $consultas = collect(DB::getQueryLog())->pluck('query')->implode(' ');
+    DB::disableQueryLog();
+
+    $resposta->assertOk()->assertDontSee('Encontramos pessoas semelhantes');
+    expect($consultas)->not->toContain('f_unaccent(nome) ILIKE f_unaccent(?)')
+        ->and($ana->refresh()->person->nome)->toBe('ANA ALVES');
+});
+
+test('edição avisa quando nome ou nascimento mudam e exclui o próprio cadastro', function (array $dadosAtuais, array $alteracao, string $nomeCandidato, string $nascimentoCandidato) {
+    $pessoa = StudentScenario::individual($dadosAtuais['nome'], [
+        'cpf' => '12345678909',
+        'data_nasc' => $dadosAtuais['nascimento'],
+    ]);
+    $candidato = StudentScenario::individual($nomeCandidato, ['data_nasc' => $nascimentoCandidato]);
+
+    $resposta = ($this->send)(($this->edit)($pessoa), ($this->payload)($alteracao + [
+        'tipoacao' => 'Editar',
+        'cod_pessoa_fj' => (string) $pessoa->getKey(),
+    ]));
+
+    $resposta->assertOk()
+        ->assertSee('Encontramos pessoas semelhantes')
+        ->assertSee("/intranet/atendidos_cad.php?cod_pessoa_fj={$candidato->getKey()}", false)
+        ->assertDontSee("/intranet/atendidos_cad.php?cod_pessoa_fj={$pessoa->getKey()}", false);
+
+    expect($pessoa->refresh()->person->nome)->toBe($dadosAtuais['nome'])
+        ->and($pessoa->data_nasc->toDateString())->toBe($dadosAtuais['nascimento']);
+
+    $token = LegacyFields::from($resposta->getContent())['token_pessoas_semelhantes'];
+
+    ($this->send)(($this->edit)($pessoa), ($this->payload)($alteracao + [
+        'tipoacao' => 'Editar',
+        'cod_pessoa_fj' => (string) $pessoa->getKey(),
+        'token_pessoas_semelhantes' => $token,
+        'confirmar_pessoas_semelhantes' => '1',
+    ]))->assertOk()->assertSee('window.opener.afterChangePessoa', false);
+
+    expect($pessoa->refresh()->person->nome)->toBe($alteracao['nm_pessoa'] ?? $dadosAtuais['nome'])
+        ->and($pessoa->data_nasc->toDateString())->toBe(isset($alteracao['data_nasc']) ? '2015-04-20' : $dadosAtuais['nascimento'])
+        ->and(session()->has('atendidos_cad.pessoas_semelhantes'))->toBeFalse();
+})->with([
+    'nome' => [['nome' => 'Bia Borges', 'nascimento' => '2015-04-20'], ['nm_pessoa' => 'Ana Alves'], 'Ana Alves', '2015-04-20'],
+    'nascimento' => [['nome' => 'Ana Alves', 'nascimento' => '2014-04-20'], ['data_nasc' => '20/04/2015'], 'Ana Alves', '2015-04-20'],
+]);
+
+test('não consulta pessoas semelhantes sem nascimento', function () {
+    StudentScenario::individual('Ana Alves');
+
+    DB::enableQueryLog();
+
+    $resposta = ($this->send)($this->new, ($this->payload)([
+        'data_nasc' => '',
+        'tipo_certidao_civil' => '',
+        'certidao_nascimento' => '',
+        'telefone_1' => '',
+    ]));
+
+    $consultas = collect(DB::getQueryLog())->pluck('query')->implode(' ');
+    DB::disableQueryLog();
+
+    $resposta->assertOk()->assertDontSee('Encontramos pessoas semelhantes');
+    expect($consultas)->not->toContain('f_unaccent(nome) ILIKE f_unaccent(?)');
+});
+
+test('CPF duplicado é recusado antes do aviso de pessoas semelhantes', function () {
+    StudentScenario::individual('Ana Alves', ['cpf' => '12345678909']);
+
+    ($this->send)($this->new, ($this->payload)())
+        ->assertOk()
+        ->assertSee('CPF já utilizado pela pessoa')
+        ->assertDontSee('Encontramos pessoas semelhantes');
+
+    expect(session()->has('atendidos_cad.pessoas_semelhantes'))->toBeFalse();
 });
 
 test('registra na trilha do CPF o que mudou', function () {
