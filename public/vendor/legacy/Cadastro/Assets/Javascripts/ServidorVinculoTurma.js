@@ -29,6 +29,7 @@ $j(document).ready(function() {
   const copiaDeVinculo = $j('#copia').val() == 1 ? true : false;
   const vinculoAnoEncerrado = $j('#vinculo_ano_encerrado').val() === '1';
   const anoEncerradoMensagem = decodeURIComponent($j('#ano_encerrado_mensagem').val().replace(/\+/g, ' '));
+  let ultimaConsultaTurma = 0;
 
   function bloquearAlteracaoVinculo(bloqueado) {
     $j('#btn_enviar, #btn_excluir')
@@ -171,6 +172,8 @@ document.getElementById("funcao_exercida").addEventListener("change", (event) =>
 
   function getTurnoTurma() {
     let turmaId = turmaField.val();
+    const consultaAtual = ++ultimaConsultaTurma;
+    let anoEncerrado = vinculoAnoEncerrado;
 
     if (turmaId == '') {
       bloquearAlteracaoVinculo(vinculoAnoEncerrado);
@@ -186,10 +189,16 @@ document.getElementById("funcao_exercida").addEventListener("change", (event) =>
       dataType: 'json',
       data: {},
       success: function(dataResponse) {
-        if (turmaField.val() !== turmaId) {
+        if (consultaAtual !== ultimaConsultaTurma || turmaField.val() !== turmaId) {
           return;
         }
+        anoEncerrado = vinculoAnoEncerrado || dataResponse.ano_letivo_encerrado === true;
         handleGetTurnoTurma(dataResponse);
+      },
+      complete: function() {
+        if (consultaAtual === ultimaConsultaTurma && turmaField.val() === turmaId) {
+          bloquearAlteracaoVinculo(anoEncerrado);
+        }
       },
     };
 

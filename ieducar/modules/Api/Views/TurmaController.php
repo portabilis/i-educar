@@ -62,7 +62,11 @@ class TurmaController extends ApiCoreController
             }
         }
 
-        $turma['ano_letivo_encerrado'] = LegacySchoolClass::findOrFail($id)->isAcademicYearFinalized();
+        $schoolClass = new LegacySchoolClass([
+            'ref_ref_cod_escola' => $turma['ref_ref_cod_escola'],
+            'ano' => $turma['ano'],
+        ]);
+        $turma['ano_letivo_encerrado'] = $schoolClass->isAcademicYearFinalized();
 
         return $turma;
     }
